@@ -1,20 +1,21 @@
 export default {
-    title: "Homepage",
-    titleSuffix: " | Pacamara ☕",
-    description: "Aromatic brew, pure indulgence, exquisite satisfaction.Default description",
+    title: "Samuel Dulex",
+    titleSuffix: " | Connecter, Communiquer, Captiver",
+    description: "L'Art de transformer chaque événement en Histoire.",
     defaultOgImage: "./defaultog.jpg",
     latestPosts: 3,
     postsPerPage: 3,
-    url: "https://pacamara-astro-6y7xr.kinsta.page",
+    url: "https://kuasar.xyz",
     social: {
         'dribbble': false,
         'facebook': false,
-        'github': 'https://github.com/palmiak',
-        'instagram': false,
+        'github': 'https://github.com/kuasar-mknd',
+        'instagram': 'https://www.instagram.com/kuasar.mknd',
         'mastodon': false,
         'pinterest': false,
         'skype': false,
-        'twitter': 'https://twitter.com/palmiak_fp'
+        'twitter': false,
+        'youtube': 'https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w',
 
     }
 }
