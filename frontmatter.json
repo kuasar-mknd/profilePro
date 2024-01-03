@@ -87,6 +87,11 @@
       "title": "page",
       "path": "[[workspace]]/src/content/page",
       "contentTypes": ["page"]
+    },
+    {
+      "title": "project",
+      "path": "[[workspace]]/src/content/project",
+      "contentTypes": ["default"]
     }
   ]
 }
