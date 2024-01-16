@@ -4,7 +4,7 @@
     {
       "name": "default",
       "pageBundle": false,
-      "previewPath": "blog/",
+      "previewPath": "project/",
       "filePrefix": null,
       "fileType": "mdx",
       "fields": [
@@ -78,8 +78,8 @@
   },
   "frontMatter.content.pageFolders": [
     {
-      "title": "blog",
-      "path": "[[workspace]]/src/content/blog",
+      "title": "project",
+      "path": "[[workspace]]/src/content/project",
       "contentTypes": ["default"]
       
     },
