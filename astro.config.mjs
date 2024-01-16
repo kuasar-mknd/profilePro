@@ -5,5 +5,6 @@ import mdx from "@astrojs/mdx";
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), mdx()],
-  site: "https://kuasar-mknd.github.io/profilePro/"
+  site: "https://kuasar-mknd.github.io/",
+  base: "/profilePro/",
 });
