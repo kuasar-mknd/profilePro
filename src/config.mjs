@@ -5,7 +5,7 @@ export default {
     defaultOgImage: "./defaultog.jpg",
     latestPosts: 3,
     postsPerPage: 3,
-    url: "https://kuasar-mknd.github.io/profilePro/",
+    url: "https://kuasar.xyz",
     social: {
         'dribbble': false,
         'facebook': false,
