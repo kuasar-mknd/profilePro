@@ -3,8 +3,8 @@ export default {
     titleSuffix: " | Connecter, Communiquer, Captiver",
     description: "L'Art de transformer chaque événement en Histoire.",
     defaultOgImage: "./defaultog.jpg",
-    latestPosts: 4,
-    postsPerPage: 4,
+    latestPosts: 10,
+    postsPerPage: 10,
     url: "https://kuasar.xyz",
     social: {
         'dribbble': false,

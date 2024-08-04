@@ -35,5 +35,5 @@ const projectCollection = defineCollection({
 export const collections = {
     'author': authorCollection,
     'page': pageCollection,
-    'project': projectCollection,
+    'project': projectCollection
 };
