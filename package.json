@@ -1,28 +1,91 @@
 {
-  "name": "pacamara-astro",
+  "name": "portfolio-samuel",
   "type": "module",
-  "version": "0.0.1",
+  "version": "2.0.0",
+  "description": "Portfolio audiovisuel ultra-optimisé de Samuel Dulex - GitHub Pages Ready",
+  "author": {
+    "name": "Samuel Dulex",
+    "email": "contact@kuasar.xyz",
+    "url": "https://portfolio.kuasar.xyz"
+  },
+  "license": "MIT",
+  "keywords": [
+    "portfolio",
+    "astro",
+    "audiovisuel",
+    "production",
+    "samuel-dulex",
+    "github-pages",
+    "performance",
+    "webp",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuasar-mknd/profilePro.git"
+  },
+  "homepage": "https://kuasar-mknd.github.io/profilePro",
+  "bugs": {
+    "url": "https://github.com/kuasar-mknd/profilePro/issues"
+  },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "sync": "astro sync",
+    "lint": "eslint src --ext .js,.astro --fix --cache",
+    "lint:check": "eslint src --ext .js,.astro",
+    "format": "prettier --write src/ --cache",
+    "format:check": "prettier --check src/",
+    "optimize-images": "node scripts/optimize-images.js",
+    "build:prod": "npm run lint && npm run format && npm run check && npm run build",
+    "build:fast": "astro build --silent",
+    "analyze": "npm run build && npx serve dist",
+    "clean": "rm -rf dist .astro node_modules/.cache",
+    "github:analyze": "node scripts/github-optimize.js --analyze-only",
+    "github:optimize": "node scripts/github-optimize.js --optimize",
+    "postbuild": "echo '✅ Build terminé avec succès !'"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.4",
-    "@astrojs/rss": "^4.0.12",
-    "@astrojs/sitemap": "^3.5.1",
-    "@astrojs/tailwind": "^6.0.2",
-    "@tailwindcss/typography": "^0.5.9",
-    "astro": "^5.13.3",
-    "astro-embed": "^0.7.4",
-    "astro-icon": "^0.8.1",
-    "dateformat": "^5.0.3",
-    "tailwindcss": "^3.3.2"
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/rss": "^4.0.8",
+    "@astrojs/sitemap": "^3.5.0",
+    "@playform/compress": "^0.2.0",
+    "@tailwindcss/typography": "^0.5.15",
+    "astro": "^5.2.5"
   },
   "devDependencies": {
-    "prettier": "^2.8.8",
-    "prettier-plugin-astro": "^0.10.0"
-  }
+    "@eslint/js": "^10.0.0",
+    "@tailwindcss/vite": "^4.1.12",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "astro-eslint-parser": "^1.0.3",
+    "eslint": "^9.15.0",
+    "eslint-plugin-astro": "^1.2.0",
+    "eslint-plugin-jsx-a11y": "^6.10.0",
+    "glob": "^11.0.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.6.3"
+  },
+  "optionalDependencies": {
+    "serve": "^14.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ]
 }

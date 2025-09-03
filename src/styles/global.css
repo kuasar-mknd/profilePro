@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pacamara-primary: #003049;
+  --color-pacamara-secondary: #B2A4FF;  
+  --color-pacamara-accent: #FFB4B4;
+  --color-pacamara-dark: #000E14;
+}
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
+  }
+}
