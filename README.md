@@ -23,6 +23,13 @@
 [![Prettier](https://img.shields.io/badge/Prettier-Enabled-F7B93E?style=flat&logo=prettier&logoColor=black)](https://prettier.io/)
 [![Lighthouse CI](https://img.shields.io/badge/Lighthouse-CI-F44B21?style=flat&logo=lighthouse&logoColor=white)](https://github.com/GoogleChrome/lighthouse-ci)
 
+<!-- Lighthouse Scores -->
+
+![Lighthouse Performance](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Performance&query=%24.performance&suffix=%25&logo=lighthouse&logoColor=white&color=orange)
+![Lighthouse Accessibility](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Accessibility&query=%24.accessibility&suffix=%25&logo=lighthouse&logoColor=white&color=brightgreen)
+![Lighthouse Best Practices](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Best%20Practices&query=%24.best-practices&suffix=%25&logo=lighthouse&logoColor=white&color=green)
+![Lighthouse SEO](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=SEO&query=%24.seo&suffix=%25&logo=lighthouse&logoColor=white&color=brightgreen)
+
 <!-- Stats -->
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/kuasar-mknd/profilePro?label=size)
