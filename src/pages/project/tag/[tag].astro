@@ -9,9 +9,11 @@ export async function getStaticPaths() {
   const uniqueTags = [...new Set(allProjects.map((project) => project.data.tag).flat())];
 
   return uniqueTags.map((tag) => {
-    const filteredProjects = allProjects.filter((project) => 
+    const filteredProjects = allProjects
+      .filter((project) => 
         Array.isArray(project.data.tag) ? project.data.tag.includes(tag) : project.data.tag === tag
-    );
+      )
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return {
       params: { tag },
       props: { projects: filteredProjects, allTags: uniqueTags },
