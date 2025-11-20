@@ -1,0 +1,25 @@
+---
+import ModeSwitch from "../ui/ModeSwitch.astro";
+import HamburgerButton from "../ui/HamburgerButton.astro";
+import Navigation from "./Navigation.astro"
+
+---
+<div class="navigation flex-1 hidden absolute top-0 left-0 w-full bg-pacamara-white/95 dark:bg-pacamara-dark/95 backdrop-blur-xl transition-all duration-300 p-7 pt-[112px] z-40 shadow-2xl" id="navigation_wrapper">
+    <Navigation />
+</div>
+<header class="container mx-auto max-w-screen-xl px-7 py-6 bg-white/70 dark:bg-pacamara-dark/70 backdrop-blur-lg flex flex-initial flex-row gap-10 items-center justify-between transition-all duration-300 relative z-50 sticky top-4 rounded-2xl border border-white/20 dark:border-white/10 shadow-glass">
+    <div class="logo flex-none">
+        <a href="/" class="font-bold font-pacamara-space text-xl hover:text-pacamara-accent transition-all duration-300 dark:text-white dark:hover:text-pacamara-accent tracking-tight">
+            Samuel Dulex
+        </a>
+    </div>
+    <div class="navigation flex-1 hidden md:block">
+        <Navigation />
+    </div>
+    
+    <div class="relative flex flex-initial flex-row items-center gap-5">
+        <ModeSwitch />
+        <HamburgerButton />
+    </div>
+    
+</header>

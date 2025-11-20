@@ -4,22 +4,25 @@ import config from '../../config.mjs';
 
 
 import Base from "../../layouts/Base.astro";
-import Post from "../../components/project/Post.astro";
+import Post from "../../components/features/projects/Post.astro";
+import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 
 export async function getStaticPaths({paginate}) {
-    const projectEntries = (await getCollection('project', ({ data }) => {
-        return true;
-    })).sort(
+    const allProjects = await getCollection('project');
+    const uniqueTags = [...new Set(allProjects.map((project) => project.data.tag).flat())];
+    
+    const projectEntries = allProjects.sort(
         (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
     );
 
-    return paginate(projectEntries, { pageSize: config.postsPerPage });
+    return paginate(projectEntries, { pageSize: config.postsPerPage, props: { allTags: uniqueTags } });
 }
 
-const { page } = Astro.props;
+const { page, allTags } = Astro.props;
 ---
 <Base>
     <section class="container mx-auto max-w-screen-lg px-7 py-10">
+        <ProjectFilter tags={allTags} />
         {
             page.data.map((post, index) => {
                 return <Post postData={post} num={index} />;

@@ -1,4 +1,4 @@
-<button id="mode_switcher" class="group" title="Switch mode">
+<button id="mode_switcher" class="group" title="Changer de mode">
   <svg
     height="512"
     viewBox="0 0 24 24"
@@ -26,15 +26,17 @@
 <script>
   const setDarkModeButton = () => {
     const button = document.querySelector("#mode_switcher");
-    button.addEventListener('click', function(){
-      document.documentElement.classList.toggle('dark');
+    if (button) {
+      button.addEventListener('click', function(){
+        document.documentElement.classList.toggle('dark');
 
-      if ( document.documentElement.classList.contains('dark') ) {
-        localStorage.darkMode = 'true'
-      } else {
-        localStorage.darkMode = 'false'
-      }
-    });
+        if ( document.documentElement.classList.contains('dark') ) {
+          localStorage.darkMode = 'true'
+        } else {
+          localStorage.darkMode = 'false'
+        }
+      });
+    }
   }
 
   setDarkModeButton();

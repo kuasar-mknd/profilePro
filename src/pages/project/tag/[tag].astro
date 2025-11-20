@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import Post from "../../../components/features/projects/Post.astro";
+import ProjectFilter from "../../../components/features/projects/ProjectFilter.astro";
+
+export async function getStaticPaths() {
+  const allProjects = await getCollection("project");
+  const uniqueTags = [...new Set(allProjects.map((project) => project.data.tag).flat())];
+
+  return uniqueTags.map((tag) => {
+    const filteredProjects = allProjects.filter((project) => 
+        Array.isArray(project.data.tag) ? project.data.tag.includes(tag) : project.data.tag === tag
+    );
+    return {
+      params: { tag },
+      props: { projects: filteredProjects, allTags: uniqueTags },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { projects, allTags } = Astro.props;
+---
+
+<Base>
+  <section class="container mx-auto max-w-screen-lg px-7 py-10">
+    <h1 class="text-3xl font-bold mb-8 capitalize text-center">{tag} Projects</h1>
+    
+    <ProjectFilter tags={allTags} activeTag={tag} />
+
+    {projects.map((post, index) => (
+      <Post postData={post} num={index} />
+    ))}
+  </section>
+</Base>

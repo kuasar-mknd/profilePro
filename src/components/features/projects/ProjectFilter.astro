@@ -1,0 +1,22 @@
+---
+const { tags, activeTag } = Astro.props;
+---
+
+<div class="flex flex-wrap justify-center gap-4 my-8">
+    <a 
+        href="/project" 
+        class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md
+        ${!activeTag ? 'bg-pacamara-accent text-white shadow-lg' : 'bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white'}`}
+    >
+        Tous
+    </a>
+    {tags.map((tag) => (
+        <a 
+            href={`/project/tag/${tag}`}
+            class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize
+            ${activeTag === tag ? 'bg-pacamara-accent text-white shadow-lg' : 'bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white'}`}
+        >
+            {tag}
+        </a>
+    ))}
+</div>
