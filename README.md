@@ -4,9 +4,30 @@
 
 **L'Art de transformer chaque événement en Histoire**
 
-[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01?style=flat&logo=astro)](https://astro.build)
-[![Styled with Tailwind](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+<!-- Status & Build -->
+
+[![Deploy Status](https://img.shields.io/github/actions/workflow/status/kuasar-mknd/profilePro/astro.yml?branch=master&label=deployment&logo=github)](https://github.com/kuasar-mknd/profilePro/actions)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkuasar.xyz&label=kuasar.xyz)](https://kuasar.xyz)
+[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
+
+<!-- Tech Stack -->
+
+[![Built with Astro](https://img.shields.io/badge/Astro-5.15-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
+
+<!-- Code Quality -->
+
+[![ESLint](https://img.shields.io/badge/ESLint-Enabled-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-Enabled-F7B93E?style=flat&logo=prettier&logoColor=black)](https://prettier.io/)
+[![Lighthouse CI](https://img.shields.io/badge/Lighthouse-CI-F44B21?style=flat&logo=lighthouse&logoColor=white)](https://github.com/GoogleChrome/lighthouse-ci)
+
+<!-- Stats -->
+
+![GitHub repo size](https://img.shields.io/github/repo-size/kuasar-mknd/profilePro?label=size)
+![GitHub last commit](https://img.shields.io/github/last-commit/kuasar-mknd/profilePro)
+![Maintenance](https://img.shields.io/maintenance/yes/2025)
 
 [🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 
