@@ -1,13 +1,34 @@
 {
-  "name": "pacamara-astro",
+  "name": "profilepro",
+  "version": "1.0.0",
   "type": "module",
-  "version": "0.0.1",
+  "private": true,
+  "description": "Portfolio professionnel de Samuel Dulex - Spécialiste en création de contenu vidéo et captation d'événements",
+  "author": {
+    "name": "Samuel Dulex",
+    "url": "https://kuasar.xyz"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuasar-mknd/profilePro.git"
+  },
+  "homepage": "https://kuasar.xyz",
+  "keywords": [
+    "portfolio",
+    "astro",
+    "video",
+    "photography",
+    "content-creation",
+    "samuel-dulex"
+  ],
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\""
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.4",

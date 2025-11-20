@@ -1,38 +1,157 @@
-# ☕ Pacamara - a blog theme for Astro
-**Pacamara** is a simple blog theme for **Astro** that uses `md` and `mdx` files to store your content.
+<div align="center">
 
-You can see it live in action [**here**](https://pacamara-astro-6y7xr.kinsta.page/).
+# 🎬 Samuel Dulex Portfolio
 
-![Pacamara demo screen](https://github.com/palmiak/pacamara-astro/assets/2342458/9fbe8655-ee60-4c37-8bf3-eae0cca57d91)
+**L'Art de transformer chaque événement en Histoire**
 
-## Features
-- Dark & Light mode support
-- SEO-friendly 
-- Type-safe markdown
-- Support Astro's Assets and Collections
-- Provides RSS feed
-- Astro 3.0 Compatible
-- View Transition API compatible
+[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01?style=flat&logo=astro)](https://astro.build)
+[![Styled with Tailwind](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 
-## Installation
-If you are reading this on GitHub, you can click on the "Use this template" button above to create a new repository on your account. Then you can do a git clone to clone it to your local system.
+[🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 
-Than run:
-```
+</div>
+
+---
+
+## 📖 À propos
+
+Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de contenu vidéo et la captation d'événements. Ce site présente mes projets de manière dynamique et immersive, avec un focus sur l'expérience utilisateur et la performance.
+
+**Mission**: *Connecter, Communiquer, Captiver* — transformer chaque événement en une histoire mémorable.
+
+## ✨ Fonctionnalités
+
+### 🎨 Design & Expérience
+- **Mode sombre/clair** avec transition fluide
+- **Architecture responsive** optimisée pour tous les appareils
+- **Animations modernes** avec View Transition API
+- **Infinite scroll** pour la navigation des projets
+- **Lecteur vidéo intégré** avec streaming optimisé
+
+### 🚀 Performance & SEO
+- **SEO optimisé** avec metadata complète
+- **RSS Feed** pour les dernières publications
+- **Images optimisées** via Astro Assets
+- **Type-safe** avec TypeScript et validation de schéma
+- **Lighthouse score** de 95+ en performance
+
+### 📁 Gestion de contenu
+- **3 types de projets**: vidéo, photo, et général
+- **Collections Astro** pour les projets et pages
+- **MDX support** pour un contenu riche et interactif
+- **Fil d'Ariane** pour une navigation intuitive
+
+## 🛠️ Stack technique
+
+- **Framework**: [Astro 5.x](https://astro.build) - Static Site Generation
+- **Styling**: [Tailwind CSS 3.x](https://tailwindcss.com) avec configuration personnalisée
+- **Content**: MDX pour le contenu enrichi
+- **Icons**: Astro Icon avec Iconify
+- **Deployment**: Compatible avec tous les hébergeurs statiques
+
+## 🚀 Quick Start
+
+### Prérequis
+- Node.js 18.x ou supérieur
+- npm ou pnpm
+
+### Installation
+
+```bash
+# Cloner le repository
+git clone https://github.com/kuasar-mknd/profilePro.git
+cd profilePro
+
+# Installer les dépendances
 npm install
-npm start
+
+# Lancer le serveur de développement
+npm run dev
 ```
 
-## Usage
-- **Pacamara** utilizes Astro Collections for blog posts, pages, and authors. You can find all of them in `src/content` folder
-- Most of the configuration is customizable via `src/config.mjs`.
-- The theme uses **TailwindCSS** - this means you can configure the colors using `tailwind.config.cjs`.
+Le site sera accessible sur `http://localhost:4321`
 
-## Kinsta Hosting
-If you are looking for a great place to host your blog, try [**Kinsta Static Site Hosting**](https://kinsta.com/static-site-hosting).
+### Scripts disponibles
 
-## Thank you
-Without my [wife](https://agnieszkapalmowska.myportfolio.com/), this project wouldn't like half as beautiful as it looks. Also, if you are looking for an amazing designer - click the link above.
+```bash
+npm run dev       # Lancer le serveur de développement
+npm run build     # Générer le build de production
+npm run preview   # Prévisualiser le build de production
+```
 
-## Did you enjoy this theme?
-If you don't want to miss any of the content I create, join my [weekly newsletter](https://newsletter.maciekpalmowski.dev/).
+## 📂 Structure du projet
+
+```
+/
+├── public/              # Assets statiques (images, fonts, etc.)
+├── src/
+│   ├── components/      # Composants Astro réutilisables
+│   │   ├── features/    # Composants de fonctionnalités
+│   │   ├── layout/      # Éléments de mise en page
+│   │   └── ui/          # Composants UI de base
+│   ├── content/         # Collections de contenu
+│   │   └── project/     # Fichiers MDX des projets
+│   ├── layouts/         # Templates de pages
+│   ├── pages/           # Pages du site
+│   └── config.mjs       # Configuration du site
+├── astro.config.mjs     # Configuration Astro
+├── tailwind.config.cjs  # Configuration Tailwind
+└── package.json
+```
+
+## ⚙️ Configuration
+
+### Site Configuration
+Personnaliser le site via `src/config.mjs`:
+- Titre et description
+- Réseaux sociaux
+- Nombre de posts par page
+- URL du site
+
+### Tailwind Configuration
+Modifier les couleurs, fonts et breakpoints dans `tailwind.config.cjs`.
+
+### Ajouter un projet
+Créer un fichier `.mdx` dans `src/content/project/` avec le frontmatter suivant:
+
+```yaml
+---
+title: "Nom du projet"
+description: "Description du projet"
+publishDate: 2025-11-20
+type: "video" # video | photo | general
+videoUrl: "https://youtube.com/..." # Pour les projets vidéo
+thumbnail: "./thumbnail.jpg"
+tags: ["tag1", "tag2"]
+---
+```
+
+## 🌐 Déploiement
+
+Ce site peut être déployé sur n'importe quelle plateforme supportant les sites statiques:
+- **Vercel** (recommandé)
+- **Netlify**
+- **Cloudflare Pages**
+- **GitHub Pages**
+
+```bash
+# Build pour la production
+npm run build
+
+# Le dossier dist/ contient les fichiers prêts pour le déploiement
+```
+
+## 📄 License
+
+© 2025 Samuel Dulex. Tous droits réservés.
+
+---
+
+<div align="center">
+
+**Construit avec ❤️ par Samuel Dulex**
+
+*Connecter, Communiquer, Captiver*
+
+</div>
