@@ -28,7 +28,17 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\""
+    "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
+    "lint": "npm run lint:eslint && npm run lint:stylelint",
+    "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
+    "lint:eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
+    "lint:stylelint": "stylelint \"src/**/*.{css,scss}\"",
+    "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
+    "lighthouse": "lhci autorun",
+    "analyze": "npm run build && open dist/stats.html",
+    "check": "npm run format:check && npm run lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.4",
@@ -43,8 +53,22 @@
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
+    "@astrojs/partytown": "^2.1.4",
+    "@astrojs/prefetch": "^0.4.1",
     "@iconify-json/mdi": "^1.2.3",
+    "@lhci/cli": "^0.15.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "astro-compress": "^2.3.8",
+    "eslint": "^9.39.1",
+    "eslint-plugin-astro": "^1.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^2.8.8",
-    "prettier-plugin-astro": "^0.10.0"
+    "prettier-plugin-astro": "^0.10.0",
+    "rollup-plugin-visualizer": "^6.0.5",
+    "sharp": "^0.34.5",
+    "stylelint": "^16.25.0",
+    "stylelint-config-standard": "^39.0.1"
   }
 }

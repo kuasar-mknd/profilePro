@@ -18,11 +18,12 @@
 
 Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de contenu vidéo et la captation d'événements. Ce site présente mes projets de manière dynamique et immersive, avec un focus sur l'expérience utilisateur et la performance.
 
-**Mission**: *Connecter, Communiquer, Captiver* — transformer chaque événement en une histoire mémorable.
+**Mission**: _Connecter, Communiquer, Captiver_ — transformer chaque événement en une histoire mémorable.
 
 ## ✨ Fonctionnalités
 
 ### 🎨 Design & Expérience
+
 - **Mode sombre/clair** avec transition fluide
 - **Architecture responsive** optimisée pour tous les appareils
 - **Animations modernes** avec View Transition API
@@ -30,13 +31,18 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **Lecteur vidéo intégré** avec streaming optimisé
 
 ### 🚀 Performance & SEO
+
 - **SEO optimisé** avec metadata complète
 - **RSS Feed** pour les dernières publications
-- **Images optimisées** via Astro Assets
+- **Images optimisées** via Sharp et compression automatique
 - **Type-safe** avec TypeScript et validation de schéma
 - **Lighthouse score** de 95+ en performance
+- **Compression automatique** HTML, CSS, JS, SVG
+- **Prefetch intelligent** pour navigation instantanée
+- **Scripts tiers optimisés** via Partytown (Web Workers)
 
 ### 📁 Gestion de contenu
+
 - **3 types de projets**: vidéo, photo, et général
 - **Collections Astro** pour les projets et pages
 - **MDX support** pour un contenu riche et interactif
@@ -44,15 +50,31 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 
 ## 🛠️ Stack technique
 
+### Core
+
 - **Framework**: [Astro 5.x](https://astro.build) - Static Site Generation
 - **Styling**: [Tailwind CSS 3.x](https://tailwindcss.com) avec configuration personnalisée
 - **Content**: MDX pour le contenu enrichi
 - **Icons**: Astro Icon avec Iconify
-- **Deployment**: Compatible avec tous les hébergeurs statiques
+
+### Performance
+
+- **Image Optimization**: Sharp
+- **Compression**: astro-compress
+- **Scripts Optimization**: Partytown
+- **Bundle Analysis**: rollup-plugin-visualizer
+
+### Code Quality
+
+- **Linting**: ESLint + Stylelint
+- **Formatting**: Prettier
+- **Git Hooks**: Husky + lint-staged
+- **Performance Audits**: Lighthouse CI
 
 ## 🚀 Quick Start
 
 ### Prérequis
+
 - Node.js 18.x ou supérieur
 - npm ou pnpm
 
@@ -74,10 +96,29 @@ Le site sera accessible sur `http://localhost:4321`
 
 ### Scripts disponibles
 
+#### Développement
+
 ```bash
 npm run dev       # Lancer le serveur de développement
 npm run build     # Générer le build de production
 npm run preview   # Prévisualiser le build de production
+```
+
+#### Qualité du Code
+
+```bash
+npm run format           # Formater tout le code
+npm run lint             # Linter (ESLint + Stylelint)
+npm run lint:eslint:fix  # Corriger erreurs ESLint
+npm run lint:stylelint:fix # Corriger erreurs CSS
+npm run check            # Vérifier formatage + lint
+```
+
+#### Performance & Analyse
+
+```bash
+npm run lighthouse  # Audit Lighthouse complet
+npm run analyze     # Analyser la taille des bundles
 ```
 
 ## 📂 Structure du projet
@@ -103,33 +144,67 @@ npm run preview   # Prévisualiser le build de production
 ## ⚙️ Configuration
 
 ### Site Configuration
+
 Personnaliser le site via `src/config.mjs`:
+
 - Titre et description
 - Réseaux sociaux
 - Nombre de posts par page
 - URL du site
 
 ### Tailwind Configuration
+
 Modifier les couleurs, fonts et breakpoints dans `tailwind.config.cjs`.
 
 ### Ajouter un projet
+
 Créer un fichier `.mdx` dans `src/content/project/` avec le frontmatter suivant:
 
 ```yaml
 ---
 title: "Nom du projet"
 description: "Description du projet"
-publishDate: 2025-11-20
+pubDate: 2025-11-20
+tag: "clip musical" # clip musical | court-métrage | photo | événementiel | production
+author: samuel
+image: ../../assets/image.jpg
 type: "video" # video | photo | general
 videoUrl: "https://youtube.com/..." # Pour les projets vidéo
-thumbnail: "./thumbnail.jpg"
-tags: ["tag1", "tag2"]
 ---
+```
+
+## 🔧 Outils de Développement
+
+### Linting Automatique
+
+Le projet utilise **Husky** et **lint-staged** pour linter automatiquement votre code avant chaque commit :
+
+- ✅ ESLint corrige JavaScript/TypeScript/Astro
+- ✅ Stylelint corrige le CSS
+- ✅ Prettier formate tout le code
+
+### Performance Monitoring
+
+**Lighthouse CI** est configuré pour auditer automatiquement les performances :
+
+```bash
+npm run lighthouse
+```
+
+Seuils configurés : Performance ≥90%, Accessibilité ≥90%, SEO ≥90%
+
+### Bundle Analysis
+
+Après chaque build, visualisez la taille de vos bundles :
+
+```bash
+npm run analyze  # Ouvre dist/stats.html
 ```
 
 ## 🌐 Déploiement
 
 Ce site peut être déployé sur n'importe quelle plateforme supportant les sites statiques:
+
 - **Vercel** (recommandé)
 - **Netlify**
 - **Cloudflare Pages**
@@ -152,6 +227,6 @@ npm run build
 
 **Construit avec ❤️ par Samuel Dulex**
 
-*Connecter, Communiquer, Captiver*
+_Connecter, Communiquer, Captiver_
 
 </div>
