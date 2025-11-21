@@ -1,45 +1,79 @@
 ---
-import config from '../../config.mjs';
-import SocialIcon from '../ui/SocialIcon.astro';
+import config from "../../config.mjs";
+import SocialIcon from "../ui/SocialIcon.astro";
 ---
-<footer class="relative mt-20 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20">
-    <div class="container mx-auto max-w-screen-xl px-7 py-16">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-10">
-            
-            <div class="flex flex-col items-center md:items-start gap-4">
-                <a href="/" class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300">
-                    Samuel Dulex
-                </a>
-                <p class="text-pacamara-primary/60 dark:text-white/60 font-outfit text-sm max-w-xs text-center md:text-left">
-                    Connecter, Communiquer, Captiver. <br/>
-                    Créateur de contenu visuel et digital.
-                </p>
-            </div>
 
-            <div class="flex flex-col items-center gap-6">
-                <ul class="flex flex-wrap justify-center gap-6">
-                    <SocialIcon socialUrl={config?.social?.dribbble} socialType="dribbble" />
-                    <SocialIcon socialUrl={config?.social?.facebook} socialType="facebook" />
-                    <SocialIcon socialUrl={config?.social?.github} socialType="github" />
-                    <SocialIcon socialUrl={config?.social?.instagram} socialType="instagram" />
-                    <SocialIcon socialUrl={config?.social?.mastodon} socialType="mastodon" />
-                    <SocialIcon socialUrl={config?.social?.pinterest} socialType="pinterest" />
-                    <SocialIcon socialUrl={config?.social?.skype} socialType="skype" />
-                    <SocialIcon socialUrl={config?.social?.twitter} socialType="twitter" />
-                    <SocialIcon socialUrl={config?.social?.youtube} socialType="youtube" />
-                </ul>
-                <div class="text-sm text-pacamara-primary/40 dark:text-white/40 font-outfit">
-                    &copy; {new Date().getFullYear()} Samuel Dulex. Tous droits réservés.
-                </div>
-            </div>
+<footer
+  class="relative mt-20 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20"
+>
+  <div class="container mx-auto max-w-screen-xl px-7 py-16">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+      <div class="flex flex-col items-center md:items-start gap-4">
+        <a
+          href="/"
+          class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300"
+        >
+          Samuel Dulex
+        </a>
+        <p
+          class="text-pacamara-primary/60 dark:text-white/60 font-outfit text-sm max-w-xs text-center md:text-left"
+        >
+          Connecter, Communiquer, Captiver. <br />
+          Créateur de contenu visuel et digital.
+        </p>
+      </div>
 
-            <div class="flex flex-col items-center md:items-end gap-2">
-                <div id="wcb" class="carbonbadge wcb-d"></div>
-                <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
-                <span class="text-sm text-pacamara-primary/40 dark:text-white/40">
-                    Fait avec <span class="text-pacamara-accent animate-pulse">&hearts;</span> avec Astro
-                </span>
-            </div>
+      <div class="flex flex-col items-center gap-6">
+        <ul class="flex flex-wrap justify-center gap-6">
+          <SocialIcon
+            socialUrl={config?.social?.dribbble}
+            socialType="dribbble"
+          />
+          <SocialIcon
+            socialUrl={config?.social?.facebook}
+            socialType="facebook"
+          />
+          <SocialIcon socialUrl={config?.social?.github} socialType="github" />
+          <SocialIcon
+            socialUrl={config?.social?.instagram}
+            socialType="instagram"
+          />
+          <SocialIcon
+            socialUrl={config?.social?.mastodon}
+            socialType="mastodon"
+          />
+          <SocialIcon
+            socialUrl={config?.social?.pinterest}
+            socialType="pinterest"
+          />
+          <SocialIcon socialUrl={config?.social?.skype} socialType="skype" />
+          <SocialIcon
+            socialUrl={config?.social?.twitter}
+            socialType="twitter"
+          />
+          <SocialIcon
+            socialUrl={config?.social?.youtube}
+            socialType="youtube"
+          />
+        </ul>
+        <div
+          class="text-sm text-pacamara-primary/40 dark:text-white/40 font-outfit"
+        >
+          &copy; {new Date().getFullYear()} Samuel Dulex. Tous droits réservés.
         </div>
+      </div>
+
+      <div class="flex flex-col items-center md:items-end gap-2">
+        <div id="wcb" class="carbonbadge wcb-d"></div>
+        <script
+          src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js"
+          defer></script>
+        <span class="text-sm text-pacamara-primary/40 dark:text-white/40">
+          Fait avec <span class="text-pacamara-accent animate-pulse"
+            >&hearts;</span
+          > avec Astro
+        </span>
+      </div>
     </div>
+  </div>
 </footer>

@@ -2,45 +2,69 @@
 import type { Page, PaginateFunction } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
-import config from '../../config.mjs';
-
+import config from "../../config.mjs";
 
 import Base from "../../layouts/Base.astro";
 import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 
-export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
-    const allProjects = await getCollection('project');
-    const uniqueTags = [...new Set(allProjects.map((project) => project.data.tag).flat())];
-    
-    const projectEntries = allProjects.sort(
-        (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-    );
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction;
+}) {
+  const allProjects = await getCollection("project");
+  const uniqueTags = [
+    ...new Set(allProjects.map((project) => project.data.tag).flat()),
+  ];
 
-    return paginate(projectEntries, { pageSize: config.postsPerPage, props: { allTags: uniqueTags } });
+  const projectEntries = allProjects.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  return paginate(projectEntries, {
+    pageSize: config.postsPerPage,
+    props: { allTags: uniqueTags },
+  });
 }
 
 interface Props {
-    page: Page<CollectionEntry<'project'>>;
-    allTags: string[];
+  page: Page<CollectionEntry<"project">>;
+  allTags: string[];
 }
 
 const { page, allTags } = Astro.props;
 ---
-<Base>
-    <section class="container mx-auto max-w-screen-lg px-7 py-10">
-        <ProjectFilter tags={allTags} />
-        {
-            page.data.map((post, index) => {
-                return <Post postData={post} num={index} />;
-            })
-        }
-        <div class="flex flex-row justify-center gap-7">
-            {page.url.prev ? <a href={page.url.prev} class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300">Previous</a> : null}
-            {page.url.next ? <a href={page.url.next} class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300">Next</a> : null}
-        </div>
-        
-    </section>
 
-    
+<Base>
+  <section class="container mx-auto max-w-screen-lg px-7 py-10">
+    <ProjectFilter tags={allTags} />
+    {
+      page.data.map((post, index) => {
+        return <Post postData={post} num={index} />;
+      })
+    }
+    <div class="flex flex-row justify-center gap-7">
+      {
+        page.url.prev ? (
+          <a
+            href={page.url.prev}
+            class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300"
+          >
+            Previous
+          </a>
+        ) : null
+      }
+      {
+        page.url.next ? (
+          <a
+            href={page.url.next}
+            class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300"
+          >
+            Next
+          </a>
+        ) : null
+      }
+    </div>
+  </section>
 </Base>

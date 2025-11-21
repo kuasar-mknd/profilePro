@@ -6,12 +6,16 @@ import ProjectFilter from "../../../components/features/projects/ProjectFilter.a
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
-  const uniqueTags = [...new Set(allProjects.map((project) => project.data.tag).flat())];
+  const uniqueTags = [
+    ...new Set(allProjects.map((project) => project.data.tag).flat()),
+  ];
 
   return uniqueTags.map((tag) => {
     const filteredProjects = allProjects
-      .filter((project) => 
-        Array.isArray(project.data.tag) ? project.data.tag.includes(tag) : project.data.tag === tag
+      .filter((project) =>
+        Array.isArray(project.data.tag)
+          ? project.data.tag.includes(tag)
+          : project.data.tag === tag,
       )
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return {
@@ -27,12 +31,12 @@ const { projects, allTags } = Astro.props;
 
 <Base>
   <section class="container mx-auto max-w-screen-lg px-7 py-10">
-    <h1 class="text-3xl font-bold mb-8 capitalize text-center">{tag} Projects</h1>
-    
+    <h1 class="text-3xl font-bold mb-8 capitalize text-center">
+      {tag} Projects
+    </h1>
+
     <ProjectFilter tags={allTags} activeTag={tag} />
 
-    {projects.map((post, index) => (
-      <Post postData={post} num={index} />
-    ))}
+    {projects.map((post, index) => <Post postData={post} num={index} />)}
   </section>
 </Base>

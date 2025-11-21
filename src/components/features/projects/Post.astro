@@ -1,6 +1,6 @@
 ---
 const { postData, num } = Astro.props;
-import { Image } from 'astro:assets'
+import { Image } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
 // default image if no image added
@@ -8,49 +8,63 @@ import defaultImage from "../../../assets/default.jpg";
 
 const isOdd = num % 2;
 ---
+
 <article
-    class="
-        group relative
+  class="group relative
         flex flex-col md:flex-row gap-8 items-center
-        bg-white/5 dark:bg-pacamara-dark/40 backdrop-blur-md 
+        bg-white/5 dark:bg-pacamara-dark/40 backdrop-blur-md
         border border-white/10 dark:border-white/5
-        rounded-3xl p-6 
+        rounded-3xl p-6
         shadow-glass hover:shadow-glow-accent
         transition-all duration-500 hover:-translate-y-1
         overflow-hidden
-        mb-16 last:mb-0
-    ">
-    <!-- Hover Gradient Background -->
-    <div class="absolute inset-0 bg-gradient-to-r from-pacamara-secondary/10 to-pacamara-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        mb-16 last:mb-0"
+>
+  <!-- Hover Gradient Background -->
+  <div
+    class="absolute inset-0 bg-gradient-to-r from-pacamara-secondary/10 to-pacamara-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+  >
+  </div>
 
-    <div class="w-full md:w-[280px] flex-none relative z-10">
-        <a href={ '/project/' + postData.slug } class="block overflow-hidden rounded-2xl">
-            <Image 
-                src={postData?.data?.image ? postData.data.image : defaultImage} 
-                width="750" 
-                alt={ postData.title + " Miniature"} 
-                class:list={[ 
-                    'object-cover h-[220px] w-full transition-transform duration-700 group-hover:scale-110', 
-                    { "rotate-2 group-hover:rotate-0": isOdd, "-rotate-2 group-hover:rotate-0": !isOdd } 
-                ]}  
-            />
-        </a>
-    </div>
+  <div class="w-full md:w-[280px] flex-none relative z-10">
+    <a
+      href={"/project/" + postData.slug}
+      class="block overflow-hidden rounded-2xl"
+    >
+      <Image
+        src={postData?.data?.image ? postData.data.image : defaultImage}
+        width="750"
+        alt={postData.title + " Miniature"}
+        class:list={[
+          "object-cover h-[220px] w-full transition-transform duration-700 group-hover:scale-110",
+          {
+            "rotate-2 group-hover:rotate-0": isOdd,
+            "-rotate-2 group-hover:rotate-0": !isOdd,
+          },
+        ]}
+      />
+    </a>
+  </div>
 
-    <div class="flex-1 relative z-10 flex flex-col justify-center">
-        <h2 class="mb-4">
-            <a href={ '/project/' + postData.slug } class="font-pacamara-space font-bold text-2xl md:text-3xl text-pacamara-primary dark:text-white group-hover:text-pacamara-accent transition-colors duration-300">
-                { postData.data.title }
-            </a>
-        </h2>
-    
-        <p class="font-outfit text-lg text-pacamara-primary/70 dark:text-white/70 line-clamp-3 mb-6">
-            { postData.data.intro }
-        </p>
-    
-        <div class="flex flex-wrap gap-4 items-center mt-auto">
-            <Tag tag={postData.data.tag} />
-            <PublishDate date={postData.data.pubDate} />
-        </div>
+  <div class="flex-1 relative z-10 flex flex-col justify-center">
+    <h2 class="mb-4">
+      <a
+        href={"/project/" + postData.slug}
+        class="font-pacamara-space font-bold text-2xl md:text-3xl text-pacamara-primary dark:text-white group-hover:text-pacamara-accent transition-colors duration-300"
+      >
+        {postData.data.title}
+      </a>
+    </h2>
+
+    <p
+      class="font-outfit text-lg text-pacamara-primary/70 dark:text-white/70 line-clamp-3 mb-6"
+    >
+      {postData.data.intro}
+    </p>
+
+    <div class="flex flex-wrap gap-4 items-center mt-auto">
+      <Tag tag={postData.data.tag} />
+      <PublishDate date={postData.data.pubDate} />
     </div>
+  </div>
 </article>

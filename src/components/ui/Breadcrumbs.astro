@@ -2,42 +2,65 @@
 const { title, category } = Astro.props;
 
 const tagTranslations = {
-    'behind-the-scenes': 'Coulisses',
-    'photo': 'Photographie',
-    'video': 'Vidéo',
-    'general': 'Général',
-    'music': 'Musique',
-    'concert': 'Concert'
+  "behind-the-scenes": "Coulisses",
+  photo: "Photographie",
+  video: "Vidéo",
+  general: "Général",
+  music: "Musique",
+  concert: "Concert",
 };
 
-const displayCategory = category ? (tagTranslations[category] || category.replace(/-/g, ' ')) : '';
+const displayCategory = category
+  ? tagTranslations[category] || category.replace(/-/g, " ")
+  : "";
 ---
-<nav aria-label="Breadcrumb" class="mb-8 animate-fade-in opacity-0" style="animation-delay: 0.1s;">
-    <ol class="flex items-center space-x-2 text-pacamara-primary dark:text-white list-none pl-0">
-        <li>
-            <a href="/" class="hover:text-pacamara-accent transition-colors">Accueil</a>
-        </li>
-        <li>
+
+<nav
+  aria-label="Breadcrumb"
+  class="mb-8 animate-fade-in opacity-0"
+  style="animation-delay: 0.1s;"
+>
+  <ol
+    class="flex items-center space-x-2 text-pacamara-primary dark:text-white list-none pl-0"
+  >
+    <li>
+      <a href="/" class="hover:text-pacamara-accent transition-colors"
+        >Accueil</a
+      >
+    </li>
+    <li>
+      <span class="opacity-50">/</span>
+    </li>
+    <li>
+      <a href="/project" class="hover:text-pacamara-accent transition-colors"
+        >Projets</a
+      >
+    </li>
+    {
+      category && (
+        <>
+          <li>
             <span class="opacity-50">/</span>
-        </li>
-        <li>
-            <a href="/project" class="hover:text-pacamara-accent transition-colors">Projets</a>
-        </li>
-        {category && (
-            <>
-                <li>
-                    <span class="opacity-50">/</span>
-                </li>
-                <li>
-                    <a href={`/project/tag/${category}`} class="hover:text-pacamara-accent transition-colors capitalize">{displayCategory}</a>
-                </li>
-            </>
-        )}
-        <li>
-            <span class="opacity-50">/</span>
-        </li>
-        <li class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-none" aria-current="page">
-            {title}
-        </li>
-    </ol>
+          </li>
+          <li>
+            <a
+              href={`/project/tag/${category}`}
+              class="hover:text-pacamara-accent transition-colors capitalize"
+            >
+              {displayCategory}
+            </a>
+          </li>
+        </>
+      )
+    }
+    <li>
+      <span class="opacity-50">/</span>
+    </li>
+    <li
+      class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-none"
+      aria-current="page"
+    >
+      {title}
+    </li>
+  </ol>
 </nav>

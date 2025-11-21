@@ -1,6 +1,6 @@
 ---
 // src/components/ImageGallery.astro
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 // Dossier spécifique pour charger les images
 const { folder } = Astro.props;
@@ -8,79 +8,97 @@ let images = {};
 
 // Utiliser import.meta.glob pour charger les images statiquement
 if (folder === "lola-clip") {
-  images = import.meta.glob('../../assets/lola-clip/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob("../../assets/lola-clip/*.{png,jpg,jpeg,svg,JPEG}");
 } else if (folder == "proud-rebel") {
-  images = import.meta.glob('../../assets/proud-rebel/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/proud-rebel/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "bcp") {
-    images = import.meta.glob('../../assets/bcp/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob("../../assets/bcp/*.{png,jpg,jpeg,svg,JPEG}");
 } else if (folder == "xxcent-sourire") {
-    images = import.meta.glob('../../assets/xxcent-sourire/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/xxcent-sourire/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "larev") {
-    images = import.meta.glob('../../assets/larev/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob("../../assets/larev/*.{png,jpg,jpeg,svg,JPEG}");
 } else if (folder == "izia-fete-musique") {
-    images = import.meta.glob('../../assets/izia-fete-musique/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/izia-fete-musique/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "cactus-heart") {
-    images = import.meta.glob('../../assets/cactus-heart/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/cactus-heart/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "48h-lausanne") {
-    images = import.meta.glob('../../assets/48h-lausanne/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/48h-lausanne/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "48h-geneve") {
-    images = import.meta.glob('../../assets/48h-geneve/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob(
+    "../../assets/48h-geneve/*.{png,jpg,jpeg,svg,JPEG}",
+  );
 } else if (folder == "lamia") {
-    images = import.meta.glob('../../assets/lamia/*.{png,jpg,jpeg,svg,JPEG}');
+  images = import.meta.glob("../../assets/lamia/*.{png,jpg,jpeg,svg,JPEG}");
 }
-
-
 
 // Charger les images
 const loadedImages = await Promise.all(
   Object.entries(images).map(async ([path, resolver]) => {
     const mod = await (resolver as any)();
     return { src: mod.default, ...mod };
-  })
+  }),
 );
 ---
+
 <style>
+  .image-gallery {
+    column-count: 3;
+    column-gap: 10px;
+  }
+
+  figure {
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto;
+    margin-bottom: 10px;
+    break-inside: avoid;
+  }
+
+  figure > img {
+    width: 100%;
+    display: block;
+  }
+
+  @media (max-width: 1200px) {
     .image-gallery {
       column-count: 3;
-      column-gap: 10px;
     }
-  
-    figure {
-      margin: 0;
-      display: grid;
-      grid-template-rows: auto;
-      margin-bottom: 10px;
-      break-inside: avoid;
+  }
+
+  @media (max-width: 768px) {
+    .image-gallery {
+      column-count: 2;
     }
-  
-    figure > img {
-      width: 100%;
-      display: block;
+  }
+
+  @media (max-width: 480px) {
+    .image-gallery {
+      column-count: 1;
     }
-  
-    @media (max-width: 1200px) {
-      .image-gallery {
-        column-count: 3;
-      }
-    }
-  
-    @media (max-width: 768px) {
-      .image-gallery {
-        column-count: 2;
-      }
-    }
-  
-    @media (max-width: 480px) {
-      .image-gallery {
-        column-count: 1;
-      }
-    }
-  </style>
-  
-  <div class="image-gallery">
-    {loadedImages.map((image, index) => (
+  }
+</style>
+
+<div class="image-gallery">
+  {
+    loadedImages.map((image, index) => (
       <figure>
-        <Image src={image.src} alt={`image-${index}`} width={image.width} height={image.height} />
+        <Image
+          src={image.src}
+          alt={`image-${index}`}
+          width={image.width}
+          height={image.height}
+        />
       </figure>
-    ))}
-  </div>
+    ))
+  }
+</div>
