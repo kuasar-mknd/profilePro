@@ -9,6 +9,9 @@ import { visualizer } from "rollup-plugin-visualizer";
 
 // https://astro.build/config
 export default defineConfig({
+  build: {
+    inlineStylesheets: 'always', // Inline le CSS pour éliminer les requêtes bloquantes
+  },
   integrations: [
     tailwind(),
     mdx(),
