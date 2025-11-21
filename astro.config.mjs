@@ -38,6 +38,7 @@ export default defineConfig({
   },
   vite: {
     build: {
+      cssCodeSplit: false, // Réduit les requêtes CSS en les bundlant ensemble
       rollupOptions: {
         plugins: [
           visualizer({

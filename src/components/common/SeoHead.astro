@@ -22,6 +22,13 @@ const type = postData?.data?.type ? postData.data.type : "website";
 <link rel="canonical" href={permalink} />
 <meta name="robots" content="index, follow" />
 <meta name="generator" content={Astro.generator} />
+
+<!-- DNS Prefetch & Preconnect pour performances -->
+<link rel="dns-prefetch" href="https://unpkg.com" />
+<link rel="preconnect" href="https://unpkg.com" crossorigin />
+<link rel="dns-prefetch" href="https://api.websitecarbon.com" />
+<link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
+
 <meta
   name="theme-color"
   content="#ffffff"
