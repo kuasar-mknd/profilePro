@@ -64,7 +64,18 @@ import SocialIcon from "../ui/SocialIcon.astro";
       </div>
 
       <div class="flex flex-col items-center md:items-end gap-2">
-        <div id="wcb" class="carbonbadge wcb-d"></div>
+        <!-- Reserve space for carbon badge to prevent CLS -->
+        <div
+          id="wcb"
+          class="carbonbadge wcb-d min-h-[120px] w-[150px] flex items-center justify-center"
+          aria-label="Website Carbon Badge"
+        >
+          <!-- Loading skeleton -->
+          <div
+            class="animate-pulse bg-pacamara-primary/10 dark:bg-white/10 rounded-lg w-full h-full"
+          >
+          </div>
+        </div>
         <script
           src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js"
           defer></script>

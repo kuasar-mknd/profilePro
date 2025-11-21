@@ -30,6 +30,23 @@ export default defineConfig({
     partytown({
       config: {
         forward: ["dataLayer.push"],
+        // Reduce forced layout recalculations
+        resolveUrl: (url) => {
+          // Proxy external scripts to avoid CORS issues and reduce reflows
+          if (url.hostname === "unpkg.com") {
+            return new URL(`/cdn-proxy?url=${encodeURIComponent(url.href)}`, url.origin);
+          }
+          return url;
+        },
+        // Limit main window accessor calls that can cause layout thrashing
+        mainWindowAccessors: {
+          offsetWidth: false,
+          offsetHeight: false,
+          clientWidth: false,
+          clientHeight: false,
+          scrollWidth: false,
+          scrollHeight: false,
+        },
       },
     }),
   ],
