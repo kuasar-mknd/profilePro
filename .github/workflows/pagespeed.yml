@@ -1,0 +1,76 @@
+name: PageSpeed Badges
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  pagespeed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run PageSpeed Insights
+        id: psi
+        run: |
+          # Define URL to test
+          URL="https://kuasar.xyz"
+          API_KEY="${{ secrets.PAGESPEED_API_KEY }}"
+          
+          # Construct API URL
+          API_URL="https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=$URL&category=PERFORMANCE&category=ACCESSIBILITY&category=BEST_PRACTICES&category=SEO"
+          
+          if [ -n "$API_KEY" ]; then
+            API_URL="$API_URL&key=$API_KEY"
+          fi
+          
+          echo "Fetching data from PageSpeed Insights..."
+          response=$(curl -s "$API_URL")
+          
+          # Check for errors
+          if echo "$response" | grep -q "error"; then
+            echo "Error fetching data:"
+            echo "$response"
+            exit 1
+          fi
+          
+          # Parse scores (0-1 scale to 0-100)
+          PERF=$(echo "$response" | jq '.lighthouseResult.categories.performance.score * 100 | round')
+          ACC=$(echo "$response" | jq '.lighthouseResult.categories.accessibility.score * 100 | round')
+          BP=$(echo "$response" | jq '.lighthouseResult.categories."best-practices".score * 100 | round')
+          SEO=$(echo "$response" | jq '.lighthouseResult.categories.seo.score * 100 | round')
+          
+          echo "Scores: Perf=$PERF, Acc=$ACC, BP=$BP, SEO=$SEO"
+          
+          # Create badges directory
+          mkdir -p badges
+          
+          # Helper function to generate badge JSON
+          generate_badge() {
+            local label=$1
+            local score=$2
+            local filename=$3
+            
+            local color="red"
+            if (( $(echo "$score >= 90" | bc -l) )); then color="brightgreen"; elif (( $(echo "$score >= 50" | bc -l) )); then color="orange"; fi
+            
+            echo "{ \"schemaVersion\": 1, \"label\": \"$label\", \"message\": \"$score%\", \"color\": \"$color\", \"namedLogo\": \"lighthouse\" }" > badges/$filename
+          }
+          
+          generate_badge "Performance" "$PERF" "performance.json"
+          generate_badge "Accessibility" "$ACC" "accessibility.json"
+          generate_badge "Best Practices" "$BP" "best-practices.json"
+          generate_badge "SEO" "$SEO" "seo.json"
+
+      - name: Deploy Badges
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./badges
+          publish_branch: badges
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
