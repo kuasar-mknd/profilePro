@@ -38,10 +38,11 @@ jobs:
             --data-urlencode "category=SEO" \
             --data-urlencode "key=$API_KEY")
           
-          # Check for errors
-          if echo "$response" | grep -q "error"; then
+          # Check for API errors specifically using jq
+          API_ERROR=$(echo "$response" | jq -r '.error.message // empty')
+          if [ -n "$API_ERROR" ]; then
             echo "Error fetching data:"
-            echo "$response"
+            echo "$response" | jq .error
             exit 1
           fi
           
