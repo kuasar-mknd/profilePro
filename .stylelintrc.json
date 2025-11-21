@@ -10,11 +10,16 @@
           "variants",
           "responsive",
           "screen",
-          "layer"
+          "layer",
+          "theme",
+          "plugin",
+          "variant",
+          "custom-variant",
+          "utility",
+          "import"
         ]
       }
     ],
-    "declaration-block-trailing-semicolon": null,
     "no-descending-specificity": null,
     "selector-class-pattern": null
   },

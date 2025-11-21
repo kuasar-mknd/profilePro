@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @plugin "@tailwindcss/typography";
 
 @variant dark (&:where(.dark, .dark *));
@@ -9,52 +10,54 @@
   --color-pacamara-accent: #F43F5E;
   --color-pacamara-dark: #0B0F19;
   --color-pacamara-white: #F8FAFC;
-  --color-glass-white: rgba(255, 255, 255, 0.05);
-  --color-glass-black: rgba(0, 0, 0, 0.4);
+  --color-glass-white: rgb(255 255 255 / 5%);
+  --color-glass-black: rgb(0 0 0 / 40%);
   --color-neon-blue: #00f3ff;
   --color-neon-purple: #bc13fe;
-
   --font-pacamara-inter: "Inter", sans-serif;
   --font-pacamara-space: "Space Grotesk", sans-serif;
   --font-outfit: "Outfit", sans-serif;
-
-  --animate-fade-in: fadeIn 0.5s ease-out forwards;
-  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+  --animate-slide-up: slide-up 0.5s ease-out forwards;
   --animate-blob: blob 20s infinite;
-  --animate-scroll-left: scrollLeft 40s linear infinite;
-
+  --animate-scroll-left: scroll-left 40s linear infinite;
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
   --background-image-hero-glow: conic-gradient(from 180deg at 50% 50%, #2a8af6 0deg, #a853ba 180deg, #e92a67 360deg);
-
-  --shadow-pacamara-shadow: 0px 25px 50px -12px rgba(0, 0, 0, 0.3);
-  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.5);
-  --shadow-glow-accent: 0 0 20px rgba(244, 63, 94, 0.5);
-
-  --aspect-9/10: 9 / 16;
+  --shadow-pacamara-shadow: 0px 25px 50px -12px rgb(0 0 0 / 30%);
+  --shadow-glass: 0 8px 32px 0 rgb(0 0 0 / 30%);
+  --shadow-glow: 0 0 20px rgb(99 102 241 / 50%);
+  --shadow-glow-accent: 0 0 20px rgb(244 63 94 / 50%);
+  --aspect-9-10: 9 / 16;
 }
 
 /* Keyframes must be defined in standard CSS for v4 to pick them up in animations if not using --animate-* with inline keyframes, 
    but since we defined --animate-* pointing to names, we need the @keyframes blocks. */
 
-@keyframes fadeIn {
+@keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
 
-@keyframes slideUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
+    0% { transform: translate(0, 0) scale(1); }
     33% { transform: translate(50px, -50px) scale(1.1); }
     66% { transform: translate(-30px, 40px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
+    100% { transform: translate(0, 0) scale(1); }
 }
 
-@keyframes scrollLeft {
+@keyframes scroll-left {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
@@ -72,7 +75,17 @@
     }
 
     body {
-        @apply bg-pacamara-white text-pacamara-primary dark:bg-pacamara-dark dark:text-white antialiased selection:bg-pacamara-secondary selection:text-white;
+        @apply bg-pacamara-white text-pacamara-primary antialiased;
+    }
+
+    ::selection {
+        @apply bg-pacamara-secondary text-white;
+    }
+
+    @variant dark {
+        body {
+            @apply bg-pacamara-dark text-white;
+        }
     }
 }
 
