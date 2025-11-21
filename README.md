@@ -6,8 +6,7 @@
 
 <!-- Status & Build -->
 
-[![Deploy Status](https://img.shields.io/github/actions/workflow/status/kuasar-mknd/profilePro/astro.yml?branch=master&label=deployment&logo=github)](https://github.com/kuasar-mknd/profilePro/actions)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fkuasar.xyz&label=kuasar.xyz)](https://kuasar.xyz)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
 
 <!-- Tech Stack -->
@@ -232,11 +231,25 @@ npm run analyze  # Ouvre dist/stats.html
 
 ## 🌐 Déploiement
 
-Ce site peut être déployé sur n'importe quelle plateforme supportant les sites statiques:
+Ce site est actuellement déployé sur **Cloudflare Pages**.
 
-- **Vercel** (recommandé)
-- **Netlify**
-- **Cloudflare Pages**
+### Configuration Cloudflare Pages
+
+- **Framework preset**: Astro
+- **Build command**: `npm run build`
+- **Build output directory**: `dist`
+- **Node version**: 18.x ou supérieur
+- **Branch de production**: `master`
+
+### Déploiement automatique
+
+Cloudflare Pages construit et déploie automatiquement à chaque push sur la branche `master`. Aucune configuration GitHub Actions n'est nécessaire.
+
+### Autres plateformes supportées
+
+Ce site peut également être déployé sur :
+- **Vercel**
+- **Netlify**  
 - **GitHub Pages**
 
 ```bash
