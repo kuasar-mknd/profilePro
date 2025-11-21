@@ -37,8 +37,7 @@
     "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lighthouse": "lhci autorun",
     "analyze": "npm run build && open dist/stats.html",
-    "check": "npm run format:check && npm run lint",
-    "prepare": "husky"
+    "check": "npm run format:check && npm run lint"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.4",
