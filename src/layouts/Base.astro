@@ -1,0 +1,28 @@
+---
+import SeoHead from "../components/common/SeoHead.astro";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+
+const { postData, jsonLd, noPadding = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+  <head>
+    <SeoHead postData={postData} jsonLd={jsonLd} />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body
+    class="bg-pacamara-white dark:bg-pacamara-dark transition-colors duration-300 min-h-screen flex flex-col"
+  >
+    <Header />
+
+    <main class={`flex-grow ${noPadding ? "" : "pt-24"}`}>
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

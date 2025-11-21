@@ -1,0 +1,63 @@
+---
+import Navigation from "./Navigation.astro";
+import ModeSwitch from "../ui/ModeSwitch.astro";
+import HamburgerButton from "../ui/HamburgerButton.astro";
+import { Image } from "astro:assets";
+import logo from "../../assets/logo.jpg";
+---
+
+<header
+  id="main-header"
+  class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-b border-white/20 dark:border-white/5"
+>
+  <div class="container mx-auto px-7 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group">
+      <div
+        class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors"
+      >
+        <Image
+          src={logo}
+          alt="Logo"
+          width={80}
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <span
+        class="font-pacamara-space font-bold text-lg text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors"
+        >Samuel Dulex</span
+      >
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <Navigation />
+      <ModeSwitch />
+    </div>
+
+    <div class="md:hidden flex items-center gap-4">
+      <ModeSwitch />
+      <HamburgerButton />
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="navigation_wrapper"
+    class="fixed inset-0 bg-white dark:bg-pacamara-dark z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col justify-center items-center h-screen"
+  >
+    <Navigation />
+  </div>
+</header>
+
+<style is:global>
+  /* Fix for mobile menu scroll */
+  html.overflow-hidden #main-header {
+    position: fixed !important;
+    width: 100%;
+    top: 0;
+    z-index: 50;
+  }
+
+  html.overflow-hidden #navigation_wrapper {
+    transform: translateX(0);
+  }
+</style>
