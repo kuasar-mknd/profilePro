@@ -25,10 +25,10 @@
 
 <!-- Lighthouse Scores -->
 
-![Lighthouse Performance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/performance.json)
-![Lighthouse Accessibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/accessibility.json)
-![Lighthouse Best Practices](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/best-practices.json)
-![Lighthouse SEO](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/seo.json)
+![Lighthouse Performance](https://psi-badge.vercel.app/https%3A%2F%2Fkuasar.xyz/performance)
+![Lighthouse Accessibility](https://psi-badge.vercel.app/https%3A%2F%2Fkuasar.xyz/accessibility)
+![Lighthouse Best Practices](https://psi-badge.vercel.app/https%3A%2F%2Fkuasar.xyz/best-practices)
+![Lighthouse SEO](https://psi-badge.vercel.app/https%3A%2F%2Fkuasar.xyz/seo)
 
 <!-- Stats -->
 
