@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight
   workflow_dispatch: # Allow manual trigger
+  push:
+    branches: [master]
 
 jobs:
   pagespeed:
@@ -17,18 +19,24 @@ jobs:
         id: psi
         run: |
           # Define URL to test
-          URL="https://kuasar.xyz"
+          URL="https://portfolio.kuasar.xyz"
           API_KEY="${{ secrets.PAGESPEED_API_KEY }}"
           
-          # Construct API URL
-          API_URL="https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=$URL&category=PERFORMANCE&category=ACCESSIBILITY&category=BEST_PRACTICES&category=SEO"
-          
           if [ -n "$API_KEY" ]; then
-            API_URL="$API_URL&key=$API_KEY"
+            echo "Using provided API Key..."
+          else
+            echo "No API Key provided..."
           fi
           
           echo "Fetching data from PageSpeed Insights..."
-          response=$(curl -s "$API_URL")
+          # Use curl -G to safely handle query parameters
+          response=$(curl -s -G "https://www.googleapis.com/pagespeedonline/v5/runPagespeed" \
+            --data-urlencode "url=$URL" \
+            --data-urlencode "category=PERFORMANCE" \
+            --data-urlencode "category=ACCESSIBILITY" \
+            --data-urlencode "category=BEST_PRACTICES" \
+            --data-urlencode "category=SEO" \
+            --data-urlencode "key=$API_KEY")
           
           # Check for errors
           if echo "$response" | grep -q "error"; then
