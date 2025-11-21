@@ -25,10 +25,10 @@
 
 <!-- Lighthouse Scores -->
 
-![Lighthouse Performance](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Performance&query=%24.performance&suffix=%25&logo=lighthouse&logoColor=white&color=orange)
-![Lighthouse Accessibility](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Accessibility&query=%24.accessibility&suffix=%25&logo=lighthouse&logoColor=white&color=brightgreen)
-![Lighthouse Best Practices](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=Best%20Practices&query=%24.best-practices&suffix=%25&logo=lighthouse&logoColor=white&color=green)
-![Lighthouse SEO](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpagespeed-insights.proxy.workers.dev%2F%3Furl%3Dhttps%3A%2F%2Fkuasar.xyz&label=SEO&query=%24.seo&suffix=%25&logo=lighthouse&logoColor=white&color=brightgreen)
+![Lighthouse Performance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/performance.json)
+![Lighthouse Accessibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/accessibility.json)
+![Lighthouse Best Practices](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/best-practices.json)
+![Lighthouse SEO](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/badges/seo.json)
 
 <!-- Stats -->
 
@@ -55,6 +55,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **Mode sombre/clair** avec transition fluide
 - **Architecture responsive** optimisée pour tous les appareils
 - **Animations modernes** avec View Transition API
+- **Background animé** interactif et subtil (blobs + mouse follower)
 - **Infinite scroll** pour la navigation des projets
 - **Lecteur vidéo intégré** avec streaming optimisé
 
