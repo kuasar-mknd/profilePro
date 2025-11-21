@@ -27,7 +27,7 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           npm install -g @lhci/cli
-          lhci autorun --collect.settings.chromeFlags="--no-sandbox" || echo "Lighthouse finished with potential errors"
+          lhci autorun || echo "Lighthouse finished with potential errors"
 
       - name: Generate Badges JSON
         id: lighthouse_badges
