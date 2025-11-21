@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import logo from "../../../assets/logo.jpg";
+import BackgroundAnimation from "./BackgroundAnimation.astro";
 
 import slide1 from "../../../assets/slide-1.jpg";
 import slide2 from "../../../assets/bcp/BCP_45_Insta_Affiche_2.jpg";
@@ -13,10 +14,8 @@ import slide5 from "../../../assets/slide-5.jpg";
   class="relative overflow-hidden min-h-[85vh] flex flex-col justify-center items-center pt-20 pb-10"
 >
   <!-- Background Glows -->
-  <div
-    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pacamara-secondary/20 rounded-full blur-[120px] -z-10 animate-pulse"
-  >
-  </div>
+  <!-- Background Glows -->
+  <BackgroundAnimation />
 
   <div class="container mx-auto px-7 text-center z-10">
     <div class="mb-8 animate-fade-in opacity-0" style="animation-delay: 0.1s;">

@@ -1,0 +1,54 @@
+---
+
+---
+
+<div class="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
+  <!-- Blob 1: Behind "Connecter" (Top Left-ish) -->
+  <div
+    class="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-pacamara-secondary/20 rounded-full blur-[120px] animate-blob mix-blend-screen dark:mix-blend-screen filter opacity-60"
+  >
+  </div>
+
+  <!-- Blob 2: Behind "Captiver" (Bottom Right-ish relative to text) -->
+  <div
+    class="absolute top-[35%] left-[55%] w-[400px] h-[400px] bg-pacamara-accent/20 rounded-full blur-[120px] animate-blob [animation-delay:4s] mix-blend-screen dark:mix-blend-screen filter opacity-60"
+  >
+  </div>
+
+  <!-- Mouse Follower Blob (Subtle) -->
+  <div
+    id="mouse-blob"
+    class="absolute w-[300px] h-[300px] bg-white/10 dark:bg-white/5 rounded-full blur-[100px] mix-blend-overlay transition-transform duration-100 ease-out opacity-0"
+    style="transform: translate(-50%, -50%);"
+  >
+  </div>
+</div>
+
+<script>
+  const blob = document.getElementById("mouse-blob");
+  const container = blob?.parentElement;
+
+  if (blob && container) {
+    document.addEventListener("mousemove", (e) => {
+      const { clientX, clientY } = e;
+      const rect = container.getBoundingClientRect();
+
+      // Calculate position relative to the container
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+
+      // Show blob on first move
+      if (blob.style.opacity === "0") {
+        blob.style.opacity = "1";
+      }
+
+      blob.animate(
+        {
+          left: `${x}px`,
+          top: `${y}px`,
+        },
+        { duration: 3000, fill: "forwards" },
+      );
+    });
+  }
+</script>

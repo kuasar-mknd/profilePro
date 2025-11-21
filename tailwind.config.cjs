@@ -23,7 +23,7 @@ module.exports = {
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',
                 'slide-up': 'slideUp 0.5s ease-out forwards',
-                'blob': 'blob 7s infinite',
+                'blob': 'blob 20s infinite',
                 'scroll-left': 'scrollLeft 40s linear infinite',
             },
             keyframes: {
@@ -37,8 +37,8 @@ module.exports = {
                 },
                 blob: {
                     '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                    '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                    '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                    '33%': { transform: 'translate(50px, -50px) scale(1.1)' },
+                    '66%': { transform: 'translate(-30px, 40px) scale(0.9)' },
                     '100%': { transform: 'translate(0px, 0px) scale(1)' },
                 },
                 scrollLeft: {
