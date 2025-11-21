@@ -1,11 +1,11 @@
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import compress from "astro-compress";
 import partytown from "@astrojs/partytown";
 import { visualizer } from "rollup-plugin-visualizer";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,7 +13,6 @@ export default defineConfig({
     inlineStylesheets: 'always', // Inline le CSS pour éliminer les requêtes bloquantes
   },
   integrations: [
-    tailwind(),
     mdx(),
     sitemap(),
     icon(),
@@ -40,17 +39,16 @@ export default defineConfig({
     defaultStrategy: "hover",
   },
   vite: {
+    plugins: [
+      tailwindcss(),
+      visualizer({
+        filename: "./dist/stats.html",
+        open: false,
+        gzipSize: true,
+      }),
+    ],
     build: {
       cssCodeSplit: false, // Réduit les requêtes CSS en les bundlant ensemble
-      rollupOptions: {
-        plugins: [
-          visualizer({
-            filename: "./dist/stats.html",
-            open: false,
-            gzipSize: true,
-          }),
-        ],
-      },
     },
   },
 });
