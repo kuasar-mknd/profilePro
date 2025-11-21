@@ -12,7 +12,7 @@
 <!-- Tech Stack -->
 
 [![Built with Astro](https://img.shields.io/badge/Astro-5.15-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
@@ -81,7 +81,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 ### Core
 
 - **Framework**: [Astro 5.x](https://astro.build) - Static Site Generation
-- **Styling**: [Tailwind CSS 3.x](https://tailwindcss.com) avec configuration personnalisée
+- **Styling**: [Tailwind CSS 4.x](https://tailwindcss.com) avec configuration CSS-first
 - **Content**: MDX pour le contenu enrichi
 - **Icons**: Astro Icon avec Iconify
 
@@ -165,7 +165,7 @@ npm run analyze     # Analyser la taille des bundles
 │   ├── pages/           # Pages du site
 │   └── config.mjs       # Configuration du site
 ├── astro.config.mjs     # Configuration Astro
-├── tailwind.config.cjs  # Configuration Tailwind
+├── src/css/style.css  # Configuration Tailwind (CSS-first)
 └── package.json
 ```
 
@@ -182,7 +182,7 @@ Personnaliser le site via `src/config.mjs`:
 
 ### Tailwind Configuration
 
-Modifier les couleurs, fonts et breakpoints dans `tailwind.config.cjs`.
+Modifier les couleurs, fonts et breakpoints directement dans `src/css/style.css` via la directive `@theme`.
 
 ### Ajouter un projet
 
