@@ -27,8 +27,20 @@
 
     if (button && nav) {
       button.addEventListener("click", function () {
-        nav.classList.toggle("hidden");
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        button.setAttribute("aria-expanded", String(!isExpanded));
         document.documentElement.classList.toggle("overflow-hidden");
+        nav.classList.toggle("translate-x-full");
+        nav.classList.toggle("translate-x-0");
+      });
+
+      nav.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          document.documentElement.classList.remove("overflow-hidden");
+          button.setAttribute("aria-expanded", "false");
+          nav.classList.add("translate-x-full");
+          nav.classList.remove("translate-x-0");
+        });
       });
     }
   };
