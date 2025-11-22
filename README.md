@@ -64,7 +64,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **RSS Feed** pour les dernières publications
 - **Images optimisées** via Sharp et compression automatique
 - **Type-safe** avec TypeScript et validation de schéma
-- **Lighthouse score** de 95+ en performance
+- **Lighthouse score** de 100% en Performance et Accessibilité
 - **Compression automatique** HTML, CSS, JS, SVG
 - **Prefetch intelligent** pour navigation instantanée
 - **Scripts tiers optimisés** via Partytown (Web Workers)
@@ -248,8 +248,9 @@ Cloudflare Pages construit et déploie automatiquement à chaque push sur la bra
 ### Autres plateformes supportées
 
 Ce site peut également être déployé sur :
+
 - **Vercel**
-- **Netlify**  
+- **Netlify**
 - **GitHub Pages**
 
 ```bash
@@ -259,9 +260,15 @@ npm run build
 # Le dossier dist/ contient les fichiers prêts pour le déploiement
 ```
 
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!
+Feel free to check [issues page](https://github.com/kuasar-mknd/profilePro/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md) and [code of conduct](CODE_OF_CONDUCT.md).
+
 ## 📄 License
 
-© 2025 Samuel Dulex. Tous droits réservés.
+Copyright © 2025 [Samuel Dulex](https://github.com/kuasar-mknd).
+This project is [MIT](LICENSE) licensed.
 
 ---
 
