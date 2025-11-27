@@ -23,7 +23,7 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
   >
     <Header />
 
-    <main class={`flex-grow ${noPadding ? "" : "pt-24"}`}>
+    <main class={`grow ${noPadding ? "" : "pt-24"}`}>
       <slot />
     </main>
 

@@ -63,7 +63,7 @@ const skills = [
           style="animation-delay: 0.2s;"
         >
           <div
-            class="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl rotate-[-2deg] hover:rotate-0 transition-all duration-500 group z-10"
+            class="relative aspect-[4/5] w-full max-w-md mx-auto md:max-w-none rounded-2xl overflow-hidden shadow-2xl -rotate-2 hover:rotate-0 transition-all duration-500 group z-10"
           >
             <Image
               src={logo}
@@ -72,7 +72,7 @@ const skills = [
               class="object-cover w-full h-full scale-105 group-hover:scale-100 transition-transform duration-700"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+              class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"
             >
             </div>
 
@@ -108,7 +108,7 @@ const skills = [
           >
             Créateur Visuel & <br />
             <span
-              class="text-transparent bg-clip-text bg-gradient-to-r from-pacamara-secondary to-pacamara-accent"
+              class="bg-clip-text text-transparent bg-linear-to-r from-pacamara-secondary to-pacamara-accent"
               >Stratège Digital.</span
             >
           </h1>
@@ -215,7 +215,7 @@ const skills = [
 
     <!-- Background decoration -->
     <div
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-b from-pacamara-secondary/5 to-pacamara-accent/5 rounded-full blur-3xl -z-0 pointer-events-none"
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-linear-to-b from-pacamara-secondary/5 to-pacamara-accent/5 rounded-full blur-3xl z-0 pointer-events-none"
     >
     </div>
   </section>

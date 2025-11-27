@@ -75,7 +75,7 @@ const jsonLd = {
               fetchpriority="high"
             />
             {/* Overlay adaptatif : Blanc en Light Mode, Noir en Dark Mode */}
-            <div class="absolute inset-0 bg-gradient-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />
+            <div class="absolute inset-0 bg-linear-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />
           </div>
         </div>
       )
@@ -108,7 +108,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <article class="container mx-auto px-7 max-w-screen-lg -mt-32 relative z-20">
+  <article class="container mx-auto max-w-5xl px-7 -mt-32 relative z-10">
     <!-- Video Player -->
     {
       entry.data.type === "video" && entry.data.videoUrl && (
@@ -170,7 +170,7 @@ const jsonLd = {
   </article>
 
   <!-- CTA Section -->
-  <section class="container mx-auto px-7 max-w-screen-lg mt-10 mb-20">
+  <div class="container mx-auto max-w-5xl px-7 mt-10 mb-20">
     <div
       class="bg-pacamara-accent/10 dark:bg-pacamara-accent/5 rounded-3xl p-8 md:p-12 text-center border border-pacamara-accent/20"
     >
@@ -192,10 +192,10 @@ const jsonLd = {
         Parlons-en
       </a>
     </div>
-  </section>
+  </div>
 
   <!-- Author & Related -->
-  <div class="container mx-auto px-7 max-w-screen-lg mb-20">
+  <div class="container mx-auto max-w-5xl px-7 mb-20">
     <AuthorInfo authorData={author} />
 
     <div class="mt-20 pt-10 border-t border-pacamara-secondary/20">
