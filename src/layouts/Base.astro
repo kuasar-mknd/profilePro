@@ -1,5 +1,6 @@
 ---
 import SeoHead from "../components/common/SeoHead.astro";
+import LocalBusinessSchema from "../components/common/LocalBusinessSchema.astro";
 import Header from "../components/common/Header.astro";
 import Footer from "../components/common/Footer.astro";
 import "../css/style.css";
@@ -15,6 +16,7 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <SeoHead postData={postData} jsonLd={jsonLd} />
+    <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>

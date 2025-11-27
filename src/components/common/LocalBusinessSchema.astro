@@ -1,0 +1,51 @@
+---
+import config from "../../config.mjs";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: config.title,
+  description: config.description,
+  image: config.url + config.defaultOgImage,
+  url: config.url,
+  email: "samuel@edulex.ch",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lausanne",
+    addressRegion: "VD",
+    addressCountry: "CH",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 46.519653,
+    longitude: 6.632273,
+  },
+  areaServed: [
+    {
+      "@type": "City",
+      name: "Lausanne",
+    },
+    {
+      "@type": "State",
+      name: "Vaud",
+    },
+    {
+      "@type": "State",
+      name: "Genève",
+    },
+    {
+      "@type": "State",
+      name: "Fribourg",
+    },
+  ],
+  priceRange: "$$",
+  openingHours: "Mo-Fr 09:00-18:00",
+  sameAs: [
+    config.social.instagram || "",
+    config.social.github || "",
+    config.social.youtube || "",
+  ].filter(Boolean),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
