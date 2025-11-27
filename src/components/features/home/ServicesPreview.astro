@@ -1,0 +1,82 @@
+---
+const services = [
+  {
+    title: "Production Vidéo",
+    description:
+      "Clips, aftermovies, corporate. Une esthétique cinématographique.",
+    icon: "mdi:video-vintage",
+    color: "text-purple-500",
+  },
+  {
+    title: "Développement Web",
+    description:
+      "Applications Fullstack, SaaS & Sites vitrines. Performants et évolutifs.",
+    icon: "mdi:code-tags",
+    color: "text-blue-500",
+  },
+  {
+    title: "Photographie",
+    description:
+      "Portraits & événements. Des images qui racontent une histoire.",
+    icon: "mdi:camera",
+    color: "text-pink-500",
+  },
+  {
+    title: "Stratégie Digitale",
+    description: "SEO & Social Ads. Boostez votre visibilité en ligne.",
+    icon: "mdi:google-analytics",
+    color: "text-orange-500",
+  },
+];
+---
+
+<section class="py-20 bg-white/50 dark:bg-white/5 backdrop-blur-sm relative">
+  <div class="container mx-auto px-7 relative z-10">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2
+        class="text-3xl md:text-4xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white"
+      >
+        Mes Expertises
+      </h2>
+      <p
+        class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit"
+      >
+        Une approche globale pour votre communication visuelle et digitale.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {
+        services.map((service, index) => (
+          <div class="group bg-white dark:bg-pacamara-dark border border-pacamara-secondary/20 rounded-2xl p-6 shadow-sm hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
+            <div
+              class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-3xl ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
+            >
+              <iconify-icon icon={service.icon} />
+            </div>
+            <h3 class="text-xl font-bold font-pacamara-space mb-2 text-pacamara-dark dark:text-white">
+              {service.title}
+            </h3>
+            <p class="text-sm text-pacamara-primary/70 dark:text-white/70 font-outfit leading-relaxed">
+              {service.description}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/about"
+        class="inline-flex items-center gap-2 text-pacamara-accent font-bold hover:gap-3 transition-all duration-300"
+      >
+        En savoir plus sur mon parcours <iconify-icon icon="mdi:arrow-right"
+        ></iconify-icon>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "iconify-icon";
+</script>
