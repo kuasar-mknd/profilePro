@@ -15,7 +15,7 @@ export async function getStaticPaths() {
       .filter((project) =>
         Array.isArray(project.data.tag)
           ? project.data.tag.includes(tag)
-          : project.data.tag === tag
+          : project.data.tag === tag,
       )
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return {
