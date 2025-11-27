@@ -1,0 +1,35 @@
+name: Dependency Review
+
+# This workflow scans pull requests for dependency changes and identifies
+# known security vulnerabilities in newly added dependencies.
+# It helps prevent the introduction of vulnerable packages.
+
+on:
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fail the build if any vulnerabilities are found
+          # Allowed values: critical, high, moderate, low
+          fail-on-severity: high
+
+          # Block PRs that introduce packages with GPL licenses
+          # Uncomment if you want to enforce license restrictions
+          # deny-licenses: GPL-2.0, GPL-3.0
+
+          # Comment on the PR with the results
+          comment-summary-in-pr: always

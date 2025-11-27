@@ -2,7 +2,7 @@ name: PageSpeed Badges
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Run daily at midnight
+    - cron: "0 0 * * *" # Run daily at midnight
   workflow_dispatch: # Allow manual trigger
   push:
     branches: [master]
@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Run PageSpeed Insights
         id: psi
@@ -21,13 +21,13 @@ jobs:
           # Define URL to test
           URL="https://portfolio.kuasar.xyz"
           API_KEY="${{ secrets.PAGESPEED_API_KEY }}"
-          
+
           if [ -n "$API_KEY" ]; then
             echo "Using provided API Key..."
           else
             echo "No API Key provided..."
           fi
-          
+
           echo "Fetching data from PageSpeed Insights..."
           # Use curl -G to safely handle query parameters
           response=$(curl -s -G "https://www.googleapis.com/pagespeedonline/v5/runPagespeed" \
@@ -37,7 +37,7 @@ jobs:
             --data-urlencode "category=BEST_PRACTICES" \
             --data-urlencode "category=SEO" \
             --data-urlencode "key=$API_KEY")
-          
+
           # Check for API errors specifically using jq
           API_ERROR=$(echo "$response" | jq -r '.error.message // empty')
           if [ -n "$API_ERROR" ]; then
@@ -45,18 +45,18 @@ jobs:
             echo "$response" | jq .error
             exit 1
           fi
-          
+
           # Parse scores (0-1 scale to 0-100)
           PERF=$(echo "$response" | jq '.lighthouseResult.categories.performance.score * 100 | round')
           ACC=$(echo "$response" | jq '.lighthouseResult.categories.accessibility.score * 100 | round')
           BP=$(echo "$response" | jq '.lighthouseResult.categories."best-practices".score * 100 | round')
           SEO=$(echo "$response" | jq '.lighthouseResult.categories.seo.score * 100 | round')
-          
+
           echo "Scores: Perf=$PERF, Acc=$ACC, BP=$BP, SEO=$SEO"
-          
+
           # Create badges directory
           mkdir -p badges
-          
+
           # Helper function to generate badge JSON
           generate_badge() {
             local label=$1
@@ -68,7 +68,7 @@ jobs:
             
             echo "{ \"schemaVersion\": 1, \"label\": \"$label\", \"message\": \"$score%\", \"color\": \"$color\", \"namedLogo\": \"lighthouse\" }" > badges/$filename
           }
-          
+
           generate_badge "Performance" "$PERF" "performance.json"
           generate_badge "Accessibility" "$ACC" "accessibility.json"
           generate_badge "Best Practices" "$BP" "best-practices.json"
@@ -81,5 +81,5 @@ jobs:
           publish_dir: ./badges
           publish_branch: badges
           keep_files: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
