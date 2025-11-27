@@ -60,4 +60,4 @@ const type = postData?.data?.type ? postData.data.type : "website";
 <meta property="twitter:title" content={title} />
 {permalink && <meta property="twitter:url" content={permalink} />}
 {description && <meta property="twitter:description" content={description} />}
-{image && <meta property="twitter:image" content={image} />}
+{image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
