@@ -23,12 +23,33 @@
   >
 </button>
 
-<script>
+<script is:inline>
+  // Fonction pour initialiser le thème
+  const initTheme = () => {
+    if (
+      localStorage.darkMode === "true" ||
+      (!("darkMode" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  // Initialisation immédiate pour éviter le flash
+  initTheme();
+
+  // Gestion du bouton
   const setDarkModeButton = () => {
     const buttons = document.querySelectorAll(".mode-switch-btn");
 
     buttons.forEach((button) => {
-      button.addEventListener("click", function () {
+      // Cloner le bouton pour supprimer les écouteurs d'événements existants (utile avec View Transitions)
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+
+      newButton.addEventListener("click", function () {
         document.documentElement.classList.toggle("dark");
 
         if (document.documentElement.classList.contains("dark")) {
@@ -40,7 +61,12 @@
     });
   };
 
+  // Exécuter au chargement initial
   setDarkModeButton();
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", setDarkModeButton);
+
+  // Ré-exécuter après chaque navigation (View Transitions)
+  document.addEventListener("astro:after-swap", () => {
+    initTheme();
+    setDarkModeButton();
+  });
 </script>

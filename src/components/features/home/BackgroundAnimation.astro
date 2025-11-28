@@ -5,13 +5,13 @@
 <div class="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
   <!-- Blob 1: Behind "Connecter" (Top Left-ish) -->
   <div
-    class="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-pacamara-secondary/20 rounded-full blur-[120px] animate-blob mix-blend-screen dark:mix-blend-screen filter opacity-60"
+    class="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-pacamara-secondary/20 rounded-full blur-[120px] animate-blob mix-blend-screen dark:mix-blend-screen filter opacity-60 will-change-transform translate-z-0"
   >
   </div>
 
   <!-- Blob 2: Behind "Captiver" (Bottom Right-ish relative to text) -->
   <div
-    class="absolute top-[35%] left-[55%] w-[400px] h-[400px] bg-pacamara-accent/20 rounded-full blur-[120px] animate-blob [animation-delay:4s] mix-blend-screen dark:mix-blend-screen filter opacity-60"
+    class="absolute top-[35%] left-[55%] w-[400px] h-[400px] bg-pacamara-accent/20 rounded-full blur-[120px] animate-blob [animation-delay:4s] mix-blend-screen dark:mix-blend-screen filter opacity-60 will-change-transform translate-z-0"
   >
   </div>
 
@@ -47,7 +47,7 @@
           left: `${x}px`,
           top: `${y}px`,
         },
-        { duration: 3000, fill: "forwards" },
+        { duration: 3000, fill: "forwards" }
       );
     });
   }

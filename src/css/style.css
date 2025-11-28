@@ -121,6 +121,7 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgb(248 250 252 / 20%);
     box-shadow: 0 8px 32px 0 rgb(0 0 0 / 30%);
+    transform: translateZ(0);
   }
 
   .dark .glass-panel {
@@ -157,6 +158,51 @@
 
   .translate-y-10 {
     transform: translateY(2.5rem);
+  }
+
+  .translate-z-0 {
+    transform: translateZ(0);
+  }
+
+  /* Micro-interactions */
+  .hover-lift {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 10px 25px -5px rgb(0 0 0 / 10%),
+      0 8px 10px -6px rgb(0 0 0 / 10%);
+  }
+
+  .hover-scale-sm {
+    transition: transform 0.3s ease;
+  }
+  .hover-scale-sm:hover {
+    transform: scale(1.02);
+  }
+
+  .link-animated {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-animated::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+  .link-animated:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
   }
 }
 

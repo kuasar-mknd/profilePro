@@ -8,6 +8,8 @@ import "@fontsource/inter";
 import "@fontsource/space-grotesk";
 import "@fontsource/outfit";
 
+import { ClientRouter } from "astro:transitions";
+
 const { postData, jsonLd, noPadding = false } = Astro.props;
 ---
 
@@ -19,13 +21,14 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
     <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <ClientRouter />
   </head>
   <body
     class="bg-pacamara-white dark:bg-pacamara-dark transition-colors duration-300 min-h-screen flex flex-col"
   >
     <Header />
 
-    <main class={`grow ${noPadding ? "" : "pt-24"}`}>
+    <main class={`grow ${noPadding ? "" : "pt-24"}`} transition:animate="fade">
       <slot />
     </main>
 
