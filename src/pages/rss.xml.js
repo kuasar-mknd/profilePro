@@ -2,7 +2,7 @@ import rss from "@astrojs/rss";
 import config from "../config.mjs";
 import { getCollection } from "astro:content";
 
-export async function get(context) {
+export async function get(_context) {
   const project = await getCollection("project");
   return rss({
     title: config.title + config.titleSuffix,

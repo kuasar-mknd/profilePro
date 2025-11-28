@@ -44,9 +44,6 @@ jobs:
           # Require a scope
           requireScope: false
 
-          # Allow multiple types in one PR (e.g., "feat, fix:")
-          disallowMultipleTypes: true
-
           # Validate subject case (e.g., "Add new feature" not "add new feature")
           subjectPattern: ^[A-Z].+$
           subjectPatternError: |
