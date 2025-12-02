@@ -10,7 +10,14 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: 'always', // Inline le CSS pour éliminer les requêtes bloquantes
+    inlineStylesheets: "always", // Inline le CSS pour éliminer les requêtes bloquantes
+  },
+  image: {
+    domains: ["kuasar.xyz"],
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+    },
+    formats: ["avif", "webp"],
   },
   integrations: [
     mdx(),
@@ -34,7 +41,10 @@ export default defineConfig({
         resolveUrl: (url) => {
           // Proxy external scripts to avoid CORS issues and reduce reflows
           if (url.hostname === "unpkg.com") {
-            return new URL(`/cdn-proxy?url=${encodeURIComponent(url.href)}`, url.origin);
+            return new URL(
+              `/cdn-proxy?url=${encodeURIComponent(url.href)}`,
+              url.origin,
+            );
           }
           return url;
         },

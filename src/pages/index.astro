@@ -4,9 +4,33 @@ import Hero from "../components/features/home/Hero.astro";
 import ServicesPreview from "../components/features/home/ServicesPreview.astro";
 import LatestPosts from "../components/features/projects/LatestPosts.astro";
 import CTASection from "../components/common/CTASection.astro";
+import config from "../config.mjs";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: config.title,
+  url: config.url,
+  sameAs: [
+    config.social.instagram,
+    config.social.github,
+    config.social.youtube,
+  ].filter(Boolean),
+  jobTitle: "Créateur de contenu & Développeur Web",
+  worksFor: {
+    "@type": "Organization",
+    name: "Indépendant",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lausanne",
+    addressRegion: "Vaud",
+    addressCountry: "CH",
+  },
+};
 ---
 
-<Base>
+<Base jsonLd={jsonLd}>
   <main>
     <Hero />
     <ServicesPreview />

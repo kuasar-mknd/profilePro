@@ -265,6 +265,10 @@ npm run build
 Contributions, issues and feature requests are welcome!
 Feel free to check [issues page](https://github.com/kuasar-mknd/profilePro/issues). You can also take a look at the [contributing guide](CONTRIBUTING.md) and [code of conduct](CODE_OF_CONDUCT.md).
 
+## 🛡️ Security
+
+Please review our [Security Policy](SECURITY.md) for information on reporting security vulnerabilities.
+
 ## 📄 License
 
 Copyright © 2025 [Samuel Dulex](https://github.com/kuasar-mknd).
