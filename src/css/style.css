@@ -170,6 +170,7 @@
       transform 0.3s ease,
       box-shadow 0.3s ease;
   }
+
   .hover-lift:hover {
     transform: translateY(-4px);
     box-shadow:
@@ -180,6 +181,7 @@
   .hover-scale-sm {
     transition: transform 0.3s ease;
   }
+
   .hover-scale-sm:hover {
     transform: scale(1.02);
   }
@@ -188,6 +190,7 @@
     position: relative;
     text-decoration: none;
   }
+
   .link-animated::after {
     content: "";
     position: absolute;
@@ -196,10 +199,11 @@
     height: 2px;
     bottom: -2px;
     left: 0;
-    background-color: currentColor;
+    background-color: currentcolor;
     transform-origin: bottom right;
     transition: transform 0.3s ease-out;
   }
+
   .link-animated:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
