@@ -8,6 +8,7 @@ import PublishDate from "../../components/features/projects/PublishDate.astro";
 import Tag from "../../components/ui/Tag.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
+import { Icon } from "astro-icon/components";
 import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
 import PhotoGallery from "../../components/features/projects/PhotoGallery.astro";
 
@@ -186,10 +187,11 @@ const jsonLd = {
         créer quelque chose d'unique.
       </p>
       <a
-        href="mailto:samuel@edulex.ch"
-        class="inline-block bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+        href="#contact-form"
+        class="inline-flex items-center gap-2 px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
       >
-        Parlons-en
+        <span>Discuter de votre projet</span>
+        <Icon name="mdi:arrow-right" class="w-5 h-5" />
       </a>
     </div>
   </div>

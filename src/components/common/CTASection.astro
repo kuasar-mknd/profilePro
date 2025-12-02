@@ -1,46 +1,50 @@
 ---
-
+import ContactForm from "./ContactForm.astro";
 ---
 
 <section
   class="-mt-40 pt-52 pb-20 bg-linear-to-b from-transparent via-pacamara-secondary/5 to-pacamara-secondary/10 dark:from-transparent dark:via-pacamara-dark/50 dark:to-pacamara-dark relative overflow-hidden border-b border-pacamara-secondary/20"
 >
-  <div class="container mx-auto px-7 relative z-10 text-center">
-    <h2
-      class="text-4xl md:text-5xl font-pacamara-space font-bold mb-6 leading-tight text-pacamara-dark dark:text-white"
-    >
-      Prêt à donner vie à <br />
-      <span
-        class="bg-clip-text text-transparent bg-linear-to-r from-pacamara-secondary to-pacamara-accent"
-      >
-        votre vision ?
-      </span>
-    </h2>
-    <p
-      class="text-xl text-pacamara-primary/80 dark:text-white/80 font-outfit max-w-2xl mx-auto mb-4"
-    >
-      Que ce soit pour une vidéo percutante, un site web moderne ou une
-      stratégie digitale complète, je suis là pour vous accompagner.
-    </p>
-    <p
-      class="text-sm text-pacamara-primary/60 dark:text-white/60 font-outfit mb-10"
-    >
-      Basé à Lausanne, disponible dans toute la Suisse romande
-    </p>
+  <div class="container mx-auto px-7 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="text-center lg:text-left">
+        <h2
+          class="text-4xl md:text-5xl font-pacamara-space font-bold mb-6 leading-tight text-pacamara-dark dark:text-white"
+        >
+          Prêt à donner vie à <br />
+          <span
+            class="bg-clip-text text-transparent bg-linear-to-r from-pacamara-secondary to-pacamara-accent"
+          >
+            votre vision ?
+          </span>
+        </h2>
+        <p
+          class="text-xl text-pacamara-primary/80 dark:text-white/80 font-outfit mb-4"
+        >
+          Que ce soit pour une vidéo percutante, un site web moderne ou une
+          stratégie digitale complète, je suis là pour vous accompagner.
+        </p>
+        <p
+          class="text-sm text-pacamara-primary/60 dark:text-white/60 font-outfit mb-10"
+        >
+          Basé à Lausanne, disponible dans toute la Suisse romande
+        </p>
 
-    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-      <a
-        href="mailto:samuel@edulex.ch"
-        class="px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
-      >
-        Démarrer un projet
-      </a>
-      <a
-        href="/project"
-        class="px-8 py-4 border-2 border-pacamara-accent text-pacamara-accent rounded-full font-bold text-lg hover:bg-pacamara-accent hover:text-white hover-scale-sm transition-all duration-300"
-      >
-        Voir mes réalisations
-      </a>
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+        >
+          <a
+            href="/project"
+            class="px-8 py-4 border-2 border-pacamara-accent text-pacamara-accent rounded-full font-bold text-lg hover:bg-pacamara-accent hover:text-white hover-scale-sm transition-all duration-300"
+          >
+            Voir mes réalisations
+          </a>
+        </div>
+      </div>
+
+      <div class="w-full">
+        <ContactForm />
+      </div>
     </div>
   </div>
 

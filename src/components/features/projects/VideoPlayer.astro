@@ -1,34 +1,119 @@
 ---
-import { YouTube } from "astro-embed";
+import "plyr/dist/plyr.css";
 
 const { videoUrl } = Astro.props;
 
-// Extract video ID if it's a full URL, otherwise assume it's an ID
+// Extract video ID
 const getVideoId = (url) => {
   if (!url) return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
-  return match && match[2].length === 11 ? match[2] : url;
+  return match && match[2].length === 11 ? match[2] : null;
 };
 
 const videoId = getVideoId(videoUrl);
+const posterUrl = videoId
+  ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  : "";
 ---
 
-<div class="w-full aspect-video">
+<div
+  class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
+>
   {
-    videoId && (
-      <YouTube
-        id={videoId}
-        class="w-full h-full rounded-xl shadow-xl max-w-none mx-0"
-      />
+    videoId ? (
+      <>
+        <div
+          class="absolute inset-0 bg-cover bg-center z-10 transition-opacity duration-500"
+          style={`background-image: url(${posterUrl})`}
+          id={`poster-${videoId}`}
+        >
+          <div
+            class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer"
+            id={`play-btn-${videoId}`}
+          >
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-10 h-10 text-white ml-1"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          id={`player-${videoId}`}
+          class="plyr__video-embed w-full h-full"
+          data-plyr-provider="youtube"
+          data-plyr-embed-id={videoId}
+        />
+      </>
+    ) : (
+      <div class="flex items-center justify-center h-full text-white/50">
+        Vidéo non disponible
+      </div>
     )
   }
 </div>
 
-<style is:global>
-  lite-youtube {
-    width: 100% !important;
-    max-width: 100% !important;
-    aspect-ratio: 16 / 9;
+<script>
+  import Plyr from "plyr";
+
+  document.addEventListener("astro:page-load", () => {
+    const wrappers = document.querySelectorAll(".video-player-wrapper");
+
+    wrappers.forEach((wrapper) => {
+      const playBtn = wrapper.querySelector("[id^='play-btn-']");
+      const poster = wrapper.querySelector("[id^='poster-']");
+      const playerDiv = wrapper.querySelector("[id^='player-']");
+
+      if (playBtn && playerDiv && poster) {
+        playBtn.addEventListener("click", () => {
+          // Initialize Plyr only on click
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const player = new Plyr(playerDiv as HTMLElement, {
+            autoplay: true,
+            controls: [
+              "play-large",
+              "play",
+              "progress",
+              "current-time",
+              "mute",
+              "volume",
+              "captions",
+              "settings",
+              "pip",
+              "airplay",
+              "fullscreen",
+            ],
+          });
+
+          // Hide poster
+          (poster as HTMLElement).style.opacity = "0";
+          setTimeout(() => {
+            (poster as HTMLElement).style.display = "none";
+          }, 500);
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Custom Plyr Styles to match theme */
+  :global(.plyr) {
+    --plyr-color-main: var(--color-pacamara-accent);
+    height: 100%;
+    border-radius: 0.75rem;
+  }
+  :global(.plyr__video-wrapper) {
+    height: 100%;
   }
 </style>
