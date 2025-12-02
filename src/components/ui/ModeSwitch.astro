@@ -24,49 +24,52 @@
 </button>
 
 <script is:inline>
-  // Fonction pour initialiser le thème
-  const initTheme = () => {
-    if (
-      localStorage.darkMode === "true" ||
-      (!("darkMode" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+  // Encapsulation pour éviter les conflits de déclaration
+  (function () {
+    // Fonction pour initialiser le thème
+    const initTheme = () => {
+      if (
+        localStorage.darkMode === "true" ||
+        (!("darkMode" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    };
 
-  // Initialisation immédiate pour éviter le flash
-  initTheme();
-
-  // Gestion du bouton
-  const setDarkModeButton = () => {
-    const buttons = document.querySelectorAll(".mode-switch-btn");
-
-    buttons.forEach((button) => {
-      // Cloner le bouton pour supprimer les écouteurs d'événements existants (utile avec View Transitions)
-      const newButton = button.cloneNode(true);
-      button.parentNode.replaceChild(newButton, button);
-
-      newButton.addEventListener("click", function () {
-        document.documentElement.classList.toggle("dark");
-
-        if (document.documentElement.classList.contains("dark")) {
-          localStorage.darkMode = "true";
-        } else {
-          localStorage.darkMode = "false";
-        }
-      });
-    });
-  };
-
-  // Exécuter au chargement initial
-  setDarkModeButton();
-
-  // Ré-exécuter après chaque navigation (View Transitions)
-  document.addEventListener("astro:after-swap", () => {
+    // Initialisation immédiate pour éviter le flash
     initTheme();
+
+    // Gestion du bouton
+    const setDarkModeButton = () => {
+      const buttons = document.querySelectorAll(".mode-switch-btn");
+
+      buttons.forEach((button) => {
+        // Cloner le bouton pour supprimer les écouteurs d'événements existants (utile avec View Transitions)
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+
+        newButton.addEventListener("click", function () {
+          document.documentElement.classList.toggle("dark");
+
+          if (document.documentElement.classList.contains("dark")) {
+            localStorage.darkMode = "true";
+          } else {
+            localStorage.darkMode = "false";
+          }
+        });
+      });
+    };
+
+    // Exécuter au chargement initial
     setDarkModeButton();
-  });
+
+    // Ré-exécuter après chaque navigation (View Transitions)
+    document.addEventListener("astro:after-swap", () => {
+      initTheme();
+      setDarkModeButton();
+    });
+  })();
 </script>
