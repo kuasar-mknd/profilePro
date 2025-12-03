@@ -1,5 +1,5 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -24,10 +24,6 @@ export async function getStaticPaths() {
   }));
 }
 const { entry } = Astro.props;
-console.log(
-  `Project: ${entry.slug}`,
-  JSON.stringify(entry.data.image, null, 2),
-);
 
 const { Content } = await entry.render();
 const author = await getEntry(entry.data.author);
