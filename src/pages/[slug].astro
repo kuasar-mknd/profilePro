@@ -35,6 +35,7 @@ const { Content } = await entry.render();
           widths={[400, 800, 1200]}
           sizes="100vw"
           formats={["avif", "webp"]}
+          fallbackFormat="avif"
           alt={entry.data.title}
           width={1200}
           height={600}

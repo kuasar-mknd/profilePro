@@ -103,6 +103,7 @@ const loadedImages = await Promise.all(
           widths={[400, 800]}
           sizes="(max-width: 768px) 100vw, 33vw"
           formats={["avif", "webp"]}
+          fallbackFormat="avif"
           alt={`Gallery image ${index + 1}`}
           class="rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer w-full"
           data-gallery-image

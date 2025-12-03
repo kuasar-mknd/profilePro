@@ -13,6 +13,7 @@ const { authorData } = Astro.props;
         widths={[100, 200]}
         sizes="100px"
         formats={["avif", "webp"]}
+        fallbackFormat="avif"
         alt={authorData.data.displayName}
         width={100}
         height={100}
