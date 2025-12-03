@@ -2,8 +2,8 @@
 import Navigation from "./Navigation.astro";
 import ModeSwitch from "../ui/ModeSwitch.astro";
 import HamburgerButton from "../ui/HamburgerButton.astro";
-import { Image } from "astro:assets";
-import logo from "../../assets/logo.jpg";
+import { Image, Picture } from "astro:assets";
+import logo from "../../assets/logo.avif";
 ---
 
 <header
@@ -15,11 +15,15 @@ import logo from "../../assets/logo.jpg";
       <div
         class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors"
       >
-        <Image
+        <Picture
           src={logo}
+          widths={[40, 80]}
+          sizes="40px"
+          formats={["avif", "webp"]}
+          width={40}
           alt="Logo"
-          width={80}
-          class="w-full h-full object-cover"
+          loading="eager"
+          class="w-10 rounded-lg shadow-sm"
         />
       </div>
       <span

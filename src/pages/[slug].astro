@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 
 import Base from "../layouts/Base.astro";
 
@@ -31,15 +31,18 @@ const { Content } = await entry.render();
     </div>
     {
       entry.data.image && (
-        <Image
+        <Picture
           src={entry.data.image}
-          width="1200"
-          height="250"
-          alt=""
+          widths={[400, 800, 1200]}
+          sizes="100vw"
+          formats={["avif", "webp"]}
+          alt={entry.data.title}
+          width={1200}
+          height={600}
           loading="eager"
           decoding="sync"
           class="block relative mx-auto mt-10 object-cover h-72 md:h-[350px] image-shine rounded-[15px]"
-          loading="eager"
+          transition:name={`project-image-${entry.slug}`}
         />
       )
     }

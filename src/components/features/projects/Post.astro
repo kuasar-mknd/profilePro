@@ -1,10 +1,10 @@
 ---
 const { postData, num } = Astro.props;
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
 // default image if no image added
-import defaultImage from "../../../assets/default.jpg";
+import defaultImage from "../../../assets/default.avif";
 
 const isOdd = num % 2;
 ---
@@ -14,8 +14,11 @@ const isOdd = num % 2;
 >
   <div class="order-2 md:order-1">
     <a href={`/project/${postData.slug}`}>
-      <Image
+      <Picture
         src={postData.data.image}
+        widths={[400, 800, 1200]}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        formats={["avif", "webp"]}
         alt={postData.data.title}
         width={700}
         height={700}

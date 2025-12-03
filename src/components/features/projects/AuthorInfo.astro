@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 const { authorData } = Astro.props;
 ---
 
@@ -8,11 +8,15 @@ const { authorData } = Astro.props;
 >
   {
     authorData.data.photo && (
-      <Image
+      <Picture
         src={authorData.data.photo}
-        width="200"
-        class="relative w-[150px] lg:w-[220px] rounded-full"
-        alt="Author's photo"
+        widths={[100, 200]}
+        sizes="100px"
+        formats={["avif", "webp"]}
+        alt={authorData.data.displayName}
+        width={100}
+        height={100}
+        class="rounded-full border-4 border-white dark:border-pacamara-secondary shadow-lg"
       />
     )
   }

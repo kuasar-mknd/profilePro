@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image, Picture } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -24,6 +24,10 @@ export async function getStaticPaths() {
   }));
 }
 const { entry } = Astro.props;
+console.log(
+  `Project: ${entry.slug}`,
+  JSON.stringify(entry.data.image, null, 2),
+);
 
 const { Content } = await entry.render();
 const author = await getEntry(entry.data.author);
@@ -66,14 +70,16 @@ const jsonLd = {
             class="relative w-full h-full"
             style="mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%);"
           >
-            <Image
+            <Picture
               src={entry.data.image}
-              width={1920}
-              height={1080}
-              alt=""
+              widths={[400, 800, 1200]}
+              sizes="100vw"
+              formats={["avif", "webp"]}
+              alt={entry.data.title}
+              width={1200}
+              height={600}
               class="w-full h-full object-cover"
-              loading="eager"
-              fetchpriority="high"
+              transition:name={`project-image-${entry.slug}`}
             />
             {/* Overlay adaptatif : Blanc en Light Mode, Noir en Dark Mode */}
             <div class="absolute inset-0 bg-linear-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />

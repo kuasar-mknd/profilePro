@@ -4,6 +4,9 @@ dist/
 .astro/
 .frontmatter/
 
+# originals images
+originals/
+
 # dependencies
 node_modules/
 
