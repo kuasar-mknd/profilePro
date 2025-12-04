@@ -17,6 +17,13 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
 <html lang="fr" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- Critical preconnects - must be early in head for effectiveness -->
+    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
+    <link
+      rel="preconnect"
+      href="https://static.cloudflareinsights.com"
+      crossorigin
+    />
     <script is:inline>
       // Early theme detection to prevent FOUC
       if (
