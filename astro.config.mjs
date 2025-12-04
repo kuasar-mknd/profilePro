@@ -62,7 +62,7 @@ export default defineConfig({
   ],
   site: "https://portfolio.kuasar.xyz",
   prefetch: {
-    prefetchAll: true,
+    prefetchAll: false,
     defaultStrategy: "hover",
   },
   vite: {

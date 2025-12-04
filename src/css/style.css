@@ -2,6 +2,22 @@
 
 @plugin "@tailwindcss/typography";
 
+/* Font Display Optimization - Prevent FOIT */
+@font-face {
+  font-family: "Space Grotesk";
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Outfit;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Inter;
+  font-display: swap;
+}
+
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -45,13 +61,11 @@
       #4f46e5
     );
     background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .dark .hero-text-subtle {
     background: linear-gradient(to right, #6366f1, #8b5cf6);
-    background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     opacity: 0.25;
@@ -61,7 +75,6 @@
   .hero-gradient-vibrant {
     background: linear-gradient(135deg, #4f46e5, #be123c, #a855f7, #ec4899);
     background-size: 300% 300%;
-    background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradient-shift 5s ease infinite;

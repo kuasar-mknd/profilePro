@@ -17,6 +17,16 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
 <html lang="fr" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <script is:inline>
+      // Early theme detection to prevent FOUC
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!localStorage.getItem("theme") &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
     <SeoHead postData={postData} jsonLd={jsonLd} />
     <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
