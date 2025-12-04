@@ -18,6 +18,9 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <!-- Critical preconnects - must be early in head for effectiveness -->
+    <link rel="dns-prefetch" href="https://unpkg.com" />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
     <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
     <link
       rel="preconnect"
