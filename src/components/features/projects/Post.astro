@@ -13,7 +13,10 @@ const isOdd = num % 2;
   class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20 hover-scale-sm rounded-3xl p-6 -m-6 transition-colors bg-white/40 dark:bg-pacamara-dark/60 border border-pacamara-secondary/10 dark:border-white/5 shadow-sm hover:shadow-md hover:bg-white/60 dark:hover:bg-pacamara-dark/80"
 >
   <div class="order-2 md:order-1">
-    <a href={`/project/${postData.slug}`}>
+    <a
+      href={`/project/${postData.slug}`}
+      aria-label={`Voir le projet ${postData.data.title}`}
+    >
       <Picture
         src={postData.data.image}
         widths={[400, 800, 1200]}
@@ -22,8 +25,8 @@ const isOdd = num % 2;
         fallbackFormat="avif"
         alt={postData.data.title}
         width={700}
-        height={700}
-        class="rounded-2xl object-cover w-full aspect-square md:aspect-4/3"
+        height={525}
+        class="rounded-2xl object-cover w-full h-auto"
         transition:name={`project-image-${postData.slug}`}
       />
     </a>

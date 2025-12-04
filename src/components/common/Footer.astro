@@ -16,7 +16,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
           Samuel Dulex
         </a>
         <p
-          class="text-pacamara-primary/60 dark:text-white/60 font-outfit text-sm max-w-xs text-center md:text-left"
+          class="text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm max-w-xs text-center md:text-left"
         >
           Connecter, Communiquer, Captiver. <br />
           Créateur de contenu visuel et digital.<br />
@@ -60,7 +60,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
           />
         </ul>
         <div
-          class="text-sm text-pacamara-primary/60 dark:text-white/60 font-outfit"
+          class="text-sm text-pacamara-primary/80 dark:text-white/80 font-outfit"
         >
           &copy; {new Date().getFullYear()} Samuel Dulex. Tous droits réservés.
         </div>
@@ -75,10 +75,28 @@ import SocialIcon from "../ui/SocialIcon.astro";
         >
           <!-- Loading skeleton -->
         </div>
-        <script
-          src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js"
-          defer></script>
-        <span class="text-sm text-pacamara-primary/60 dark:text-white/60">
+        <script is:inline>
+          if (
+            window.location.hostname !== "localhost" &&
+            window.location.hostname !== "127.0.0.1"
+          ) {
+            const script = document.createElement("script");
+            script.src =
+              "https://unpkg.com/website-carbon-badges@1.1.3/b.min.js";
+            script.defer = true;
+            script.onerror = function () {
+              this.style.display = "none";
+              const wcb = document.getElementById("wcb");
+              if (wcb) wcb.style.display = "none";
+              console.warn("Carbon Badge script failed to load");
+            };
+            document.body.appendChild(script);
+          } else {
+            const wcb = document.getElementById("wcb");
+            if (wcb) wcb.style.display = "none";
+          }
+        </script>
+        <span class="text-sm text-pacamara-primary/80 dark:text-white/80">
           Fait avec <span
             class="text-red-600 dark:text-pacamara-accent animate-pulse"
             >&hearts;</span

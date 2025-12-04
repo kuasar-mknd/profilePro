@@ -35,6 +35,50 @@
   --aspect-9-10: 9 / 16;
 }
 
+/* Hero Gradient Text - Progressive Enhancement */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .hero-text-subtle {
+    background: linear-gradient(
+      to right,
+      rgb(255 255 255 / 60%),
+      rgb(255 255 255 / 80%),
+      #4f46e5
+    );
+    background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dark .hero-text-subtle {
+    background: linear-gradient(to right, #6366f1, #8b5cf6);
+    background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.25;
+    text-shadow: 0 0 30px rgb(255 255 255 / 15%);
+  }
+
+  .hero-gradient-vibrant {
+    background: linear-gradient(135deg, #4f46e5, #be123c, #a855f7, #ec4899);
+    background-size: 300% 300%;
+    background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 5s ease infinite;
+  }
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 /* Keyframes must be defined in standard CSS for v4 to pick them up in animations if not using --animate-* with inline keyframes, 
    but since we defined --animate-* pointing to names, we need the @keyframes blocks. */
 
