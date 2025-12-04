@@ -74,21 +74,22 @@
 
   .hero-gradient-vibrant {
     background: linear-gradient(135deg, #4f46e5, #be123c, #a855f7, #ec4899);
-    background-size: 300% 300%;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradient-shift 5s ease infinite;
+    animation: gradient-hue-shift 5s ease infinite;
+    will-change: filter;
   }
 }
 
-@keyframes gradient-shift {
+/* GPU-accelerated animation using filter instead of background-position */
+@keyframes gradient-hue-shift {
   0%,
   100% {
-    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
   }
 
   50% {
-    background-position: 100% 50%;
+    filter: hue-rotate(30deg);
   }
 }
 
