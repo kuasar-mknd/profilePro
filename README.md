@@ -52,10 +52,11 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 ### 🎨 Design & Expérience
 
 - **Mode sombre/clair** avec transition fluide
-- **Architecture responsive** optimisée pour tous les appareils
-- **Animations modernes** avec View Transition API
-- **Background animé** interactif et subtil (blobs + mouse follower)
-- **Infinite scroll** pour la navigation des projets
+- **Architecture responsive** optimisée (Mobile First)
+- **Animations modernes** avec View Transition API & ScrollReveal
+- **Cartes Projets 3D** avec effet Tilt et glare subtil
+- **Carousel d'accueil** intelligent (chargement aléatoire + scroll infini)
+- **Background animé** interactif et subtil
 - **Lecteur vidéo intégré** avec streaming optimisé
 
 ### 🚀 Performance & SEO
