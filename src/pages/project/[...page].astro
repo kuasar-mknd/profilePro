@@ -7,6 +7,7 @@ import config from "../../config.mjs";
 import Base from "../../layouts/Base.astro";
 import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
+import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 
 export async function getStaticPaths({
   paginate,
@@ -37,21 +38,42 @@ const { page, allTags } = Astro.props;
 ---
 
 <Base>
-  <section class="container mx-auto max-w-5xl px-7 pt-10 pb-20">
-    <ProjectFilter tags={allTags} />
-    {
-      page.data.map((post, index) => {
-        return <Post postData={post} num={index} />;
-      })
-    }
+  <section class="container mx-auto max-w-7xl px-7 pt-10 pb-20">
+    <ScrollReveal class="text-center mb-10">
+      <h1
+        class="text-3xl md:text-5xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white relative inline-block"
+      >
+        Toutes les <span class="text-shimmer">Réalisations</span>
+      </h1>
+      <p
+        class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit max-w-2xl mx-auto mb-8"
+      >
+        Une collection de mes projets récents en vidéo, photo et développement.
+      </p>
+      <ProjectFilter tags={allTags} />
+    </ScrollReveal>
+    <div class="flex flex-wrap justify-center gap-8 mb-16">
+      {
+        page.data.map((post, index) => {
+          return (
+            <ScrollReveal
+              delay={index * 0.1}
+              class="w-full md:w-[calc(50%-1rem)]"
+            >
+              <Post postData={post} num={index} />
+            </ScrollReveal>
+          );
+        })
+      }
+    </div>
     <div class="flex flex-row justify-center gap-7">
       {
         page.url.prev ? (
           <a
             href={page.url.prev}
-            class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300"
+            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
           >
-            Previous
+            &larr; Previous
           </a>
         ) : null
       }
@@ -59,12 +81,13 @@ const { page, allTags } = Astro.props;
         page.url.next ? (
           <a
             href={page.url.next}
-            class="text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full py-3 px-5 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300"
+            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
           >
-            Next
+            Next &rarr;
           </a>
         ) : null
       }
     </div>
   </section>
 </Base>
+```

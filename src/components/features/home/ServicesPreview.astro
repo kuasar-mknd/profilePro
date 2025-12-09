@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+import ScrollReveal from "../../ui/ScrollReveal.astro";
+import TiltCard from "../../ui/TiltCard.astro";
 
 const services = [
   {
@@ -8,6 +10,7 @@ const services = [
       "Clips, aftermovies, corporate. Une esthétique cinématographique.",
     icon: "mdi:video-vintage",
     color: "text-purple-500",
+    gradient: "from-purple-500/20 to-purple-600/10",
   },
   {
     title: "Développement Web",
@@ -15,6 +18,7 @@ const services = [
       "Applications Fullstack, SaaS & Sites vitrines. Performants et évolutifs.",
     icon: "mdi:code-tags",
     color: "text-blue-500",
+    gradient: "from-blue-500/20 to-blue-600/10",
   },
   {
     title: "Photographie",
@@ -22,61 +26,85 @@ const services = [
       "Portraits & événements. Des images qui racontent une histoire.",
     icon: "mdi:camera",
     color: "text-pink-500",
+    gradient: "from-pink-500/20 to-pink-600/10",
   },
   {
     title: "Stratégie Digitale",
     description: "SEO & Social Ads. Boostez votre visibilité en ligne.",
     icon: "mdi:google-analytics",
     color: "text-orange-500",
+    gradient: "from-orange-500/20 to-orange-600/10",
   },
 ];
 ---
 
-<section class="py-20 relative">
+<section class="py-24 relative overflow-hidden">
+  <!-- Animated background gradient -->
+  <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
+    <div
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-pacamara-secondary/30 rounded-full blur-3xl floating"
+    >
+    </div>
+    <div
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pacamara-accent/30 rounded-full blur-3xl floating-slow floating-delayed"
+    >
+    </div>
+  </div>
+
   <div class="container mx-auto px-7 relative z-10">
-    <div class="text-center max-w-3xl mx-auto mb-16">
+    <ScrollReveal class="text-center max-w-3xl mx-auto mb-16">
       <h2
-        class="text-3xl md:text-4xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white"
+        class="text-3xl md:text-5xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white"
       >
-        Mes Expertises
+        Mes <span class="text-shimmer">Expertises</span>
       </h2>
       <p
-        class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit"
+        class="text-lg md:text-xl text-pacamara-primary/70 dark:text-white/70 font-outfit"
       >
         Une approche globale pour votre communication visuelle et digitale.
       </p>
-    </div>
+    </ScrollReveal>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {
         services.map((service, index) => (
-          <div class="group bg-white dark:bg-pacamara-dark border border-pacamara-secondary/20 rounded-2xl p-6 shadow-sm hover:shadow-glow transition-all duration-300 hover:-translate-y-1">
-            <div
-              class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
+          <ScrollReveal delay={0.1 * index}>
+            <TiltCard
+              class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300`}
             >
-              <Icon name={service.icon} class="w-8 h-8" />
-            </div>
-            <h3 class="text-xl font-bold font-pacamara-space mb-2 text-pacamara-dark dark:text-white">
-              {service.title}
-            </h3>
-            <p class="text-sm text-pacamara-primary/70 dark:text-white/70 font-outfit leading-relaxed">
-              {service.description}
-            </p>
-          </div>
+              <div
+                class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}
+              />
+              <div class="relative z-10">
+                <div
+                  class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon name={service.icon} class="w-8 h-8 icon-animate" />
+                </div>
+                <h3 class="text-xl font-bold font-pacamara-space mb-3 text-pacamara-dark dark:text-white">
+                  {service.title}
+                </h3>
+                <p class="text-sm text-pacamara-primary/70 dark:text-white/70 font-outfit leading-relaxed">
+                  {service.description}
+                </p>
+              </div>
+            </TiltCard>
+          </ScrollReveal>
         ))
       }
     </div>
 
-    <div class="text-center mt-12">
+    <ScrollReveal delay={0.5} class="text-center mt-12">
       <a
         href="/about"
-        class="inline-flex items-center gap-2 text-pacamara-accent font-bold hover:gap-3 transition-all duration-300"
+        class="inline-flex items-center gap-2 text-pacamara-accent font-bold hover:gap-4 transition-all duration-300 group"
       >
-        En savoir plus sur mon parcours <Icon
+        <span>En savoir plus sur mon parcours</span>
+        <Icon
           name="mdi:arrow-right"
-          class="w-5 h-5"
+          class="w-5 h-5 group-hover:translate-x-1 transition-transform"
         />
       </a>
-    </div>
+    </ScrollReveal>
   </div>
 </section>

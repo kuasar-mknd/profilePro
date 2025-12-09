@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import Base from "../../../layouts/Base.astro";
 import Post from "../../../components/features/projects/Post.astro";
 import ProjectFilter from "../../../components/features/projects/ProjectFilter.astro";
+import ScrollReveal from "../../../components/ui/ScrollReveal.astro";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -30,13 +31,28 @@ const { projects, allTags } = Astro.props;
 ---
 
 <Base>
-  <section class="container mx-auto max-w-5xl px-7 pt-10 pb-14">
-    <h1 class="text-3xl font-bold mb-8 capitalize text-center">
-      {tag} Projects
-    </h1>
+  <section class="container mx-auto max-w-7xl px-7 pt-10 pb-14">
+    <ScrollReveal class="text-center mb-10">
+      <h1
+        class="text-3xl md:text-5xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white relative inline-block"
+      >
+        <span class="capitalize">{tag}</span>
+        <span class="text-shimmer">Projects</span>
+      </h1>
+      <ProjectFilter tags={allTags} activeTag={tag} />
+    </ScrollReveal>
 
-    <ProjectFilter tags={allTags} activeTag={tag} />
-
-    {projects.map((post, index) => <Post postData={post} num={index} />)}
+    <div class="flex flex-wrap justify-center gap-8 mb-16">
+      {
+        projects.map((post, index) => (
+          <ScrollReveal
+            delay={index * 0.1}
+            class="w-full md:w-[calc(50%-1rem)]"
+          >
+            <Post postData={post} num={index} />
+          </ScrollReveal>
+        ))
+      }
+    </div>
   </section>
 </Base>

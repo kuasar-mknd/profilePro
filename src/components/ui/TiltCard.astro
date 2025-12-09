@@ -1,0 +1,65 @@
+---
+interface Props {
+  class?: string;
+  maxTilt?: number;
+  scale?: number;
+  perspective?: number;
+}
+
+const {
+  class: className = "",
+  maxTilt = 10,
+  scale = 1.02,
+  perspective = 1000,
+} = Astro.props;
+---
+
+<div
+  class:list={["tilt-card", className]}
+  data-max-tilt={maxTilt}
+  data-scale={scale}
+  data-perspective={perspective}
+>
+  <div class="tilt-shine"></div>
+  <slot />
+</div>
+
+<script>
+  function initTiltCards() {
+    const cards = document.querySelectorAll(
+      ".tilt-card:not(.tilt-initialized)",
+    );
+
+    cards.forEach((card) => {
+      const maxTilt = Number(card.dataset.maxTilt) || 10;
+
+      card.classList.add("tilt-initialized");
+
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -maxTilt;
+        const rotateY = ((x - centerX) / centerX) * maxTilt;
+
+        (card as HTMLElement).style.setProperty("--rotate-x", `${rotateX}deg`);
+        (card as HTMLElement).style.setProperty("--rotate-y", `${rotateY}deg`);
+      });
+
+      card.addEventListener("mouseleave", () => {
+        (card as HTMLElement).style.setProperty("--rotate-x", "0deg");
+        (card as HTMLElement).style.setProperty("--rotate-y", "0deg");
+      });
+    });
+  }
+
+  // Run on initial load
+  initTiltCards();
+
+  // Re-run on page transitions
+  document.addEventListener("astro:page-load", initTiltCards);
+</script>

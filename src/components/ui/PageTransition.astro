@@ -1,0 +1,156 @@
+---
+/**
+ * Page transition component that provides smooth transitions between pages.
+ * Uses Astro's View Transitions API for native-like page transitions.
+ */
+---
+
+<!-- Page Transition Overlay -->
+<div id="page-transition" class="page-transition">
+  <div class="transition-slide"></div>
+</div>
+
+<style is:global>
+  /* Page Transition Overlay */
+  .page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+  }
+
+  .transition-slide {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      var(--color-pacamara-secondary) 0%,
+      var(--color-pacamara-accent) 50%,
+      var(--color-pacamara-secondary) 100%
+    );
+    transform: translateY(100%);
+    will-change: transform;
+  }
+
+  /* View Transition Animations */
+  ::view-transition-old(root) {
+    animation: fade-out 0.3s ease-out forwards;
+  }
+
+  ::view-transition-new(root) {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Image transitions */
+  ::view-transition-old(project-image),
+  ::view-transition-new(project-image) {
+    animation-duration: 0.5s;
+  }
+
+  /* Header stays fixed during transition */
+  ::view-transition-old(header),
+  ::view-transition-new(header) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* Custom slide transition for navigation */
+  .slide-transition-active .transition-slide {
+    animation: slide-up 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  @keyframes slide-up {
+    0% {
+      transform: translateY(100%);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+
+  /* Loading indicator */
+  .page-loading::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-pacamara-accent),
+      transparent
+    );
+    animation: loading-bar 1s ease-in-out infinite;
+    z-index: 10000;
+  }
+
+  @keyframes loading-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+
+    .transition-slide {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Handle page transitions
+  document.addEventListener("astro:before-preparation", () => {
+    document.body.classList.add("page-loading");
+  });
+
+  document.addEventListener("astro:after-preparation", () => {
+    document.body.classList.remove("page-loading");
+  });
+
+  // Optional: Add slide transition on specific links
+  document.querySelectorAll("[data-slide-transition]").forEach((link) => {
+    link.addEventListener("click", () => {
+      document.body.classList.add("slide-transition-active");
+
+      setTimeout(() => {
+        document.body.classList.remove("slide-transition-active");
+      }, 600);
+    });
+  });
+</script>

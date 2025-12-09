@@ -1,0 +1,67 @@
+---
+interface Props {
+  direction?: "up" | "left" | "right" | "scale";
+  delay?: number;
+  threshold?: number;
+  class?: string;
+}
+
+const {
+  direction = "up",
+  delay = 0,
+  threshold = 0.1,
+  class: className = "",
+} = Astro.props;
+
+const directionClass = {
+  up: "",
+  left: "from-left",
+  right: "from-right",
+  scale: "scale-in",
+}[direction];
+
+const staggerClass =
+  delay > 0 ? `stagger-${Math.min(Math.ceil(delay * 10), 6)}` : "";
+---
+
+<div
+  class:list={["reveal-on-scroll", directionClass, staggerClass, className]}
+  data-threshold={threshold}
+>
+  <slot />
+</div>
+
+<script>
+  // Initialize Intersection Observer for scroll reveal
+  function initScrollReveal() {
+    const elements = document.querySelectorAll(
+      ".reveal-on-scroll:not(.initialized)",
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      },
+    );
+
+    elements.forEach((el) => {
+      el.classList.add("initialized");
+      observer.observe(el);
+    });
+  }
+
+  // Run on initial load
+  initScrollReveal();
+
+  // Re-run on page transitions (Astro View Transitions)
+  document.addEventListener("astro:page-load", initScrollReveal);
+</script>
