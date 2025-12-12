@@ -113,8 +113,15 @@ const allSlides = [...slides, ...slides];
   </div>
 
   <!-- Infinite Scroll Carousel -->
-  <div class="w-full mt-16 overflow-hidden hero-carousel">
-    <div class="infinite-scroll py-8" style="animation-duration: 80s;">
+  <div
+    class="w-full mt-16 overflow-hidden hero-carousel touch-carousel"
+    id="hero-carousel"
+  >
+    <div
+      class="infinite-scroll py-8 pb-12"
+      id="carousel-track"
+      style="animation-duration: 120s;"
+    >
       {/* Duplicate slides for seamless infinite scroll */}
       {
         allSlides.map((slide, index) => (
@@ -124,10 +131,10 @@ const allSlides = [...slides, ...slides];
           >
             <Picture
               src={slide.src}
-              width={288}
-              height={512}
-              widths={[240, 288]}
-              sizes="(max-width: 768px) 240px, 288px"
+              width={576}
+              height={1024}
+              widths={[450, 576]}
+              sizes="(max-width: 768px) 450px, 576px"
               formats={["avif", "webp"]}
               fallbackFormat="avif"
               alt={slide.alt}
@@ -242,6 +249,17 @@ const allSlides = [...slides, ...slides];
     );
   }
 
+  /* Touch-friendly carousel on mobile - allow scrolling while keeping animation */
+  @media (pointer: coarse) {
+    .touch-carousel {
+      cursor: grab;
+    }
+
+    .touch-carousel:active {
+      cursor: grabbing;
+    }
+  }
+
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .letter-animate {
@@ -287,4 +305,48 @@ const allSlides = [...slides, ...slides];
 
   initMagneticButtons();
   document.addEventListener("astro:page-load", initMagneticButtons);
+
+  // Touch drag for carousel
+  function initCarouselTouch() {
+    const carousel = document.getElementById("hero-carousel");
+    const track = document.getElementById("carousel-track");
+    if (!carousel || !track) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let currentTranslate = 0;
+
+    carousel.addEventListener(
+      "touchstart",
+      (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        track.style.animationPlayState = "paused";
+        const computedStyle = getComputedStyle(track);
+        const matrix = new DOMMatrix(computedStyle.transform);
+        currentTranslate = matrix.m41;
+      },
+      { passive: true },
+    );
+
+    carousel.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!isDragging) return;
+        const x = e.touches[0].clientX;
+        const diff = x - startX;
+        track.style.transform = `translateX(${currentTranslate + diff}px)`;
+      },
+      { passive: true },
+    );
+
+    carousel.addEventListener("touchend", () => {
+      isDragging = false;
+      track.style.transform = "";
+      track.style.animationPlayState = "running";
+    });
+  }
+
+  initCarouselTouch();
+  document.addEventListener("astro:page-load", initCarouselTouch);
 </script>

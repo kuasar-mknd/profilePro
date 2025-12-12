@@ -471,10 +471,6 @@
   will-change: transform;
 }
 
-.infinite-scroll:hover {
-  animation-play-state: paused;
-}
-
 /* Magnetic Button Effect */
 .magnetic-btn {
   position: relative;
