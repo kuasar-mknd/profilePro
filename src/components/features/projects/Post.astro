@@ -10,7 +10,7 @@ const isWide = bentoSize === "bento-item-wide";
 
 <article
   class:list={[
-    "group relative h-full rounded-2xl overflow-hidden shadow-lg card-glow transition-all duration-500",
+    "group relative h-full rounded-2xl shadow-lg card-glow transition-all duration-500",
     isLarge ? "min-h-[400px] md:min-h-[500px]" : "min-h-[280px]",
     isWide ? "min-h-[280px]" : "",
   ]}
@@ -21,7 +21,7 @@ const isWide = bentoSize === "bento-item-wide";
     class="block h-full"
   >
     <!-- Background Image with zoom effect -->
-    <div class="absolute inset-0 image-zoom">
+    <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
       <Picture
         src={postData.data.image}
         widths={[400, 800, 1200]}
@@ -40,7 +40,7 @@ const isWide = bentoSize === "bento-item-wide";
 
     <!-- Gradient Overlay - smooth transition on hover -->
     <div
-      class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500 ease-out"
+      class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500 ease-out rounded-2xl"
     >
     </div>
 
@@ -50,7 +50,7 @@ const isWide = bentoSize === "bento-item-wide";
       <div
         class:list={[
           "relative z-10 p-4 md:p-5 flex flex-col justify-start",
-          isLarge ? "min-h-[160px]" : "min-h-[110px]",
+          isLarge ? "min-h-[160px] pb-12" : "min-h-[110px]",
         ]}
       >
         <!-- Tags - slides up on hover -->
@@ -75,14 +75,16 @@ const isWide = bentoSize === "bento-item-wide";
         <!-- Description - collapses when hidden, expands on hover -->
         <div
           class:list={[
-            "overflow-hidden transition-all duration-300 ease-out",
-            isLarge ? "max-h-20" : "max-h-0 group-hover:max-h-20",
+            "transition-all duration-300 ease-out",
+            isLarge ? "" : "overflow-hidden max-h-0 group-hover:max-h-20",
           ]}
         >
           <p
             class:list={[
-              "font-outfit text-white/90 line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 ease-out",
-              isLarge ? "text-sm" : "text-xs",
+              "font-outfit text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out",
+              isLarge
+                ? "text-sm line-clamp-3"
+                : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0",
             ]}
           >
             {postData.data.intro}
