@@ -1,10 +1,18 @@
 ---
-const { tag } = Astro.props;
+const { tag, variant = "default" } = Astro.props;
+const isDark = variant === "dark";
 ---
 
 {
   tag && (
-    <span class="group text-[16px] bg-transparent border-pacamara-secondary border-[1px] leading-none rounded-full flex flex-row content-center items-center h-[34px] px-3 text-pacamara-secondary">
+    <span
+      class:list={[
+        "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm",
+        isDark
+          ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+          : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
+      ]}
+    >
       <span>{tag}</span>
     </span>
   )
