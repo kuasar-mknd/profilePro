@@ -31,14 +31,16 @@ const {
     );
 
     cards.forEach((card) => {
-      const maxTilt = Number(card.dataset.maxTilt) || 10;
+      const el = card as HTMLElement;
+      const maxTilt = Number(el.dataset.maxTilt) || 10;
 
       card.classList.add("tilt-initialized");
 
       card.addEventListener("mousemove", (e) => {
+        const event = e as MouseEvent;
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
 
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
