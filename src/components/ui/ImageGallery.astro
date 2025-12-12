@@ -1,135 +1,157 @@
 ---
-// src/components/ImageGallery.astro
-import { Image, Picture } from "astro:assets";
+/**
+ * ImageGallery.astro - Galerie d'images avec chargement automatique par dossier
+ *
+ * Usage: <ImageGallery folder="mon-projet" />
+ *
+ * Charge automatiquement toutes les images du dossier spécifié dans assets/
+ */
+import { Picture } from "astro:assets";
 
-// Dossier spécifique pour charger les images
-const { folder } = Astro.props;
-let images = {};
-
-// Utiliser import.meta.glob pour charger les images statiquement
-if (folder === "lola-clip") {
-  images = import.meta.glob(
-    "../../assets/lola-clip/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "proud-rebel") {
-  images = import.meta.glob(
-    "../../assets/proud-rebel/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "bcp") {
-  images = import.meta.glob("../../assets/bcp/*.{avif,png,jpg,jpeg,svg,JPEG}");
-} else if (folder == "xxcent-sourire") {
-  images = import.meta.glob(
-    "../../assets/xxcent-sourire/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "larev") {
-  images = import.meta.glob(
-    "../../assets/larev/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "izia-fete-musique") {
-  images = import.meta.glob(
-    "../../assets/izia-fete-musique/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "cactus-heart") {
-  images = import.meta.glob(
-    "../../assets/cactus-heart/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "48h-lausanne") {
-  images = import.meta.glob(
-    "../../assets/48h-lausanne/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "48h-geneve") {
-  images = import.meta.glob(
-    "../../assets/48h-geneve/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "lamia") {
-  images = import.meta.glob(
-    "../../assets/lamia/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "Paternelle-2025") {
-  images = import.meta.glob(
-    "../../assets/Paternelle-2025/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "Paternelle-2024") {
-  images = import.meta.glob(
-    "../../assets/Paternelle-2024/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "corps&ame") {
-  images = import.meta.glob(
-    "../../assets/corps&ame/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "48h-vevey") {
-  images = import.meta.glob(
-    "../../assets/48h-vevey/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
-} else if (folder == "48h-geneve-2025") {
-  images = import.meta.glob(
-    "../../assets/48h-geneve-2025/*.{avif,png,jpg,jpeg,svg,JPEG}",
-  );
+interface Props {
+  folder: string;
+  columns?: 2 | 3 | 4;
+  excludePatterns?: string[];
 }
 
-// Charger les images
-const loadedImages = await Promise.all(
-  Object.entries(images).map(async ([path, resolver]) => {
-    const mod = await (resolver as any)();
-    return { src: mod.default, ...mod };
-  }),
+const { folder, columns = 3, excludePatterns = [] } = Astro.props;
+
+// Import dynamique de toutes les images
+const allImages = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
+  { eager: true },
 );
+
+// Filtrer par dossier et exclure certains patterns (ex: awards/)
+const loadedImages = Object.entries(allImages)
+  .filter(([path]) => {
+    // Vérifier que le chemin contient le dossier demandé
+    const folderMatch = path.includes(`/${folder}/`);
+    if (!folderMatch) return false;
+
+    // Exclure les sous-dossiers comme "awards"
+    const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
+    if (isInSubfolder) return false;
+
+    // Exclure les patterns spécifiés
+    for (const pattern of excludePatterns) {
+      if (path.includes(pattern)) return false;
+    }
+
+    return true;
+  })
+  .map(([path, module]) => ({
+    src: module.default,
+    filename: path.split("/").pop() || "",
+  }))
+  .sort((a, b) => a.filename.localeCompare(b.filename));
+
+// Column class mapping
+const columnClasses = {
+  2: "gallery-cols-2",
+  3: "gallery-cols-3",
+  4: "gallery-cols-4",
+};
 ---
+
+{
+  loadedImages.length > 0 ? (
+    <div class={`image-gallery ${columnClasses[columns]}`}>
+      {loadedImages.map((image, index) => (
+        <figure class="gallery-item">
+          <Picture
+            src={image.src}
+            widths={[400, 800]}
+            sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+            formats={["avif", "webp"]}
+            fallbackFormat="avif"
+            alt={`Photo ${index + 1} - ${folder}`}
+            class="gallery-image"
+            data-gallery-image
+          />
+        </figure>
+      ))}
+    </div>
+  ) : (
+    <p class="text-pacamara-primary/50 dark:text-white/50 text-center py-8">
+      Aucune image trouvée dans le dossier "{folder}"
+    </p>
+  )
+}
 
 <style>
   .image-gallery {
+    column-gap: 1rem;
+  }
+
+  .gallery-cols-2 {
+    column-count: 2;
+  }
+
+  .gallery-cols-3 {
     column-count: 3;
-    column-gap: 10px;
   }
 
-  figure {
+  .gallery-cols-4 {
+    column-count: 4;
+  }
+
+  .gallery-item {
     margin: 0;
-    display: grid;
-    grid-template-rows: auto;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
     break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
   }
 
-  figure > img {
+  .gallery-image {
     width: 100%;
     display: block;
+    cursor: pointer;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
+  .gallery-item:hover .gallery-image {
+    transform: scale(1.02);
+  }
+
+  .gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.1) 0%, transparent 30%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 0.75rem;
+  }
+
+  .gallery-item:hover::after {
+    opacity: 1;
+  }
+
+  /* Responsive columns */
   @media (max-width: 1200px) {
-    .image-gallery {
+    .gallery-cols-4 {
       column-count: 3;
     }
   }
 
   @media (max-width: 768px) {
-    .image-gallery {
+    .gallery-cols-3,
+    .gallery-cols-4 {
       column-count: 2;
     }
   }
 
   @media (max-width: 480px) {
-    .image-gallery {
+    .gallery-cols-2,
+    .gallery-cols-3,
+    .gallery-cols-4 {
       column-count: 1;
     }
   }
 </style>
-
-<div class="image-gallery">
-  {
-    loadedImages.map((image, index) => (
-      <figure>
-        <Picture
-          src={image.src}
-          widths={[400, 800]}
-          sizes="(max-width: 768px) 100vw, 33vw"
-          formats={["avif", "webp"]}
-          fallbackFormat="avif"
-          alt={`Gallery image ${index + 1}`}
-          class="rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer w-full"
-          data-gallery-image
-        />
-      </figure>
-    ))
-  }
-</div>
-```
