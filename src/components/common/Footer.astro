@@ -12,6 +12,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         <a
           href="/"
           aria-label="Retour à l'accueil"
+          aria-current={Astro.url.pathname === "/" ? "page" : undefined}
           class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300"
         >
           Samuel Dulex

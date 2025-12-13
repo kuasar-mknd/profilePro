@@ -26,6 +26,8 @@ const {
 
 <script>
   function initTiltCards() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const cards = document.querySelectorAll(
       ".tilt-card:not(.tilt-initialized)",
     );

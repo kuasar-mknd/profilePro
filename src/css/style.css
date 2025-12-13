@@ -160,6 +160,7 @@
   .hero-buttons,
   .hero-carousel,
   #lightbox,
+  #back-to-top,
   .group.mode-switch-btn {
     display: none !important;
   }

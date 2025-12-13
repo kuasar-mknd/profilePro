@@ -156,6 +156,15 @@ import { Icon } from "astro-icon/components";
       <!-- Ripple effect container -->
       <div class="btn-ripple absolute inset-0 pointer-events-none"></div>
     </button>
+
+    <!-- Inline Error Message -->
+    <div
+      id="form-error-message"
+      class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center"
+      role="alert"
+    >
+      Une erreur est survenue. Veuillez réessayer.
+    </div>
   </div>
 
   <p
@@ -304,7 +313,13 @@ import { Icon } from "astro-icon/components";
             el.setAttribute("aria-invalid", "true");
           });
           // Show error state
-          alert("Une erreur est survenue. Veuillez réessayer.");
+          // alert("Une erreur est survenue. Veuillez réessayer.");
+          const errorMsg = form.querySelector("#form-error-message");
+          if (errorMsg) {
+            errorMsg.classList.remove("hidden");
+            errorMsg.textContent =
+              "Une erreur est survenue. Veuillez réessayer plus tard.";
+          }
         }
       });
     }

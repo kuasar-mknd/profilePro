@@ -18,6 +18,13 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
 <html lang="fr" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <style>
+      @media (prefers-reduced-motion: reduce) {
+        :global(html) {
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
     <!-- Critical preconnects - must be early in head for effectiveness -->
     <link rel="dns-prefetch" href="https://unpkg.com" />
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -84,6 +91,7 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
       id="back-to-top"
       class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift"
       aria-label="Retour en haut de page"
+      tabindex="-1"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -114,22 +122,16 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
                 "invisible",
                 "translate-y-4",
               );
-              backToTopBtn.classList.add(
-                "opacity-100",
-                "visible",
-                "translate-y-0",
-              );
+              backToTopBtn.classList.add("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "0");
             } else {
               backToTopBtn.classList.add(
                 "opacity-0",
                 "invisible",
                 "translate-y-4",
               );
-              backToTopBtn.classList.remove(
-                "opacity-100",
-                "visible",
-                "translate-y-0",
-              );
+              backToTopBtn.classList.remove("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "-1");
             }
           };
 

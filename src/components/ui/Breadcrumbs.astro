@@ -60,6 +60,14 @@ const breadcrumbSchema = {
   class="mb-8 animate-fade-in opacity-0"
   style="animation-delay: 0.1s;"
 >
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      .animate-fade-in {
+        animation: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
   <ol
     class="flex items-center space-x-2 text-pacamara-primary dark:text-white list-none pl-0"
   >

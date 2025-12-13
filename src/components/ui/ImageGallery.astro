@@ -137,19 +137,6 @@ const columnClasses = {
   }
 
   /* Responsive columns */
-  @media (max-width: 1200px) {
-    .gallery-cols-4 {
-      column-count: 3;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .gallery-cols-3,
-    .gallery-cols-4 {
-      column-count: 2;
-    }
-  }
-
   @media (max-width: 480px) {
     .gallery-cols-2,
     .gallery-cols-3,
@@ -158,3 +145,24 @@ const columnClasses = {
     }
   }
 </style>
+
+<script>
+  function initGalleryKeyboard() {
+    const images = document.querySelectorAll("[data-gallery-image]");
+    images.forEach((img) => {
+      img.addEventListener("keydown", (e) => {
+        if (
+          (e as KeyboardEvent).key === "Enter" ||
+          (e as KeyboardEvent).key === " "
+        ) {
+          e.preventDefault();
+          (img as HTMLElement).click();
+        }
+      });
+    });
+  }
+
+  // Initialize
+  initGalleryKeyboard();
+  document.addEventListener("astro:page-load", initGalleryKeyboard);
+</script>

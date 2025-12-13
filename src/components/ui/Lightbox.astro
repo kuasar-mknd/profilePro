@@ -16,10 +16,12 @@
   aria-hidden="true"
   role="dialog"
   aria-modal="true"
+  aria-label="Galerie photos en plein écran"
 >
   <div class="lightbox-backdrop"></div>
 
   <button
+    type="button"
     class="lightbox-close"
     aria-label="Fermer"
     title="Fermer (Esc)"
@@ -42,6 +44,7 @@
   </button>
 
   <button
+    type="button"
     class="lightbox-nav lightbox-prev"
     aria-label="Image précédente"
     title="Image précédente (←)"
@@ -70,6 +73,7 @@
   </div>
 
   <button
+    type="button"
     class="lightbox-nav lightbox-next"
     aria-label="Image suivante"
     title="Image suivante (→)"
@@ -357,13 +361,11 @@
 
     private collectImages() {
       const elements = document.querySelectorAll("[data-gallery-image]");
-      console.log("Found gallery images:", elements.length);
 
       this.images = Array.from(elements).map((element) => {
         const img = element as HTMLImageElement;
         // currentSrc is the actual URL the browser loaded
         const url = img.currentSrc || img.src;
-        console.log("Image URL:", url);
         return url;
       });
     }
