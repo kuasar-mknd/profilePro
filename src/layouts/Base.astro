@@ -11,11 +11,11 @@ import "@fontsource/outfit";
 
 import { ClientRouter } from "astro:transitions";
 
-const { postData, jsonLd, noPadding = false } = Astro.props;
+const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="fr" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <style>
@@ -59,6 +59,7 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
     <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <ClientRouter />
   </head>
   <body
@@ -150,6 +151,38 @@ const { postData, jsonLd, noPadding = false } = Astro.props;
       // Initialize on load and after view transitions
       initBackToTop();
       document.addEventListener("astro:after-swap", initBackToTop);
+
+      // Update theme-color meta tag based on current theme
+      function updateThemeColor() {
+        const isDark = document.documentElement.classList.contains("dark");
+
+        // We can dynamically update one specific meta tag if needed, or rely on the media attribute.
+        // However, some browsers don't respect the media attribute on theme-color dynamically.
+        // A more robust way is to update a single meta tag or ensuring the browser picks up the change.
+        // For simple switching, the existing media query approach works for OS preference changes.
+        // But for manual toggles, we might need to force it.
+
+        const meta =
+          document.querySelector('meta[name="theme-color"]:not([media])') ||
+          document.createElement("meta");
+        meta.setAttribute("name", "theme-color");
+        meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
+
+        if (!document.querySelector('meta[name="theme-color"]:not([media])')) {
+          document.head.appendChild(meta);
+        }
+      }
+
+      // Observer for class changes on html to trigger theme color update
+      const themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            updateThemeColor();
+          }
+        });
+      });
+
+      themeObserver.observe(document.documentElement, { attributes: true });
     </script>
   </body>
 </html>

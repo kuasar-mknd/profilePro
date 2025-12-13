@@ -1,0 +1,16 @@
+{
+  "name": "Samuel Dulex - Portfolio",
+  "short_name": "Samuel Dulex",
+  "description": "Portfolio de Samuel Dulex, Créateur de contenu et Développeur Web.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

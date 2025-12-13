@@ -197,10 +197,35 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 100px;
+    accent-color: var(--color-pacamara-accent);
   }
 
   body {
     @apply bg-pacamara-white text-pacamara-primary antialiased dark:bg-pacamara-dark dark:text-pacamara-white;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 300px;
+  }
+
+  /* Ensure content is visible if JS is disabled */
+  @media (scripting: none) {
+    .reveal-on-scroll {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+    }
   }
 
   ::selection {

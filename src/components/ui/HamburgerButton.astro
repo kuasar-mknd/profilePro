@@ -43,6 +43,29 @@
           nav.classList.remove("translate-x-0");
         });
       });
+
+      // Sync aria-expanded with the actual state of the menu (overflow-hidden on html)
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            const isMenuOpen =
+              document.documentElement.classList.contains("overflow-hidden");
+            button.setAttribute("aria-expanded", String(isMenuOpen));
+
+            if (isMenuOpen) {
+              nav.classList.remove("translate-x-full");
+              nav.classList.add("translate-x-0");
+            } else {
+              nav.classList.add("translate-x-full");
+              nav.classList.remove("translate-x-0");
+            }
+          }
+        });
+      });
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
     }
   };
 

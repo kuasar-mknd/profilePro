@@ -3,8 +3,9 @@ import dateFormat, { masks } from "dateformat";
 const { date } = Astro.props;
 ---
 
-<small
+<time
+  datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
 >
   {dateFormat(date, "dd-mm-yyyy")}
-</small>
+</time>

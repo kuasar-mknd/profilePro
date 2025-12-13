@@ -31,10 +31,16 @@ import Base from "../layouts/Base.astro";
 
     <a
       href="/"
-      class="px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
+      class="inline-block bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
     >
-      Retour au casting
+      Retour à l'accueil
     </a>
+    <button
+      onclick="history.back()"
+      class="inline-block ml-4 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer"
+    >
+      Page précédente
+    </button>
   </section>
 </Base>
 <script>

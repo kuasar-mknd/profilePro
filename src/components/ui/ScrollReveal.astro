@@ -14,10 +14,10 @@ const {
 } = Astro.props;
 
 const directionClass = {
-  up: "",
-  left: "from-left",
-  right: "from-right",
-  scale: "scale-in",
+  up: "will-change-transform",
+  left: "from-left will-change-transform",
+  right: "from-right will-change-transform",
+  scale: "scale-in will-change-transform",
 }[direction];
 
 const staggerClass =

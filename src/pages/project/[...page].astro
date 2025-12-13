@@ -72,6 +72,7 @@ const { page, allTags } = Astro.props;
           <a
             href={page.url.prev}
             class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            aria-label="Page précédente"
           >
             &larr; Previous
           </a>
@@ -82,6 +83,7 @@ const { page, allTags } = Astro.props;
           <a
             href={page.url.next}
             class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            aria-label="Page suivante"
           >
             Next &rarr;
           </a>
