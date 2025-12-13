@@ -67,12 +67,16 @@ if (!posterUrl && poster) {
             aria-label="Lire la vidéo"
             type="button"
           >
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 group-focus-visible:scale-110 transition-transform duration-300">
+            <div class="group-focus-visible:ring-4 group-focus-visible:ring-pacamara-accent/50 w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 transition-transform duration-300 relative">
+              <div
+                class="absolute inset-0 rounded-full border-t-2 border-white animate-spin opacity-0 transition-opacity duration-300"
+                id={`spinner-${videoId}`}
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="w-10 h-10 text-white ml-1"
+                class="w-10 h-10 text-white ml-1 transition-opacity duration-300"
                 aria-hidden="true"
               >
                 <path
@@ -123,6 +127,15 @@ if (!posterUrl && poster) {
 
       if (playBtn && playerDiv && poster) {
         playBtn.addEventListener("click", () => {
+          // Show spinner
+          const spinner = wrapper.querySelector(
+            `[id^='spinner-']`,
+          ) as HTMLElement;
+          const svgIcon = playBtn.querySelector("svg");
+
+          if (spinner) spinner.style.opacity = "1";
+          if (svgIcon) svgIcon.style.opacity = "0";
+
           // Initialize Plyr only on click
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const player = new Plyr(playerDiv as HTMLElement, {

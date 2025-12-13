@@ -1,23 +1,24 @@
 <button
   id="menu_toggle"
-  class="block md:hidden text-white"
+  class="block md:hidden text-white group"
   type="button"
   aria-controls="navbar-main"
   aria-expanded="false"
   aria-label="Ouvrir le menu"
 >
-  <svg
-    class="w-8 h-auto fill-pacamara-dark stroke-pacamara-dark transition-all duration-300 hover:fill-pacamara-accent hover:stroke-pacamara-accent dark:fill-pacamara-accent dark:stroke-pacamara-accent dark:hover:fill-pacamara-secondary dark:hover:stroke-pacamara-secondary"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    ><path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M4 6h16M4 12h16M4 18h16"></path></svg
+  <div
+    class="relative w-8 h-6 flex flex-col justify-between items-center group-hover:scale-105 transition-transform duration-300"
   >
+    <span
+      class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:rotate-45 group-aria-expanded:translate-x-1"
+    ></span>
+    <span
+      class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 group-aria-expanded:opacity-0"
+    ></span>
+    <span
+      class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:-rotate-45 group-aria-expanded:translate-x-1"
+    ></span>
+  </div>
 </button>
 
 <script>
