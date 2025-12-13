@@ -35,16 +35,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       href="https://static.cloudflareinsights.com"
       crossorigin
     />
-    <meta
-      name="theme-color"
-      content="#f8fafc"
-      media="(prefers-color-scheme: light)"
-    />
-    <meta
-      name="theme-color"
-      content="#0b0f19"
-      media="(prefers-color-scheme: dark)"
-    />
+    <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
       // Early theme detection to prevent FOUC
       if (
@@ -162,14 +153,9 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         // For simple switching, the existing media query approach works for OS preference changes.
         // But for manual toggles, we might need to force it.
 
-        const meta =
-          document.querySelector('meta[name="theme-color"]:not([media])') ||
-          document.createElement("meta");
-        meta.setAttribute("name", "theme-color");
-        meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
-
-        if (!document.querySelector('meta[name="theme-color"]:not([media])')) {
-          document.head.appendChild(meta);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
         }
       }
 

@@ -5,20 +5,20 @@
 <div class="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
   <!-- Blob 1: Behind "Connecter" (Top Left-ish) -->
   <div
-    class="absolute top-[20%] left-[20%] w-[400px] h-[400px] bg-pacamara-secondary/20 rounded-full blur-[120px] animate-blob mix-blend-screen dark:mix-blend-screen filter opacity-60 will-change-transform translate-z-0"
+    class="absolute top-[20%] left-[20%] w-[300px] h-[300px] bg-pacamara-secondary/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 will-change-transform translate-z-0"
   >
   </div>
 
   <!-- Blob 2: Behind "Captiver" (Bottom Right-ish relative to text) -->
   <div
-    class="absolute top-[35%] left-[55%] w-[400px] h-[400px] bg-pacamara-accent/20 rounded-full blur-[120px] animate-blob [animation-delay:4s] mix-blend-screen dark:mix-blend-screen filter opacity-60 will-change-transform translate-z-0"
+    class="absolute top-[35%] left-[55%] w-[300px] h-[300px] bg-pacamara-accent/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 will-change-transform translate-z-0"
   >
   </div>
 
   <!-- Mouse Follower Blob (Subtle) -->
   <div
     id="mouse-blob"
-    class="absolute w-[300px] h-[300px] bg-white/10 dark:bg-white/5 rounded-full blur-[100px] mix-blend-overlay transition-transform duration-100 ease-out opacity-0"
+    class="absolute w-[250px] h-[250px] bg-white/10 dark:bg-white/5 rounded-full blur-[60px] mix-blend-overlay transition-transform duration-100 ease-out opacity-0 will-change-transform translate-z-0"
     style="transform: translate(-50%, -50%);"
   >
   </div>
@@ -29,26 +29,46 @@
   const container = blob?.parentElement;
 
   if (blob && container) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let blobX = 0;
+    let blobY = 0;
+    let isVisible = false;
+
+    // Smoothness factor (lower = smoother/slower)
+    const ease = 0.08;
+
+    // Track mouse position
     document.addEventListener("mousemove", (e) => {
-      const { clientX, clientY } = e;
       const rect = container.getBoundingClientRect();
+      // Calculate relative position
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
 
-      // Calculate position relative to the container
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-
-      // Show blob on first move
-      if (blob.style.opacity === "0") {
+      if (!isVisible) {
+        isVisible = true;
         blob.style.opacity = "1";
+        // Initialize position to prevent jump
+        blobX = mouseX;
+        blobY = mouseY;
+      }
+    });
+
+    // Animation loop
+    function animate() {
+      if (isVisible) {
+        // Linear interpolation (lerp)
+        blobX += (mouseX - blobX) * ease;
+        blobY += (mouseY - blobY) * ease;
+
+        if (blob) {
+          blob.style.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
+        }
       }
 
-      blob.animate(
-        {
-          left: `${x}px`,
-          top: `${y}px`,
-        },
-        { duration: 3000, fill: "forwards" },
-      );
-    });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
   }
 </script>
