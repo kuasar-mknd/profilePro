@@ -39,7 +39,7 @@ import { Icon } from "astro-icon/components";
         for="name"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
       >
-        Nom complet
+        Nom complet <span class="text-pacamara-accent">*</span>
       </label>
       <div class="relative">
         <input
@@ -63,7 +63,7 @@ import { Icon } from "astro-icon/components";
         for="email"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
       >
-        Email
+        Email <span class="text-pacamara-accent">*</span>
       </label>
       <div class="relative">
         <input
@@ -87,7 +87,7 @@ import { Icon } from "astro-icon/components";
         for="message"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
       >
-        Message
+        Message <span class="text-pacamara-accent">*</span>
       </label>
       <div class="relative">
         <textarea
@@ -150,6 +150,11 @@ import { Icon } from "astro-icon/components";
 
   <p
     class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
+  >
+    Les champs marqués d'un <span class="text-pacamara-accent">*</span> sont obligatoires.
+  </p>
+  <p
+    class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
   >
     Powered by Web3Forms
   </p>
