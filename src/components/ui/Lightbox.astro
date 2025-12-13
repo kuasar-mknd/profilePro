@@ -277,7 +277,7 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
-    private images: string[] = [];
+    private images: { src: string; alt: string }[] = [];
     private currentIndex: number = 0;
     private touchStartX: number = 0;
     private touchEndX: number = 0;
@@ -366,7 +366,8 @@
         const img = element as HTMLImageElement;
         // currentSrc is the actual URL the browser loaded
         const url = img.currentSrc || img.src;
-        return url;
+        const alt = img.alt || "";
+        return { src: url, alt };
       });
     }
 
@@ -409,8 +410,9 @@
     }
 
     private updateImage() {
-      this.image.src = this.images[this.currentIndex];
-      this.image.alt = `Image ${this.currentIndex + 1}`;
+      const currentImage = this.images[this.currentIndex];
+      this.image.src = currentImage.src;
+      this.image.alt = currentImage.alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.images.length);
 
