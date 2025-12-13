@@ -10,7 +10,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { Icon } from "astro-icon/components";
 import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
-import PhotoGallery from "../../components/features/projects/PhotoGallery.astro";
+import ImageGallery from "../../components/ui/ImageGallery.astro";
 
 import { getCollection, getEntry } from "astro:content";
 import config from "../../config.mjs";
@@ -165,7 +165,7 @@ const jsonLd = {
             class="w-full mb-16 animate-slide-up opacity-0"
             style="animation-delay: 0.6s;"
           >
-            <PhotoGallery images={entry.data.gallery} />
+            <ImageGallery images={entry.data.gallery} />
           </div>
         )
     }

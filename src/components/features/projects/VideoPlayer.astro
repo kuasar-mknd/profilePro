@@ -67,7 +67,10 @@ if (!posterUrl && poster) {
             aria-label="Lire la vidéo"
             type="button"
           >
-            <div class="group-focus-visible:ring-4 group-focus-visible:ring-pacamara-accent/50 w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 transition-transform duration-300 relative">
+            <div
+              class="group-focus-visible:ring-4 group-focus-visible:ring-pacamara-accent/50 w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 transition-transform duration-300 relative"
+              role="presentation"
+            >
               <div
                 class="absolute inset-0 rounded-full border-t-2 border-white animate-spin opacity-0 transition-opacity duration-300 motion-reduce:animate-none"
                 id={`spinner-${videoId}`}

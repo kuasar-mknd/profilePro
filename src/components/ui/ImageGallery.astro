@@ -1,50 +1,64 @@
 ---
 /**
- * ImageGallery.astro - Galerie d'images avec chargement automatique par dossier
+ * ImageGallery.astro - Universal Image Gallery
  *
- * Usage: <ImageGallery folder="mon-projet" />
- *
- * Charge automatiquement toutes les images du dossier spécifié dans assets/
+ * Usage:
+ * 1. Automatic loading from folder: <ImageGallery folder="my-project" />
+ * 2. Explicit image array: <ImageGallery images={myImagesArray} />
  */
 import { Picture } from "astro:assets";
 
 interface Props {
-  folder: string;
+  folder?: string;
+  images?: ImageMetadata[];
   columns?: 2 | 3 | 4;
   excludePatterns?: string[];
 }
 
-const { folder, columns = 3, excludePatterns = [] } = Astro.props;
+const {
+  folder,
+  images: explicitImages,
+  columns = 3,
+  excludePatterns = [],
+} = Astro.props;
 
-// Import dynamique de toutes les images
-const allImages = import.meta.glob<{ default: ImageMetadata }>(
-  "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-  { eager: true },
-);
+let galleryImages: { src: ImageMetadata; filename: string; alt?: string }[] =
+  [];
 
-// Filtrer par dossier et exclure certains patterns (ex: awards/)
-const loadedImages = Object.entries(allImages)
-  .filter(([path]) => {
-    // Vérifier que le chemin contient le dossier demandé
-    const folderMatch = path.includes(`/${folder}/`);
-    if (!folderMatch) return false;
+if (explicitImages && explicitImages.length > 0) {
+  // Use explicit images if provided
+  galleryImages = explicitImages.map((img, index) => ({
+    src: img,
+    filename: `image-${index}`,
+    alt: `Photo ${index + 1}`,
+  }));
+} else if (folder) {
+  // Load from folder
+  const allImages = import.meta.glob<{ default: ImageMetadata }>(
+    "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
+    { eager: true },
+  );
 
-    // Exclure les sous-dossiers comme "awards"
-    const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
-    if (isInSubfolder) return false;
+  galleryImages = Object.entries(allImages)
+    .filter(([path]) => {
+      const folderMatch = path.includes(`/${folder}/`);
+      if (!folderMatch) return false;
 
-    // Exclure les patterns spécifiés
-    for (const pattern of excludePatterns) {
-      if (path.includes(pattern)) return false;
-    }
+      const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
+      if (isInSubfolder) return false;
 
-    return true;
-  })
-  .map(([path, module]) => ({
-    src: module.default,
-    filename: path.split("/").pop() || "",
-  }))
-  .sort((a, b) => a.filename.localeCompare(b.filename));
+      for (const pattern of excludePatterns) {
+        if (path.includes(pattern)) return false;
+      }
+      return true;
+    })
+    .map(([path, module]) => ({
+      src: module.default,
+      filename: path.split("/").pop() || "",
+      alt: `Photo - ${folder}`,
+    }))
+    .sort((a, b) => a.filename.localeCompare(b.filename));
+}
 
 // Column class mapping
 const columnClasses = {
@@ -55,9 +69,9 @@ const columnClasses = {
 ---
 
 {
-  loadedImages.length > 0 ? (
+  galleryImages.length > 0 ? (
     <div class={`image-gallery ${columnClasses[columns]}`}>
-      {loadedImages.map((image, index) => (
+      {galleryImages.map((image, index) => (
         <figure class="gallery-item">
           <Picture
             src={image.src}
@@ -65,7 +79,7 @@ const columnClasses = {
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
             formats={["avif", "webp"]}
             fallbackFormat="avif"
-            alt={`Photo ${index + 1} - ${folder}`}
+            alt={image.alt || `Photo ${index + 1}`}
             class="gallery-image"
             data-gallery-image
             tabindex="0"
@@ -77,7 +91,9 @@ const columnClasses = {
     </div>
   ) : (
     <p class="text-pacamara-primary/50 dark:text-white/50 text-center py-8">
-      Aucune image trouvée dans le dossier "{folder}"
+      {folder
+        ? `Aucune image trouvée dans le dossier "${folder}"`
+        : "Aucune image à afficher."}
     </p>
   )
 }
