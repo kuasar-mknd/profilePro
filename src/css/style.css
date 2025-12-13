@@ -280,6 +280,30 @@
       0 8px 10px -6px rgb(0 0 0 / 10%);
   }
 
+  .hover-lift:active {
+    transform: translateY(-2px);
+    box-shadow:
+      0 5px 12px -2px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+  }
+
+  /* Universal Active State for Buttons */
+  button:active:not(:disabled),
+  .magnetic-btn:active,
+  a.button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  /* External Link Indicator for Prose */
+  .prose a[target="_blank"]::after,
+  .external-link::after {
+    content: " ↗";
+    font-size: 0.7em;
+    vertical-align: super;
+    opacity: 0.7;
+    margin-left: 2px;
+  }
+
   .hover-scale-sm {
     transition: transform 0.3s ease;
   }
