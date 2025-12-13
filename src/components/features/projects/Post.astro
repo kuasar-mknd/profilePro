@@ -24,12 +24,13 @@ const isWide = bentoSize === "bento-item-wide";
     <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
       <Picture
         src={postData.data.image}
-        widths={[400, 800, 1200]}
+        widths={[400, 600, 800, 1200]}
         sizes={isLarge
-          ? "(max-width: 768px) 100vw, 50vw"
-          : "(max-width: 768px) 100vw, 25vw"}
+          ? "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 600px"
+          : "(max-width: 768px) 100vw, (max-width: 1280px) 25vw, 300px"}
         formats={["avif", "webp"]}
         fallbackFormat="avif"
+        quality={80}
         alt={postData.data.title}
         width={isLarge ? 800 : 400}
         height={isLarge ? 600 : 300}
