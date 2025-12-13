@@ -79,7 +79,11 @@ const services = [
                 <div
                   class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
                 >
-                  <Icon name={service.icon} class="w-8 h-8 icon-animate" />
+                  <Icon
+                    name={service.icon}
+                    class="w-8 h-8 icon-animate"
+                    aria-hidden="true"
+                  />
                 </div>
                 <h3 class="text-xl font-bold font-pacamara-space mb-3 text-pacamara-dark dark:text-white">
                   {service.title}

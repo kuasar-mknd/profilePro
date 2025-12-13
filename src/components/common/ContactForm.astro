@@ -46,6 +46,7 @@ import { Icon } from "astro-icon/components";
           type="text"
           name="name"
           id="name"
+          autocomplete="name"
           required
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="Votre nom"
@@ -70,6 +71,7 @@ import { Icon } from "astro-icon/components";
           type="email"
           name="email"
           id="email"
+          autocomplete="email"
           required
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="votre@email.com"
@@ -108,20 +110,24 @@ import { Icon } from "astro-icon/components";
     <button
       type="submit"
       class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+      aria-live="polite"
     >
       <span class="btn-text relative z-10">Envoyer le message</span>
       <Icon
         name="mdi:send"
         class="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform"
+        aria-hidden="true"
       />
       <span
         class="btn-loading hidden absolute inset-0 items-center justify-center"
+        aria-label="Envoi en cours..."
       >
         <svg
           class="animate-spin h-6 w-6 text-white"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <circle
             class="opacity-25"
@@ -139,8 +145,9 @@ import { Icon } from "astro-icon/components";
       </span>
       <span
         class="btn-success hidden absolute inset-0 items-center justify-center gap-2"
+        aria-label="Message envoyé avec succès"
       >
-        <Icon name="mdi:check-circle" class="w-6 h-6" />
+        <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         <span>Message envoyé !</span>
       </span>
       <!-- Ripple effect container -->

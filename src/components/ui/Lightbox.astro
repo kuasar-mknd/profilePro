@@ -281,7 +281,15 @@
         .forEach((img, index) => {
           img.addEventListener("click", () => {
             this.collectImages();
-            this.open(index);
+            this.open(index, img as HTMLElement);
+          });
+          img.addEventListener("keydown", (e) => {
+            const key = (e as KeyboardEvent).key;
+            if (key === "Enter" || key === " ") {
+              e.preventDefault();
+              this.collectImages();
+              this.open(index, img as HTMLElement);
+            }
           });
         });
     }
@@ -299,16 +307,31 @@
       });
     }
 
-    public open(index: number) {
+    private triggerElement: HTMLElement | null = null;
+
+    public open(index: number, trigger?: HTMLElement) {
+      if (trigger) this.triggerElement = trigger;
       this.currentIndex = index;
       this.updateImage();
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+      // Move focus to close button
+      setTimeout(() => {
+        const closeBtn = this.lightbox.querySelector(
+          ".lightbox-close",
+        ) as HTMLElement;
+        closeBtn?.focus();
+      }, 100);
     }
 
     public close() {
       this.lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+      // Return focus to trigger
+      if (this.triggerElement) {
+        this.triggerElement.focus();
+        this.triggerElement = null;
+      }
     }
 
     public next() {

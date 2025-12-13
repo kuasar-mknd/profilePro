@@ -148,6 +148,50 @@
 
 /* Custom Utilities & Base Styles */
 
+/* Improved Focus Styles for Accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-pacamara-secondary);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  /* Hide non-essential elements */
+  header,
+  footer,
+  .magnetic-btn,
+  .hero-buttons,
+  .hero-carousel,
+  #lightbox,
+  .group.mode-switch-btn {
+    display: none !important;
+  }
+
+  /* Optimize layout for print */
+  body {
+    background: white;
+    color: black;
+  }
+
+  main {
+    padding-top: 0 !important;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  /* Ensure text is readable */
+  p,
+  h1,
+  h2,
+  h3 {
+    color: black !important;
+    text-shadow: none !important;
+  }
+}
+
 :root {
   --gradient-space: 20px;
   --gradient-height: 2px;

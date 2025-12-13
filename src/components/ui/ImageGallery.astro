@@ -68,6 +68,9 @@ const columnClasses = {
             alt={`Photo ${index + 1} - ${folder}`}
             class="gallery-image"
             data-gallery-image
+            tabindex="0"
+            role="button"
+            aria-label={`Ouvrir la photo ${index + 1} en plein écran`}
           />
         </figure>
       ))}

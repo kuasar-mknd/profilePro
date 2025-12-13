@@ -61,16 +61,19 @@ if (!posterUrl && poster) {
           style={`background-image: url(${posterUrl})`}
           id={`poster-${videoId}`}
         >
-          <div
-            class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer"
+          <button
+            class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40"
             id={`play-btn-${videoId}`}
+            aria-label="Lire la vidéo"
+            type="button"
           >
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 transition-transform duration-300">
+            <div class="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg group-hover:scale-110 group-focus-visible:scale-110 transition-transform duration-300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 class="w-10 h-10 text-white ml-1"
+                aria-hidden="true"
               >
                 <path
                   fill-rule="evenodd"
@@ -79,7 +82,7 @@ if (!posterUrl && poster) {
                 />
               </svg>
             </div>
-          </div>
+          </button>
         </div>
         {provider === "vimeo" ? (
           <div id={`player-${videoId}`} class="plyr__video-embed w-full h-full">

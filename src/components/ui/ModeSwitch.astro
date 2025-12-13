@@ -1,10 +1,16 @@
-<button class="group mode-switch-btn" title="Changer de mode">
+<button
+  class="group mode-switch-btn"
+  title="Changer de mode"
+  aria-label="Activer le mode sombre"
+  aria-pressed="false"
+>
   <svg
     height="512"
     viewBox="0 0 24 24"
     width="512"
     xmlns="http://www.w3.org/2000/svg"
     class="w-8 h-auto fill-pacamara-secondary transition-all duration-300 hover:fill-pacamara-accent dark:fill-white dark:hover:fill-pacamara-accent"
+    aria-hidden="true"
   >
     <path
       d="m12 18a6 6 0 1 1 6-6 6 6 0 0 1 -6 6zm0-10a4 4 0 1 0 4 4 4 4 0 0 0 -4-4z"
@@ -26,17 +32,31 @@
 <script is:inline>
   // Encapsulation pour éviter les conflits de déclaration
   (function () {
+    // Fonction pour synchroniser l'état ARIA
+    const updateAriaState = (isDark) => {
+      const buttons = document.querySelectorAll(".mode-switch-btn");
+      buttons.forEach((btn) => {
+        btn.setAttribute("aria-pressed", isDark ? "true" : "false");
+        btn.setAttribute(
+          "aria-label",
+          isDark ? "Désactiver le mode sombre" : "Activer le mode sombre",
+        );
+      });
+    };
+
     // Fonction pour initialiser le thème
     const initTheme = () => {
-      if (
+      const isDark =
         localStorage.darkMode === "true" ||
         (!("darkMode" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      if (isDark) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
       }
+      updateAriaState(isDark);
     };
 
     // Initialisation immédiate pour éviter le flash
@@ -53,12 +73,14 @@
 
         newButton.addEventListener("click", function () {
           document.documentElement.classList.toggle("dark");
+          const isDark = document.documentElement.classList.contains("dark");
 
-          if (document.documentElement.classList.contains("dark")) {
+          if (isDark) {
             localStorage.darkMode = "true";
           } else {
             localStorage.darkMode = "false";
           }
+          updateAriaState(isDark);
         });
       });
     };
