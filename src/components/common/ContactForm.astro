@@ -48,6 +48,7 @@ import { Icon } from "astro-icon/components";
           id="name"
           autocomplete="name"
           required
+          inputmode="text"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="Votre nom"
         />
@@ -73,6 +74,8 @@ import { Icon } from "astro-icon/components";
           id="email"
           autocomplete="email"
           required
+          inputmode="email"
+          spellcheck="false"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="votre@email.com"
         />
@@ -208,7 +211,14 @@ import { Icon } from "astro-icon/components";
     background: rgba(255, 255, 255, 0.3);
     transform: scale(0);
     animation: ripple 0.6s linear;
+    animation: ripple 0.6s linear;
     pointer-events: none;
+  }
+
+  /* Focus Visible Enhancement */
+  .form-input:focus-visible {
+    outline: 2px solid var(--color-pacamara-accent);
+    outline-offset: 2px;
   }
 </style>
 
@@ -225,6 +235,11 @@ import { Icon } from "astro-icon/components";
 
       // Ripple effect
       submitButton?.addEventListener("click", (e) => {
+        // Accessibility: Skip ripple if user prefers reduced motion
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          return;
+        }
+
         const rect = submitButton.getBoundingClientRect();
         const ripple = document.createElement("span");
         ripple.className = "ripple-circle";
@@ -265,6 +280,10 @@ import { Icon } from "astro-icon/components";
           if (result.success) {
             submitButton?.classList.remove("loading");
             submitButton?.classList.add("success");
+            // Clear invalid states
+            form.querySelectorAll("input, textarea").forEach((el) => {
+              el.setAttribute("aria-invalid", "false");
+            });
             form.reset();
 
             setTimeout(() => {
@@ -280,6 +299,10 @@ import { Icon } from "astro-icon/components";
           if (submitButton) {
             submitButton.disabled = false;
           }
+          // Add visual feedback that something went wrong
+          form.querySelectorAll(":invalid").forEach((el) => {
+            el.setAttribute("aria-invalid", "true");
+          });
           // Show error state
           alert("Une erreur est survenue. Veuillez réessayer.");
         }

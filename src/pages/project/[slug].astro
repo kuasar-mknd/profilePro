@@ -16,14 +16,25 @@ import { getCollection, getEntry } from "astro:content";
 import config from "../../config.mjs";
 
 export async function getStaticPaths() {
-  const projectEntries = await getCollection("project");
+  const projectEntries = (await getCollection("project")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
 
-  return projectEntries.map((entry) => ({
+  return projectEntries.map((entry, index) => ({
     params: { slug: entry.slug },
-    props: { entry },
+    props: {
+      entry,
+      prevPost:
+        index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
+      nextPost: index > 0 ? projectEntries[index - 1] : null,
+    },
   }));
 }
-const { entry } = Astro.props;
+const { entry, prevPost, nextPost } = Astro.props;
+
+// Calculate reading time
+const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
+const readingTime = Math.ceil(wordCount / 200);
 
 const { Content } = await entry.render();
 const author = await getEntry(entry.data.author);
@@ -54,6 +65,17 @@ const jsonLd = {
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
+  <!-- Scroll Progress Bar -->
+  <div
+    class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none"
+  >
+    <div
+      class="h-full bg-pacamara-accent w-0 transition-all duration-100 ease-out"
+      id="scroll-progress"
+    >
+    </div>
+  </div>
+
   <!-- Project Hero Section -->
   <section
     class="relative w-full h-screen min-h-[600px] flex items-end justify-center overflow-hidden pb-32"
@@ -92,6 +114,12 @@ const jsonLd = {
       >
         <Tag tag={entry.data.tag} />
         <PublishDate date={entry.data.pubDate} />
+
+        <span class="text-pacamara-primary/60 dark:text-white/60">•</span>
+        <span
+          class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
+          >{readingTime} min de lecture</span
+        >
       </div>
       <h1
         class="font-pacamara-space font-bold text-5xl md:text-7xl lg:text-8xl mb-6 text-pacamara-dark dark:text-white animate-slide-up opacity-0 leading-tight tracking-tight drop-shadow-sm dark:drop-shadow-lg"
@@ -173,8 +201,116 @@ const jsonLd = {
         >
       </div>
       <Content />
+
+      <!-- Share Button & Navigation -->
+      <div
+        class="mt-12 pt-8 border-t border-pacamara-secondary/10 flex flex-col md:flex-row justify-between items-center gap-6"
+      >
+        <button
+          id="share-btn"
+          class="flex items-center gap-2 px-4 py-2 rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 text-pacamara-primary dark:text-white transition-colors cursor-pointer"
+        >
+          <Icon name="mdi:share-variant" class="w-5 h-5" />
+          <span class="font-medium">Partager ce projet</span>
+        </button>
+      </div>
+
+      <!-- Script for interactions -->
+      <script>
+        // Reading Progress
+        window.addEventListener(
+          "scroll",
+          () => {
+            const winScroll =
+              document.body.scrollTop || document.documentElement.scrollTop;
+            const height =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById("scroll-progress");
+            if (progressBar) progressBar.style.width = scrolled + "%";
+          },
+          { passive: true },
+        );
+
+        // Share functionality
+        const shareBtn = document.getElementById("share-btn");
+        if (shareBtn) {
+          shareBtn.addEventListener("click", async () => {
+            if (navigator.share) {
+              try {
+                await navigator.share({
+                  title: document.title,
+                  url: window.location.href,
+                });
+              } catch (err) {
+                console.log("Error sharing:", err);
+              }
+            } else {
+              // Fallback: Copy to clipboard
+              navigator.clipboard.writeText(window.location.href);
+              const span = shareBtn.querySelector("span");
+              if (span) {
+                const originalText = span.innerText;
+                span.innerText = "Lien copié !";
+                setTimeout(() => {
+                  span.innerText = originalText;
+                }, 2000);
+              }
+            }
+          });
+        }
+      </script>
     </div>
   </article>
+
+  <!-- Project Navigation -->
+  <nav
+    class="container mx-auto max-w-5xl px-7 mb-12"
+    aria-label="Navigation entre projets"
+  >
+    <div class="flex flex-col md:flex-row justify-between gap-4">
+      {
+        nextPost ? (
+          <a
+            href={`/project/${nextPost.slug}`}
+            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2"
+          >
+            <div class="flex-none">
+              <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
+                Projet précédent
+              </span>
+              <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors line-clamp-1">
+                {nextPost.data.title}
+              </span>
+            </div>
+          </a>
+        ) : (
+          <div class="w-full md:w-1/2" />
+        )
+      }
+
+      {
+        prevPost ? (
+          <a
+            href={`/project/${prevPost.slug}`}
+            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right"
+          >
+            <div class="flex-none">
+              <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
+                Projet suivant
+              </span>
+              <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors line-clamp-1">
+                {prevPost.data.title}
+              </span>
+            </div>
+          </a>
+        ) : (
+          <div class="w-full md:w-1/2" />
+        )
+      }
+    </div>
+  </nav>
 
   <!-- CTA Section -->
   <div class="container mx-auto max-w-5xl px-7 mt-10 mb-20">

@@ -93,9 +93,7 @@
   }
 }
 
-/* Keyframes must be defined in standard CSS for v4 to pick them up in animations if not using --animate-* with inline keyframes, 
-   but since we defined --animate-* pointing to names, we need the @keyframes blocks. */
-
+/* Keyframes */
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -156,7 +154,6 @@
 
 /* Print Styles */
 @media print {
-  /* Hide non-essential elements */
   header,
   footer,
   .magnetic-btn,
@@ -167,7 +164,6 @@
     display: none !important;
   }
 
-  /* Optimize layout for print */
   body {
     background: white;
     color: black;
@@ -182,7 +178,6 @@
     font-size: 0.8em;
   }
 
-  /* Ensure text is readable */
   p,
   h1,
   h2,
@@ -200,20 +195,15 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
   }
 
   body {
-    @apply bg-pacamara-white text-pacamara-primary antialiased;
+    @apply bg-pacamara-white text-pacamara-primary antialiased dark:bg-pacamara-dark dark:text-pacamara-white;
   }
 
   ::selection {
     @apply bg-pacamara-secondary text-pacamara-white;
-  }
-
-  @variant dark {
-    body {
-      @apply bg-pacamara-dark text-pacamara-white;
-    }
   }
 }
 
@@ -241,7 +231,7 @@
     );
   }
 
-  /* Animation Utilities - kept for backward compatibility if used directly */
+  /* Animation Utilities */
   .animate-fade-in {
     transition-property: opacity;
     transition-duration: 700ms;
@@ -280,6 +270,30 @@
       0 8px 10px -6px rgb(0 0 0 / 10%);
   }
 
+  .hover-lift:active {
+    transform: translateY(-2px);
+    box-shadow:
+      0 5px 12px -2px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+  }
+
+  /* Universal Active State for Buttons */
+  button:active:not(:disabled),
+  .magnetic-btn:active,
+  a.button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  /* External Link Indicator for Prose */
+  .prose a[target="_blank"]::after,
+  .external-link::after {
+    content: " ↗";
+    font-size: 0.7em;
+    vertical-align: super;
+    opacity: 0.7;
+    margin-left: 2px;
+  }
+
   .hover-scale-sm {
     transition: transform 0.3s ease;
   }
@@ -312,7 +326,7 @@
   }
 }
 
-/* Legacy Animation Classes (if needed) */
+/* Legacy Animation Classes */
 .animate-blob {
   animation: blob 7s infinite;
 }
@@ -398,11 +412,7 @@
   @apply bg-pacamara-secondary/50 rounded-full hover:bg-pacamara-secondary;
 }
 
-/* ========================================
-   ENHANCED UX ANIMATIONS
-   ======================================== */
-
-/* Scroll Reveal Animations */
+/* ENHANCED UX ANIMATIONS */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(40px);
@@ -441,7 +451,6 @@
   transform: scale(1);
 }
 
-/* Stagger delays for sequential reveals */
 .stagger-1 {
   transition-delay: 0.1s;
 }
@@ -466,7 +475,6 @@
   transition-delay: 0.6s;
 }
 
-/* 3D Tilt Card Effect */
 .tilt-card {
   transform-style: preserve-3d;
   transition: transform 0.3s cubic-bezier(0.03, 0.98, 0.52, 0.99);
@@ -497,7 +505,13 @@
   opacity: 1;
 }
 
-/* Infinite Scroll Animation */
+.infinite-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll-infinite 30s linear infinite;
+  will-change: transform;
+}
+
 @keyframes scroll-infinite {
   0% {
     transform: translateX(0);
@@ -508,20 +522,11 @@
   }
 }
 
-.infinite-scroll {
-  display: flex;
-  width: max-content;
-  animation: scroll-infinite 30s linear infinite;
-  will-change: transform;
-}
-
-/* Magnetic Button Effect */
 .magnetic-btn {
   position: relative;
   transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Text Shimmer Effect */
 @keyframes shimmer {
   0% {
     background-position: -200% center;
@@ -547,7 +552,6 @@
   animation: shimmer 4s linear infinite;
 }
 
-/* Floating Animation */
 @keyframes float {
   0%,
   100% {
@@ -572,7 +576,6 @@
   animation-delay: 2s;
 }
 
-/* Gradient Mesh Background */
 @keyframes gradient-mesh {
   0%,
   100% {
@@ -596,7 +599,6 @@
   animation: gradient-mesh 15s ease infinite;
 }
 
-/* Icon Bounce Animation */
 @keyframes icon-bounce {
   0%,
   100% {
@@ -612,7 +614,6 @@
   animation: icon-bounce 0.6s ease-in-out;
 }
 
-/* Card Glow Effect */
 .card-glow {
   position: relative;
 }
@@ -638,7 +639,6 @@
   opacity: 0.15;
 }
 
-/* Bento Grid Layout */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -685,7 +685,6 @@
   }
 }
 
-/* Image Reveal Effect */
 .image-reveal {
   clip-path: inset(0 100% 0 0);
   transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -695,7 +694,6 @@
   clip-path: inset(0 0 0 0);
 }
 
-/* Smooth Image Zoom */
 .image-zoom {
   overflow: hidden;
 }
@@ -708,7 +706,6 @@
   transform: scale(1.08);
 }
 
-/* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
