@@ -11,7 +11,8 @@ const CONFIG = {
   // 2560px : Le compromis parfait.
   // Suffisant pour Retina sur laptop 15" et très propre sur écran 4K.
   // Divise le poids par ~2.5 par rapport à la 4K native.
-  maxWidth: 2560,
+  // 1600px : Suffisant pour couvrier le max (1280px) avec marge.
+  maxWidth: 1600,
 
   // Qualité 68 en AVIF :
   // Visuellement "sans perte" pour l'œil humain, même pour un pro.
