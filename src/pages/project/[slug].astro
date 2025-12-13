@@ -218,20 +218,40 @@ const jsonLd = {
       <!-- Script for interactions -->
       <script>
         // Reading Progress
-        window.addEventListener(
-          "scroll",
-          () => {
+        const progressBar = document.getElementById("scroll-progress");
+
+        if (progressBar) {
+          let ticking = false;
+
+          const updateProgress = () => {
             const winScroll =
               document.body.scrollTop || document.documentElement.scrollTop;
             const height =
               document.documentElement.scrollHeight -
               document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
-            const progressBar = document.getElementById("scroll-progress");
-            if (progressBar) progressBar.style.width = scrolled + "%";
-          },
-          { passive: true },
-        );
+            progressBar.style.width = scrolled + "%";
+            ticking = false;
+          };
+
+          const onScroll = () => {
+            if (!ticking) {
+              window.requestAnimationFrame(updateProgress);
+              ticking = true;
+            }
+          };
+
+          window.addEventListener("scroll", onScroll, { passive: true });
+
+          // Cleanup to prevent duplicate listeners on navigation
+          document.addEventListener(
+            "astro:before-swap",
+            () => {
+              window.removeEventListener("scroll", onScroll);
+            },
+            { once: true },
+          );
+        }
 
         // Share functionality
         const shareBtn = document.getElementById("share-btn");
