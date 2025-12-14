@@ -162,6 +162,7 @@ import { Icon } from "astro-icon/components";
       id="form-error-message"
       class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center"
       role="alert"
+      aria-live="assertive"
     >
       Une erreur est survenue. Veuillez réessayer.
     </div>
@@ -228,6 +229,12 @@ import { Icon } from "astro-icon/components";
   .form-input:focus-visible {
     outline: 2px solid var(--color-pacamara-accent);
     outline-offset: 2px;
+  }
+
+  /* Invalid Input Styling */
+  [aria-invalid="true"] {
+    border-color: #ef4444; /* red-500 */
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   }
 </style>
 
@@ -309,8 +316,17 @@ import { Icon } from "astro-icon/components";
             submitButton.disabled = false;
           }
           // Add visual feedback that something went wrong
-          form.querySelectorAll(":invalid").forEach((el) => {
-            el.setAttribute("aria-invalid", "true");
+          form.querySelectorAll("input, textarea").forEach((el) => {
+            // Check if the element has a `name` attribute and is not a hidden field
+            if (
+              el.getAttribute("name") &&
+              el.getAttribute("type") !== "hidden" &&
+              el.getAttribute("name") !== "botcheck" &&
+              el.getAttribute("name") !== "subject" &&
+              el.getAttribute("name") !== "access_key"
+            ) {
+              el.setAttribute("aria-invalid", "true");
+            }
           });
           // Show error state
           // alert("Une erreur est survenue. Veuillez réessayer.");
