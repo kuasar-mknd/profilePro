@@ -11,10 +11,12 @@ originals/
 node_modules/
 
 # logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+dev.log
 
 # environment variables
 .env

@@ -8,6 +8,24 @@ import { Icon } from "astro-icon/components";
   class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
 >
+  <!-- Form Success Message -->
+  <div
+    id="form-success-message"
+    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="space-y-4">
+      <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
+      <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
+        Message envoyé !
+      </h3>
+      <p class="text-pacamara-primary/80 dark:text-white/80">
+        Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
+      </p>
+    </div>
+  </div>
+
   <!-- Decorative gradient corner -->
   <div
     class="absolute -top-20 -right-20 w-40 h-40 bg-linear-to-br from-pacamara-secondary/20 to-pacamara-accent/20 rounded-full blur-2xl pointer-events-none"
@@ -48,6 +66,7 @@ import { Icon } from "astro-icon/components";
           id="name"
           autocomplete="name"
           required
+          maxlength="100"
           inputmode="text"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="Votre nom"
@@ -74,6 +93,7 @@ import { Icon } from "astro-icon/components";
           id="email"
           autocomplete="email"
           required
+          maxlength="254"
           inputmode="email"
           spellcheck="false"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
@@ -100,6 +120,7 @@ import { Icon } from "astro-icon/components";
           id="message"
           rows="4"
           required
+          maxlength="5000"
           class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
@@ -162,6 +183,7 @@ import { Icon } from "astro-icon/components";
       id="form-error-message"
       class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center"
       role="alert"
+      aria-live="assertive"
     >
       Une erreur est survenue. Veuillez réessayer.
     </div>
@@ -229,6 +251,12 @@ import { Icon } from "astro-icon/components";
     outline: 2px solid var(--color-pacamara-accent);
     outline-offset: 2px;
   }
+
+  /* Invalid Input Styling */
+  [aria-invalid="true"] {
+    border-color: #ef4444; /* red-500 */
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
 </style>
 
 <script>
@@ -269,6 +297,9 @@ import { Icon } from "astro-icon/components";
         const object = Object.fromEntries(formData);
         const json = JSON.stringify(object);
 
+        const successMessage = form.querySelector("#form-success-message");
+        const errorMessage = form.querySelector("#form-error-message");
+
         if (submitButton) {
           submitButton.classList.add("loading");
           submitButton.disabled = true;
@@ -287,20 +318,18 @@ import { Icon } from "astro-icon/components";
           const result = await response.json();
 
           if (result.success) {
-            submitButton?.classList.remove("loading");
-            submitButton?.classList.add("success");
-            // Clear invalid states
-            form.querySelectorAll("input, textarea").forEach((el) => {
-              el.setAttribute("aria-invalid", "false");
-            });
-            form.reset();
+            // Hide error message if it was visible
+            errorMessage?.classList.add("hidden");
 
-            setTimeout(() => {
-              submitButton?.classList.remove("success");
-              if (submitButton) submitButton.disabled = false;
-            }, 3000);
+            // Show success message overlay
+            if (successMessage) {
+              successMessage.classList.remove("hidden");
+              successMessage.classList.add("flex"); // Uses flex for centering
+            }
+            form.reset();
+            // The form is now covered, button remains disabled.
           } else {
-            throw new Error("Submission failed");
+            throw new Error(result.message || "Submission failed");
           }
         } catch (error) {
           console.error(error);
@@ -308,18 +337,26 @@ import { Icon } from "astro-icon/components";
           if (submitButton) {
             submitButton.disabled = false;
           }
-          // Add visual feedback that something went wrong
-          form.querySelectorAll(":invalid").forEach((el) => {
-            el.setAttribute("aria-invalid", "true");
-          });
-          // Show error state
-          // alert("Une erreur est survenue. Veuillez réessayer.");
-          const errorMsg = form.querySelector("#form-error-message");
-          if (errorMsg) {
-            errorMsg.classList.remove("hidden");
-            errorMsg.textContent =
+          // Show general error message
+          if (errorMessage) {
+            errorMessage.classList.remove("hidden");
+            errorMessage.textContent =
               "Une erreur est survenue. Veuillez réessayer plus tard.";
           }
+
+          // Add visual feedback that something went wrong
+          form.querySelectorAll("input, textarea").forEach((el) => {
+            // Check if the element has a `name` attribute and is not a hidden field
+            if (
+              el.getAttribute("name") &&
+              el.getAttribute("type") !== "hidden" &&
+              el.getAttribute("name") !== "botcheck" &&
+              el.getAttribute("name") !== "subject" &&
+              el.getAttribute("name") !== "access_key"
+            ) {
+              el.setAttribute("aria-invalid", "true");
+            }
+          });
         }
       });
     }
