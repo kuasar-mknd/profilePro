@@ -130,8 +130,16 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <ClientRouter />
   </head>
   <body
-    class="bg-pacamara-white dark:bg-pacamara-dark transition-colors duration-300 min-h-screen flex flex-col"
+    class="bg-pacamara-white dark:bg-pacamara-dark transition-colors duration-300 min-h-screen flex flex-col relative"
   >
+    <!-- Scroll Sentinel for Back to Top visibility -->
+    <div
+      id="scroll-sentinel"
+      class="absolute top-0 w-full h-[300px] pointer-events-none -z-50"
+      aria-hidden="true"
+    >
+    </div>
+
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary"
@@ -180,33 +188,38 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <script>
       function initBackToTop() {
         const backToTopBtn = document.getElementById("back-to-top");
+        const sentinel = document.getElementById("scroll-sentinel");
 
-        if (backToTopBtn) {
-          // Show button when scrolling down
-          const toggleButton = () => {
-            if (window.scrollY > 300) {
-              backToTopBtn.classList.remove(
-                "opacity-0",
-                "invisible",
-                "translate-y-4",
-              );
-              backToTopBtn.classList.add("visible", "translate-y-0");
-              backToTopBtn.setAttribute("tabindex", "0");
-            } else {
-              backToTopBtn.classList.add(
-                "opacity-0",
-                "invisible",
-                "translate-y-4",
-              );
-              backToTopBtn.classList.remove("visible", "translate-y-0");
-              backToTopBtn.setAttribute("tabindex", "-1");
-            }
-          };
+        if (backToTopBtn && sentinel) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              const entry = entries[0];
+              // If sentinel is NOT intersecting (scrolled past), show button
+              if (!entry.isIntersecting) {
+                backToTopBtn.classList.remove(
+                  "opacity-0",
+                  "invisible",
+                  "translate-y-4",
+                );
+                backToTopBtn.classList.add("visible", "translate-y-0");
+                backToTopBtn.setAttribute("tabindex", "0");
+              } else {
+                backToTopBtn.classList.add(
+                  "opacity-0",
+                  "invisible",
+                  "translate-y-4",
+                );
+                backToTopBtn.classList.remove("visible", "translate-y-0");
+                backToTopBtn.setAttribute("tabindex", "-1");
+              }
+            },
+            {
+              root: null, // viewport
+              threshold: 0,
+            },
+          );
 
-          window.addEventListener("scroll", toggleButton, { passive: true });
-
-          // Initial check
-          toggleButton();
+          observer.observe(sentinel);
 
           // Scroll to top action
           backToTopBtn.addEventListener("click", () => {
@@ -222,13 +235,6 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       // Update theme-color meta tag based on current theme
       function updateThemeColor() {
         const isDark = document.documentElement.classList.contains("dark");
-
-        // We can dynamically update one specific meta tag if needed, or rely on the media attribute.
-        // However, some browsers don't respect the media attribute on theme-color dynamically.
-        // A more robust way is to update a single meta tag or ensuring the browser picks up the change.
-        // For simple switching, the existing media query approach works for OS preference changes.
-        // But for manual toggles, we might need to force it.
-
         const meta = document.querySelector('meta[name="theme-color"]');
         if (meta) {
           meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
