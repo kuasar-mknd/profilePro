@@ -246,14 +246,33 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 
       themeObserver.observe(document.documentElement, { attributes: true });
 
-      // 🛡️ Sentinel: Prevent Reverse Tabnabbing
+      // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
+      // and a warning in title/aria-label.
       function secureLinks() {
         const links = document.querySelectorAll('a[target="_blank"]');
+        const warning = " (ouvre un nouvel onglet)";
+
         links.forEach((link) => {
+          // Security: Add rel="noopener noreferrer"
           const rel = link.getAttribute("rel") || "";
           if (!rel.includes("noopener")) {
             link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+          }
+
+          // Accessibility: Append warning to title
+          const title = link.getAttribute("title") || "";
+          if (!title.includes(warning.trim())) {
+            link.setAttribute(
+              "title",
+              title ? title + warning : warning.trim(),
+            );
+          }
+
+          // Accessibility: Append warning to aria-label (only if present)
+          const ariaLabel = link.getAttribute("aria-label");
+          if (ariaLabel && !ariaLabel.includes(warning.trim())) {
+            link.setAttribute("aria-label", ariaLabel + warning);
           }
         });
       }
