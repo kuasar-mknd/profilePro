@@ -4,33 +4,37 @@ import SocialIcon from "../ui/SocialIcon.astro";
 ---
 
 <footer
-  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20"
+  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit"
 >
-  <div class="container mx-auto max-w-7xl px-7 py-16">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-10">
-      <div class="flex flex-col items-center md:items-start gap-4">
-        <a
-          href="/"
-          aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-          class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white
-        hover:text-pacamara-accent transition-colors duration-300"
-        >
-          Samuel Dulex
-        </a>
-      </div>
+  <div
+    class="container mx-auto max-w-7xl px-7 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8 items-start"
+  >
+    <!-- Column 1: Identity & Mission -->
+    <div
+      class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4"
+    >
+      <a
+        href="/"
+        aria-current={Astro.url.pathname === "/" ? "page" : undefined}
+        class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300"
+      >
+        Samuel Dulex
+      </a>
       <p
-        class="text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm max-w-xs text-center md:text-left"
+        class="text-pacamara-primary/80 dark:text-white/80 text-sm max-w-sm leading-relaxed"
       >
         Connecter, Communiquer, Captiver. <br />
-        Créateur de contenu visuel et digital.<br />
-        <span class="text-pacamara-accent font-medium"
-          >📍 Lausanne, Suisse romande</span
-        >
+        Créateur de contenu visuel et digital.
       </p>
+      <div class="flex items-center gap-2 text-sm text-pacamara-accent">
+        <span class="text-lg">📍</span>
+        <span class="font-medium">Lausanne, Suisse romande</span>
+      </div>
     </div>
 
-    <div class="flex flex-col items-center gap-6">
-      <ul class="flex flex-wrap justify-center gap-6">
+    <!-- Column 2: Socials & Copyright (Centered) -->
+    <div class="flex flex-col items-center justify-center space-y-6">
+      <ul class="flex flex-wrap justify-center gap-4">
         <SocialIcon
           socialUrl={config?.social?.dribbble}
           socialType="dribbble"
@@ -57,47 +61,63 @@ import SocialIcon from "../ui/SocialIcon.astro";
         <SocialIcon socialUrl={config?.social?.youtube} socialType="youtube" />
       </ul>
       <div
-        class="text-sm text-pacamara-primary/80 dark:text-white/80 font-outfit"
+        class="text-sm text-pacamara-primary/60 dark:text-white/60 text-center"
       >
-        &copy; {new Date().getFullYear()} Samuel Dulex. Tous droits réservés.
+        &copy; {new Date().getFullYear()} Samuel Dulex. <br
+          class="visible sm:hidden"
+        /> Tous droits réservés.
       </div>
     </div>
 
-    <div class="flex flex-col items-center md:items-end gap-2">
-      <!-- Reserve space for carbon badge to prevent CLS -->
+    <!-- Column 3: Badge & Credits (Right Aligned) -->
+    <div
+      class="flex flex-col items-center lg:items-end text-center lg:text-right space-y-4"
+    >
+      <!-- Website Carbon Badge -->
       <div
         id="wcb"
-        class="carbonbadge wcb-d flex items-center justify-center"
+        class="carbonbadge wcb-d flex items-center justify-center min-h-[50px]"
         aria-label="Website Carbon Badge"
       >
-        <!-- Loading skeleton -->
+        <!-- Badge injected by script -->
       </div>
-      <script is:inline>
-        if (
-          window.location.hostname !== "localhost" &&
-          window.location.hostname !== "127.0.0.1"
-        ) {
-          const script = document.createElement("script");
-          script.src = "https://unpkg.com/website-carbon-badges@1.1.3/b.min.js";
-          script.defer = true;
-          script.onerror = function () {
-            this.style.display = "none";
-            const wcb = document.getElementById("wcb");
-            if (wcb) wcb.style.display = "none";
-            console.warn("Carbon Badge script failed to load");
-          };
-          document.body.appendChild(script);
-        } else {
-          const wcb = document.getElementById("wcb");
-          if (wcb) wcb.style.display = "none";
-        }
-      </script>
+
       <span class="text-sm text-pacamara-primary/80 dark:text-white/80">
         Fait avec <span
-          class="text-red-600 dark:text-pacamara-accent animate-pulse motion-reduce:animate-none"
+          class="text-red-500 animate-pulse inline-block align-middle"
           >&hearts;</span
-        > avec Astro
+        > avec <a
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium hover:text-pacamara-accent transition-colors"
+          >Astro</a
+        >
       </span>
     </div>
   </div>
+
+  <script is:inline>
+    // Load Website Carbon Badge only in production/preview
+    if (
+      window.location.hostname !== "localhost" &&
+      window.location.hostname !== "127.0.0.1"
+    ) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/website-carbon-badges@1.1.3/b.min.js";
+      script.defer = true;
+      script.onerror = function () {
+        const wcb = document.getElementById("wcb");
+        if (wcb) wcb.style.display = "none";
+        console.warn("Carbon Badge script failed to load");
+      };
+      document.body.appendChild(script);
+    } else {
+      const wcb = document.getElementById("wcb");
+      if (wcb) {
+        wcb.innerHTML =
+          '<div class="text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded">Carbon Badge (Dev)</div>';
+      }
+    }
+  </script>
 </footer>
