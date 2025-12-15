@@ -58,7 +58,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
   >
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary"
     >
       Aller au contenu principal
     </a>
@@ -169,6 +169,22 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       });
 
       themeObserver.observe(document.documentElement, { attributes: true });
+
+      // 🛡️ Sentinel: Prevent Reverse Tabnabbing
+      // Ensures all external links opening in a new tab have rel="noopener noreferrer"
+      function secureLinks() {
+        const links = document.querySelectorAll('a[target="_blank"]');
+        links.forEach((link) => {
+          const rel = link.getAttribute("rel") || "";
+          if (!rel.includes("noopener")) {
+            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+          }
+        });
+      }
+
+      // Run on load and after view transitions
+      secureLinks();
+      document.addEventListener("astro:after-swap", secureLinks);
     </script>
   </body>
 </html>

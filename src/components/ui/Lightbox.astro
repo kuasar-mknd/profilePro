@@ -93,10 +93,12 @@
     </svg>
   </button>
 
-  <div class="lightbox-counter">
-    <span class="lightbox-current">1</span> / <span class="lightbox-total"
-      >1</span
-    >
+  <div class="lightbox-counter" aria-live="polite" aria-atomic="true">
+    <span class="sr-only">Image </span>
+    <span class="lightbox-current">1</span>
+    <span aria-hidden="true"> / </span>
+    <span class="sr-only"> sur </span>
+    <span class="lightbox-total">1</span>
   </div>
 </div>
 

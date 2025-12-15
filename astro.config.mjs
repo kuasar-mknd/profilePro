@@ -3,7 +3,6 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import compress from "astro-compress";
-import partytown from "@astrojs/partytown";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -33,31 +32,6 @@ export default defineConfig({
       Image: false, // Sharp handles this
       JavaScript: true,
       SVG: true,
-    }),
-    partytown({
-      config: {
-        forward: ["dataLayer.push"],
-        // Reduce forced layout recalculations
-        resolveUrl: (url) => {
-          // Proxy external scripts to avoid CORS issues and reduce reflows
-          if (url.hostname === "unpkg.com") {
-            return new URL(
-              `/cdn-proxy?url=${encodeURIComponent(url.href)}`,
-              url.origin,
-            );
-          }
-          return url;
-        },
-        // Limit main window accessor calls that can cause layout thrashing
-        mainWindowAccessors: {
-          offsetWidth: false,
-          offsetHeight: false,
-          clientWidth: false,
-          clientHeight: false,
-          scrollWidth: false,
-          scrollHeight: false,
-        },
-      },
     }),
   ],
   site: "https://portfolio.kuasar.xyz",
