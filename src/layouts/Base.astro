@@ -169,6 +169,22 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       });
 
       themeObserver.observe(document.documentElement, { attributes: true });
+
+      // 🛡️ Sentinel: Prevent Reverse Tabnabbing
+      // Ensures all external links opening in a new tab have rel="noopener noreferrer"
+      function secureLinks() {
+        const links = document.querySelectorAll('a[target="_blank"]');
+        links.forEach((link) => {
+          const rel = link.getAttribute("rel") || "";
+          if (!rel.includes("noopener")) {
+            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+          }
+        });
+      }
+
+      // Run on load and after view transitions
+      secureLinks();
+      document.addEventListener("astro:after-swap", secureLinks);
     </script>
   </body>
 </html>
