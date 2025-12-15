@@ -51,24 +51,32 @@
         // Initialize position to prevent jump
         blobX = mouseX;
         blobY = mouseY;
+        requestAnimationFrame(animate);
       }
     });
 
     // Animation loop
     function animate() {
-      if (isVisible) {
-        // Linear interpolation (lerp)
-        blobX += (mouseX - blobX) * ease;
-        blobY += (mouseY - blobY) * ease;
+      if (!isVisible) return;
 
-        if (blob) {
-          blob.style.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
-        }
+      // Linear interpolation (lerp)
+      const dx = mouseX - blobX;
+      const dy = mouseY - blobY;
+
+      blobX += dx * ease;
+      blobY += dy * ease;
+
+      if (blob) {
+        blob.style.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
+      }
+
+      // Stop loop if close enough to target
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        isVisible = false;
+        return;
       }
 
       requestAnimationFrame(animate);
     }
-
-    animate();
   }
 </script>
