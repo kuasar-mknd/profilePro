@@ -181,9 +181,10 @@ import { Icon } from "astro-icon/components";
     <!-- Inline Error Message -->
     <div
       id="form-error-message"
-      class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center"
+      class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center outline-none"
       role="alert"
       aria-live="assertive"
+      tabindex="-1"
     >
       Une erreur est survenue. Veuillez réessayer.
     </div>
@@ -342,6 +343,7 @@ import { Icon } from "astro-icon/components";
             errorMessage.classList.remove("hidden");
             errorMessage.textContent =
               "Une erreur est survenue. Veuillez réessayer plus tard.";
+            (errorMessage as HTMLElement).focus();
           }
 
           // Add visual feedback that something went wrong
