@@ -1,7 +1,15 @@
 ---
 import { Icon } from "astro-icon/components";
 
+interface Props {
+  socialUrl?: string;
+  socialType: string;
+}
+
 const { socialUrl = false, socialType } = Astro.props;
+const capitalizedType =
+  socialType.charAt(0).toUpperCase() + socialType.slice(1);
+const label = `Visitez notre page ${capitalizedType} (ouvre un nouvel onglet)`;
 ---
 
 {
@@ -11,8 +19,8 @@ const { socialUrl = false, socialType } = Astro.props;
         href={socialUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Visitez notre page ${socialType}`}
-        title={`Visitez notre page ${socialType}`}
+        aria-label={label}
+        title={label}
       >
         <Icon
           name={socialType}
