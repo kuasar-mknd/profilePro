@@ -5,9 +5,10 @@ import Header from "../components/common/Header.astro";
 import Footer from "../components/common/Footer.astro";
 import Lightbox from "../components/ui/Lightbox.astro";
 import "../css/style.css";
-import "@fontsource/inter";
-import "@fontsource/space-grotesk";
-import "@fontsource/outfit";
+// Fonts are now manually imported in <head> to allow preloading
+// import "@fontsource/inter";
+// import "@fontsource/space-grotesk";
+// import "@fontsource/outfit";
 
 import { ClientRouter } from "astro:transitions";
 
@@ -23,6 +24,81 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         :global(html) {
           scroll-behavior: auto !important;
         }
+      }
+    </style>
+    <!-- Font Preloads (Critical Request Chain Optimization) -->
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/outfit-light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/outfit-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <style is:global>
+      /* Manual Font Face Definitions */
+      @font-face {
+        font-family: "Space Grotesk";
+        src: url("/fonts/space-grotesk-bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Outfit";
+        src: url("/fonts/outfit-light.woff2") format("woff2");
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Outfit";
+        src: url("/fonts/outfit-regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Outfit";
+        src: url("/fonts/outfit-bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("/fonts/inter-regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("/fonts/inter-bold.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
       }
     </style>
     <!-- Critical preconnects - must be early in head for effectiveness -->

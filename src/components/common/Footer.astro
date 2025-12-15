@@ -116,4 +116,13 @@ import SocialIcon from "../ui/SocialIcon.astro";
       }
     }
   </script>
+  <style is:global>
+    /* Fix Carbon Badge Contrast */
+    #wcb #wcb_2 {
+      color: var(--color-pacamara-primary) !important;
+    }
+    .dark #wcb #wcb_2 {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+  </style>
 </footer>
