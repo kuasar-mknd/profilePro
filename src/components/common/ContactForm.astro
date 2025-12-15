@@ -8,6 +8,24 @@ import { Icon } from "astro-icon/components";
   class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
 >
+  <!-- Form Success Message -->
+  <div
+    id="form-success-message"
+    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="space-y-4">
+      <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
+      <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
+        Message envoyé !
+      </h3>
+      <p class="text-pacamara-primary/80 dark:text-white/80">
+        Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
+      </p>
+    </div>
+  </div>
+
   <!-- Decorative gradient corner -->
   <div
     class="absolute -top-20 -right-20 w-40 h-40 bg-linear-to-br from-pacamara-secondary/20 to-pacamara-accent/20 rounded-full blur-2xl pointer-events-none"
@@ -269,6 +287,9 @@ import { Icon } from "astro-icon/components";
         const object = Object.fromEntries(formData);
         const json = JSON.stringify(object);
 
+        const successMessage = form.querySelector("#form-success-message");
+        const errorMessage = form.querySelector("#form-error-message");
+
         if (submitButton) {
           submitButton.classList.add("loading");
           submitButton.disabled = true;
@@ -287,20 +308,18 @@ import { Icon } from "astro-icon/components";
           const result = await response.json();
 
           if (result.success) {
-            submitButton?.classList.remove("loading");
-            submitButton?.classList.add("success");
-            // Clear invalid states
-            form.querySelectorAll("input, textarea").forEach((el) => {
-              el.setAttribute("aria-invalid", "false");
-            });
-            form.reset();
+            // Hide error message if it was visible
+            errorMessage?.classList.add("hidden");
 
-            setTimeout(() => {
-              submitButton?.classList.remove("success");
-              if (submitButton) submitButton.disabled = false;
-            }, 3000);
+            // Show success message overlay
+            if (successMessage) {
+              successMessage.classList.remove("hidden");
+              successMessage.classList.add("flex"); // Uses flex for centering
+            }
+            form.reset();
+            // The form is now covered, button remains disabled.
           } else {
-            throw new Error("Submission failed");
+            throw new Error(result.message || "Submission failed");
           }
         } catch (error) {
           console.error(error);
@@ -308,18 +327,18 @@ import { Icon } from "astro-icon/components";
           if (submitButton) {
             submitButton.disabled = false;
           }
-          // Add visual feedback that something went wrong
+
+          // Show general error message
+          if (errorMessage) {
+            errorMessage.classList.remove("hidden");
+            errorMessage.textContent =
+              "Une erreur est survenue. Veuillez réessayer plus tard.";
+          }
+
+          // Mark invalid fields
           form.querySelectorAll(":invalid").forEach((el) => {
             el.setAttribute("aria-invalid", "true");
           });
-          // Show error state
-          // alert("Une erreur est survenue. Veuillez réessayer.");
-          const errorMsg = form.querySelector("#form-error-message");
-          if (errorMsg) {
-            errorMsg.classList.remove("hidden");
-            errorMsg.textContent =
-              "Une erreur est survenue. Veuillez réessayer plus tard.";
-          }
         }
       });
     }
