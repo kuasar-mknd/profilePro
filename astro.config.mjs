@@ -17,7 +17,7 @@ export default defineConfig({
     service: {
       entrypoint: "astro/assets/services/sharp",
     },
-    formats: ["avif", "webp"],
+    formats: ["avif"],
   },
   integrations: [
     mdx(),

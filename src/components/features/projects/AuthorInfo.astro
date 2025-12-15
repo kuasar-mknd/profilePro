@@ -10,9 +10,9 @@ const { authorData } = Astro.props;
     authorData.data.photo && (
       <Picture
         src={authorData.data.photo}
-        widths={[100, 200]}
+        widths={[200]}
         sizes="(min-resolution: 2dppx) 200px, 100px"
-        formats={["avif", "webp"]}
+        formats={["avif"]}
         fallbackFormat="avif"
         alt={authorData.data.displayName}
         width={100}

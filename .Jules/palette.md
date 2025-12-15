@@ -49,3 +49,8 @@
 
 **Learning:** Users need to know which page is active in navigation.
 **Action:** Add `aria-current="page"` to the active link.
+
+## 2025-12-13 - Lightbox Context
+
+**Learning:** Lightboxes often lose the context (alt text) of the image they display.
+**Action:** Capture and preserve `alt` attributes when opening images in a modal.
