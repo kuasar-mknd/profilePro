@@ -208,10 +208,21 @@ const jsonLd = {
       >
         <button
           id="share-btn"
-          class="flex items-center gap-2 px-4 py-2 rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 text-pacamara-primary dark:text-white transition-colors cursor-pointer"
+          class="flex items-center gap-2 px-4 py-2 rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 text-pacamara-primary dark:text-white transition-colors cursor-pointer group"
+          aria-live="polite"
         >
-          <Icon name="mdi:share-variant" class="w-5 h-5" />
-          <span class="font-medium">Partager ce projet</span>
+          <Icon
+            name="mdi:share-variant"
+            class="w-5 h-5 group-[.copied]:hidden"
+          />
+          <Icon
+            name="mdi:check"
+            class="w-5 h-5 text-green-600 dark:text-green-400 hidden group-[.copied]:block"
+          />
+          <span
+            class="font-medium group-[.copied]:text-green-600 dark:group-[.copied]:text-green-400"
+            >Partager ce projet</span
+          >
         </button>
       </div>
 
@@ -270,11 +281,15 @@ const jsonLd = {
               // Fallback: Copy to clipboard
               navigator.clipboard.writeText(window.location.href);
               const span = shareBtn.querySelector("span");
-              if (span) {
+
+              if (span && !shareBtn.classList.contains("copied")) {
                 const originalText = span.innerText;
                 span.innerText = "Lien copié !";
+                shareBtn.classList.add("copied");
+
                 setTimeout(() => {
                   span.innerText = originalText;
+                  shareBtn.classList.remove("copied");
                 }, 2000);
               }
             }
