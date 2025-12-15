@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components";
 
 interface Props {
-  socialUrl?: string;
+  socialUrl?: string | boolean;
   socialType: string;
 }
 
@@ -13,7 +13,7 @@ const label = `Visitez notre page ${capitalizedType} (ouvre un nouvel onglet)`;
 ---
 
 {
-  socialUrl && (
+  typeof socialUrl === "string" && (
     <li>
       <a
         href={socialUrl}
