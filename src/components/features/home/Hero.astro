@@ -134,9 +134,9 @@ const allSlides = [...slides, ...slides];
           >
             <Picture
               src={slide.src}
-              width={576}
-              height={1024}
-              widths={[224, 288, 448, 576]}
+              width={288}
+              height={512}
+              widths={[224, 288]}
               sizes="(max-width: 768px) 224px, 288px"
               formats={["avif"]}
               fallbackFormat="avif"
@@ -144,7 +144,7 @@ const allSlides = [...slides, ...slides];
               class="object-cover w-full h-full"
               loading={index < 3 ? "eager" : "lazy"}
               decoding="async"
-              quality={80}
+              quality={75}
             />
             <div class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
           </div>
@@ -206,9 +206,9 @@ const allSlides = [...slides, ...slides];
   }
 
   /* Hero elements entrance animations */
+  /* Note: hero-logo has NO initial opacity:0 to ensure LCP is visible immediately */
   .hero-logo {
-    opacity: 0;
-    animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Logo is visible immediately for LCP - no animation delay */
   }
 
   .hero-subtitle {
