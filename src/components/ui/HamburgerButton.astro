@@ -77,12 +77,14 @@
           }
         });
       });
-
-      menuObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["class"],
-      });
     }
+
+    // ⚡ Always ensure observer is connected to current documentElement
+    menuObserver.disconnect(); // Safety disconnect before reconnect
+    menuObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
   }
 
   menuToggle();
