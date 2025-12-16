@@ -11,6 +11,11 @@ import "../css/style.css";
 // import "@fontsource/outfit";
 
 import { ClientRouter } from "astro:transitions";
+import { getImage } from "astro:assets";
+import logo from "../assets/logo.avif";
+
+// Precompute LCP image URL for preloading
+const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 ---
@@ -55,7 +60,14 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       type="font/woff2"
       crossorigin
     />
-
+    <!-- LCP Image Preload (Hero Logo) -->
+    <link
+      rel="preload"
+      href={heroLogo.src}
+      as="image"
+      type="image/avif"
+      fetchpriority="high"
+    />
     <style is:global>
       /* Manual Font Face Definitions */
       @font-face {

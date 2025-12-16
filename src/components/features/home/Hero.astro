@@ -142,7 +142,8 @@ const allSlides = [...slides, ...slides];
               fallbackFormat="avif"
               alt={slide.alt}
               class="object-cover w-full h-full"
-              loading={index < 5 ? "eager" : "lazy"}
+              loading={index < 3 ? "eager" : "lazy"}
+              decoding="async"
               quality={80}
             />
             <div class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
@@ -154,15 +155,15 @@ const allSlides = [...slides, ...slides];
 </section>
 
 <style>
-  /* Letter Animation */
+  /* Letter Animation - GPU-composited */
   @keyframes letter-appear {
     0% {
       opacity: 0;
-      transform: translateY(20px) rotateX(-90deg);
+      transform: translateY(20px) scale(0.8);
     }
     100% {
       opacity: 1;
-      transform: translateY(0) rotateX(0deg);
+      transform: translateY(0) scale(1);
     }
   }
 
@@ -170,6 +171,7 @@ const allSlides = [...slides, ...slides];
     display: inline-block;
     opacity: 0;
     animation: letter-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
   }
 
   .hero-title .letter-animate:nth-child(1) {
