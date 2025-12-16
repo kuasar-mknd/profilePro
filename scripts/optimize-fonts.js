@@ -139,7 +139,13 @@ async function run() {
 
     console.log("✅ Fonts updated!");
   } catch (error) {
-    console.error("Error:", error);
+    // Sanitize error output to prevent log injection
+    let errMsg =
+      (error && error.message ? error.message : String(error)).replace(
+        /[\r\n]+/g,
+        " "
+      );
+    console.error("Error:", errMsg);
   }
 }
 
