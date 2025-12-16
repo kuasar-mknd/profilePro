@@ -52,7 +52,7 @@ const breadcrumbSchema = {
 
 <script
   type="application/ld+json"
-  set:html={JSON.stringify(breadcrumbSchema)}
+  set:html={JSON.stringify(breadcrumbSchema).replace(/</g, "\\u003c")}
 />
 
 <nav

@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import rehypeExternalLinks from "rehype-external-links";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import compress from "astro-compress";
@@ -19,7 +20,25 @@ export default defineConfig({
     formats: ["avif"],
   },
   integrations: [
-    mdx(),
+    mdx({
+      rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["noopener", "noreferrer"],
+            content: {
+              type: "text",
+              value: " (ouvre un nouvel onglet)",
+            },
+            contentProperties: {
+              "aria-hidden": "true",
+              class: "sr-only", // Screen reader only text to avoid visual clutter but keep accessibility
+            },
+          },
+        ],
+      ],
+    }),
     sitemap(),
     icon(),
     compress({

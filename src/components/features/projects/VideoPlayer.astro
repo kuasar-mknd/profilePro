@@ -97,6 +97,7 @@ if (!posterUrl && poster) {
             <iframe
               src={`https://player.vimeo.com/video/${videoId}${hash ? `?h=${hash}` : ""}`}
               allow="autoplay; fullscreen; picture-in-picture"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
               allowfullscreen
               class="w-full h-full"
               title="Lecteur vidéo Vimeo"

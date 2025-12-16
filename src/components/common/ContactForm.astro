@@ -67,6 +67,7 @@ import { Icon } from "astro-icon/components";
           autocomplete="name"
           required
           maxlength="100"
+          minlength="2"
           inputmode="text"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="Votre nom"
@@ -121,6 +122,7 @@ import { Icon } from "astro-icon/components";
           rows="4"
           required
           maxlength="5000"
+          minlength="10"
           class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
@@ -297,12 +299,31 @@ import { Icon } from "astro-icon/components";
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const formData = new FormData(form);
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
 
       const successMessage = form.querySelector("#form-success-message");
       const errorMessage = form.querySelector("#form-error-message");
+
+      // Rate Limiting (Client-side)
+      const lastSubmission = localStorage.getItem(
+        "contact_form_last_submission",
+      );
+      if (lastSubmission) {
+        const timeSince = Date.now() - parseInt(lastSubmission, 10);
+        // Limit to 1 submission every 2 minutes
+        if (timeSince < 120000) {
+          if (errorMessage) {
+            errorMessage.classList.remove("hidden");
+            errorMessage.textContent =
+              "Veuillez attendre quelques minutes avant de renvoyer un message.";
+            (errorMessage as HTMLElement).focus();
+          }
+          return;
+        }
+      }
+
+      const formData = new FormData(form);
+      const object = Object.fromEntries(formData);
+      const json = JSON.stringify(object);
 
       if (submitButton) {
         submitButton.classList.add("loading");
@@ -330,6 +351,10 @@ import { Icon } from "astro-icon/components";
             successMessage.classList.remove("hidden");
             successMessage.classList.add("flex"); // Uses flex for centering
           }
+          localStorage.setItem(
+            "contact_form_last_submission",
+            Date.now().toString(),
+          );
           form.reset();
           // The form is now covered, button remains disabled.
         } else {

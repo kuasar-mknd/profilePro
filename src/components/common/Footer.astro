@@ -119,19 +119,53 @@ import SocialIcon from "../ui/SocialIcon.astro";
       // Render function
       const render = (data) => {
         if (!wcb) return;
-        wcb.innerHTML = `
-          <div id="wcb_p" class="flex items-center text-[15px] leading-[1.15]">
-            <span id="wcb_g" class="bg-white border-r-0 border border-[#00ffbc] py-[0.3em] px-[0.5em] rounded-l-[0.3em] min-w-[8.2em] text-[#0e11a8] text-center">
-              ${data.c}g of CO<sub>2</sub>/view
-            </span>
-            <a id="wcb_a" target="_blank" rel="noopener" href="https://websitecarbon.com" class="bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity">
-              Website Carbon
-            </a>
-          </div>
-          <span id="wcb_2" class="block text-center text-sm mt-1 text-[#0e11a8] dark:text-white/80">
-            Cleaner than ${data.p}% of pages tested
-          </span>
-        `;
+        wcb.innerHTML = ""; // Clear loading state
+
+        const wrapper = document.createElement("div");
+        wrapper.id = "wcb_p";
+        wrapper.className = "flex items-center text-[15px] leading-[1.15]";
+
+        const scoreSpan = document.createElement("span");
+        scoreSpan.id = "wcb_g";
+        scoreSpan.className =
+          "bg-white border-r-0 border border-[#00ffbc] py-[0.3em] px-[0.5em] rounded-l-[0.3em] min-w-[8.2em] text-[#0e11a8] text-center";
+        // Safe text content
+        scoreSpan.textContent = data.c + "g of CO";
+        // Append subscribe element manually to avoid innerHTML for it if needed, or just text.
+        // But wait, the original had <sub>2</sub>.
+        // Let's do it safely.
+        const sub = document.createElement("sub");
+        sub.textContent = "2";
+        scoreSpan.appendChild(sub);
+        scoreSpan.append("/view");
+
+        // Reset textContent to handle the mix correctly if I want to be super strict,
+        // or effectively just build the nodes.
+        // Let's rebuild properly:
+        scoreSpan.textContent = "";
+        scoreSpan.append(data.c + "g of CO", sub, "/view");
+
+        const link = document.createElement("a");
+        link.id = "wcb_a";
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.href = "https://websitecarbon.com";
+        link.className =
+          "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity";
+        link.textContent = "Website Carbon";
+
+        wrapper.appendChild(scoreSpan);
+        wrapper.appendChild(link);
+
+        const percentSpan = document.createElement("span");
+        percentSpan.id = "wcb_2";
+        percentSpan.className =
+          "block text-center text-sm mt-1 text-[#0e11a8] dark:text-white/80";
+        percentSpan.textContent =
+          "Cleaner than " + data.p + "% of pages tested";
+
+        wcb.appendChild(wrapper);
+        wcb.appendChild(percentSpan);
       };
 
       // Styles are handled by global CSS or Tailwind, but we add structure above.
