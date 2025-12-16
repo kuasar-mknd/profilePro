@@ -141,11 +141,10 @@ async function run() {
   } catch (error) {
     // Sanitize error output to prevent log injection
     let errMsg =
-      (error && error.message ? error.message : String(error)).replace(
-        /[\r\n]+/g,
-        " "
-      );
-    console.error("Error:", errMsg);
+      (error && error.message ? error.message : String(error))
+        .replace(/[\r\n\t]+/g, " ") // Remove newlines, carriage returns, and tabs
+        .trim();
+    console.error("Error: [%s]", errMsg);
   }
 }
 
