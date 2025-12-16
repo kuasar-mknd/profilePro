@@ -343,9 +343,22 @@
       );
 
       // Gallery image clicks
+      this.bindGalleryImages();
+    }
+
+    /**
+     * ⚡ Bolt: Rebind gallery images for page transitions
+     * Called when navigating to a new page to attach listeners to new gallery images
+     */
+    public rebindGalleryImages() {
+      this.bindGalleryImages();
+    }
+
+    private bindGalleryImages() {
       document
-        .querySelectorAll("[data-gallery-image]")
+        .querySelectorAll("[data-gallery-image]:not(.lightbox-bound)")
         .forEach((img, index) => {
+          img.classList.add("lightbox-bound");
           img.addEventListener("click", () => {
             this.collectImages();
             this.open(index, img as HTMLElement);
@@ -482,9 +495,27 @@
     }
   }
 
+  /**
+   * ⚡ Bolt: Singleton pattern for Lightbox
+   * Prevents duplicate instances and memory leaks during page transitions.
+   * The same Lightbox instance is reused, with event handlers cleaned up properly.
+   */
+  let lightboxInstance: Lightbox | null = null;
+
+  function initLightbox() {
+    // ⚡ Early return if already initialized
+    if (lightboxInstance) {
+      // Re-bind gallery images for the new page
+      lightboxInstance.rebindGalleryImages();
+      return;
+    }
+
+    lightboxInstance = new Lightbox();
+  }
+
   // Initialize on page load
-  document.addEventListener("DOMContentLoaded", () => new Lightbox());
+  document.addEventListener("DOMContentLoaded", initLightbox);
 
   // Re-initialize on Astro page transitions
-  document.addEventListener("astro:page-load", () => new Lightbox());
+  document.addEventListener("astro:page-load", initLightbox);
 </script>

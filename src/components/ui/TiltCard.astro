@@ -25,6 +25,11 @@ const {
 </div>
 
 <script>
+  /**
+   * ⚡ Bolt: TiltCard performance optimization
+   * Caches DOM references and pre-calculates values to reduce overhead
+   * during frequent mousemove events.
+   */
   function initTiltCards() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -38,25 +43,34 @@ const {
 
       card.classList.add("tilt-initialized");
 
+      // ⚡ Cache the style object reference to avoid repeated lookups
+      const cardStyle = el.style;
+
       card.addEventListener("mousemove", (e) => {
         const event = e as MouseEvent;
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        const rect = (card as Element).getBoundingClientRect();
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+        // ⚡ Pre-calculate center coordinates
+        const centerX = rect.width * 0.5;
+        const centerY = rect.height * 0.5;
 
-        const rotateX = ((y - centerY) / centerY) * -maxTilt;
-        const rotateY = ((x - centerX) / centerX) * maxTilt;
+        // ⚡ Calculate relative position
+        const relativeX = event.clientX - rect.left - centerX;
+        const relativeY = event.clientY - rect.top - centerY;
 
-        (card as HTMLElement).style.setProperty("--rotate-x", `${rotateX}deg`);
-        (card as HTMLElement).style.setProperty("--rotate-y", `${rotateY}deg`);
+        // ⚡ Calculate rotation with division by center values
+        const rotateX = (relativeY / centerY) * -maxTilt;
+        const rotateY = (relativeX / centerX) * maxTilt;
+
+        // ⚡ Set CSS custom properties using cached style reference
+        cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
+        cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
       });
 
       card.addEventListener("mouseleave", () => {
-        (card as HTMLElement).style.setProperty("--rotate-x", "0deg");
-        (card as HTMLElement).style.setProperty("--rotate-y", "0deg");
+        // ⚡ Use cached style reference
+        cardStyle.setProperty("--rotate-x", "0deg");
+        cardStyle.setProperty("--rotate-y", "0deg");
       });
     });
   }

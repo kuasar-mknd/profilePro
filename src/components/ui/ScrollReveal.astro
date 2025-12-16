@@ -32,11 +32,44 @@ const staggerClass =
 </div>
 
 <script>
-  // Initialize Intersection Observer for scroll reveal
+  /**
+   * ⚡ Bolt: Cached IntersectionObserver singleton
+   * Reuses a single observer across page transitions to reduce memory usage
+   * and avoid creating multiple observers for the same purpose.
+   */
+  let cachedScrollRevealObserver: IntersectionObserver | null = null;
+
+  function getScrollRevealObserver(): IntersectionObserver {
+    // ⚡ Reuse existing observer instance
+    if (cachedScrollRevealObserver) {
+      return cachedScrollRevealObserver;
+    }
+
+    cachedScrollRevealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            cachedScrollRevealObserver?.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      },
+    );
+
+    return cachedScrollRevealObserver;
+  }
+
   function initScrollReveal() {
     const elements = document.querySelectorAll(
       ".reveal-on-scroll:not(.initialized)",
     );
+
+    // Early return if no elements to process
+    if (elements.length === 0) return;
 
     // Respect reduced motion preference
     const prefersReducedMotion = window.matchMedia(
@@ -53,20 +86,8 @@ const staggerClass =
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
-      },
-    );
+    // ⚡ Get or create the singleton observer
+    const observer = getScrollRevealObserver();
 
     elements.forEach((el) => {
       el.classList.add("initialized");

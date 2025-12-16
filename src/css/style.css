@@ -215,8 +215,15 @@
   }
 
   footer {
+    /* ⚡ Bolt: Skip rendering of off-screen footer content */
     content-visibility: auto;
     contain-intrinsic-size: 1px 300px;
+  }
+
+  /* ⚡ Bolt: Optimization for below-the-fold content */
+  .bento-grid {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
   }
 
   /* Ensure content is visible if JS is disabled */
@@ -551,6 +558,9 @@
 .magnetic-btn {
   position: relative;
   transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* ⚡ Bolt: Hint browser to pre-composite for transform animations */
+  will-change: transform;
 }
 
 @keyframes shimmer {
@@ -596,6 +606,9 @@
 
 .floating-slow {
   animation: float 8s ease-in-out infinite;
+
+  /* ⚡ Bolt: Match will-change with .floating for consistency */
+  will-change: transform;
 }
 
 .floating-delayed {

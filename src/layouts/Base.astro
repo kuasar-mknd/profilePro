@@ -203,31 +203,41 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     </button>
 
     <script>
+      /**
+       * ⚡ Bolt: Back to Top Performance Optimization
+       * Uses IntersectionObserver (already optimal) with initialization guard
+       * to prevent duplicate event handlers during page transitions.
+       */
+      let backToTopObserver: IntersectionObserver | null = null;
+
       function initBackToTop() {
         const backToTopBtn = document.getElementById("back-to-top");
         const sentinel = document.getElementById("scroll-sentinel");
 
-        if (backToTopBtn && sentinel) {
-          const observer = new IntersectionObserver(
+        // ⚡ Early return if elements don't exist
+        if (!backToTopBtn || !sentinel) return;
+
+        // ⚡ Early return if already initialized
+        if (backToTopBtn.dataset.initialized === "true") return;
+        backToTopBtn.dataset.initialized = "true";
+
+        // ⚡ Reuse observer if already created
+        if (!backToTopObserver) {
+          backToTopObserver = new IntersectionObserver(
             (entries) => {
               const entry = entries[0];
+              const btn = document.getElementById("back-to-top");
+              if (!btn) return;
+
               // If sentinel is NOT intersecting (scrolled past), show button
               if (!entry.isIntersecting) {
-                backToTopBtn.classList.remove(
-                  "opacity-0",
-                  "invisible",
-                  "translate-y-4",
-                );
-                backToTopBtn.classList.add("visible", "translate-y-0");
-                backToTopBtn.setAttribute("tabindex", "0");
+                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
+                btn.classList.add("visible", "translate-y-0");
+                btn.setAttribute("tabindex", "0");
               } else {
-                backToTopBtn.classList.add(
-                  "opacity-0",
-                  "invisible",
-                  "translate-y-4",
-                );
-                backToTopBtn.classList.remove("visible", "translate-y-0");
-                backToTopBtn.setAttribute("tabindex", "-1");
+                btn.classList.add("opacity-0", "invisible", "translate-y-4");
+                btn.classList.remove("visible", "translate-y-0");
+                btn.setAttribute("tabindex", "-1");
               }
             },
             {
@@ -235,14 +245,14 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
               threshold: 0,
             },
           );
-
-          observer.observe(sentinel);
-
-          // Scroll to top action
-          backToTopBtn.addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
         }
+
+        backToTopObserver.observe(sentinel);
+
+        // Scroll to top action
+        backToTopBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       }
 
       // Initialize on load and after view transitions

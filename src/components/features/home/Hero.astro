@@ -284,7 +284,10 @@ const allSlides = [...slides, ...slides];
 </style>
 
 <script>
-  // Magnetic button effect
+  /**
+   * ⚡ Bolt: Magnetic Button Performance Optimization
+   * Caches style references to reduce DOM access during frequent mousemove events.
+   */
   function initMagneticButtons() {
     const buttons = document.querySelectorAll(
       ".magnetic-btn:not(.magnetic-initialized)",
@@ -293,18 +296,27 @@ const allSlides = [...slides, ...slides];
     buttons.forEach((btn) => {
       btn.classList.add("magnetic-initialized");
 
+      // ⚡ Cache the style object reference
+      const btnStyle = (btn as HTMLElement).style;
+
       btn.addEventListener("mousemove", (e: Event) => {
         const mouseEvent = e as MouseEvent;
         const rect = btn.getBoundingClientRect();
-        const x = mouseEvent.clientX - rect.left - rect.width / 2;
-        const y = mouseEvent.clientY - rect.top - rect.height / 2;
 
-        (btn as HTMLElement).style.transform =
-          `translate(${x * 0.2}px, ${y * 0.2}px)`;
+        // ⚡ Pre-calculate center offset
+        const centerOffsetX = rect.width * 0.5;
+        const centerOffsetY = rect.height * 0.5;
+
+        const x = (mouseEvent.clientX - rect.left - centerOffsetX) * 0.2;
+        const y = (mouseEvent.clientY - rect.top - centerOffsetY) * 0.2;
+
+        // ⚡ Use cached style reference
+        btnStyle.transform = `translate(${x}px, ${y}px)`;
       });
 
       btn.addEventListener("mouseleave", () => {
-        (btn as HTMLElement).style.transform = "translate(0, 0)";
+        // ⚡ Use cached style reference
+        btnStyle.transform = "translate(0, 0)";
       });
     });
   }
@@ -312,11 +324,18 @@ const allSlides = [...slides, ...slides];
   initMagneticButtons();
   document.addEventListener("astro:page-load", initMagneticButtons);
 
-  // Touch drag for carousel
+  /**
+   * ⚡ Bolt: Carousel Touch Optimization
+   * Added initialization guard and passive listeners to all touch events
+   */
   function initCarouselTouch() {
     const carousel = document.getElementById("hero-carousel");
     const track = document.getElementById("carousel-track");
+
+    // ⚡ Early return guards
     if (!carousel || !track) return;
+    if (carousel.dataset.touchInitialized === "true") return;
+    carousel.dataset.touchInitialized = "true";
 
     let isDragging = false;
     let startX = 0;
@@ -346,11 +365,16 @@ const allSlides = [...slides, ...slides];
       { passive: true },
     );
 
-    carousel.addEventListener("touchend", () => {
-      isDragging = false;
-      track.style.transform = "";
-      track.style.animationPlayState = "running";
-    });
+    // ⚡ Bolt: Added passive: true to touchend for scroll optimization
+    carousel.addEventListener(
+      "touchend",
+      () => {
+        isDragging = false;
+        track.style.transform = "";
+        track.style.animationPlayState = "running";
+      },
+      { passive: true },
+    );
   }
 
   initCarouselTouch();

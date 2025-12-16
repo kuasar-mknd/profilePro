@@ -70,9 +70,13 @@ const columnClasses = {
 
 {
   galleryImages.length > 0 ? (
-    <div class={`image-gallery ${columnClasses[columns]}`}>
+    <div
+      class={`image-gallery ${columnClasses[columns]}`}
+      data-gallery-container
+    >
       {galleryImages.map((image, index) => (
         <figure class="gallery-item">
+          {/* ⚡ Bolt: Added loading="lazy" and decoding="async" for faster initial page load */}
           <Picture
             src={image.src}
             widths={[800]}
@@ -85,6 +89,8 @@ const columnClasses = {
             tabindex="0"
             role="button"
             aria-label={`Ouvrir la photo ${index + 1} en plein écran`}
+            loading="lazy"
+            decoding="async"
           />
         </figure>
       ))}
@@ -163,16 +169,30 @@ const columnClasses = {
 </style>
 
 <script>
+  /**
+   * ⚡ Bolt: Event delegation optimization
+   * Uses a single event listener on the container instead of individual listeners per image
+   * Reduces memory usage and event handler overhead for large galleries
+   */
   function initGalleryKeyboard() {
-    const images = document.querySelectorAll("[data-gallery-image]");
-    images.forEach((img) => {
-      img.addEventListener("keydown", (e) => {
+    const galleries = document.querySelectorAll(
+      "[data-gallery-container]:not(.gallery-initialized)",
+    );
+
+    galleries.forEach((gallery) => {
+      gallery.classList.add("gallery-initialized");
+
+      // ⚡ Single delegated listener instead of one per image
+      gallery.addEventListener("keydown", (e) => {
+        const target = (e as KeyboardEvent).target as HTMLElement;
+
         if (
-          (e as KeyboardEvent).key === "Enter" ||
-          (e as KeyboardEvent).key === " "
+          target.hasAttribute("data-gallery-image") &&
+          ((e as KeyboardEvent).key === "Enter" ||
+            (e as KeyboardEvent).key === " ")
         ) {
           e.preventDefault();
-          (img as HTMLElement).click();
+          target.click();
         }
       });
     });
