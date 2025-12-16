@@ -70,7 +70,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **Sécurité renforcée** avec CodeQL Analysis et Headers CSP stricts
 - **Compression automatique** HTML, CSS, JS, SVG
 - **Prefetch intelligent** pour navigation instantanée
-- **Scripts tiers optimisés** via Partytown (Web Workers)
+- **PWA Ready** pour une installation et support offline
 
 ### 📁 Gestion de contenu
 
@@ -92,7 +92,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 
 - **Image Optimization**: Sharp
 - **Compression**: astro-compress
-- **Scripts Optimization**: Partytown
+- **PWA**: vite-plugin-pwa (Offline support)
 - **Bundle Analysis**: rollup-plugin-visualizer
 
 ### Code Quality
