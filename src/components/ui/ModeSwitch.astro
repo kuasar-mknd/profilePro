@@ -31,7 +31,10 @@
 <span aria-live="polite" class="sr-only" id="mode-switch-announcer"></span>
 
 <script is:inline>
-  // Encapsulation pour éviter les conflits de déclaration
+  /**
+   * ⚡ Bolt: Optimized to prevent forced layout thrashing
+   * Replaced cloneNode/replaceChild pattern with initialization guard
+   */
   (function () {
     // Fonction pour synchroniser l'état ARIA
     const updateAriaState = (isDark) => {
@@ -63,16 +66,16 @@
     // Initialisation immédiate pour éviter le flash
     initTheme();
 
-    // Gestion du bouton
+    // ⚡ Gestion du bouton avec initialization guard (no cloneNode)
     const setDarkModeButton = () => {
       const buttons = document.querySelectorAll(".mode-switch-btn");
 
       buttons.forEach((button) => {
-        // Cloner le bouton pour supprimer les écouteurs d'événements existants (utile avec View Transitions)
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
+        // ⚡ Use initialization guard instead of cloneNode/replaceChild
+        if (button.dataset.initialized === "true") return;
+        button.dataset.initialized = "true";
 
-        newButton.addEventListener("click", function () {
+        button.addEventListener("click", function () {
           document.documentElement.classList.toggle("dark");
           const isDark = document.documentElement.classList.contains("dark");
 
