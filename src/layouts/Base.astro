@@ -33,6 +33,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
     <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
     <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
+    <link rel="preconnect" href="https://player.vimeo.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -50,40 +51,23 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     />
     <link
       rel="preload"
-      href="/fonts/outfit-light.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
       href="/fonts/outfit-regular.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="/fonts/inter-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/outfit-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- LCP Image Preload (Hero Logo) -->
-    <link
-      rel="preload"
-      href={heroLogo.src}
-      as="image"
-      type="image/avif"
-      fetchpriority="high"
-    />
+    <!-- LCP Image Preload (Hero Logo) - Only on Homepage -->
+    {
+      Astro.url.pathname === "/" && (
+        <link
+          rel="preload"
+          href={heroLogo.src}
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
     <style is:global>
       /* Manual Font Face Definitions */
       @font-face {
@@ -198,6 +182,8 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6"
+        width="24"
+        height="24"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

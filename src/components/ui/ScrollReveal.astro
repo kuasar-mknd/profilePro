@@ -49,8 +49,19 @@ const staggerClass =
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            cachedScrollRevealObserver?.unobserve(entry.target);
+            const target = entry.target as HTMLElement;
+            target.classList.add("visible");
+
+            // ⚡ Bolt: Cleanup high-cost will-change property after animation
+            target.addEventListener(
+              "transitionend",
+              () => {
+                target.classList.remove("will-change-transform");
+              },
+              { once: true },
+            );
+
+            cachedScrollRevealObserver?.unobserve(target);
           }
         });
       },

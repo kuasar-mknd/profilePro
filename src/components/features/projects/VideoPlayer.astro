@@ -1,6 +1,4 @@
 ---
-import "plyr/dist/plyr.css";
-
 const { videoUrl, poster } = Astro.props;
 
 // Extract video ID and provider
@@ -52,6 +50,7 @@ if (!posterUrl && poster) {
 
 <div
   class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
+  style="contain: layout style;"
 >
   {
     videoId ? (
@@ -140,7 +139,9 @@ if (!posterUrl && poster) {
           if (spinner) spinner.style.opacity = "1";
           if (svgIcon) svgIcon.style.opacity = "0";
 
-          // Dynamically import Plyr only when needed
+          // Dynamically import Plyr and its CSS only when needed
+          // @ts-ignore
+          await import("plyr/dist/plyr.css");
           // @ts-ignore
           const { default: Plyr } = await import("plyr");
 
