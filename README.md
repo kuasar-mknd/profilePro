@@ -11,9 +11,9 @@
 
 <!-- Tech Stack -->
 
-[![Built with Astro](https://img.shields.io/badge/Astro-5.15-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Built with Astro](https://img.shields.io/badge/Astro-5.16-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
 <!-- Code Quality -->
@@ -64,8 +64,10 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **SEO optimisé** avec metadata complète
 - **RSS Feed** pour les dernières publications
 - **Images optimisées** via Sharp et compression automatique
+- **Carbon Badge** avec calcul d'empreinte écologique (API dédiée)
 - **Type-safe** avec TypeScript et validation de schéma
 - **Lighthouse score** de 100% en Performance et Accessibilité
+- **Sécurité renforcée** avec CodeQL Analysis et Headers CSP stricts
 - **Compression automatique** HTML, CSS, JS, SVG
 - **Prefetch intelligent** pour navigation instantanée
 - **Scripts tiers optimisés** via Partytown (Web Workers)
@@ -232,34 +234,26 @@ npm run analyze  # Ouvre dist/stats.html
 
 ## 🌐 Déploiement
 
-Ce site est actuellement déployé sur **Cloudflare Pages**.
+Ce site est déployé sur **Cloudflare Pages** via une pipeline CI/CD GitHub Actions personnalisée et robuste.
 
-### Configuration Cloudflare Pages
+### Workflow de Déploiement (`deploy.yml`)
 
-- **Framework preset**: Astro
-- **Build command**: `npm run build`
-- **Build output directory**: `dist`
-- **Node version**: 18.x ou supérieur
-- **Branch de production**: `master`
+Le déploiement est entièrement automatisé et sécurisé :
 
-### Déploiement automatique
+1.  **Trigger** : Push sur la branche `master`.
+2.  **Quality Checks** (Parallèle) : Linting (ESLint, Stylelint) et formatage (Prettier).
+3.  **Security Scan** (Parallèle) : Analyse de vulnérabilités via **CodeQL**.
+4.  **Build & Deploy** (Séquentiel) :
+    - Nettoyage et installation des dépendances (`npm ci`).
+    - Restauration du cache intelligent pour les images (`node_modules/.astro`).
+    - Build de production (`npm run build`).
+    - Déploiement direct sur Cloudflare Pages via **Wrangler** (`npx wrangler pages deploy`).
 
-Cloudflare Pages construit et déploie automatiquement à chaque push sur la branche `master`. Aucune configuration GitHub Actions n'est nécessaire.
+### Configuration Cloudflare
 
-### Autres plateformes supportées
-
-Ce site peut également être déployé sur :
-
-- **Vercel**
-- **Netlify**
-- **GitHub Pages**
-
-```bash
-# Build pour la production
-npm run build
-
-# Le dossier dist/ contient les fichiers prêts pour le déploiement
-```
+- **Projet** : `profilepro`
+- **Wrangler** : Version latest utilisée via CI.
+- **Authentification** : Token API sécurisé via GitHub Secrets.
 
 ## 🤝 Contributing
 
