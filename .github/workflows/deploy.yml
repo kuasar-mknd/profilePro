@@ -39,12 +39,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           queries: security-extended
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:javascript-typescript"
 
@@ -65,6 +65,9 @@ jobs:
           node-version: "20"
           cache: "npm"
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Cache Astro Generated Images
         uses: actions/cache@v5
         with:
@@ -72,9 +75,6 @@ jobs:
           key: ${{ runner.os }}-astro-images-${{ hashFiles('src/assets/**/*') }}
           restore-keys: |
             ${{ runner.os }}-astro-images-
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Build Astro
         run: npm run build
