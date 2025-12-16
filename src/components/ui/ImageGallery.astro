@@ -79,10 +79,10 @@ const columnClasses = {
           {/* ⚡ Bolt: Added loading="lazy" and decoding="async" for faster initial page load */}
           <Picture
             src={image.src}
-            widths={[800]}
+            widths={[400, 800]}
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-            formats={["avif"]}
-            fallbackFormat="avif"
+            formats={["avif", "webp"]}
+            fallbackFormat="webp"
             alt={image.alt || `Photo ${index + 1}`}
             class="gallery-image"
             data-gallery-image
