@@ -1,7 +1,11 @@
 # Sentinel Journal 🛡️
 
 ## 2025-02-20 - Markdown External Links Vulnerability
-
 **Vulnerability:** External links in Markdown content (rendered via `@astrojs/mdx`) open in new tabs (`target="_blank"`) without `rel="noopener noreferrer"`, exposing users to Reverse Tabnabbing attacks.
 **Learning:** Astro's default MDX integration does not automatically sanitize or configure external links. It requires explicit plugins like `rehype-external-links`.
 **Prevention:** Verify MDX configuration for link handling. If adding dependencies is restricted, implement client-side mitigation to enforce `rel="noopener noreferrer"`.
+
+## 2025-12-16 - JSON-LD Injection XSS
+**Vulnerability:** `JSON.stringify` does not escape HTML characters, allowing XSS via `</script>` injection in `set:html`.
+**Learning:** Astro's `set:html` directives blindly inject content. `JSON.stringify` is insufficient for sanitization in this context.
+**Prevention:** Always append `.replace(/</g, "\\u003c")` when injecting JSON objects into `script` tags via `set:html`.
