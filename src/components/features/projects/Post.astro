@@ -22,6 +22,7 @@ const isWide = bentoSize === "bento-item-wide";
   >
     <!-- Background Image with zoom effect -->
     <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
+      {/* ⚡ Bolt: Added lazy loading for faster project listing load */}
       <Picture
         src={postData.data.image}
         widths={[800]}
@@ -35,6 +36,8 @@ const isWide = bentoSize === "bento-item-wide";
         width={isLarge ? 800 : 400}
         height={isLarge ? 600 : 300}
         class="w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
         transition:name={`project-image-${postData.slug}`}
       />
     </div>

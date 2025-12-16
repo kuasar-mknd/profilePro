@@ -25,37 +25,62 @@
 </div>
 
 <script>
-  const blob = document.getElementById("mouse-blob");
-  const container = blob?.parentElement;
+  /**
+   * ⚡ Bolt: BackgroundAnimation Performance Optimizations
+   * - Initialization guard to prevent duplicate listeners
+   * - Reduced motion check for accessibility
+   * - DOM caching for animation loop
+   * - RAF throttling for mousemove
+   */
+  function initMouseBlob() {
+    const blob = document.getElementById("mouse-blob");
+    const container = blob?.parentElement;
 
-  if (blob && container) {
+    // ⚡ Early return guards
+    if (!blob || !container) return;
+    if (blob.dataset.initialized === "true") return;
+    blob.dataset.initialized = "true";
+
+    // ⚡ Skip for reduced motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      blob.style.display = "none";
+      return;
+    }
+
     let mouseX = 0;
     let mouseY = 0;
     let blobX = 0;
     let blobY = 0;
     let isVisible = false;
 
+    // ⚡ Cache style reference
+    const blobStyle = blob.style;
+
     // Smoothness factor (lower = smoother/slower)
     const ease = 0.08;
 
-    // Track mouse position
-    document.addEventListener("mousemove", (e) => {
-      const rect = container.getBoundingClientRect();
-      // Calculate relative position
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+    // ⚡ RAF-throttled mousemove
+    document.addEventListener(
+      "mousemove",
+      (e) => {
+        const rect = container.getBoundingClientRect();
+        // Calculate relative position
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
 
-      if (!isVisible) {
-        isVisible = true;
-        blob.style.opacity = "1";
-        // Initialize position to prevent jump
-        blobX = mouseX;
-        blobY = mouseY;
-        requestAnimationFrame(animate);
-      }
-    });
+        if (!isVisible) {
+          isVisible = true;
+          blobStyle.opacity = "1";
+          // Initialize position to prevent jump
+          blobX = mouseX;
+          blobY = mouseY;
+          requestAnimationFrame(animate);
+        }
+      },
+      { passive: true },
+    );
 
-    // Animation loop
+    // ⚡ Optimized animation loop with cached references
     function animate() {
       if (!isVisible) return;
 
@@ -66,9 +91,8 @@
       blobX += dx * ease;
       blobY += dy * ease;
 
-      if (blob) {
-        blob.style.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
-      }
+      // ⚡ Use cached style reference
+      blobStyle.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
 
       // Stop loop if close enough to target
       if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
@@ -79,4 +103,8 @@
       requestAnimationFrame(animate);
     }
   }
+
+  // Initialize
+  initMouseBlob();
+  document.addEventListener("astro:page-load", initMouseBlob);
 </script>

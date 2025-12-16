@@ -22,52 +22,68 @@
 </button>
 
 <script>
-  const menuToggle = () => {
+  /**
+   * ⚡ Bolt: HamburgerButton Performance Optimization
+   * Added initialization guard to prevent duplicate observers and handlers
+   */
+  let menuObserver: MutationObserver | null = null;
+
+  function menuToggle() {
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
-    if (button && nav) {
-      button.addEventListener("click", function () {
-        const isExpanded = button.getAttribute("aria-expanded") === "true";
-        button.setAttribute("aria-expanded", String(!isExpanded));
-        document.documentElement.classList.toggle("overflow-hidden");
-        nav.classList.toggle("translate-x-full");
-        nav.classList.toggle("translate-x-0");
-      });
+    // ⚡ Early return guards
+    if (!button || !nav) return;
+    if ((button as HTMLElement).dataset.initialized === "true") return;
+    (button as HTMLElement).dataset.initialized = "true";
 
-      nav.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", () => {
-          document.documentElement.classList.remove("overflow-hidden");
-          button.setAttribute("aria-expanded", "false");
-          nav.classList.add("translate-x-full");
-          nav.classList.remove("translate-x-0");
-        });
-      });
+    button.addEventListener("click", function () {
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!isExpanded));
+      document.documentElement.classList.toggle("overflow-hidden");
+      nav.classList.toggle("translate-x-full");
+      nav.classList.toggle("translate-x-0");
+    });
 
-      // Sync aria-expanded with the actual state of the menu (overflow-hidden on html)
-      const observer = new MutationObserver((mutations) => {
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.documentElement.classList.remove("overflow-hidden");
+        button.setAttribute("aria-expanded", "false");
+        nav.classList.add("translate-x-full");
+        nav.classList.remove("translate-x-0");
+      });
+    });
+
+    // ⚡ Reuse observer if already created
+    if (!menuObserver) {
+      menuObserver = new MutationObserver((mutations) => {
+        const btn = document.querySelector("#menu_toggle");
+        const navEl = document.querySelector("#navigation_wrapper");
+        if (!btn || !navEl) return;
+
         mutations.forEach((mutation) => {
           if (mutation.attributeName === "class") {
             const isMenuOpen =
               document.documentElement.classList.contains("overflow-hidden");
-            button.setAttribute("aria-expanded", String(isMenuOpen));
+            btn.setAttribute("aria-expanded", String(isMenuOpen));
 
             if (isMenuOpen) {
-              nav.classList.remove("translate-x-full");
-              nav.classList.add("translate-x-0");
+              navEl.classList.remove("translate-x-full");
+              navEl.classList.add("translate-x-0");
             } else {
-              nav.classList.add("translate-x-full");
-              nav.classList.remove("translate-x-0");
+              navEl.classList.add("translate-x-full");
+              navEl.classList.remove("translate-x-0");
             }
           }
         });
       });
-      observer.observe(document.documentElement, {
+
+      menuObserver.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ["class"],
       });
     }
-  };
+  }
 
   menuToggle();
   // Runs on view transitions navigation

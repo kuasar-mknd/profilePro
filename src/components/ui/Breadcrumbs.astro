@@ -58,13 +58,14 @@ const breadcrumbSchema = {
 <nav
   aria-label="Breadcrumb"
   class="mb-8 animate-fade-in opacity-0"
-  style="animation-delay: 0.1s;"
+  style="animation-delay: 0.1s; will-change: opacity;"
 >
   <style>
     @media (prefers-reduced-motion: reduce) {
       .animate-fade-in {
         animation: none !important;
         opacity: 1 !important;
+        will-change: auto;
       }
     }
   </style>

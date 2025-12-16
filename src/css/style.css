@@ -655,6 +655,9 @@
 
 .card-glow {
   position: relative;
+
+  /* ⚡ Bolt: CSS containment for layout optimization */
+  contain: layout style;
 }
 
 .card-glow::before {
@@ -672,6 +675,9 @@
   z-index: -1;
   transition: opacity 0.3s ease;
   filter: blur(8px);
+
+  /* ⚡ Bolt: Pre-composite for smoother hover transition */
+  will-change: opacity;
 }
 
 .card-glow:hover::before {
