@@ -24,6 +24,15 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
+    <link
+      rel="preconnect"
+      href="https://static.cloudflareinsights.com"
+      crossorigin
+    />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -75,11 +84,6 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       type="image/avif"
       fetchpriority="high"
     />
-    <!-- ⚡ Preconnect hints for third-party origins (300ms + 250ms LCP savings) -->
-    <link rel="preconnect" href="https://cloudflareinsights.com" crossorigin />
-    <link rel="dns-prefetch" href="https://cloudflareinsights.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
-    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
     <style is:global>
       /* Manual Font Face Definitions */
       @font-face {
