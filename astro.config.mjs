@@ -9,7 +9,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: "auto", // Use "auto" to allow external CSS files for better caching
+    inlineStylesheets: "always", // Inline le CSS pour éliminer les requêtes bloquantes
   },
   image: {
     domains: ["kuasar.xyz"],

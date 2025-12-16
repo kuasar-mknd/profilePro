@@ -90,11 +90,13 @@ const jsonLd = {
           >
             <Picture
               src={entry.data.image}
-              widths={[1280]}
+              widths={[375, 640, 1024, 1280, 1920]}
               sizes="100vw"
               formats={["avif"]}
               fallbackFormat="avif"
               alt={entry.data.title}
+              loading="eager"
+              fetchpriority="high"
               width={1200}
               height={600}
               class="w-full h-full object-cover"
