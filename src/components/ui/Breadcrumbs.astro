@@ -73,7 +73,9 @@ const breadcrumbSchema = {
     class="flex items-center space-x-2 text-pacamara-primary dark:text-white list-none pl-0"
   >
     <li>
-      <a href="/" class="hover:text-pacamara-accent transition-colors"
+      <a
+        href="/"
+        class="hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-sm px-1 -mx-1"
         >Accueil</a
       >
     </li>
@@ -81,7 +83,9 @@ const breadcrumbSchema = {
       <span class="opacity-50" aria-hidden="true">/</span>
     </li>
     <li>
-      <a href="/project" class="hover:text-pacamara-accent transition-colors"
+      <a
+        href="/project"
+        class="hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-sm px-1 -mx-1"
         >Projets</a
       >
     </li>
@@ -89,12 +93,14 @@ const breadcrumbSchema = {
       category && (
         <>
           <li>
-            <span class="opacity-50">/</span>
+            <span class="opacity-50" aria-hidden="true">
+              /
+            </span>
           </li>
           <li>
             <a
               href={`/project/tag/${category}`}
-              class="hover:text-pacamara-accent transition-colors capitalize"
+              class="hover:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-sm px-1 -mx-1"
             >
               {displayCategory}
             </a>
