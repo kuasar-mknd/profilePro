@@ -14,3 +14,8 @@
 
 **Learning:** Apply magnetic transforms to the _element itself_ causes it to move out from under the cursor, triggering a -> -> loop (flickering).
 **Action:** Always use a **Wrapper/Target** pattern. The detects mouse events and stays static. The (inner child) receives the transform.
+
+## 2025-12-16 - [Expert Optimizations: Speculation Rules & PWA]
+
+**Learning:** is the modern standard for instant navigation, replacing older prefetch libraries. makes offline support trivial with the right configuration.
+**Action:** When optimizing fonts, always verify if generic Google Fonts binaries are full-size. Using binaries for specific subsets (like Latin) can save ~50% of font file size vs standard fetches.

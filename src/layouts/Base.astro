@@ -68,6 +68,22 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         />
       )
     }
+
+    <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
+    <script
+      type="speculationrules"
+      set:html={JSON.stringify({
+        prerender: [
+          {
+            source: "document",
+            where: {
+              href_matches: "/*",
+            },
+            eagerness: "moderate",
+          },
+        ],
+      })}
+    />
     <style is:global>
       /* Manual Font Face Definitions */
       @font-face {
@@ -308,6 +324,21 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       // Run on load and after view transitions
       secureLinks();
       document.addEventListener("astro:after-swap", secureLinks);
+    </script>
+    <script>
+      import { registerSW } from "virtual:pwa-register";
+
+      if ("serviceWorker" in navigator) {
+        registerSW({
+          immediate: true,
+          onNeedRefresh() {
+            console.log("⚡ Bolt PWA: New content available");
+          },
+          onOfflineReady() {
+            console.log("⚡ Bolt PWA: App ready to work offline");
+          },
+        });
+      }
     </script>
   </body>
 </html>
