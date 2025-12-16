@@ -1,9 +1,12 @@
 name: PageSpeed Badges
-
 on:
   schedule:
     - cron: "0 0 * * *" # Run daily at midnight
   workflow_dispatch: # Allow manual trigger
+  workflow_run:
+    workflows: ["Deploy"]
+    types:
+      - completed
 
 jobs:
   pagespeed:
