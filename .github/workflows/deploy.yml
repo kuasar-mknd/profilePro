@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
           cache: "npm"
@@ -66,7 +66,7 @@ jobs:
           cache: "npm"
 
       - name: Cache Astro Generated Images
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules/.astro
           key: ${{ runner.os }}-astro-images-${{ hashFiles('src/assets/**/*') }}
@@ -81,11 +81,7 @@ jobs:
         timeout-minutes: 360
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: profilepro
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: master
+        run: npx wrangler pages deploy dist --project-name=profilepro --branch=master
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
