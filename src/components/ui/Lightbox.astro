@@ -286,8 +286,10 @@
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
     private lastFocusableElement: HTMLElement | null = null;
+    private boundKeyHandler: (e: KeyboardEvent) => void;
 
     constructor() {
+      this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.lightbox = document.getElementById("lightbox")!;
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
@@ -328,7 +330,7 @@
         ?.addEventListener("click", () => this.next());
 
       // Keyboard
-      document.addEventListener("keydown", (e) => this.handleKeyboard(e));
+      document.addEventListener("keydown", this.boundKeyHandler);
 
       // Touch events for swipe
       this.lightbox.addEventListener(
@@ -480,11 +482,21 @@
         }
       }
     }
+
+    public destroy() {
+      document.removeEventListener("keydown", this.boundKeyHandler);
+    }
   }
 
-  // Initialize on page load
-  document.addEventListener("DOMContentLoaded", () => new Lightbox());
+  let lightboxInstance: Lightbox | null = null;
 
-  // Re-initialize on Astro page transitions
-  document.addEventListener("astro:page-load", () => new Lightbox());
+  function initLightbox() {
+    if (lightboxInstance) {
+      lightboxInstance.destroy();
+    }
+    lightboxInstance = new Lightbox();
+  }
+
+  // Initialize on page load (covers both initial load and view transitions)
+  document.addEventListener("astro:page-load", initLightbox);
 </script>
