@@ -36,7 +36,10 @@ const type = postData?.data?.type ? postData.data.type : "website";
 <!-- JSON-LD Structured Data -->
 {
   jsonLd && (
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
+    />
   )
 }
 

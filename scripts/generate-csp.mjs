@@ -1,5 +1,4 @@
 import fs from "node:fs/promises";
-
 import crypto from "node:crypto";
 import * as cheerio from "cheerio";
 import { glob } from "glob";
