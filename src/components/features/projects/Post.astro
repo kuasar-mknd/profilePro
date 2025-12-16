@@ -25,13 +25,13 @@ const isWide = bentoSize === "bento-item-wide";
       {/* ⚡ Bolt: Added lazy loading for faster project listing load */}
       <Picture
         src={postData.data.image}
-        widths={[800]}
+        widths={[400, 800, 1200]}
         sizes={isLarge
-          ? "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 600px"
-          : "(max-width: 768px) 100vw, (max-width: 1280px) 25vw, 300px"}
-        formats={["avif"]}
-        fallbackFormat="avif"
-        quality={80}
+          ? "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 800px"
+          : "(max-width: 768px) 100vw, (max-width: 1280px) 25vw, 400px"}
+        formats={["avif", "webp"]}
+        fallbackFormat="webp"
+        quality={65}
         alt={postData.data.title}
         width={isLarge ? 800 : 400}
         height={isLarge ? 600 : 300}
