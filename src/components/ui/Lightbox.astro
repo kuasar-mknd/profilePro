@@ -287,9 +287,14 @@
     private firstFocusableElement: HTMLElement | null = null;
     private lastFocusableElement: HTMLElement | null = null;
     private boundKeyHandler: (e: KeyboardEvent) => void;
+    private boundClickHandler: (e: MouseEvent) => void;
+    private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
 
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
+      this.boundClickHandler = this.handleClick.bind(this);
+      this.boundDelegatedKeyHandler = this.handleDelegatedKeyboard.bind(this);
+
       this.lightbox = document.getElementById("lightbox")!;
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
@@ -344,36 +349,61 @@
         { passive: true },
       );
 
-      // Gallery image clicks
-      this.bindGalleryImages();
+      // ⚡ Bolt: Event Delegation for Gallery Images
+      // Listens on document instead of attaching listeners to every image
+      document.addEventListener("click", this.boundClickHandler);
+      // ⚡ Bolt: Accessibility - Handle keyboard activation for images
+      document.addEventListener("keydown", this.boundDelegatedKeyHandler);
     }
 
     /**
-     * ⚡ Bolt: Rebind gallery images for page transitions
-     * Called when navigating to a new page to attach listeners to new gallery images
+     * ⚡ Bolt: Delegated click handler
+     * Handles clicks on any element with data-gallery-image
      */
-    public rebindGalleryImages() {
-      this.bindGalleryImages();
+    private handleClick(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      // Handle direct clicks or clicks on children (though img usually doesn't have children)
+      const galleryImage = target.closest(
+        "[data-gallery-image]",
+      ) as HTMLElement;
+
+      if (galleryImage) {
+        this.activateImage(galleryImage);
+      }
     }
 
-    private bindGalleryImages() {
-      document
-        .querySelectorAll("[data-gallery-image]:not(.lightbox-bound)")
-        .forEach((img, index) => {
-          img.classList.add("lightbox-bound");
-          img.addEventListener("click", () => {
-            this.collectImages();
-            this.open(index, img as HTMLElement);
-          });
-          img.addEventListener("keydown", (e) => {
-            const key = (e as KeyboardEvent).key;
-            if (key === "Enter" || key === " ") {
-              e.preventDefault();
-              this.collectImages();
-              this.open(index, img as HTMLElement);
-            }
-          });
-        });
+    /**
+     * ⚡ Bolt: Delegated keyboard handler
+     * Handles Enter/Space on any element with data-gallery-image
+     */
+    private handleDelegatedKeyboard(e: KeyboardEvent) {
+      if (e.key === "Enter" || e.key === " ") {
+        const target = e.target as HTMLElement;
+        const galleryImage = target.closest(
+          "[data-gallery-image]",
+        ) as HTMLElement;
+
+        if (galleryImage) {
+          e.preventDefault(); // Prevent page scroll on Space
+          this.activateImage(galleryImage);
+        }
+      }
+    }
+
+    private activateImage(galleryImage: HTMLElement) {
+      // Collect images to ensure we have the latest set from DOM
+      this.collectImages();
+
+      // Find the index of the clicked image
+      // We re-query the DOM to match the order in this.images
+      const elements = Array.from(
+        document.querySelectorAll("[data-gallery-image]"),
+      );
+      const index = elements.indexOf(galleryImage);
+
+      if (index !== -1) {
+        this.open(index, galleryImage);
+      }
     }
 
     private collectImages() {
@@ -444,6 +474,7 @@
     }
 
     private handleKeyboard(e: KeyboardEvent) {
+      // Only handle modal navigation keys if lightbox is open
       if (this.lightbox.getAttribute("aria-hidden") === "true") return;
 
       // Focus trap
@@ -498,6 +529,8 @@
 
     public destroy() {
       document.removeEventListener("keydown", this.boundKeyHandler);
+      document.removeEventListener("click", this.boundClickHandler);
+      document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
     }
   }
 
@@ -518,9 +551,7 @@
     lightboxInstance = new Lightbox();
   }
 
-  // Initialize on page load
-  document.addEventListener("DOMContentLoaded", initLightbox);
-
-  // Re-initialize on Astro page transitions
+  // ⚡ Bolt: Removed redundant DOMContentLoaded listener
+  // astro:page-load handles both initial load and subsequent navigations
   document.addEventListener("astro:page-load", initLightbox);
 </script>
