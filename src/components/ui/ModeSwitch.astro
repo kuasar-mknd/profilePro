@@ -28,6 +28,7 @@
     ></path></svg
   >
 </button>
+<span aria-live="polite" class="sr-only" id="mode-switch-announcer"></span>
 
 <script is:inline>
   // Encapsulation pour éviter les conflits de déclaration
@@ -81,6 +82,12 @@
             localStorage.darkMode = "false";
           }
           updateAriaState(isDark);
+          const announcer = document.getElementById("mode-switch-announcer");
+          if (announcer) {
+            announcer.textContent = isDark
+              ? "Mode sombre activé"
+              : "Mode clair activé";
+          }
         });
       });
     };
