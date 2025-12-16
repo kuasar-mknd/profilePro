@@ -4,8 +4,6 @@ name: CI
 # Runs linting and build checks on every push and pull request
 
 on:
-  push:
-    branches: ["master"]
   pull_request:
     branches: ["master"]
 
@@ -56,14 +54,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-astro-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Run Prettier check
-        run: npm run format:check
-
-      - name: Run ESLint
-        run: npm run lint:eslint
-
-      - name: Run Stylelint
-        run: npm run lint:stylelint
+      - name: Run Quality Checks
+        run: npm run check
 
       - name: Build project
         run: npm run build

@@ -90,15 +90,16 @@ const jsonLd = {
           >
             <Picture
               src={entry.data.image}
-              widths={[1280]}
+              widths={[640, 960, 1280, 1600]}
               sizes="100vw"
-              formats={["avif"]}
-              fallbackFormat="avif"
+              formats={["avif", "webp"]}
+              fallbackFormat="webp"
               alt={entry.data.title}
-              width={1200}
-              height={600}
+              width={1600}
+              height={800}
               class="w-full h-full object-cover"
               transition:name={`project-image-${entry.slug}`}
+              quality={70}
             />
             {/* Overlay adaptatif : Blanc en Light Mode, Noir en Dark Mode */}
             <div class="absolute inset-0 bg-linear-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />

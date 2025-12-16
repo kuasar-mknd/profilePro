@@ -61,9 +61,9 @@ const readingTime = Math.ceil(wordCount / 200);
         <Picture
           src={entry.data.image}
           widths={[400, 800, 1200]}
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 800px"
           formats={["avif", "webp"]}
-          fallbackFormat="avif"
+          fallbackFormat="webp"
           alt={entry.data.title}
           width={1200}
           height={600}
@@ -71,6 +71,7 @@ const readingTime = Math.ceil(wordCount / 200);
           decoding="sync"
           class="block relative mx-auto mt-10 object-cover h-72 md:h-[350px] image-shine rounded-[15px]"
           transition:name={`project-image-${entry.slug}`}
+          quality={75}
         />
       )
     }
