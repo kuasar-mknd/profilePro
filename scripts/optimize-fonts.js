@@ -140,11 +140,18 @@ async function run() {
     console.log("✅ Fonts updated!");
   } catch (error) {
     // Sanitize error output to prevent log injection
-    let errMsg =
-      (error && error.message ? error.message : String(error))
-        .replace(/[\r\n\t]+/g, " ") // Remove newlines, carriage returns, and tabs
+    function sanitizeLogInput(str) {
+      // Remove all control characters except for printable ASCII (32-126), like space
+      // Also remove common ANSI escape sequences
+      return String(str)
+        .replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "")  // Remove ANSI escapes
+        .replace(/[^\x20-\x7E]+/g, " ") // Replace non-printable ASCII characters with space
         .trim();
-    console.error("Error: [%s]", errMsg);
+    }
+    let errMsg = sanitizeLogInput(
+      error && error.message ? error.message : String(error)
+    );
+    console.error('Error: [%s]', errMsg);
   }
 }
 
