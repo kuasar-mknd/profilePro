@@ -286,8 +286,10 @@
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
     private lastFocusableElement: HTMLElement | null = null;
+    private boundKeyHandler: (e: KeyboardEvent) => void;
 
     constructor() {
+      this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.lightbox = document.getElementById("lightbox")!;
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
@@ -328,7 +330,7 @@
         ?.addEventListener("click", () => this.next());
 
       // Keyboard
-      document.addEventListener("keydown", (e) => this.handleKeyboard(e));
+      document.addEventListener("keydown", this.boundKeyHandler);
 
       // Touch events for swipe
       this.lightbox.addEventListener(
@@ -493,23 +495,26 @@
         }
       }
     }
+
+    public destroy() {
+      document.removeEventListener("keydown", this.boundKeyHandler);
+    }
   }
 
   /**
-   * ⚡ Bolt: Singleton pattern for Lightbox
-   * Prevents duplicate instances and memory leaks during page transitions.
-   * The same Lightbox instance is reused, with event handlers cleaned up properly.
+   * ⚡ Bolt: Singleton pattern for Lightbox with proper cleanup
+   * Ensures the Lightbox instance is tied to the current DOM elements
+   * and previous listeners are removed before creating a new one.
    */
   let lightboxInstance: Lightbox | null = null;
 
   function initLightbox() {
-    // ⚡ Early return if already initialized
+    // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
     if (lightboxInstance) {
-      // Re-bind gallery images for the new page
-      lightboxInstance.rebindGalleryImages();
-      return;
+      lightboxInstance.destroy();
     }
 
+    // Create fresh instance for the new page content
     lightboxInstance = new Lightbox();
   }
 
