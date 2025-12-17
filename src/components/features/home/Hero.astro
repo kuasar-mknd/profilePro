@@ -302,8 +302,8 @@ const allSlides = [...slides, ...slides];
 <script>
   /**
    * ⚡ Bolt: Magnetic Button Performance Optimization
-   * Refactored to use Wrapper/Target pattern to prevent flickering (mouseleave loops).
-   * The wrapper stays static and captures events, while the inner target moves.
+   * Refactored to use Wrapper/Target pattern with requestAnimationFrame.
+   * Prevents layout thrashing and ensures 60fps animations.
    */
   function initMagneticButtons() {
     const wrappers = document.querySelectorAll(
@@ -325,12 +325,12 @@ const allSlides = [...slides, ...slides];
     updateCache();
 
     // Update cache on resize/scroll (throttled)
-    let resizeTimeout;
+    let resizeTimeout: number;
     window.addEventListener(
       "resize",
       () => {
         if (resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(updateCache, 100);
+        resizeTimeout = window.setTimeout(updateCache, 100);
       },
       { passive: true },
     );
@@ -338,13 +338,24 @@ const allSlides = [...slides, ...slides];
     wrappers.forEach((wrap) => {
       wrap.classList.add("magnetic-initialized");
       const target = wrap.querySelector(".magnetic-content") as HTMLElement;
-      if (!target) return;
+      // Fallback for buttons that might not have the inner class yet (if legacy)
+      const actualTarget = target || (wrap.querySelector("a") as HTMLElement);
 
-      const targetStyle = target.style;
+      if (!actualTarget) return;
 
+      const targetStyle = actualTarget.style;
       // ⚡ Bolt: Hint browser to pre-composite for transform animations
-      target.style.willChange = "transform";
-      target.style.transition = "transform 0.2s cubic-bezier(0.23, 1, 0.32, 1)";
+      targetStyle.willChange = "transform";
+      targetStyle.transition = "transform 0.2s cubic-bezier(0.23, 1, 0.32, 1)";
+
+      let currentX = 0;
+      let currentY = 0;
+      let rafId: number | null = null;
+
+      const updateTransform = () => {
+        targetStyle.transform = `translate(${currentX}px, ${currentY}px)`;
+        rafId = null;
+      };
 
       wrap.addEventListener("mousemove", (e: Event) => {
         const mouseEvent = e as MouseEvent;
@@ -356,14 +367,20 @@ const allSlides = [...slides, ...slides];
         const centerOffsetY = rect.height * 0.5;
 
         // Calculate distance from center of the wrapper
-        const x = (mouseEvent.clientX - rect.left - centerOffsetX) * 0.3; // Increased movement factor slightly
-        const y = (mouseEvent.clientY - rect.top - centerOffsetY) * 0.3;
+        currentX = (mouseEvent.clientX - rect.left - centerOffsetX) * 0.3;
+        currentY = (mouseEvent.clientY - rect.top - centerOffsetY) * 0.3;
 
-        // ⚡ Move the inner target
-        targetStyle.transform = `translate(${x}px, ${y}px)`;
+        // ⚡ Optimize: Use requestAnimationFrame to throttle visual updates
+        if (!rafId) {
+          rafId = requestAnimationFrame(updateTransform);
+        }
       });
 
       wrap.addEventListener("mouseleave", () => {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
         // ⚡ Reset the inner target
         targetStyle.transform = "translate(0, 0)";
       });
@@ -389,6 +406,13 @@ const allSlides = [...slides, ...slides];
     let isDragging = false;
     let startX = 0;
     let currentTranslate = 0;
+    let rafId: number | null = null;
+    let diff = 0;
+
+    const updateCarousel = () => {
+      track.style.transform = `translateX(${currentTranslate + diff}px)`;
+      rafId = null;
+    };
 
     carousel.addEventListener(
       "touchstart",
@@ -408,8 +432,12 @@ const allSlides = [...slides, ...slides];
       (e) => {
         if (!isDragging) return;
         const x = e.touches[0].clientX;
-        const diff = x - startX;
-        track.style.transform = `translateX(${currentTranslate + diff}px)`;
+        diff = x - startX;
+
+        // ⚡ Optimize: Use rAF for smoother touch tracking
+        if (!rafId) {
+          rafId = requestAnimationFrame(updateCarousel);
+        }
       },
       { passive: true },
     );
@@ -419,6 +447,10 @@ const allSlides = [...slides, ...slides];
       "touchend",
       () => {
         isDragging = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
         track.style.transform = "";
         track.style.animationPlayState = "running";
       },
