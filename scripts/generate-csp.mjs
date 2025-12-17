@@ -73,22 +73,10 @@ async function main() {
     headersContent = headersContent.replace(cspRegex, (match) => {
       let newPolicy = match;
       if (scriptHashes.size > 0) {
-        // Sentinel: Check for script-src-elem first as it overrides script-src
-        const targetDirective = newPolicy.includes("script-src-elem")
-          ? "script-src-elem"
-          : "script-src";
-        newPolicy = injectIntoDirective(
-          newPolicy,
-          targetDirective,
-          scriptHashes,
-        );
+        newPolicy = injectIntoDirective(newPolicy, "script-src", scriptHashes);
       }
       if (styleHashes.size > 0) {
-        // Sentinel: Check for style-src-elem first as it overrides style-src
-        const targetDirective = newPolicy.includes("style-src-elem")
-          ? "style-src-elem"
-          : "style-src";
-        newPolicy = injectIntoDirective(newPolicy, targetDirective, styleHashes);
+        newPolicy = injectIntoDirective(newPolicy, "style-src", styleHashes);
       }
       return newPolicy;
     });

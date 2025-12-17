@@ -35,105 +35,30 @@ import SocialIcon from "../ui/SocialIcon.astro";
     <!-- Column 2: Socials & Copyright (Centered) -->
     <div class="flex flex-col items-center justify-center space-y-6">
       <ul class="flex flex-wrap justify-center gap-4">
-        {
-          config?.social?.dribbble && (
-            <li>
-              <SocialIcon
-                url={config.social.dribbble}
-                icon="mdi:dribbble"
-                label="Dribbble"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.facebook && (
-            <li>
-              <SocialIcon
-                url={config.social.facebook}
-                icon="mdi:facebook"
-                label="Facebook"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.github && (
-            <li>
-              <SocialIcon
-                url={config.social.github}
-                icon="mdi:github"
-                label="GitHub"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.instagram && (
-            <li>
-              <SocialIcon
-                url={config.social.instagram}
-                icon="mdi:instagram"
-                label="Instagram"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.mastodon && (
-            <li>
-              <SocialIcon
-                url={config.social.mastodon}
-                icon="mdi:mastodon"
-                label="Mastodon"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.pinterest && (
-            <li>
-              <SocialIcon
-                url={config.social.pinterest}
-                icon="mdi:pinterest"
-                label="Pinterest"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.skype && (
-            <li>
-              <SocialIcon
-                url={config.social.skype}
-                icon="mdi:skype"
-                label="Skype"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.twitter && (
-            <li>
-              <SocialIcon
-                url={config.social.twitter}
-                icon="mdi:twitter"
-                label="Twitter"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.youtube && (
-            <li>
-              <SocialIcon
-                url={config.social.youtube}
-                icon="mdi:youtube"
-                label="YouTube"
-              />
-            </li>
-          )
-        }
+        <SocialIcon
+          socialUrl={config?.social?.dribbble}
+          socialType="dribbble"
+        />
+        <SocialIcon
+          socialUrl={config?.social?.facebook}
+          socialType="facebook"
+        />
+        <SocialIcon socialUrl={config?.social?.github} socialType="github" />
+        <SocialIcon
+          socialUrl={config?.social?.instagram}
+          socialType="instagram"
+        />
+        <SocialIcon
+          socialUrl={config?.social?.mastodon}
+          socialType="mastodon"
+        />
+        <SocialIcon
+          socialUrl={config?.social?.pinterest}
+          socialType="pinterest"
+        />
+        <SocialIcon socialUrl={config?.social?.skype} socialType="skype" />
+        <SocialIcon socialUrl={config?.social?.twitter} socialType="twitter" />
+        <SocialIcon socialUrl={config?.social?.youtube} socialType="youtube" />
       </ul>
       <div
         class="text-sm text-pacamara-primary/80 dark:text-white/80 text-center"

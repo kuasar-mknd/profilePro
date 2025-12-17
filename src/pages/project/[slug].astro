@@ -88,7 +88,6 @@ const jsonLd = {
             class="relative w-full h-full"
             style="mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%);"
           >
-            {/* ⚡ Bolt: LCP Optimization - Eager load hero image with high priority */}
             <Picture
               src={entry.data.image}
               widths={[640, 960, 1280, 1600]}
@@ -101,8 +100,6 @@ const jsonLd = {
               class="w-full h-full object-cover"
               transition:name={`project-image-${entry.slug}`}
               quality={70}
-              loading="eager"
-              fetchpriority="high"
             />
             {/* Overlay adaptatif : Blanc en Light Mode, Noir en Dark Mode */}
             <div class="absolute inset-0 bg-linear-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />
