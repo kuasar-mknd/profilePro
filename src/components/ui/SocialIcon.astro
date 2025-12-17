@@ -2,33 +2,32 @@
 import { Icon } from "astro-icon/components";
 
 interface Props {
-  socialUrl?: string | boolean;
-  socialType: string;
+  icon: string;
+  url: string;
+  label: string;
 }
 
-const { socialUrl = false, socialType } = Astro.props;
-const capitalizedType =
-  socialType.charAt(0).toUpperCase() + socialType.slice(1);
-const label = `Visitez notre page ${capitalizedType} (ouvre un nouvel onglet)`;
+const { icon, url, label } = Astro.props;
+
+// Palette: Accessibility enhancement
+// Append warning for external links (which open in new tab)
+const isExternal = true; // Hardcoded in the template as target="_blank"
+const a11yLabel = label
+  ? `${label} (ouvre un nouvel onglet)`
+  : "Lien social (ouvre un nouvel onglet)";
 ---
 
-{
-  typeof socialUrl === "string" && (
-    <li>
-      <a
-        href={socialUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={label}
-        title={label}
-        class="group focus:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-md p-1 -m-1"
-      >
-        <Icon
-          name={socialType}
-          class="w-auto h-[15px] transition-all duration-300 fill-pacamara-primary/60 group-hover:fill-pacamara-secondary dark:fill-pacamara-accent dark:group-hover:fill-pacamara-secondary group-focus-visible:fill-pacamara-secondary"
-          aria-hidden="true"
-        />
-      </a>
-    </li>
-  )
-}
+<a
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="group relative flex h-10 w-10 items-center justify-center rounded-full bg-pacamara-secondary transition-all duration-300 hover:scale-110 hover:bg-pacamara-accent focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2 dark:bg-pacamara-secondary/10 dark:hover:bg-pacamara-accent"
+  aria-label={a11yLabel}
+  title={a11yLabel}
+>
+  <Icon
+    name={icon}
+    class="h-5 w-5 text-pacamara-primary-800 transition-colors duration-300 group-hover:text-white dark:text-pacamara-white"
+  />
+  <span class="sr-only">{a11yLabel}</span>
+</a>
