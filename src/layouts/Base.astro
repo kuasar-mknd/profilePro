@@ -191,8 +191,9 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
-      class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift"
+      class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2"
       aria-label="Retour en haut de page"
+      title="Retour en haut de page"
       tabindex="-1"
     >
       <svg
