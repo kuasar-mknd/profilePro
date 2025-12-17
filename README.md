@@ -1,8 +1,6 @@
-<div align="center">
-
 # 🎬 Samuel Dulex Portfolio
 
-**L'Art de transformer chaque événement en Histoire**
+> **L'Art de transformer chaque événement en Histoire**
 
 <!-- Status & Build -->
 
@@ -36,8 +34,6 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2025)
 
 [🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
-
-</div>
 
 ---
 
@@ -154,7 +150,7 @@ bun run analyze     # Analyser la taille des bundles
 
 ## 📂 Structure du projet
 
-```
+```text
 /
 ├── public/              # Assets statiques (images, fonts, etc.)
 ├── src/
@@ -240,14 +236,14 @@ Ce site est déployé sur **Cloudflare Pages** via une pipeline CI/CD GitHub Act
 
 Le déploiement est entièrement automatisé et sécurisé :
 
-1.  **Trigger** : Push sur la branche `master`.
-2.  **Quality Checks** (Parallèle) : Linting (ESLint, Stylelint) et formatage (Prettier).
-3.  **Security Scan** (Parallèle) : Analyse de vulnérabilités via **CodeQL**.
-4.  **Build & Deploy** (Séquentiel) :
-    - Nettoyage et installation des dépendances (`bun install --frozen-lockfile`).
-    - Restauration du cache intelligent pour les images (`node_modules/.astro`).
-    - Build de production (`bun run build`).
-    - Déploiement direct sur Cloudflare Pages via **Wrangler** (`bunx wrangler pages deploy`).
+1. **Trigger** : Push sur la branche `master`.
+2. **Quality Checks** (Parallèle) : Linting (ESLint, Stylelint) et formatage (Prettier).
+3. **Security Scan** (Parallèle) : Analyse de vulnérabilités via **CodeQL**.
+4. **Build & Deploy** (Séquentiel) :
+   - Nettoyage et installation des dépendances (`bun install --frozen-lockfile`).
+   - Restauration du cache intelligent pour les images (`node_modules/.astro`).
+   - Build de production (`bun run build`).
+   - Déploiement direct sur Cloudflare Pages via **Wrangler** (`bunx wrangler pages deploy`).
 
 ### Configuration Cloudflare
 
@@ -271,10 +267,4 @@ This project is [MIT](LICENSE) licensed.
 
 ---
 
-<div align="center">
-
-**Construit avec ❤️ par Samuel Dulex**
-
-_Connecter, Communiquer, Captiver_
-
-</div>
+Construit avec ❤️ par Samuel Dulex — _Connecter, Communiquer, Captiver_
