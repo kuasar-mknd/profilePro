@@ -107,7 +107,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 ### Prérequis
 
 - Node.js 18.x ou supérieur
-- npm ou pnpm
+- Bun 1.0+
 
 ### Installation
 
@@ -117,10 +117,10 @@ git clone https://github.com/kuasar-mknd/profilePro.git
 cd profilePro
 
 # Installer les dépendances
-npm install
+bun install
 
 # Lancer le serveur de développement
-npm run dev
+bun run dev
 ```
 
 Le site sera accessible sur `http://localhost:4321`
@@ -130,26 +130,26 @@ Le site sera accessible sur `http://localhost:4321`
 #### Développement
 
 ```bash
-npm run dev       # Lancer le serveur de développement
-npm run build     # Générer le build de production
-npm run preview   # Prévisualiser le build de production
+bun run dev       # Lancer le serveur de développement
+bun run build     # Générer le build de production
+bun run preview   # Prévisualiser le build de production
 ```
 
 #### Qualité du Code
 
 ```bash
-npm run format           # Formater tout le code
-npm run lint             # Linter (ESLint + Stylelint)
-npm run lint:eslint:fix  # Corriger erreurs ESLint
-npm run lint:stylelint:fix # Corriger erreurs CSS
-npm run check            # Vérifier formatage + lint
+bun run format           # Formater tout le code
+bun run lint             # Linter (ESLint + Stylelint)
+bun run lint:eslint:fix  # Corriger erreurs ESLint
+bun run lint:stylelint:fix # Corriger erreurs CSS
+bun run check            # Vérifier formatage + lint
 ```
 
 #### Performance & Analyse
 
 ```bash
-npm run lighthouse  # Audit Lighthouse complet
-npm run analyze     # Analyser la taille des bundles
+bun run lighthouse  # Audit Lighthouse complet
+bun run analyze     # Analyser la taille des bundles
 ```
 
 ## 📂 Structure du projet
@@ -219,7 +219,7 @@ Le projet utilise **Husky** et **lint-staged** pour linter automatiquement votre
 **Lighthouse CI** est configuré pour auditer automatiquement les performances :
 
 ```bash
-npm run lighthouse
+bun run lighthouse
 ```
 
 Seuils configurés : Performance ≥90%, Accessibilité ≥90%, SEO ≥90%
@@ -229,7 +229,7 @@ Seuils configurés : Performance ≥90%, Accessibilité ≥90%, SEO ≥90%
 Après chaque build, visualisez la taille de vos bundles :
 
 ```bash
-npm run analyze  # Ouvre dist/stats.html
+bun run analyze  # Ouvre dist/stats.html
 ```
 
 ## 🌐 Déploiement
@@ -244,10 +244,10 @@ Le déploiement est entièrement automatisé et sécurisé :
 2.  **Quality Checks** (Parallèle) : Linting (ESLint, Stylelint) et formatage (Prettier).
 3.  **Security Scan** (Parallèle) : Analyse de vulnérabilités via **CodeQL**.
 4.  **Build & Deploy** (Séquentiel) :
-    - Nettoyage et installation des dépendances (`npm ci`).
+    - Nettoyage et installation des dépendances (`bun install --frozen-lockfile`).
     - Restauration du cache intelligent pour les images (`node_modules/.astro`).
-    - Build de production (`npm run build`).
-    - Déploiement direct sur Cloudflare Pages via **Wrangler** (`npx wrangler pages deploy`).
+    - Build de production (`bun run build`).
+    - Déploiement direct sur Cloudflare Pages via **Wrangler** (`bunx wrangler pages deploy`).
 
 ### Configuration Cloudflare
 
