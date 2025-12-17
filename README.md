@@ -190,15 +190,40 @@ Créer un fichier `.mdx` dans `src/content/project/` avec le frontmatter suivant
 ```yaml
 ---
 title: "Nom du projet"
-description: "Description du projet"
+description: "Description courte pour le SEO"
+intro: "Introduction affichée en haut de page"
 pubDate: 2025-11-20
-tag: "clip musical" # clip musical | court-métrage | photo | événementiel | production
+tag: "clip musical"
 author: samuel
 image: ../../assets/image.jpg
-type: "video" # video | photo | general
-videoUrl: "https://youtube.com/..." # Pour les projets vidéo
+type: "video" # video | photo | general (défaut)
+
+# Pour type: "video"
+videoUrl: "https://vimeo.com/..." # ou YouTube
+
+# Pour type: "photo"
+gallery:
+  - ../../assets/photo1.jpg
+  - ../../assets/photo2.jpg
 ---
 ```
+
+### Configuration du projet
+
+#### `tag` (Catégorie)
+
+Définit la catégorie fonctionnelle du projet.
+
+- **Libre** : Vous pouvez créer vos propres catégories (ex: "Clip", "Mariage", "Documentaire").
+- Utilisé pour l'URL et le filtrage.
+
+#### `type` (Layout)
+
+Définit l'apparence et le rendu de la page.
+
+1. **Vidéo** (`type: "video"`) : Affiche un lecteur vidéo en haut de page.
+2. **Photo** (`type: "photo"`) : Affiche une galerie d'images interactive.
+3. **Général** (`type: "general"`) : Affichage standard (Article / Défaut).
 
 ## 🔧 Outils de Développement
 
