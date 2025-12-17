@@ -82,7 +82,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
             eagerness: "moderate",
           },
         ],
-      })}
+      }).replace(/</g, "\\u003c")}
     />
     <style is:global>
       /* Manual Font Face Definitions */
