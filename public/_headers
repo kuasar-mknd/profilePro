@@ -1,19 +1,19 @@
-/\*
+/*
 X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), display-capture=(), midi=(), sync-xhr=()
-Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: https://i.ytimg.com https://i.vimeocdn.com https://vumbnail.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com/ https://www.youtube.com/ https://player.vimeo.com/ https://vimeo.com/; object-src 'none'; connect-src 'self' https://vimeo.com https://api.websitecarbon.com https://cloudflareinsights.com https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests;
+Content-Security-Policy: default-src 'self'; script-src-elem 'self' https://static.cloudflareinsights.com; script-src-attr 'none'; style-src 'self'; img-src 'self' data: https://i.ytimg.com https://i.vimeocdn.com https://vumbnail.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com/ https://www.youtube.com/ https://player.vimeo.com/ https://vimeo.com/; object-src 'none'; connect-src 'self' https://vimeo.com https://api.websitecarbon.com https://cloudflareinsights.com https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests;
 
 # Astro build assets (hashed, immutable)
 
-/\_astro/\*
+/_astro/*
 Cache-Control: public, max-age=31536000, immutable
 
 # Font files
 
-/fonts/\*
+/fonts/*
 Cache-Control: public, max-age=31536000, immutable
 
 # Static images (favicons, logos, etc.)
@@ -34,20 +34,20 @@ Cache-Control: public, max-age=86400
 
 # Sitemap (cache for 1 day)
 
-/sitemap\*.xml
+/sitemap*.xml
 Cache-Control: public, max-age=86400
 
 # Scripts folder
 
-/scripts/\*
+/scripts/*
 Cache-Control: public, max-age=31536000, immutable
 
 # OG images (pre-generated, can be cached long)
 
-/og/\*
-Cache-Control: public, max-age=604800
+/og/*
+Cache-control: public, max-age=604800
 
 # Default HTML pages (cache briefly for revalidation)
 
-/\*.html
+/*.html
 Cache-Control: public, max-age=3600, must-revalidate
