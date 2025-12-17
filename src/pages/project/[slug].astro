@@ -100,6 +100,8 @@ const jsonLd = {
               class="w-full h-full object-cover"
               transition:name={`project-image-${entry.slug}`}
               quality={70}
+              loading="eager"
+              fetchpriority="high"
             />
             {/* Overlay adaptatif : Blanc en Light Mode, Noir en Dark Mode */}
             <div class="absolute inset-0 bg-linear-to-t from-white/95 via-white/70 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent opacity-90" />
@@ -302,7 +304,7 @@ const jsonLd = {
 
   <!-- Project Navigation -->
   <nav
-    class="container mx-auto max-w-5xl px-7 mb-12"
+    class="container mx-auto max-w-5xl px-7 mb-12 mt-12"
     aria-label="Navigation entre projets"
   >
     <div class="flex flex-col md:flex-row justify-between gap-4">
@@ -349,7 +351,7 @@ const jsonLd = {
   </nav>
 
   <!-- CTA Section -->
-  <div class="container mx-auto max-w-5xl px-7 mt-10 mb-20">
+  <div class="container mx-auto max-w-5xl px-7 mt-12 mb-20">
     <div
       class="bg-pacamara-accent/10 dark:bg-pacamara-accent/5 rounded-3xl p-8 md:p-12 text-center border border-pacamara-accent/20"
     >
