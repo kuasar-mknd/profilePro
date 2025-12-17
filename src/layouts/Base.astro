@@ -263,6 +263,14 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         // Scroll to top action
         backToTopBtn.addEventListener("click", () => {
           window.scrollTo({ top: 0, behavior: "smooth" });
+          // Focus fix for accessibility
+          const main = document.getElementById("main-content");
+          if (main) {
+             if (!main.hasAttribute("tabindex")) {
+               main.setAttribute("tabindex", "-1");
+             }
+             main.focus({ preventScroll: true });
+          }
         });
       }
 
