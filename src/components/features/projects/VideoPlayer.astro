@@ -1,5 +1,6 @@
 ---
 const { videoUrl, poster } = Astro.props;
+import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
 const getVideoDetails = (url) => {
@@ -51,7 +52,9 @@ if (!posterUrl && poster) {
 <div
   class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
   style="contain: layout style;"
+  data-poster-url={posterUrl}
 >
+  <Skeleton class="absolute inset-0 z-0" />
   {
     videoId ? (
       <>
@@ -127,6 +130,17 @@ if (!posterUrl && poster) {
       const playBtn = wrapper.querySelector("[id^='play-btn-']");
       const poster = wrapper.querySelector("[id^='poster-']");
       const playerDiv = wrapper.querySelector("[id^='player-']");
+      const skeleton = wrapper.querySelector(".skeleton");
+      const posterUrl = wrapper.getAttribute("data-poster-url");
+
+      // ⚡ Bolt: Preload poster image to hide skeleton when ready
+      if (posterUrl && skeleton) {
+        const img = new Image();
+        img.src = posterUrl;
+        img.onload = () => {
+          skeleton.remove();
+        };
+      }
 
       if (playBtn && playerDiv && poster) {
         playBtn.addEventListener("click", async () => {

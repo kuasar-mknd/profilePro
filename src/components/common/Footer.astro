@@ -36,28 +36,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
     <div class="flex flex-col items-center justify-center space-y-6">
       <ul class="flex flex-wrap justify-center gap-4">
         {
-          config?.social?.dribbble && (
-            <li>
-              <SocialIcon
-                url={config.social.dribbble}
-                icon="mdi:dribbble"
-                label="Dribbble"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.facebook && (
-            <li>
-              <SocialIcon
-                url={config.social.facebook}
-                icon="mdi:facebook"
-                label="Facebook"
-              />
-            </li>
-          )
-        }
-        {
           config?.social?.github && (
             <li>
               <SocialIcon
@@ -79,50 +57,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
             </li>
           )
         }
-        {
-          config?.social?.mastodon && (
-            <li>
-              <SocialIcon
-                url={config.social.mastodon}
-                icon="mdi:mastodon"
-                label="Mastodon"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.pinterest && (
-            <li>
-              <SocialIcon
-                url={config.social.pinterest}
-                icon="mdi:pinterest"
-                label="Pinterest"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.skype && (
-            <li>
-              <SocialIcon
-                url={config.social.skype}
-                icon="mdi:skype"
-                label="Skype"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.twitter && (
-            <li>
-              <SocialIcon
-                url={config.social.twitter}
-                icon="mdi:twitter"
-                label="Twitter"
-              />
-            </li>
-          )
-        }
+
         {
           config?.social?.youtube && (
             <li>
@@ -157,7 +92,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         Fait avec <span
           class="text-red-500 animate-pulse motion-reduce:animate-none inline-block align-middle"
           >&#9829;</span
-        > avec <a
+        > et <a
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
