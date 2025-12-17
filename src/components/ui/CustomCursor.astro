@@ -132,28 +132,48 @@
     let mouseY = 0;
     let outlineX = 0;
     let outlineY = 0;
+    let animationFrameId: number | null = null;
+
+    // Smooth follow for outline
+    function animateOutline() {
+      // Calculate distance to target
+      const dx = mouseX - outlineX;
+      const dy = mouseY - outlineY;
+
+      // If the outline is very close to the mouse, stop the animation loop
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        return;
+      }
+
+      // Move the outline towards the mouse
+      outlineX += dx * 0.15;
+      outlineY += dy * 0.15;
+
+      outline.style.left = `${outlineX}px`;
+      outline.style.top = `${outlineY}px`;
+
+      // Continue the animation
+      animationFrameId = requestAnimationFrame(animateOutline);
+    }
 
     // Track mouse position
     document.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Instant update for dot
+      // Dot position updates instantly
       dot.style.left = `${mouseX}px`;
       dot.style.top = `${mouseY}px`;
+
+      // If the animation isn't running, start it
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(animateOutline);
+      }
     });
-
-    // Smooth follow for outline
-    function animateOutline() {
-      outlineX += (mouseX - outlineX) * 0.15;
-      outlineY += (mouseY - outlineY) * 0.15;
-
-      outline.style.left = `${outlineX}px`;
-      outline.style.top = `${outlineY}px`;
-
-      requestAnimationFrame(animateOutline);
-    }
-    animateOutline();
 
     // Hover effect on interactive elements
     const interactiveElements =
@@ -183,6 +203,14 @@
     document.addEventListener("mouseenter", () =>
       cursor.classList.remove("cursor-hidden"),
     );
+
+    // Pause animation when tab is not visible to save resources
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+    });
   }
 
   // Initialize
