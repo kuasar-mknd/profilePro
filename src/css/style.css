@@ -150,7 +150,6 @@
 @media print {
   header,
   footer,
-  .magnetic-btn,
   .hero-buttons,
   .hero-carousel,
   #lightbox,
@@ -306,7 +305,6 @@
 
   /* Universal Active State for Buttons */
   button:active:not(:disabled),
-  .magnetic-btn:active,
   a.button:active:not(:disabled) {
     transform: scale(0.98);
   }
@@ -547,14 +545,6 @@
   100% {
     transform: translateX(-50%);
   }
-}
-
-.magnetic-btn {
-  position: relative;
-  transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-
-  /* ⚡ Bolt: Hint browser to pre-composite for transform animations */
-  will-change: transform;
 }
 
 @keyframes shimmer {

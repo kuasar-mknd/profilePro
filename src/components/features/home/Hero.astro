@@ -96,29 +96,25 @@ const allSlides = [...slides, ...slides];
     <div
       class="flex flex-col md:flex-row gap-4 justify-center items-center hero-buttons"
     >
-      <div class="magnetic-wrap relative z-20">
-        <a
-          href="/project"
-          class="magnetic-content btn-content group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden"
-          id="hero-cta-primary"
+      <a
+        href="/project"
+        class="group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden active:scale-95"
+        id="hero-cta-primary"
+      >
+        <span class="relative z-10">Voir mes projets</span>
+        <div
+          class="absolute inset-0 bg-linear-to-r from-pacamara-secondary to-pacamara-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         >
-          <span class="relative z-10">Voir mes projets</span>
-          <div
-            class="absolute inset-0 bg-linear-to-r from-pacamara-secondary to-pacamara-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-          </div>
-        </a>
-      </div>
+        </div>
+      </a>
 
-      <div class="magnetic-wrap relative z-10">
-        <a
-          href="#contact-form"
-          class="magnetic-content btn-content block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift"
-          id="hero-cta-secondary"
-        >
-          Me contacter
-        </a>
-      </div>
+      <a
+        href="#contact-form"
+        class="block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-95"
+        id="hero-cta-secondary"
+      >
+        Me contacter
+      </a>
     </div>
   </div>
 
@@ -300,85 +296,6 @@ const allSlides = [...slides, ...slides];
 </style>
 
 <script>
-  /**
-   * ⚡ Bolt: Magnetic Button Performance Optimization
-   * Refactored to use Wrapper/Target pattern to prevent flickering (mouseleave loops).
-   * The wrapper stays static and captures events, while the inner target moves.
-   */
-  function initMagneticButtons() {
-    // 🎨 Palette: Accessibility check for reduced motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const wrappers = document.querySelectorAll(
-      ".magnetic-wrap:not(.magnetic-initialized)",
-    );
-
-    if (wrappers.length === 0) return;
-
-    // ⚡ Accessibility: Skip magnetic effect if user prefers reduced motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // cache for rects to avoid layout thrashing
-    const wrapperCache = new Map();
-
-    const updateCache = () => {
-      wrappers.forEach((wrap) => {
-        wrapperCache.set(wrap, wrap.getBoundingClientRect());
-      });
-    };
-
-    // Initial cache
-    updateCache();
-
-    // Update cache on resize/scroll (throttled)
-    let resizeTimeout;
-    window.addEventListener(
-      "resize",
-      () => {
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(updateCache, 100);
-      },
-      { passive: true },
-    );
-
-    wrappers.forEach((wrap) => {
-      wrap.classList.add("magnetic-initialized");
-      const target = wrap.querySelector(".magnetic-content") as HTMLElement;
-      if (!target) return;
-
-      const targetStyle = target.style;
-
-      // ⚡ Bolt: Hint browser to pre-composite for transform animations
-      target.style.willChange = "transform";
-      target.style.transition = "transform 0.2s cubic-bezier(0.23, 1, 0.32, 1)";
-
-      wrap.addEventListener("mousemove", (e: Event) => {
-        const mouseEvent = e as MouseEvent;
-        // ⚡ Use cached rect of the STATIC wrapper
-        const rect = wrapperCache.get(wrap) || wrap.getBoundingClientRect();
-
-        // ⚡ Pre-calculate center offset
-        const centerOffsetX = rect.width * 0.5;
-        const centerOffsetY = rect.height * 0.5;
-
-        // Calculate distance from center of the wrapper
-        const x = (mouseEvent.clientX - rect.left - centerOffsetX) * 0.3; // Increased movement factor slightly
-        const y = (mouseEvent.clientY - rect.top - centerOffsetY) * 0.3;
-
-        // ⚡ Move the inner target
-        targetStyle.transform = `translate(${x}px, ${y}px)`;
-      });
-
-      wrap.addEventListener("mouseleave", () => {
-        // ⚡ Reset the inner target
-        targetStyle.transform = "translate(0, 0)";
-      });
-    });
-  }
-
-  initMagneticButtons();
-  document.addEventListener("astro:page-load", initMagneticButtons);
-
   /**
    * ⚡ Bolt: Carousel Touch Optimization
    * Added initialization guard and passive listeners to all touch events
