@@ -36,7 +36,7 @@ import Base from "../layouts/Base.astro";
       Retour à l'accueil
     </a>
     <button
-      onclick="history.back()"
+      id="go-back-btn"
       class="inline-block ml-4 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer"
     >
       Page précédente
@@ -44,5 +44,24 @@ import Base from "../layouts/Base.astro";
   </section>
 </Base>
 <script>
-  // Facts removed for production security/cleanliness
+  /**
+   * 🛡️ Sentinel: CSP Compliance
+   * Replaced inline `onclick` with event listener to support `script-src-attr 'none'`.
+   */
+  function initBackBtn() {
+    const btn = document.getElementById("go-back-btn");
+    // Guard: Check if button exists and hasn't been initialized yet
+    // Note: View Transitions might replace the body, so we always re-bind if found.
+    // But to be safe against double-binding on the same element instance:
+    if (!btn || btn.dataset.initialized === "true") return;
+
+    btn.dataset.initialized = "true";
+    btn.addEventListener("click", () => {
+      history.back();
+    });
+  }
+
+  // Initialize on load and after navigation (View Transitions)
+  initBackBtn();
+  document.addEventListener("astro:page-load", initBackBtn);
 </script>

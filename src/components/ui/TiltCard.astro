@@ -40,7 +40,6 @@ const {
     cards.forEach((card) => {
       const el = card as HTMLElement;
       const maxTilt = Number(el.dataset.maxTilt) || 10;
-
       card.classList.add("tilt-initialized");
 
       // ⚡ Cache the style object reference to avoid repeated lookups
