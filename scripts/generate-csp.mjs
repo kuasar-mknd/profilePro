@@ -76,6 +76,7 @@ async function main() {
 
     headersContent = headersContent.replace(cspRegex, (match) => {
       let newPolicy = match;
+
       if (scriptHashes.size > 0) {
         // 🛡️ Sentinel: Prioritize script-src-elem if present, as it overrides script-src for script tags
         if (new RegExp("script-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
@@ -92,6 +93,7 @@ async function main() {
           );
         }
       }
+
       if (styleHashes.size > 0) {
         // 🛡️ Sentinel: Prioritize style-src-elem if present
         if (new RegExp("style-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
