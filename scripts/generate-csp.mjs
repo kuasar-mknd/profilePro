@@ -61,18 +61,16 @@ async function main() {
 
     // Helper to inject into a specific directive
     const injectIntoDirective = (policy, directive, hashes) => {
-      // Strict regex: directive name followed by NOT a hyphen/letter (to avoid partial matches like script-src matching script-src-elem)
-      // Captures:
-      // $1: Directive name (e.g. "script-src")
-      // $2: Content up to next semicolon (e.g. " 'self' https:...")
-      // $3: Optional semicolon
-      const regex = new RegExp(`(${directive})(?![a-zA-Z-])([^;]*)(;?)`);
-
+      // 🛡️ Sentinel: Match exact directive to prevent partial matches (e.g., script-src matching script-src-elem)
+      // Lookahead (?=\s|;|$) ensures we match the whole word
+      const regex = new RegExp(`(${directive}(?=\\s|;|$)[^;]*)(;?)`);
       if (regex.test(policy)) {
-        return policy.replace(regex, `$1$2 ${Array.from(hashes).join(" ")}$3`);
+        return policy.replace(regex, `$1 ${Array.from(hashes).join(" ")}$2`);
       } else {
         // Directive doesn't exist, append it
-        return `${policy}; ${directive} ${Array.from(hashes).join(" ")}`;
+        // Ensure proper spacing/semicolon separation
+        const separator = policy.trim().endsWith(";") ? " " : "; ";
+        return `${policy}${separator}${directive} ${Array.from(hashes).join(" ")}`;
       }
     };
 
@@ -80,21 +78,31 @@ async function main() {
       let newPolicy = match;
 
       if (scriptHashes.size > 0) {
-        // Prioritize injecting into script-src-elem if it exists
-        if (/script-src-elem(?![a-zA-Z-])/.test(newPolicy)) {
-          newPolicy = injectIntoDirective(newPolicy, "script-src-elem", scriptHashes);
+        // 🛡️ Sentinel: Prioritize script-src-elem if present, as it overrides script-src for script tags
+        if (new RegExp("script-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
+          newPolicy = injectIntoDirective(
+            newPolicy,
+            "script-src-elem",
+            scriptHashes,
+          );
         } else {
-          // Fallback to script-src (will append if missing)
-          newPolicy = injectIntoDirective(newPolicy, "script-src", scriptHashes);
+          newPolicy = injectIntoDirective(
+            newPolicy,
+            "script-src",
+            scriptHashes,
+          );
         }
       }
 
       if (styleHashes.size > 0) {
-        // Prioritize injecting into style-src-elem if it exists
-        if (/style-src-elem(?![a-zA-Z-])/.test(newPolicy)) {
-          newPolicy = injectIntoDirective(newPolicy, "style-src-elem", styleHashes);
+        // 🛡️ Sentinel: Prioritize style-src-elem if present
+        if (new RegExp("style-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
+          newPolicy = injectIntoDirective(
+            newPolicy,
+            "style-src-elem",
+            styleHashes,
+          );
         } else {
-           // Fallback to style-src (will append if missing)
           newPolicy = injectIntoDirective(newPolicy, "style-src", styleHashes);
         }
       }
