@@ -312,6 +312,9 @@ const allSlides = [...slides, ...slides];
 
     if (wrappers.length === 0) return;
 
+    // ⚡ Accessibility: Skip magnetic effect if user prefers reduced motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     // cache for rects to avoid layout thrashing
     const wrapperCache = new Map();
 
