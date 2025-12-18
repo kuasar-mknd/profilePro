@@ -99,7 +99,7 @@ const allSlides = [...slides, ...slides];
       <div class="magnetic-wrap relative z-20">
         <a
           href="/project"
-          class="btn-content group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden"
+          class="magnetic-content btn-content group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden"
           id="hero-cta-primary"
         >
           <span class="relative z-10">Voir mes projets</span>
@@ -113,7 +113,7 @@ const allSlides = [...slides, ...slides];
       <div class="magnetic-wrap relative z-10">
         <a
           href="#contact-form"
-          class="btn-content block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift"
+          class="magnetic-content btn-content block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift"
           id="hero-cta-secondary"
         >
           Me contacter
@@ -306,6 +306,9 @@ const allSlides = [...slides, ...slides];
    * The wrapper stays static and captures events, while the inner target moves.
    */
   function initMagneticButtons() {
+    // 🎨 Palette: Accessibility check for reduced motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const wrappers = document.querySelectorAll(
       ".magnetic-wrap:not(.magnetic-initialized)",
     );
