@@ -27,7 +27,7 @@ const {
 <script>
   /**
    * ⚡ Bolt: TiltCard performance optimization
-   * Caches DOM references and pre-calculates values to reduce overhead
+   * Caches DOM references and uses requestAnimationFrame to reduce overhead
    * during frequent mousemove events.
    */
   function initTiltCards() {
@@ -40,64 +40,72 @@ const {
     cards.forEach((card) => {
       const el = card as HTMLElement;
       const maxTilt = Number(el.dataset.maxTilt) || 10;
-      let rect: DOMRect | null = null;
-      let frameId: number | null = null;
-
       card.classList.add("tilt-initialized");
 
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
-      // ⚡ Cache layout metrics on hover start to avoid thrashing in mousemove
-      card.addEventListener("mouseenter", () => {
-        rect = el.getBoundingClientRect();
-      });
+      let bounds: DOMRect | null = null;
+      let frameId: number | null = null;
+      let targetX = 0;
+      let targetY = 0;
 
-      card.addEventListener("mousemove", (e) => {
-        // Guard: If we don't have the rect yet (rare), fetch it once
-        if (!rect) rect = el.getBoundingClientRect();
+      function update() {
+        if (!bounds) return;
 
-        const event = e as MouseEvent;
+        // ⚡ Pre-calculate center coordinates using cached bounds
+        const centerX = bounds.width * 0.5;
+        const centerY = bounds.height * 0.5;
 
-        // ⚡ Bolt: Debounce visual updates to screen refresh rate
-        if (frameId) return;
+        // ⚡ Calculate relative position
+        const relativeX = targetX - bounds.left - centerX;
+        const relativeY = targetY - bounds.top - centerY;
 
-        frameId = requestAnimationFrame(() => {
-          if (!rect) return; // TS guard
+        // ⚡ Calculate rotation with division by center values
+        const rotateX = (relativeY / centerY) * -maxTilt;
+        const rotateY = (relativeX / centerX) * maxTilt;
 
-          // ⚡ Pre-calculate center coordinates (cached in closure if we wanted, but cheap here)
-          const centerX = rect.width * 0.5;
-          const centerY = rect.height * 0.5;
+        // ⚡ Set CSS custom properties using cached style reference
+        cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
+        cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
 
-          // ⚡ Calculate relative position using cached rect
-          const relativeX = event.clientX - rect.left - centerX;
-          const relativeY = event.clientY - rect.top - centerY;
+        frameId = null;
+      }
 
-          // ⚡ Calculate rotation with division by center values
-          const rotateX = (relativeY / centerY) * -maxTilt;
-          const rotateY = (relativeX / centerX) * maxTilt;
+      function onMouseEnter() {
+        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
+        bounds = el.getBoundingClientRect();
+      }
 
-          // ⚡ Set CSS custom properties
-          cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
-          cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
+      function onMouseMove(e: MouseEvent) {
+        if (!bounds) return;
 
-          frameId = null;
-        });
-      });
+        targetX = e.clientX;
+        targetY = e.clientY;
 
-      card.addEventListener("mouseleave", () => {
+        // ⚡ Use requestAnimationFrame to throttle visual updates
+        if (!frameId) {
+          frameId = requestAnimationFrame(update);
+        }
+      }
+
+      function onMouseLeave() {
+        // ⚡ Cancel pending frame
         if (frameId) {
           cancelAnimationFrame(frameId);
           frameId = null;
         }
 
-        // ⚡ Use cached style reference
+        // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
 
-        // Clear cached rect
-        rect = null;
-      });
+        bounds = null;
+      }
+
+      card.addEventListener("mouseenter", onMouseEnter);
+      card.addEventListener("mousemove", onMouseMove);
+      card.addEventListener("mouseleave", onMouseLeave);
     });
   }
 

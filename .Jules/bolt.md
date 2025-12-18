@@ -19,3 +19,8 @@
 
 **Learning:** is the modern standard for instant navigation, replacing older prefetch libraries. makes offline support trivial with the right configuration.
 **Action:** When optimizing fonts, always verify if generic Google Fonts binaries are full-size. Using binaries for specific subsets (like Latin) can save ~50% of font file size vs standard fetches.
+
+## 2025-02-27 - [Layout Thrashing in Tilt Interactions]
+
+**Learning:** Querying `getBoundingClientRect()` inside a `mousemove` handler forces the browser to recalculate layout (reflow) on every frame, causing significant jank.
+**Action:** Cache layout metrics on `mouseenter` and only read them during calculation. Use `requestAnimationFrame` to decouple the input sampling rate (mouse events) from the render rate (screen refresh).
