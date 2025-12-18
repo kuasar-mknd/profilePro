@@ -61,22 +61,42 @@ async function main() {
 
     // Helper to inject into a specific directive
     const injectIntoDirective = (policy, directive, hashes) => {
-      const regex = new RegExp(`(${directive}[^;]*)(;?)`);
+      // Strict regex: directive name followed by NOT a hyphen/letter (to avoid partial matches like script-src matching script-src-elem)
+      // Captures:
+      // $1: Directive name (e.g. "script-src")
+      // $2: Content up to next semicolon (e.g. " 'self' https:...")
+      // $3: Optional semicolon
+      const regex = new RegExp(`(${directive})(?![a-zA-Z-])([^;]*)(;?)`);
+
       if (regex.test(policy)) {
-        return policy.replace(regex, `$1 ${Array.from(hashes).join(" ")}$2`);
+        return policy.replace(regex, `$1$2 ${Array.from(hashes).join(" ")}$3`);
       } else {
-        // Directive doesn't exist, append it (simplified assumption, usually it exists)
+        // Directive doesn't exist, append it
         return `${policy}; ${directive} ${Array.from(hashes).join(" ")}`;
       }
     };
 
     headersContent = headersContent.replace(cspRegex, (match) => {
       let newPolicy = match;
+
       if (scriptHashes.size > 0) {
-        newPolicy = injectIntoDirective(newPolicy, "script-src", scriptHashes);
+        // Prioritize injecting into script-src-elem if it exists
+        if (/script-src-elem(?![a-zA-Z-])/.test(newPolicy)) {
+          newPolicy = injectIntoDirective(newPolicy, "script-src-elem", scriptHashes);
+        } else {
+          // Fallback to script-src (will append if missing)
+          newPolicy = injectIntoDirective(newPolicy, "script-src", scriptHashes);
+        }
       }
+
       if (styleHashes.size > 0) {
-        newPolicy = injectIntoDirective(newPolicy, "style-src", styleHashes);
+        // Prioritize injecting into style-src-elem if it exists
+        if (/style-src-elem(?![a-zA-Z-])/.test(newPolicy)) {
+          newPolicy = injectIntoDirective(newPolicy, "style-src-elem", styleHashes);
+        } else {
+           // Fallback to style-src (will append if missing)
+          newPolicy = injectIntoDirective(newPolicy, "style-src", styleHashes);
+        }
       }
       return newPolicy;
     });
