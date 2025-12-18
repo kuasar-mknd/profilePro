@@ -40,37 +40,63 @@ const {
     cards.forEach((card) => {
       const el = card as HTMLElement;
       const maxTilt = Number(el.dataset.maxTilt) || 10;
+      let rect: DOMRect | null = null;
+      let frameId: number | null = null;
 
       card.classList.add("tilt-initialized");
 
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
+      // ⚡ Cache layout metrics on hover start to avoid thrashing in mousemove
+      card.addEventListener("mouseenter", () => {
+        rect = el.getBoundingClientRect();
+      });
+
       card.addEventListener("mousemove", (e) => {
+        // Guard: If we don't have the rect yet (rare), fetch it once
+        if (!rect) rect = el.getBoundingClientRect();
+
         const event = e as MouseEvent;
-        const rect = (card as Element).getBoundingClientRect();
 
-        // ⚡ Pre-calculate center coordinates
-        const centerX = rect.width * 0.5;
-        const centerY = rect.height * 0.5;
+        // ⚡ Bolt: Debounce visual updates to screen refresh rate
+        if (frameId) return;
 
-        // ⚡ Calculate relative position
-        const relativeX = event.clientX - rect.left - centerX;
-        const relativeY = event.clientY - rect.top - centerY;
+        frameId = requestAnimationFrame(() => {
+          if (!rect) return; // TS guard
 
-        // ⚡ Calculate rotation with division by center values
-        const rotateX = (relativeY / centerY) * -maxTilt;
-        const rotateY = (relativeX / centerX) * maxTilt;
+          // ⚡ Pre-calculate center coordinates (cached in closure if we wanted, but cheap here)
+          const centerX = rect.width * 0.5;
+          const centerY = rect.height * 0.5;
 
-        // ⚡ Set CSS custom properties using cached style reference
-        cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
-        cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
+          // ⚡ Calculate relative position using cached rect
+          const relativeX = event.clientX - rect.left - centerX;
+          const relativeY = event.clientY - rect.top - centerY;
+
+          // ⚡ Calculate rotation with division by center values
+          const rotateX = (relativeY / centerY) * -maxTilt;
+          const rotateY = (relativeX / centerX) * maxTilt;
+
+          // ⚡ Set CSS custom properties
+          cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
+          cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
+
+          frameId = null;
+        });
       });
 
       card.addEventListener("mouseleave", () => {
+        if (frameId) {
+          cancelAnimationFrame(frameId);
+          frameId = null;
+        }
+
         // ⚡ Use cached style reference
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
+
+        // Clear cached rect
+        rect = null;
       });
     });
   }
