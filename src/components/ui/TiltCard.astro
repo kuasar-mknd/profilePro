@@ -27,7 +27,7 @@ const {
 <script>
   /**
    * ⚡ Bolt: TiltCard performance optimization
-   * Caches DOM references and pre-calculates values to reduce overhead
+   * Caches DOM references and uses requestAnimationFrame to reduce overhead
    * during frequent mousemove events.
    */
   function initTiltCards() {
@@ -46,17 +46,21 @@ const {
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
-      card.addEventListener("mousemove", (e) => {
-        const event = e as MouseEvent;
-        const rect = (card as Element).getBoundingClientRect();
+      let bounds: DOMRect | null = null;
+      let frameId: number | null = null;
+      let targetX = 0;
+      let targetY = 0;
 
-        // ⚡ Pre-calculate center coordinates
-        const centerX = rect.width * 0.5;
-        const centerY = rect.height * 0.5;
+      function update() {
+        if (!bounds) return;
+
+        // ⚡ Pre-calculate center coordinates using cached bounds
+        const centerX = bounds.width * 0.5;
+        const centerY = bounds.height * 0.5;
 
         // ⚡ Calculate relative position
-        const relativeX = event.clientX - rect.left - centerX;
-        const relativeY = event.clientY - rect.top - centerY;
+        const relativeX = targetX - bounds.left - centerX;
+        const relativeY = targetY - bounds.top - centerY;
 
         // ⚡ Calculate rotation with division by center values
         const rotateX = (relativeY / centerY) * -maxTilt;
@@ -65,13 +69,44 @@ const {
         // ⚡ Set CSS custom properties using cached style reference
         cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
         cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
-      });
 
-      card.addEventListener("mouseleave", () => {
-        // ⚡ Use cached style reference
+        frameId = null;
+      }
+
+      function onMouseEnter() {
+        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
+        bounds = el.getBoundingClientRect();
+      }
+
+      function onMouseMove(e: MouseEvent) {
+        if (!bounds) return;
+
+        targetX = e.clientX;
+        targetY = e.clientY;
+
+        // ⚡ Use requestAnimationFrame to throttle visual updates
+        if (!frameId) {
+          frameId = requestAnimationFrame(update);
+        }
+      }
+
+      function onMouseLeave() {
+        // ⚡ Cancel pending frame
+        if (frameId) {
+          cancelAnimationFrame(frameId);
+          frameId = null;
+        }
+
+        // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
-      });
+
+        bounds = null;
+      }
+
+      card.addEventListener("mouseenter", onMouseEnter);
+      card.addEventListener("mousemove", onMouseMove);
+      card.addEventListener("mouseleave", onMouseLeave);
     });
   }
 
