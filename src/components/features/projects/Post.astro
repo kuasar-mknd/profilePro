@@ -38,6 +38,7 @@ const isWide = bentoSize === "bento-item-wide";
         class="w-full h-full object-cover"
         loading="lazy"
         decoding="async"
+        fetchpriority="low"
         transition:name={`project-image-${postData.slug}`}
       />
     </div>
