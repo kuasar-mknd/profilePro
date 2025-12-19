@@ -279,7 +279,7 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
-    private images: { src: string; alt: string }[] = [];
+    private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
     private touchStartX: number = 0;
     private touchEndX: number = 0;
@@ -354,6 +354,9 @@
       document.addEventListener("click", this.boundClickHandler);
       // ⚡ Bolt: Accessibility - Handle keyboard activation for images
       document.addEventListener("keydown", this.boundDelegatedKeyHandler);
+
+      // ⚡ Bolt: Cache gallery elements once on init
+      this.collectImages();
     }
 
     /**
@@ -391,15 +394,10 @@
     }
 
     private activateImage(galleryImage: HTMLElement) {
-      // Collect images to ensure we have the latest set from DOM
-      this.collectImages();
-
-      // Find the index of the clicked image
-      // We re-query the DOM to match the order in this.images
-      const elements = Array.from(
-        document.querySelectorAll("[data-gallery-image]"),
+      // ⚡ Bolt: Use cached elements for O(1) lookup
+      const index = this.galleryElements.indexOf(
+        galleryImage as HTMLImageElement,
       );
-      const index = elements.indexOf(galleryImage);
 
       if (index !== -1) {
         this.open(index, galleryImage);
@@ -407,15 +405,9 @@
     }
 
     private collectImages() {
+      // ⚡ Bolt: Cache DOM elements once at init
       const elements = document.querySelectorAll("[data-gallery-image]");
-
-      this.images = Array.from(elements).map((element) => {
-        const img = element as HTMLImageElement;
-        // currentSrc is the actual URL the browser loaded
-        const url = img.currentSrc || img.src;
-        const alt = img.alt || "";
-        return { src: url, alt };
-      });
+      this.galleryElements = Array.from(elements) as HTMLImageElement[];
     }
 
     private triggerElement: HTMLElement | null = null;
@@ -446,22 +438,27 @@
     }
 
     public next() {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length;
+      this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
       this.updateImage();
     }
 
     public prev() {
       this.currentIndex =
-        (this.currentIndex - 1 + this.images.length) % this.images.length;
+        (this.currentIndex - 1 + this.galleryElements.length) %
+        this.galleryElements.length;
       this.updateImage();
     }
 
     private updateImage() {
-      const currentImage = this.images[this.currentIndex];
-      this.image.src = currentImage.src;
-      this.image.alt = currentImage.alt || `Image ${this.currentIndex + 1}`;
+      // ⚡ Bolt: Read properties on demand
+      const currentElement = this.galleryElements[this.currentIndex];
+      const src = currentElement.currentSrc || currentElement.src;
+      const alt = currentElement.alt || "";
+
+      this.image.src = src;
+      this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
-      this.totalSpan.textContent = String(this.images.length);
+      this.totalSpan.textContent = String(this.galleryElements.length);
 
       // Loading state
       this.lightbox.classList.add("loading");
