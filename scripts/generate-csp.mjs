@@ -63,7 +63,10 @@ async function main() {
     const injectIntoDirective = (policy, directive, hashes) => {
       // 🛡️ Sentinel: Match exact directive to prevent partial matches (e.g., script-src matching script-src-elem)
       // Lookahead (?=\s|;|$) ensures we match the whole word
-      const regex = new RegExp(`(${directive}(?=\\s|;|$)[^;]*)(;?)`);
+      // Negative lookahead (?![a-zA-Z-]) prevents matching substrings (e.g. script-src matching script-src-elem)
+      const regex = new RegExp(
+        `(${directive}(?![a-zA-Z-])(?=\\s|;|$)[^;]*)(;?)`,
+      );
       if (regex.test(policy)) {
         return policy.replace(regex, `$1 ${Array.from(hashes).join(" ")}$2`);
       } else {
