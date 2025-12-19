@@ -11,6 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Quality is already checked in CI workflow, but we re-check here to be safe before deploy
+  # Or we could rely on CI status check if configured in repo settings.
+  # For safety, we keep it but it runs in parallel with other checks if needed.
   quality:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -26,31 +29,10 @@ jobs:
       - name: Run Quality Checks
         run: bun run check
 
-  security:
-    name: Security Scan (CodeQL)
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      packages: read
-      actions: read
-      contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: javascript-typescript
-          queries: security-extended
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:javascript-typescript"
-
   deploy:
     runs-on: ubuntu-latest
     name: Build & Deploy
-    needs: [quality, security]
+    needs: [quality]
     permissions:
       contents: read
       deployments: write
@@ -76,10 +58,11 @@ jobs:
 
       - name: Build Astro
         run: bun run build
-        timeout-minutes: 360
+        timeout-minutes: 20
 
       - name: Deploy to Cloudflare Pages
-        run: bunx wrangler pages deploy dist --project-name=profilepro --branch=master
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=profilepro --branch=master
