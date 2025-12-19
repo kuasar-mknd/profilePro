@@ -418,6 +418,10 @@
       this.updateImage();
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+
+      // 🎨 Palette: Trap focus and context using inert
+      this.toggleInert(true);
+
       // Move focus to close button
       setTimeout(() => {
         const closeBtn = this.lightbox.querySelector(
@@ -430,11 +434,40 @@
     public close() {
       this.lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+
+      // 🎨 Palette: Restore access to main content
+      this.toggleInert(false);
+
       // Return focus to trigger
       if (this.triggerElement) {
         this.triggerElement.focus();
         this.triggerElement = null;
       }
+    }
+
+    /**
+     * 🎨 Palette: Toggles inert and aria-hidden on background content
+     * This ensures screen readers and keyboard navigation stay within the lightbox.
+     */
+    private toggleInert(enable: boolean) {
+      const selectors = [
+        "#main-header",
+        "#main-content",
+        "footer",
+        "#back-to-top",
+        ".skip-link",
+      ];
+      const elements = document.querySelectorAll(selectors.join(", "));
+
+      elements.forEach((el) => {
+        if (enable) {
+          el.setAttribute("inert", "");
+          el.setAttribute("aria-hidden", "true");
+        } else {
+          el.removeAttribute("inert");
+          el.removeAttribute("aria-hidden");
+        }
+      });
     }
 
     public next() {
