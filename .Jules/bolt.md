@@ -24,3 +24,8 @@
 
 **Learning:** Querying `getBoundingClientRect()` inside a `mousemove` handler forces the browser to recalculate layout (reflow) on every frame, causing significant jank.
 **Action:** Cache layout metrics on `mouseenter` and only read them during calculation. Use `requestAnimationFrame` to decouple the input sampling rate (mouse events) from the render rate (screen refresh).
+
+## 2025-03-05 - [Initial Setup]
+
+**Learning:** Initialized Bolt's journal for performance tracking.
+**Action:** Record critical performance learnings here.
