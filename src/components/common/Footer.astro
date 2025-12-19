@@ -194,8 +194,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
             data.t = new Date().getTime();
             localStorage.setItem(cacheKey, JSON.stringify(data));
           })
-          .catch((e) => {
-            console.error(e);
+          .catch(() => {
+            console.error("Carbon Badge update failed");
             wcb.innerHTML = "No Result";
             localStorage.removeItem(cacheKey);
           });
