@@ -1,5 +1,5 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
@@ -23,6 +23,9 @@ function shuffle(array: any[]) {
 const slides = shuffle([...projectImages]);
 // Ensure we have enough slides for the loop (duplicate if needed)
 const allSlides = [...slides, ...slides];
+
+// ⚡ Bolt: Precompute LCP image URL to match Base.astro preload exactly
+const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 ---
 
 <section
@@ -34,14 +37,16 @@ const allSlides = [...slides, ...slides];
   <div class="container mx-auto px-7 text-center z-10">
     {/* ⚡ LCP Image - decoding="sync" ensures immediate display after load */}
     <div class="mb-8 hero-logo">
-      <Picture
-        src={logo}
-        width={360}
-        widths={[180, 360]}
-        sizes="180px"
-        formats={["avif"]}
-        fallbackFormat="avif"
+      {
+        /* ⚡ Bolt: Using standard <img> to match the preloaded asset in Base.astro exactly.
+          This prevents double-fetching (preload + responsive candidate mismatch) and guarantees LCP boost.
+      */
+      }
+      <img
+        src={optimizedLogo.src}
         alt="Logo Samuel Dulex"
+        width="180"
+        height="180"
         class="mx-auto rounded-2xl shadow-glow-accent w-[180px] lcp-image"
         loading="eager"
         decoding="sync"
