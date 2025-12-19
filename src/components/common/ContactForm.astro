@@ -345,6 +345,7 @@ import { Icon } from "astro-icon/components";
         if (result.success) {
           // Hide error message if it was visible
           errorMessage?.classList.add("hidden");
+          form.removeAttribute("aria-describedby");
 
           // Show success message overlay
           if (successMessage) {
@@ -374,19 +375,8 @@ import { Icon } from "astro-icon/components";
           (errorMessage as HTMLElement).focus();
         }
 
-        // Add visual feedback that something went wrong
-        form.querySelectorAll("input, textarea").forEach((el) => {
-          // Check if the element has a `name` attribute and is not a hidden field
-          if (
-            el.getAttribute("name") &&
-            el.getAttribute("type") !== "hidden" &&
-            el.getAttribute("name") !== "botcheck" &&
-            el.getAttribute("name") !== "subject" &&
-            el.getAttribute("name") !== "access_key"
-          ) {
-            el.setAttribute("aria-invalid", "true");
-          }
-        });
+        // Make the form aware of the error message for better accessibility
+        form.setAttribute("aria-describedby", "form-error-message");
       }
     });
   }
