@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
 <form
@@ -39,11 +41,7 @@ import { Icon } from "astro-icon/components";
   </div>
 
   <!-- Access Key -->
-  <input
-    type="hidden"
-    name="access_key"
-    value="6f4ab1a4-c755-44e1-8524-2dd2a6651845"
-  />
+  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
@@ -404,7 +402,10 @@ import { Icon } from "astro-icon/components";
           throw new Error("Submission failed");
         }
       } catch (error) {
-        console.error("Form submission failed");
+        console.error(
+          "Form submission failed:",
+          error instanceof Error ? error.message : "Unknown error",
+        );
         submitButton?.classList.remove("loading");
         if (submitButton) {
           submitButton.disabled = false;

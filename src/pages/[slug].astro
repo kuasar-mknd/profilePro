@@ -106,7 +106,10 @@ const readingTime = Math.ceil(wordCount / 200);
             url: window.location.href,
           });
         } catch (err) {
-          console.log("Error sharing:", err);
+          console.log(
+            "Error sharing:",
+            err instanceof Error ? err.message : "Unknown error",
+          );
         }
       } else {
         // Fallback: copy to clipboard
@@ -118,7 +121,10 @@ const readingTime = Math.ceil(wordCount / 200);
             shareBtn.innerHTML = originalText;
           }, 2000);
         } catch (err) {
-          console.error("Failed to copy:", err);
+          console.error(
+            "Failed to copy:",
+            err instanceof Error ? err.message : "Unknown error",
+          );
         }
       }
     });
