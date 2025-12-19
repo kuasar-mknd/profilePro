@@ -6,6 +6,7 @@
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
+[![CI Quality](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
 
 <!-- Tech Stack -->
 
@@ -27,12 +28,6 @@
 ![Lighthouse Best Practices](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/best-practices.json)
 ![Lighthouse SEO](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/seo.json)
 
-<!-- Stats -->
-
-![GitHub repo size](https://img.shields.io/github/repo-size/kuasar-mknd/profilePro?label=size)
-![GitHub last commit](https://img.shields.io/github/last-commit/kuasar-mknd/profilePro)
-![Maintenance](https://img.shields.io/maintenance/yes/2025)
-
 [🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 
 ---
@@ -43,6 +38,8 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 
 **Mission**: _Connecter, Communiquer, Captiver_ — transformer chaque événement en une histoire mémorable.
 
+Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de détails techniques.
+
 ## ✨ Fonctionnalités
 
 ### 🎨 Design & Expérience
@@ -51,59 +48,33 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 - **Architecture responsive** optimisée (Mobile First)
 - **Animations modernes** avec View Transition API & ScrollReveal
 - **Cartes Projets 3D** avec effet Tilt et glare subtil
-- **Carousel d'accueil** intelligent (chargement aléatoire + scroll infini)
-- **Background animé** interactif et subtil
+- **Carousel d'accueil** intelligent
 - **Lecteur vidéo intégré** avec streaming optimisé
 
 ### 🚀 Performance & SEO
 
 - **SEO optimisé** avec metadata complète
 - **RSS Feed** pour les dernières publications
-- **Images optimisées** via Sharp et compression automatique
-- **Carbon Badge** avec calcul d'empreinte écologique (API dédiée)
-- **Type-safe** avec TypeScript et validation de schéma
+- **Images optimisées** via Sharp
+- **Carbon Badge** avec calcul d'empreinte écologique
 - **Lighthouse score** de 100% en Performance et Accessibilité
 - **Sécurité renforcée** avec CodeQL Analysis et Headers CSP stricts
-- **Compression automatique** HTML, CSS, JS, SVG
-- **Prefetch intelligent** pour navigation instantanée
-- **PWA Ready** pour une installation et support offline
 
-### 📁 Gestion de contenu
+## 📚 Documentation
 
-- **3 types de projets**: vidéo, photo, et général
-- **Collections Astro** pour les projets et pages
-- **MDX support** pour un contenu riche et interactif
-- **Fil d'Ariane** pour une navigation intuitive
+Une documentation détaillée est disponible dans le dossier `docs/` :
 
-## 🛠️ Stack technique
-
-### Core
-
-- **Framework**: [Astro 5.x](https://astro.build) - Static Site Generation
-- **Styling**: [Tailwind CSS 4.x](https://tailwindcss.com) avec configuration CSS-first
-- **Content**: MDX pour le contenu enrichi
-- **Icons**: Astro Icon avec Iconify
-
-### Performance
-
-- **Image Optimization**: Sharp
-- **Compression**: astro-compress
-- **PWA**: vite-plugin-pwa (Offline support)
-- **Bundle Analysis**: rollup-plugin-visualizer
-
-### Code Quality
-
-- **Linting**: ESLint + Stylelint
-- **Formatting**: Prettier
-- **Git Hooks**: Husky + lint-staged
-- **Performance Audits**: Lighthouse CI
+- [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
+- [🔌 API](docs/API.md) : Services externes (Web3Forms) et API internes.
+- [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
+- [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 
 ## 🚀 Quick Start
 
 ### Prérequis
 
-- Node.js 18.x ou supérieur
-- Bun 1.0+
+- Node.js 20+
+- Bun 1.0+ (Requis pour les scripts locaux)
 
 ### Installation
 
@@ -119,162 +90,43 @@ bun install
 bun run dev
 ```
 
-Le site sera accessible sur `http://localhost:4321`
+Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-#### Développement
-
-```bash
-bun run dev       # Lancer le serveur de développement
-bun run build     # Générer le build de production
-bun run preview   # Prévisualiser le build de production
-```
-
-#### Qualité du Code
-
-```bash
-bun run format           # Formater tout le code
-bun run lint             # Linter (ESLint + Stylelint)
-bun run lint:eslint:fix  # Corriger erreurs ESLint
-bun run lint:stylelint:fix # Corriger erreurs CSS
-bun run check            # Vérifier formatage + lint
-```
-
-#### Performance & Analyse
-
-```bash
-bun run lighthouse  # Audit Lighthouse complet
-bun run analyze     # Analyser la taille des bundles
-```
+- `bun run dev` : Lancer le serveur de développement.
+- `bun run build` : Générer le build de production.
+- `bun run check` : Vérifier le code (linting + formatage).
+- `bun run lighthouse` : Lancer l'audit de performance.
 
 ## 📂 Structure du projet
 
 ```text
 /
-├── public/              # Assets statiques (images, fonts, etc.)
+├── public/              # Assets statiques
 ├── src/
-│   ├── components/      # Composants Astro réutilisables
-│   │   ├── features/    # Composants de fonctionnalités
-│   │   ├── layout/      # Éléments de mise en page
-│   │   └── ui/          # Composants UI de base
-│   ├── content/         # Collections de contenu
-│   │   └── project/     # Fichiers MDX des projets
+│   ├── components/      # Composants Astro
+│   ├── content/         # Collections de contenu (MDX)
 │   ├── layouts/         # Templates de pages
 │   ├── pages/           # Pages du site
 │   └── config.mjs       # Configuration du site
 ├── astro.config.mjs     # Configuration Astro
-├── src/css/style.css  # Configuration Tailwind (CSS-first)
 └── package.json
 ```
 
 ## ⚙️ Configuration
 
-### Site Configuration
+Personnalisez le site via `src/config.mjs` (Titre, Réseaux sociaux, etc.) et ajoutez des projets dans `src/content/project/`.
 
-Personnaliser le site via `src/config.mjs`:
-
-- Titre et description
-- Réseaux sociaux
-- Nombre de posts par page
-- URL du site
-
-### Tailwind Configuration
-
-Modifier les couleurs, fonts et breakpoints directement dans `src/css/style.css` via la directive `@theme`.
-
-### Ajouter un projet
-
-Créer un fichier `.mdx` dans `src/content/project/` avec le frontmatter suivant:
-
-```yaml
----
-title: "Nom du projet"
-description: "Description courte pour le SEO"
-intro: "Introduction affichée en haut de page"
-pubDate: 2025-11-20
-tag: "clip musical"
-author: samuel
-image: ../../assets/image.jpg
-type: "video" # video | photo | general (défaut)
-
-# Pour type: "video"
-videoUrl: "https://vimeo.com/..." # ou YouTube
-
-# Pour type: "photo"
-gallery:
-  - ../../assets/photo1.jpg
-  - ../../assets/photo2.jpg
----
-```
-
-### Configuration du projet
-
-#### `tag` (Catégorie)
-
-Définit la catégorie fonctionnelle du projet.
-
-- **Libre** : Vous pouvez créer vos propres catégories (ex: "Clip", "Mariage", "Documentaire").
-- Utilisé pour l'URL et le filtrage.
-
-#### `type` (Layout)
-
-Définit l'apparence et le rendu de la page.
-
-1. **Vidéo** (`type: "video"`) : Affiche un lecteur vidéo en haut de page.
-2. **Photo** (`type: "photo"`) : Affiche une galerie d'images interactive.
-3. **Général** (`type: "general"`) : Affichage standard (Article / Défaut).
-
-## 🔧 Outils de Développement
-
-### Linting Automatique
-
-Le projet utilise **Husky** et **lint-staged** pour linter automatiquement votre code avant chaque commit :
-
-- ✅ ESLint corrige JavaScript/TypeScript/Astro
-- ✅ Stylelint corrige le CSS
-- ✅ Prettier formate tout le code
-
-### Performance Monitoring
-
-**Lighthouse CI** est configuré pour auditer automatiquement les performances :
-
-```bash
-bun run lighthouse
-```
-
-Seuils configurés : Performance ≥90%, Accessibilité ≥90%, SEO ≥90%
-
-### Bundle Analysis
-
-Après chaque build, visualisez la taille de vos bundles :
-
-```bash
-bun run analyze  # Ouvre dist/stats.html
-```
+Voir [ARCHITECTURE.md](docs/ARCHITECTURE.md) pour plus de détails.
 
 ## 🌐 Déploiement
 
-Ce site est déployé sur **Cloudflare Pages** via une pipeline CI/CD GitHub Actions personnalisée et robuste.
-
-### Workflow de Déploiement (`deploy.yml`)
-
-Le déploiement est entièrement automatisé et sécurisé :
-
-1. **Trigger** : Push sur la branche `master`.
-2. **Quality Checks** (Parallèle) : Linting (ESLint, Stylelint) et formatage (Prettier).
-3. **Security Scan** (Parallèle) : Analyse de vulnérabilités via **CodeQL**.
-4. **Build & Deploy** (Séquentiel) :
-   - Nettoyage et installation des dépendances (`bun install --frozen-lockfile`).
-   - Restauration du cache intelligent pour les images (`node_modules/.astro`).
-   - Build de production (`bun run build`).
-   - Déploiement direct sur Cloudflare Pages via **Wrangler** (`bunx wrangler pages deploy`).
-
-### Configuration Cloudflare
-
-- **Projet** : `profilepro`
-- **Wrangler** : Version latest utilisée via CI.
-- **Authentification** : Token API sécurisé via GitHub Secrets.
+Le déploiement est automatisé sur **Cloudflare Pages** via GitHub Actions.
+Le workflow assure :
+1. Vérification de la qualité (`check`).
+2. Scan de sécurité (`CodeQL`, `Dependency Review`).
+3. Build et déploiement via Wrangler.
 
 ## 🤝 Contributing
 
@@ -292,4 +144,4 @@ This project is [MIT](LICENSE) licensed.
 
 ---
 
-Construit avec ❤️ par Samuel Dulex — _Connecter, Communiquer, Captiver_
+Construit avec ❤️ par Samuel Dulex
