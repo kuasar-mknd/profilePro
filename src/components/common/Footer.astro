@@ -16,7 +16,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <a
         href="/"
         aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-        class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300"
+        class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-1 -m-1"
       >
         Samuel Dulex
       </a>
@@ -96,7 +96,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
-          class="font-medium hover:text-pacamara-accent transition-colors"
+          class="font-medium hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-sm px-1 -mx-1"
           >Astro</a
         >
       </span>
@@ -161,7 +161,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         link.rel = "noopener";
         link.href = "https://websitecarbon.com";
         link.className =
-          "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity";
+          "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0e11a8]";
         link.textContent = "Website Carbon";
 
         wrapper.appendChild(scoreSpan);
