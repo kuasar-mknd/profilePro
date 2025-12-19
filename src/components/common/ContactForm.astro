@@ -329,6 +329,22 @@ import { Icon } from "astro-icon/components";
       const successMessage = form.querySelector("#form-success-message");
       const errorMessage = form.querySelector("#form-error-message");
 
+      // 🛡️ Sentinel: Enhanced Input Validation
+      const emailInput = form.querySelector(
+        'input[name="email"]',
+      ) as HTMLInputElement;
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (emailInput && !emailPattern.test(emailInput.value)) {
+        if (errorMessage) {
+          errorMessage.classList.remove("hidden");
+          errorMessage.textContent =
+            "Veuillez entrer une adresse email valide.";
+          (errorMessage as HTMLElement).focus();
+        }
+        return;
+      }
+
       // Rate Limiting (Client-side)
       const lastSubmission = localStorage.getItem(
         "contact_form_last_submission",
@@ -385,10 +401,10 @@ import { Icon } from "astro-icon/components";
           form.reset();
           // The form is now covered, button remains disabled.
         } else {
-          throw new Error(result.message || "Submission failed");
+          throw new Error("Submission failed");
         }
       } catch (error) {
-        console.error(error);
+        console.error("Form submission failed");
         submitButton?.classList.remove("loading");
         if (submitButton) {
           submitButton.disabled = false;

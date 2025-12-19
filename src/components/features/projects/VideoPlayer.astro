@@ -39,7 +39,10 @@ if (provider === "youtube" && videoId) {
     const data = await response.json();
     posterUrl = data.thumbnail_url;
   } catch (e) {
-    console.error(`Failed to fetch Vimeo thumbnail for ${videoId}:`, e);
+    console.error(
+      `Failed to fetch Vimeo thumbnail for ${videoId}:`,
+      e instanceof Error ? e.message : "Unknown error",
+    );
   }
 }
 
