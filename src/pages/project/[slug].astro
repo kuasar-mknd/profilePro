@@ -277,7 +277,10 @@ const jsonLd = {
                   url: window.location.href,
                 });
               } catch (err) {
-                console.log("Error sharing:", err);
+                console.log(
+                  "Error sharing:",
+                  err instanceof Error ? err.message : "Unknown error",
+                );
               }
             } else {
               // Fallback: Copy to clipboard

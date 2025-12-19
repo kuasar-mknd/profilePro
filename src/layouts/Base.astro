@@ -18,6 +18,7 @@ import logo from "../assets/logo.avif";
 const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
+const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -327,10 +328,12 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         registerSW({
           immediate: true,
           onNeedRefresh() {
-            console.log("⚡ Bolt PWA: New content available");
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: New content available");
           },
           onOfflineReady() {
-            console.log("⚡ Bolt PWA: App ready to work offline");
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: App ready to work offline");
           },
         });
       }
@@ -339,7 +342,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "e010f74e2248479f940bfa3dedfefa12"}'></script>
+      data-cf-beacon={`{"token": "${PUBLIC_CF_ANALYTICS_TOKEN}"}`}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
