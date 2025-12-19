@@ -69,6 +69,7 @@ const readingTime = Math.ceil(wordCount / 200);
           height={600}
           loading="eager"
           decoding="sync"
+          fetchpriority="high"
           class="block relative mx-auto mt-10 object-cover h-72 md:h-[350px] image-shine rounded-[15px]"
           transition:name={`project-image-${entry.slug}`}
           quality={75}
