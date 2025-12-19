@@ -23,6 +23,12 @@ import { Icon } from "astro-icon/components";
       <p class="text-pacamara-primary/80 dark:text-white/80">
         Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
       </p>
+      <button
+        type="button"
+        class="reset-form-btn mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-pacamara-accent"
+      >
+        Envoyer un autre message
+      </button>
     </div>
   </div>
 
@@ -275,6 +281,26 @@ import { Icon } from "astro-icon/components";
     form.dataset.initialized = "true";
 
     const submitButton = form.querySelector(".submit-btn") as HTMLButtonElement;
+    const resetBtn = form.querySelector(".reset-form-btn") as HTMLButtonElement;
+
+    // Reset form flow
+    resetBtn?.addEventListener("click", () => {
+      const successMessage = form.querySelector("#form-success-message");
+      successMessage?.classList.add("hidden");
+      successMessage?.classList.remove("flex");
+
+      // Ensure form is fresh
+      form.reset();
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.classList.remove("loading");
+      }
+
+      // Focus first input for accessibility
+      const firstInput = form.querySelector("input") as HTMLInputElement;
+      firstInput?.focus();
+    });
 
     // Ripple effect
     submitButton?.addEventListener("click", (e) => {
