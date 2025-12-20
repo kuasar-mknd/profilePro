@@ -39,7 +39,12 @@
 
     button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!isExpanded));
+      const newIsExpanded = !isExpanded;
+      button.setAttribute("aria-expanded", String(newIsExpanded));
+      button.setAttribute(
+        "aria-label",
+        newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
+      );
       document.documentElement.classList.toggle("overflow-hidden");
       nav.classList.toggle("translate-x-full");
       nav.classList.toggle("translate-x-0");
@@ -49,6 +54,7 @@
       link.addEventListener("click", () => {
         document.documentElement.classList.remove("overflow-hidden");
         button.setAttribute("aria-expanded", "false");
+        button.setAttribute("aria-label", "Ouvrir le menu");
         nav.classList.add("translate-x-full");
         nav.classList.remove("translate-x-0");
       });
