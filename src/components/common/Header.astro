@@ -74,12 +74,23 @@ import logo from "../../assets/logo.avif";
 </style>
 
 <script>
+  let headerObserver: MutationObserver | null = null;
+
   function initMobileMenuAccessibility() {
+    // ⚡ Bolt: Cleanup previous observer to prevent stacking and memory leaks
+    if (headerObserver) {
+      headerObserver.disconnect();
+      headerObserver = null;
+    }
+
     const navWrapper = document.getElementById("navigation_wrapper");
     const html = document.documentElement;
 
+    // Guard clause if header elements aren't found
+    if (!navWrapper) return;
+
     // Observer to detect when menu is opened (via class change on html)
-    const observer = new MutationObserver((mutations) => {
+    headerObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           const isOpen = html.classList.contains("overflow-hidden");
@@ -92,7 +103,10 @@ import logo from "../../assets/logo.avif";
       });
     });
 
-    observer.observe(html, { attributes: true });
+    headerObserver.observe(html, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape" && html.classList.contains("overflow-hidden")) {
@@ -143,7 +157,6 @@ import logo from "../../assets/logo.avif";
     }
   }
 
-  // Initialize
-  initMobileMenuAccessibility();
+  // Initialize only via event listener to avoid double execution on initial load
   document.addEventListener("astro:page-load", initMobileMenuAccessibility);
 </script>
