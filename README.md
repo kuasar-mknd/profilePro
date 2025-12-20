@@ -73,8 +73,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20+
-- Bun 1.0+ (Requis pour les scripts locaux)
+- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
+- Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 

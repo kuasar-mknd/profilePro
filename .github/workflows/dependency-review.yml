@@ -1,5 +1,6 @@
 name: Dependency Review
 
+# Managed by DocOps
 # This workflow scans pull requests for dependency changes and identifies
 # known security vulnerabilities in newly added dependencies.
 # It helps prevent the introduction of vulnerable packages.

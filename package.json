@@ -38,7 +38,8 @@
     "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lighthouse": "lhci autorun",
     "analyze": "bun run build && open dist/stats.html",
-    "check": "bun run format:check && bun run lint",
+    "check": "bun run format:check && bun run lint && bun run typecheck",
+    "typecheck": "astro check",
     "prepare": "husky"
   },
   "dependencies": {
