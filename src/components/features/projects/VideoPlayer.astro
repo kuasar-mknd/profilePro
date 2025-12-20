@@ -7,11 +7,12 @@ const getVideoDetails = (url) => {
   if (!url) return { id: null, provider: null };
 
   // YouTube
+  // 🛡️ Sentinel: Optimized regex to prevent ReDoS (removed leading ^.* and trailing .*)
   const youtubeRegExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/;
   const youtubeMatch = url.match(youtubeRegExp);
-  if (youtubeMatch && youtubeMatch[2].length === 11) {
-    return { id: youtubeMatch[2], hash: null, provider: "youtube" };
+  if (youtubeMatch && youtubeMatch[1].length === 11) {
+    return { id: youtubeMatch[1], hash: null, provider: "youtube" };
   }
 
   // Vimeo
