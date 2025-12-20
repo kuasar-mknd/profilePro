@@ -62,10 +62,18 @@ if (!posterUrl && poster) {
     videoId ? (
       <>
         <div
-          class="absolute inset-0 bg-cover bg-center z-10 transition-opacity duration-500"
-          style={`background-image: url(${posterUrl})`}
+          class="absolute inset-0 z-10 transition-opacity duration-500"
           id={`poster-${videoId}`}
         >
+          {/* ⚡ Bolt: Used <img> tag instead of background-image for better LCP/loading performance */}
+          <img
+            src={posterUrl}
+            alt=""
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
           <button
             class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40"
             id={`play-btn-${videoId}`}
