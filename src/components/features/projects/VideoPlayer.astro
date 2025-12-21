@@ -54,6 +54,9 @@ if (provider === "youtube" && videoId) {
 if (!posterUrl && poster) {
   posterUrl = poster;
 }
+
+// ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
+const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 ---
 
 <div
@@ -69,7 +72,7 @@ if (!posterUrl && poster) {
           class="absolute inset-0 z-10 transition-opacity duration-500"
           id={`poster-${videoId}`}
         >
-          {/* ⚡ Bolt: Used <img> tag instead of background-image for better LCP/loading performance */}
+          {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
           <img
             src={posterUrl}
             alt=""
@@ -109,25 +112,13 @@ if (!posterUrl && poster) {
             </div>
           </button>
         </div>
-        {provider === "vimeo" ? (
-          <div id={`player-${videoId}`} class="plyr__video-embed w-full h-full">
-            <iframe
-              src={`https://player.vimeo.com/video/${videoId}${hash ? `?h=${hash}` : ""}`}
-              allow="autoplay; fullscreen; picture-in-picture"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
-              allowfullscreen
-              class="w-full h-full"
-              title="Lecteur vidéo Vimeo"
-            />
-          </div>
-        ) : (
-          <div
-            id={`player-${videoId}`}
-            class="plyr__video-embed w-full h-full"
-            data-plyr-provider={provider}
-            data-plyr-embed-id={videoId}
-          />
-        )}
+        {/* ⚡ Bolt: Removed eager iframe for Vimeo. Both providers now use data attributes to defer loading until interaction. */}
+        <div
+          id={`player-${videoId}`}
+          class="plyr__video-embed w-full h-full"
+          data-plyr-provider={provider}
+          data-plyr-embed-id={embedId}
+        />
       </>
     ) : (
       <div class="flex items-center justify-center h-full text-white/50">
