@@ -1,3 +1,5 @@
-## 2025-03-05 - [Visibility/Animation State Conflict]
-**Learning:** Overloading a single state variable (e.g., `isVisible`) to track both "element is in viewport" AND "animation loop is running" causes bugs. When the element settles (animation stops), the variable is set to false. If the viewport observer also relies on this variable, it might prevent the animation from restarting when the user interacts again.
-**Action:** Use distinct variables for different state concerns (e.g., `isInViewport` vs `isAnimating`) or ensure the logic flow cleanly separates "permission to animate" (viewport) from "currently animating" (loop status).
+## 2024-05-23 - Lazy Loading External Widgets
+
+**Learning:** When lazy-loading third-party widgets (like Website Carbon Badge) using `IntersectionObserver`, always assign a `min-height` or explicit dimensions to the placeholder container.
+**Reason:** Without dimensions, the container may have 0px height, causing the `IntersectionObserver` to trigger immediately (or fail to trigger correctly depending on layout), defeating the lazy-loading purpose and causing Cumulative Layout Shift (CLS) when the content eventually loads.
+**Action:** Always verify `min-h-[size]` is present on lazy-loaded containers.
