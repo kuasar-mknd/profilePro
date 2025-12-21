@@ -84,7 +84,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
       class="flex flex-col items-center lg:items-end text-center lg:text-right space-y-4"
     >
       <!-- Website Carbon Badge -->
-      <div id="wcb" class="carbonbadge wcb-d" aria-label="Website Carbon Badge">
+      <div
+        id="wcb"
+        class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
+        aria-label="Website Carbon Badge"
+      >
         <!-- Badge injected by script -->
       </div>
 
@@ -139,20 +143,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
         scoreSpan.id = "wcb_g";
         scoreSpan.className =
           "bg-white border-r-0 border border-[#00ffbc] py-[0.3em] px-[0.5em] rounded-l-[0.3em] min-w-[8.2em] text-[#0e11a8] text-center";
-        // Safe text content
-        scoreSpan.textContent = data.c + "g of CO";
-        // Append subscribe element manually to avoid innerHTML for it if needed, or just text.
-        // But wait, the original had <sub>2</sub>.
-        // Let's do it safely.
+
+        // Safe text content construction
+        scoreSpan.textContent = "";
         const sub = document.createElement("sub");
         sub.textContent = "2";
-        scoreSpan.appendChild(sub);
-        scoreSpan.append("/view");
-
-        // Reset textContent to handle the mix correctly if I want to be super strict,
-        // or effectively just build the nodes.
-        // Let's rebuild properly:
-        scoreSpan.textContent = "";
         scoreSpan.append(data.c + "g of CO", sub, "/view");
 
         const link = document.createElement("a");
@@ -178,7 +173,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
         wcb.appendChild(percentSpan);
       };
 
-      // Styles are handled by global CSS or Tailwind, but we add structure above.
       // Fetch logic
       const fetchData = () => {
         wcb.innerHTML =
@@ -206,17 +200,30 @@ import SocialIcon from "../ui/SocialIcon.astro";
 
       // Cache Check
       const cached = localStorage.getItem(cacheKey);
+      let isValidCache = false;
+
       if (cached) {
         const data = JSON.parse(cached);
         const now = new Date().getTime();
         // Cache validity: 1 day (86400000 ms)
         if (now - data.t < 86400000) {
           render(data);
-        } else {
-          fetchData();
+          isValidCache = true;
         }
-      } else {
-        fetchData();
+      }
+
+      // ⚡ Bolt: Lazy load if not cached or expired to save initial bandwidth
+      if (!isValidCache) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              fetchData();
+              observer.disconnect();
+            }
+          },
+          { rootMargin: "200px" },
+        );
+        observer.observe(wcb);
       }
     }
 
