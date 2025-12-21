@@ -427,8 +427,9 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({ token: PUBLIC_CF_ANALYTICS_TOKEN })}
-    ></script>
+      data-cf-beacon={JSON.stringify({
+        token: PUBLIC_CF_ANALYTICS_TOKEN,
+      }).replace(/</g, "\\u003c")}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

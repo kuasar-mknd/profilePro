@@ -401,10 +401,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           throw new Error(result.message || "Submission failed");
         }
       } catch (error) {
-        console.error(
-          "Form submission failed:",
-          "An unexpected error occurred. See network tab for details.",
-        );
+        // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
+        if (import.meta.env.DEV) {
+          console.error("Form submission failed:", error);
+        } else {
+          console.error(
+            "Form submission failed: An unexpected error occurred.",
+          );
+        }
         if (submitButton) {
           submitButton.classList.remove("loading");
         }
