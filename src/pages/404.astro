@@ -1,10 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
+import LatestPosts from "../components/features/projects/LatestPosts.astro";
 ---
 
 <Base postData={{ data: { title: "Page introuvable" } }}>
   <section
-    class="container mx-auto px-7 py-24 flex flex-col items-center justify-center min-h-[70vh] text-center"
+    class="container mx-auto px-7 py-24 flex flex-col items-center justify-center min-h-[50vh] text-center"
   >
     <div class="relative mb-10">
       <div
@@ -42,6 +43,15 @@ import Base from "../layouts/Base.astro";
       Page précédente
     </button>
   </section>
+
+  <!-- Suggest recent projects to keep user engaged -->
+  <div class="border-t border-pacamara-secondary/10">
+    <LatestPosts
+      postLimit={3}
+      title="Plutôt intéressé par..."
+      subtitle="Voici quelques projets qui pourraient vous plaire au lieu de cette page vide."
+    />
+  </div>
 </Base>
 <script>
   /**
