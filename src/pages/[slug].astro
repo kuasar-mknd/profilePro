@@ -106,6 +106,7 @@ const readingTime = Math.ceil(wordCount / 200);
             url: window.location.href,
           });
         } catch (err) {
+          // 🛡️ Sentinel: Dev-only logging
           if (import.meta.env.DEV) {
             console.error(
               "Error sharing:",
@@ -126,10 +127,13 @@ const readingTime = Math.ceil(wordCount / 200);
             }, 2000);
           }
         } catch (err) {
-          console.error(
-            "Failed to copy:",
-            err instanceof Error ? err.message : "Unknown error",
-          );
+          // 🛡️ Sentinel: Dev-only logging
+          if (import.meta.env.DEV) {
+            console.error(
+              "Failed to copy:",
+              err instanceof Error ? err.message : "Unknown error",
+            );
+          }
         }
       }
     });

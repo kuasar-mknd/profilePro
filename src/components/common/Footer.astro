@@ -189,10 +189,13 @@ import SocialIcon from "../ui/SocialIcon.astro";
             localStorage.setItem(cacheKey, JSON.stringify(data));
           })
           .catch((e) => {
-            console.error(
-              "Carbon Badge update failed:",
-              e instanceof Error ? e.message : "Unknown error",
-            );
+            // 🛡️ Sentinel: Dev-only logging
+            if (import.meta.env.DEV) {
+              console.error(
+                "Carbon Badge update failed:",
+                e instanceof Error ? e.message : "Unknown error",
+              );
+            }
             wcb.innerHTML = "No Result";
             localStorage.removeItem(cacheKey);
           });
