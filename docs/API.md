@@ -26,8 +26,8 @@ Utilisé pour gérer les soumissions du formulaire de contact sans backend serve
 
 Utilisé pour afficher l'impact écologique de la page.
 
-- **Type**: Script externe
-- **Source**: `https://unpkg.com/website-carbon-badges@1.1.3/b.min.js` (Note: Ce script peut être bloqué par la CSP ou remplacé par une version locale dans `public/scripts/` pour la sécurité).
+- **Type**: Implémentation locale inline (voir `src/components/common/Footer.astro`).
+- **Note de sécurité**: L'ancien script externe `website-carbon-badges.js` a été supprimé pour réduire la surface d'attaque (injection HTML) et améliorer la performance.
 
 ## API Interne (Build-time)
 

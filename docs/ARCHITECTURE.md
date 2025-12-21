@@ -10,6 +10,7 @@ Le projet suit une architecture de site statique (SSG) généré par Astro, avec
 - **Core**: Astro 5 (Static Site Generation)
 - **Styling**: Tailwind CSS 4 (CSS-first config)
 - **Scripting**: TypeScript (Strict mode)
+- **Type Checking**: `astro check` (via CI)
 - **Contenu**: MDX (Markdown + Components)
 - **Package Manager**: Bun (Utilisé pour le développement et le build)
 

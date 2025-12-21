@@ -18,7 +18,7 @@ const isWide = bentoSize === "bento-item-wide";
   <a
     href={`/project/${postData.slug}`}
     aria-label={`Voir le projet ${postData.data.title}`}
-    class="block h-full"
+    class="block h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-2xl"
   >
     <!-- Background Image with zoom effect -->
     <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
@@ -27,8 +27,8 @@ const isWide = bentoSize === "bento-item-wide";
         src={postData.data.image}
         widths={[400, 800, 1200]}
         sizes={isLarge
-          ? "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 800px"
-          : "(max-width: 768px) 100vw, (max-width: 1280px) 25vw, 400px"}
+          ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+          : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
         formats={["avif", "webp"]}
         fallbackFormat="webp"
         quality={65}
@@ -38,6 +38,7 @@ const isWide = bentoSize === "bento-item-wide";
         class="w-full h-full object-cover"
         loading="lazy"
         decoding="async"
+        fetchpriority="low"
         transition:name={`project-image-${postData.slug}`}
       />
     </div>

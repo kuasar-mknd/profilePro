@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
 <form
@@ -23,6 +25,12 @@ import { Icon } from "astro-icon/components";
       <p class="text-pacamara-primary/80 dark:text-white/80">
         Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
       </p>
+      <button
+        type="button"
+        class="reset-form-btn mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+      >
+        Envoyer un autre message
+      </button>
     </div>
   </div>
 
@@ -33,11 +41,7 @@ import { Icon } from "astro-icon/components";
   </div>
 
   <!-- Access Key -->
-  <input
-    type="hidden"
-    name="access_key"
-    value="6f4ab1a4-c755-44e1-8524-2dd2a6651845"
-  />
+  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
@@ -135,7 +139,7 @@ import { Icon } from "astro-icon/components";
     <!-- Submit Button -->
     <button
       type="submit"
-      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
       aria-live="polite"
     >
       <span class="btn-text relative z-10">Envoyer le message</span>
@@ -188,7 +192,14 @@ import { Icon } from "astro-icon/components";
       aria-live="assertive"
       tabindex="-1"
     >
-      Une erreur est survenue. Veuillez réessayer.
+      <p id="error-text">Une erreur est survenue. Veuillez réessayer.</p>
+      <button
+        type="button"
+        id="reset-error-btn"
+        class="mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+      >
+        Réessayer
+      </button>
     </div>
   </div>
 
@@ -275,55 +286,86 @@ import { Icon } from "astro-icon/components";
     form.dataset.initialized = "true";
 
     const submitButton = form.querySelector(".submit-btn") as HTMLButtonElement;
+    const resetBtn = form.querySelector(".reset-form-btn") as HTMLButtonElement;
+    const errorResetBtn = form.querySelector(
+      "#reset-error-btn",
+    ) as HTMLButtonElement;
+    const errorMessage = form.querySelector(
+      "#form-error-message",
+    ) as HTMLElement;
+    const errorText = form.querySelector("#error-text") as HTMLParagraphElement;
+
+    // Reset form from success message
+    resetBtn?.addEventListener("click", () => {
+      const successMessage = form.querySelector("#form-success-message");
+      successMessage?.classList.add("hidden");
+      successMessage?.classList.remove("flex");
+      form.reset();
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.classList.remove("loading");
+      }
+      (form.querySelector("input") as HTMLInputElement)?.focus();
+    });
+
+    // Reset form from error message
+    errorResetBtn?.addEventListener("click", () => {
+      errorMessage?.classList.add("hidden");
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+      (form.querySelector("input") as HTMLInputElement)?.focus();
+    });
 
     // Ripple effect
     submitButton?.addEventListener("click", (e) => {
-      // Accessibility: Skip ripple if user prefers reduced motion
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const rect = submitButton.getBoundingClientRect();
       const ripple = document.createElement("span");
       ripple.className = "ripple-circle";
-      ripple.style.width = ripple.style.height =
-        Math.max(rect.width, rect.height) + "px";
-      ripple.style.left = e.clientX - rect.left - rect.width / 2 + "px";
-      ripple.style.top = e.clientY - rect.top - rect.height / 2 + "px";
-
-      const rippleContainer = submitButton.querySelector(".btn-ripple");
-      rippleContainer?.appendChild(ripple);
-
+      ripple.style.width =
+        ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+      ripple.style.left = `${e.clientX - rect.left - rect.width / 2}px`;
+      ripple.style.top = `${e.clientY - rect.top - rect.height / 2}px`;
+      submitButton.querySelector(".btn-ripple")?.appendChild(ripple);
       setTimeout(() => ripple.remove(), 600);
     });
+
+    // Helper to display errors
+    function showError(message: string) {
+      if (errorMessage && errorText) {
+        errorText.textContent = message;
+        errorMessage.classList.remove("hidden");
+        errorMessage.focus();
+      }
+    }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const successMessage = form.querySelector("#form-success-message");
-      const errorMessage = form.querySelector("#form-error-message");
+      const emailInput = form.querySelector(
+        'input[name="email"]',
+      ) as HTMLInputElement;
+      const emailPattern =
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
 
-      // Rate Limiting (Client-side)
+      if (emailInput && !emailPattern.test(emailInput.value)) {
+        showError("Veuillez entrer une adresse email valide.");
+        return;
+      }
+
       const lastSubmission = localStorage.getItem(
         "contact_form_last_submission",
       );
-      if (lastSubmission) {
-        const timeSince = Date.now() - parseInt(lastSubmission, 10);
-        // Limit to 1 submission every 2 minutes
-        if (timeSince < 120000) {
-          if (errorMessage) {
-            errorMessage.classList.remove("hidden");
-            errorMessage.textContent =
-              "Veuillez attendre quelques minutes avant de renvoyer un message.";
-            (errorMessage as HTMLElement).focus();
-          }
-          return;
-        }
+      if (
+        lastSubmission &&
+        Date.now() - parseInt(lastSubmission, 10) < 120000
+      ) {
+        showError(
+          "Veuillez attendre quelques minutes avant de renvoyer un message.",
+        );
+        return;
       }
-
-      const formData = new FormData(form);
-      const object = Object.fromEntries(formData);
-      const json = JSON.stringify(object);
 
       if (submitButton) {
         submitButton.classList.add("loading");
@@ -337,45 +379,40 @@ import { Icon } from "astro-icon/components";
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: json,
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
         });
 
         const result = await response.json();
 
         if (result.success) {
-          // Hide error message if it was visible
           errorMessage?.classList.add("hidden");
           form.removeAttribute("aria-describedby");
-
-          // Show success message overlay
+          const successMessage = form.querySelector("#form-success-message");
           if (successMessage) {
             successMessage.classList.remove("hidden");
-            successMessage.classList.add("flex"); // Uses flex for centering
+            successMessage.classList.add("flex");
           }
           localStorage.setItem(
             "contact_form_last_submission",
             Date.now().toString(),
           );
           form.reset();
-          // The form is now covered, button remains disabled.
         } else {
           throw new Error(result.message || "Submission failed");
         }
       } catch (error) {
-        console.error(error);
-        submitButton?.classList.remove("loading");
+        // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
+        if (import.meta.env.DEV) {
+          console.error("Form submission failed:", error);
+        } else {
+          console.error(
+            "Form submission failed: An unexpected error occurred.",
+          );
+        }
         if (submitButton) {
-          submitButton.disabled = false;
+          submitButton.classList.remove("loading");
         }
-        // Show general error message
-        if (errorMessage) {
-          errorMessage.classList.remove("hidden");
-          errorMessage.textContent =
-            "Une erreur est survenue. Veuillez réessayer plus tard.";
-          (errorMessage as HTMLElement).focus();
-        }
-
-        // Make the form aware of the error message for better accessibility
+        showError("Une erreur est survenue. Veuillez réessayer plus tard.");
         form.setAttribute("aria-describedby", "form-error-message");
       }
     });

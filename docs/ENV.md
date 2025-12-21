@@ -15,6 +15,7 @@ cp .env.example .env
 | Variable | Description | Requis | Contexte |
 |----------|-------------|--------|----------|
 | `PUBLIC_WEB3FORMS_ACCESS_KEY` | Clé d'API publique pour le service de formulaire de contact Web3Forms. | Oui* | Runtime (Client) |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token pour les analytics Cloudflare (Web Analytics). | Non | Runtime (Client) |
 
 *> Note : Actuellement, cette clé peut être définie directement dans le code source de `ContactForm.astro` ou via l'environnement.
 

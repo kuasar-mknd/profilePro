@@ -18,6 +18,7 @@ import logo from "../assets/logo.avif";
 const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
+const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 ---
 
 <!doctype html>
@@ -177,16 +178,40 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
-      class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2"
+      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2 group"
       aria-label="Retour en haut de page"
       title="Retour en haut de page"
       tabindex="-1"
     >
+      <!-- 🎨 Palette: Circular Progress Indicator -->
+      <svg
+        class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none p-0.5"
+        viewBox="0 0 36 36"
+        aria-hidden="true"
+      >
+        <!-- Track -->
+        <path
+          class="text-white/20"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"></path>
+        <!-- Progress -->
+        <path
+          id="scroll-progress-circle"
+          class="text-white transition-all duration-100 ease-out"
+          stroke-dasharray="100, 100"
+          stroke-dashoffset="100"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"></path>
+      </svg>
+
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        width="24"
-        height="24"
+        class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -195,7 +220,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="2.5"
           d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
       </svg>
     </button>
@@ -203,54 +228,104 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <script>
       /**
        * ⚡ Bolt: Back to Top Performance Optimization
-       * Uses IntersectionObserver (already optimal) with initialization guard
-       * to prevent duplicate event handlers during page transitions.
+       * - Implements cleanup pattern to prevent event listener leaks on navigation
+       * - Caches layout metrics to avoid layout thrashing in scroll handler
+       * - Throttles scroll updates using requestAnimationFrame
        */
-      let backToTopObserver: IntersectionObserver | null = null;
+      let cleanupBackToTop: (() => void) | null = null;
 
       function initBackToTop() {
-        const backToTopBtn = document.getElementById("back-to-top");
-        const sentinel = document.getElementById("scroll-sentinel");
-
-        // ⚡ Early return if elements don't exist
-        if (!backToTopBtn || !sentinel) return;
-
-        // ⚡ Early return if already initialized
-        if (backToTopBtn.dataset.initialized === "true") return;
-        backToTopBtn.dataset.initialized = "true";
-
-        // ⚡ Reuse observer if already created
-        if (!backToTopObserver) {
-          backToTopObserver = new IntersectionObserver(
-            (entries) => {
-              const entry = entries[0];
-              const btn = document.getElementById("back-to-top");
-              if (!btn) return;
-
-              // If sentinel is NOT intersecting (scrolled past), show button
-              if (!entry.isIntersecting) {
-                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
-                btn.classList.add("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "0");
-              } else {
-                btn.classList.add("opacity-0", "invisible", "translate-y-4");
-                btn.classList.remove("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "-1");
-              }
-            },
-            {
-              root: null, // viewport
-              threshold: 0,
-            },
-          );
+        // ⚡ Cleanup previous listeners before initializing new ones
+        if (cleanupBackToTop) {
+          cleanupBackToTop();
+          cleanupBackToTop = null;
         }
 
-        backToTopObserver.observe(sentinel);
+        const backToTopBtn = document.getElementById("back-to-top");
+        const sentinel = document.getElementById("scroll-sentinel");
+        const progressCircle = document.getElementById(
+          "scroll-progress-circle",
+        );
+
+        // ⚡ Early return if elements don't exist
+        if (!backToTopBtn || !sentinel || !progressCircle) return;
+
+        // ⚡ Cache metrics to avoid reflows during scroll
+        let docHeight = 0;
+        let clientHeight = 0;
+        let rafId: number | null = null;
+
+        const updateMetrics = () => {
+          docHeight = document.documentElement.scrollHeight;
+          clientHeight = document.documentElement.clientHeight;
+        };
+
+        // Initial metrics
+        updateMetrics();
+
+        // 🎨 Palette: Scroll Progress Logic (Optimized)
+        const updateScrollProgress = () => {
+          const scrollTop = window.scrollY;
+          // Use cached metrics
+          const scrollableHeight = docHeight - clientHeight;
+          const scrollPercent =
+            scrollableHeight > 0
+              ? Math.min(scrollTop / scrollableHeight, 1)
+              : 0;
+          const draw = scrollPercent * 100;
+          progressCircle.style.strokeDashoffset = (100 - draw).toString();
+          rafId = null;
+        };
+
+        // ⚡ Throttled Scroll Handler
+        const onScroll = () => {
+          if (!rafId) {
+            rafId = requestAnimationFrame(updateScrollProgress);
+          }
+        };
+
+        // Initial update
+        updateScrollProgress();
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", updateMetrics, { passive: true });
+        // Robustness: Update metrics if body size changes (e.g. lazy loading)
+        const resizeObserver = new ResizeObserver(updateMetrics);
+        resizeObserver.observe(document.body);
+
+        // Visibility Observer
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            // Check existence because this runs async
+            if (!backToTopBtn) return;
+
+            if (!entry.isIntersecting) {
+              backToTopBtn.classList.remove(
+                "opacity-0",
+                "invisible",
+                "translate-y-4",
+              );
+              backToTopBtn.classList.add("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "0");
+            } else {
+              backToTopBtn.classList.add(
+                "opacity-0",
+                "invisible",
+                "translate-y-4",
+              );
+              backToTopBtn.classList.remove("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "-1");
+            }
+          },
+          { root: null, threshold: 0 },
+        );
+
+        observer.observe(sentinel);
 
         // Scroll to top action
-        backToTopBtn.addEventListener("click", () => {
+        const onClick = () => {
           window.scrollTo({ top: 0, behavior: "smooth" });
-          // Focus fix for accessibility
           const main = document.getElementById("main-content");
           if (main) {
             if (!main.hasAttribute("tabindex")) {
@@ -258,7 +333,18 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
             }
             main.focus({ preventScroll: true });
           }
-        });
+        };
+        backToTopBtn.addEventListener("click", onClick);
+
+        // ⚡ Register cleanup
+        cleanupBackToTop = () => {
+          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener("resize", updateMetrics);
+          resizeObserver.disconnect();
+          observer.disconnect();
+          backToTopBtn.removeEventListener("click", onClick);
+          if (rafId) cancelAnimationFrame(rafId);
+        };
       }
 
       // Initialize on load and after view transitions
@@ -327,10 +413,12 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         registerSW({
           immediate: true,
           onNeedRefresh() {
-            console.log("⚡ Bolt PWA: New content available");
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: New content available");
           },
           onOfflineReady() {
-            console.log("⚡ Bolt PWA: App ready to work offline");
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: App ready to work offline");
           },
         });
       }
@@ -339,7 +427,9 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "e010f74e2248479f940bfa3dedfefa12"}'></script>
+      data-cf-beacon={JSON.stringify({
+        token: PUBLIC_CF_ANALYTICS_TOKEN,
+      }).replace(/</g, "\\u003c")}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

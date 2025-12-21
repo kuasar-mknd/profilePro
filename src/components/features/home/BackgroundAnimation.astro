@@ -32,6 +32,7 @@
    * - DOM caching for animation loop
    * - RAF throttling for mousemove
    * - Pre-calculated coordinates to avoid layout thrashing (getBoundingClientRect)
+   * - Visibility Observer to pause mouse tracking when off-screen
    */
 
   let cleanup: (() => void) | null = null;
@@ -48,9 +49,6 @@
 
     // ⚡ Early return guards
     if (!blob || !container) return;
-
-    // Note: We removed the dataset check because we're handling explicit cleanup now
-    // allowing re-initialization on fresh DOM elements.
 
     // ⚡ Skip for reduced motion preference
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -84,7 +82,7 @@
     // Initial calculation
     updateMetrics();
 
-    // Update on resize (throttled via RAF implied or simple event)
+    // Update on resize
     window.addEventListener("resize", updateMetrics, { passive: true });
 
     // ⚡ Optimized mousemove handler
@@ -103,8 +101,6 @@
         animate();
       }
     };
-
-    document.addEventListener("mousemove", onMouseMove, { passive: true });
 
     // ⚡ Optimized animation loop with cached references
     function animate() {
@@ -130,8 +126,34 @@
       animationFrameId = requestAnimationFrame(animate);
     }
 
+    // ⚡ Bolt: Visibility Observer to pause mouse tracking when off-screen
+    // Saves CPU/Battery by removing the high-frequency mousemove listener
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          document.addEventListener("mousemove", onMouseMove, {
+            passive: true,
+          });
+        } else {
+          document.removeEventListener("mousemove", onMouseMove);
+          // Also stop any ongoing animation
+          isVisible = false;
+          blobStyle.opacity = "0"; // Fade out when off-screen
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+        }
+      },
+      { rootMargin: "200px" }, // Start tracking slightly before it enters viewport
+    );
+
+    observer.observe(container);
+
     // Register cleanup function
     cleanup = () => {
+      observer.disconnect();
       window.removeEventListener("resize", updateMetrics);
       document.removeEventListener("mousemove", onMouseMove);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);

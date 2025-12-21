@@ -9,3 +9,13 @@
 **Vulnerability:** `JSON.stringify` does not escape HTML characters, allowing XSS via `</script>` injection in `set:html`.
 **Learning:** Astro's `set:html` directives blindly inject content. `JSON.stringify` is insufficient for sanitization in this context.
 **Prevention:** Always append `.replace(/</g, "\\u003c")` when injecting JSON objects into `script` tags via `set:html`.
+
+## 2025-05-24 - [Attack Surface Reduction]
+**Vulnerability:** Unused third-party script (`website-carbon-badges.js`) contained an unsafe `innerHTML` injection pattern using external data.
+**Learning:** Even "trusted" external scripts can introduce DOM-based XSS vectors. Unused code is technical debt that can become a security liability.
+**Prevention:** Regularly audit `public/scripts` and remove unused files. Prefer local, type-safe implementations over dropping in external JS files.
+
+## 2025-02-20 - Unsafe HTML Attribute Injection in Base Layout
+**Vulnerability:** The Cloudflare Analytics token was injected into the `data-cf-beacon` attribute using manual string interpolation (`{"token": "${TOKEN}"}`), which could create invalid JSON or allow attribute injection if the token contained quotes.
+**Learning:** Never manually construct JSON strings for HTML attributes. React/Astro JSX handles attribute serialization safely, but the content *inside* the string is not automatically JSON-escaped if manually built.
+**Prevention:** Use `JSON.stringify()` to generate the value for attributes expecting JSON data. Example: `data-beacon={JSON.stringify({ token })}`.

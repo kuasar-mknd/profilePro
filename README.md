@@ -32,6 +32,19 @@
 
 ---
 
+## ❓ Troubleshooting
+
+Si vous rencontrez des problèmes lors de l'installation ou du lancement :
+
+1.  **Erreur `sharp` ou optimisation d'images** :
+    *   Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    *   Lancez `bun install --force` pour reconstruire les binaires natifs.
+2.  **Erreur `bun run` introuvable** :
+    *   Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
+3.  **Problèmes d'environnement** :
+    *   Vérifiez que `.env` existe (copié depuis `.env.example`).
+    *   Les variables `PUBLIC_` sont nécessaires au build.
+
 ## 📖 À propos
 
 Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de contenu vidéo et la captation d'événements. Ce site présente mes projets de manière dynamique et immersive, avec un focus sur l'expérience utilisateur et la performance.
@@ -73,8 +86,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20+
-- Bun 1.0+ (Requis pour les scripts locaux)
+- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
+- Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 
@@ -98,6 +111,15 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run build` : Générer le build de production.
 - `bun run check` : Vérifier le code (linting + formatage).
 - `bun run lighthouse` : Lancer l'audit de performance.
+
+### API Access (Flux RSS)
+
+Le site propose un flux RSS pour suivre les nouveaux projets :
+
+```bash
+# Récupérer le flux RSS (XML)
+curl https://portfolio.kuasar.xyz/rss.xml
+```
 
 ## 📂 Structure du projet
 
