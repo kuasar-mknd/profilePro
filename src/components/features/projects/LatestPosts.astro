@@ -5,7 +5,12 @@ import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 
-const { postLimit = config.latestPosts, skipPost = "" } = Astro.props;
+const {
+  postLimit = config.latestPosts,
+  skipPost = "",
+  title = "Projets",
+  subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
+} = Astro.props;
 
 const posts = (
   await getCollection("project", ({ data }) => {
@@ -32,13 +37,20 @@ const remainingCount = allPosts.length - postLimit;
     <h2
       class="text-3xl md:text-4xl font-pacamara-space font-bold mb-4 text-pacamara-dark dark:text-white"
     >
-      Projets <span class="text-shimmer">Récents</span>
+      {
+        title === "Projets" ? (
+          <>
+            Projets <span class="text-shimmer">Récents</span>
+          </>
+        ) : (
+          title
+        )
+      }
     </h2>
     <p
       class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit max-w-2xl mx-auto"
     >
-      Découvrez mes dernières réalisations en production vidéo, photographie et
-      développement web.
+      {subtitle}
     </p>
   </ScrollReveal>
 
