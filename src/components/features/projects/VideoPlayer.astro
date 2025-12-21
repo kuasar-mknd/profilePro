@@ -12,7 +12,12 @@ const getVideoDetails = (url) => {
   const youtubeRegExp =
     /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
   const youtubeMatch = url.match(youtubeRegExp);
-  if (youtubeMatch && youtubeMatch[1]) {
+  // 🛡️ Sentinel: Strict input validation for YouTube IDs (allowlist: alphanumeric + _ -)
+  if (
+    youtubeMatch &&
+    youtubeMatch[1].length === 11 &&
+    /^[a-zA-Z0-9_-]{11}$/.test(youtubeMatch[1])
+  ) {
     return { id: youtubeMatch[1], hash: null, provider: "youtube" };
   }
 
@@ -21,8 +26,9 @@ const getVideoDetails = (url) => {
   const vimeoRegExp =
     /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
-  if (vimeoMatch && vimeoMatch[1]) {
-    return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
+  if (vimeoMatch && vimeoMatch[4]) {
+    // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
+    return { id: vimeoMatch[4], hash: vimeoMatch[5], provider: "vimeo" };
   }
 
   return { id: null, hash: null, provider: null };
