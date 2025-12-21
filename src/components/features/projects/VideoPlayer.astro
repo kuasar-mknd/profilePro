@@ -8,19 +8,21 @@ const getVideoDetails = (url) => {
 
   // YouTube
   // 🛡️ Sentinel: Optimized regex to prevent ReDoS (removed leading ^.* and trailing .*)
+  // Enforces 11-char ID and safe delimiters to avoid catastrophic backtracking
   const youtubeRegExp =
-    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/;
+    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
   const youtubeMatch = url.match(youtubeRegExp);
-  if (youtubeMatch && youtubeMatch[1].length === 11) {
+  if (youtubeMatch && youtubeMatch[1]) {
     return { id: youtubeMatch[1], hash: null, provider: "youtube" };
   }
 
   // Vimeo
+  // 🛡️ Sentinel: Safe regex avoiding nested quantifiers
   const vimeoRegExp =
-    /^(http\:\/\/|https\:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)(?:\/([a-z0-9]+))?$/;
+    /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
-  if (vimeoMatch && vimeoMatch[4]) {
-    return { id: vimeoMatch[4], hash: vimeoMatch[5], provider: "vimeo" };
+  if (vimeoMatch && vimeoMatch[1]) {
+    return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
   }
 
   return { id: null, hash: null, provider: null };
