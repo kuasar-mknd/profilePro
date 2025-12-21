@@ -403,7 +403,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       } catch (error) {
         console.error(
           "Form submission failed:",
-          error instanceof Error ? error.message : "Unknown error",
+          "An unexpected error occurred. See network tab for details.",
         );
         if (submitButton) {
           submitButton.classList.remove("loading");
