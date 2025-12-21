@@ -232,6 +232,7 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
        * to prevent duplicate event handlers during page transitions.
        */
       let backToTopObserver: IntersectionObserver | null = null;
+      let cleanupScroll: (() => void) | null = null;
 
       function initBackToTop() {
         const backToTopBtn = document.getElementById("back-to-top");
@@ -243,27 +244,50 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         // ⚡ Early return if elements don't exist
         if (!backToTopBtn || !sentinel) return;
 
-        // 🎨 Palette: Scroll Progress Logic
-        const updateScrollProgress = () => {
+        // ⚡ Clean up previous listeners to prevent stacking on navigation
+        if (cleanupScroll) {
+          cleanupScroll();
+          cleanupScroll = null;
+        }
+
+        // ⚡ Bolt: RAF throttling state
+        let ticking = false;
+
+        // 🎨 Palette: Scroll Progress Logic with RAF throttling
+        const updateVisuals = () => {
           if (!progressCircle) return;
           const scrollTop = window.scrollY;
+          // Calculate height inside RAF loop to handle dynamic content (e.g., lazy loaded images)
           const docHeight =
             document.documentElement.scrollHeight -
             document.documentElement.clientHeight;
-          const scrollPercent = Math.min(scrollTop / docHeight, 1);
+          // Protect against divide by zero or negative
+          const scrollPercent =
+            docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
           const draw = scrollPercent * 100;
           progressCircle.style.strokeDashoffset = (100 - draw).toString();
+          ticking = false;
         };
 
-        // Initial update in case we start scrolled
-        updateScrollProgress();
+        const onScroll = () => {
+          if (!ticking) {
+            window.requestAnimationFrame(updateVisuals);
+            ticking = true;
+          }
+        };
 
-        // Update on scroll (throttled by rAF implicit in browser handling)
-        // For smoother performance, we could wrap in requestAnimationFrame,
-        // but modern browsers handle scroll listeners well if logic is light.
-        window.addEventListener("scroll", updateScrollProgress, {
+        // Update on scroll (optimized)
+        window.addEventListener("scroll", onScroll, {
           passive: true,
         });
+
+        // Register cleanup
+        cleanupScroll = () => {
+          window.removeEventListener("scroll", onScroll);
+        };
+
+        // Initial update
+        updateVisuals();
 
         // ⚡ Early return if already initialized
         if (backToTopBtn.dataset.initialized === "true") return;
