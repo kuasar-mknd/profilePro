@@ -228,12 +228,19 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <script>
       /**
        * ⚡ Bolt: Back to Top Performance Optimization
-       * Uses IntersectionObserver (already optimal) with initialization guard
-       * to prevent duplicate event handlers during page transitions.
+       * - Implements cleanup pattern to prevent event listener leaks on navigation
+       * - Caches layout metrics to avoid layout thrashing in scroll handler
+       * - Throttles scroll updates using requestAnimationFrame
        */
-      let backToTopObserver: IntersectionObserver | null = null;
+      let cleanupBackToTop: (() => void) | null = null;
 
       function initBackToTop() {
+        // ⚡ Cleanup previous listeners before initializing new ones
+        if (cleanupBackToTop) {
+          cleanupBackToTop();
+          cleanupBackToTop = null;
+        }
+
         const backToTopBtn = document.getElementById("back-to-top");
         const sentinel = document.getElementById("scroll-sentinel");
         const progressCircle = document.getElementById(
@@ -241,66 +248,84 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         );
 
         // ⚡ Early return if elements don't exist
-        if (!backToTopBtn || !sentinel) return;
+        if (!backToTopBtn || !sentinel || !progressCircle) return;
 
-        // 🎨 Palette: Scroll Progress Logic
-        const updateScrollProgress = () => {
-          if (!progressCircle) return;
-          const scrollTop = window.scrollY;
-          const docHeight =
-            document.documentElement.scrollHeight -
-            document.documentElement.clientHeight;
-          const scrollPercent = Math.min(scrollTop / docHeight, 1);
-          const draw = scrollPercent * 100;
-          progressCircle.style.strokeDashoffset = (100 - draw).toString();
+        // ⚡ Cache metrics to avoid reflows during scroll
+        let docHeight = 0;
+        let clientHeight = 0;
+        let rafId: number | null = null;
+
+        const updateMetrics = () => {
+          docHeight = document.documentElement.scrollHeight;
+          clientHeight = document.documentElement.clientHeight;
         };
 
-        // Initial update in case we start scrolled
+        // Initial metrics
+        updateMetrics();
+
+        // 🎨 Palette: Scroll Progress Logic (Optimized)
+        const updateScrollProgress = () => {
+          const scrollTop = window.scrollY;
+          // Use cached metrics
+          const scrollableHeight = docHeight - clientHeight;
+          const scrollPercent =
+            scrollableHeight > 0
+              ? Math.min(scrollTop / scrollableHeight, 1)
+              : 0;
+          const draw = scrollPercent * 100;
+          progressCircle.style.strokeDashoffset = (100 - draw).toString();
+          rafId = null;
+        };
+
+        // ⚡ Throttled Scroll Handler
+        const onScroll = () => {
+          if (!rafId) {
+            rafId = requestAnimationFrame(updateScrollProgress);
+          }
+        };
+
+        // Initial update
         updateScrollProgress();
 
-        // Update on scroll (throttled by rAF implicit in browser handling)
-        // For smoother performance, we could wrap in requestAnimationFrame,
-        // but modern browsers handle scroll listeners well if logic is light.
-        window.addEventListener("scroll", updateScrollProgress, {
-          passive: true,
-        });
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", updateMetrics, { passive: true });
+        // Robustness: Update metrics if body size changes (e.g. lazy loading)
+        const resizeObserver = new ResizeObserver(updateMetrics);
+        resizeObserver.observe(document.body);
 
-        // ⚡ Early return if already initialized
-        if (backToTopBtn.dataset.initialized === "true") return;
-        backToTopBtn.dataset.initialized = "true";
+        // Visibility Observer
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            // Check existence because this runs async
+            if (!backToTopBtn) return;
 
-        // ⚡ Reuse observer if already created
-        if (!backToTopObserver) {
-          backToTopObserver = new IntersectionObserver(
-            (entries) => {
-              const entry = entries[0];
-              const btn = document.getElementById("back-to-top");
-              if (!btn) return;
+            if (!entry.isIntersecting) {
+              backToTopBtn.classList.remove(
+                "opacity-0",
+                "invisible",
+                "translate-y-4",
+              );
+              backToTopBtn.classList.add("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "0");
+            } else {
+              backToTopBtn.classList.add(
+                "opacity-0",
+                "invisible",
+                "translate-y-4",
+              );
+              backToTopBtn.classList.remove("visible", "translate-y-0");
+              backToTopBtn.setAttribute("tabindex", "-1");
+            }
+          },
+          { root: null, threshold: 0 },
+        );
 
-              // If sentinel is NOT intersecting (scrolled past), show button
-              if (!entry.isIntersecting) {
-                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
-                btn.classList.add("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "0");
-              } else {
-                btn.classList.add("opacity-0", "invisible", "translate-y-4");
-                btn.classList.remove("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "-1");
-              }
-            },
-            {
-              root: null, // viewport
-              threshold: 0,
-            },
-          );
-        }
-
-        backToTopObserver.observe(sentinel);
+        observer.observe(sentinel);
 
         // Scroll to top action
-        backToTopBtn.addEventListener("click", () => {
+        const onClick = () => {
           window.scrollTo({ top: 0, behavior: "smooth" });
-          // Focus fix for accessibility
           const main = document.getElementById("main-content");
           if (main) {
             if (!main.hasAttribute("tabindex")) {
@@ -308,7 +333,18 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
             }
             main.focus({ preventScroll: true });
           }
-        });
+        };
+        backToTopBtn.addEventListener("click", onClick);
+
+        // ⚡ Register cleanup
+        cleanupBackToTop = () => {
+          window.removeEventListener("scroll", onScroll);
+          window.removeEventListener("resize", updateMetrics);
+          resizeObserver.disconnect();
+          observer.disconnect();
+          backToTopBtn.removeEventListener("click", onClick);
+          if (rafId) cancelAnimationFrame(rafId);
+        };
       }
 
       // Initialize on load and after view transitions
@@ -391,8 +427,9 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <script
       defer
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({ token: PUBLIC_CF_ANALYTICS_TOKEN })}
-    ></script>
+      data-cf-beacon={JSON.stringify({
+        token: PUBLIC_CF_ANALYTICS_TOKEN,
+      }).replace(/</g, "\\u003c")}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
