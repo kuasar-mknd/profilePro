@@ -101,7 +101,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
           target="_blank"
           rel="noopener noreferrer"
           class="font-medium hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg px-2 -mx-2"
-          >Astro</a
+          aria-label="Astro (ouvre un nouvel onglet)"
+          title="Astro (ouvre un nouvel onglet)">Astro</a
         >
       </span>
     </div>
@@ -158,6 +159,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
         link.className =
           "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0e11a8] rounded-lg";
         link.textContent = "Website Carbon";
+        link.setAttribute(
+          "aria-label",
+          "Website Carbon (ouvre un nouvel onglet)",
+        );
+        link.setAttribute("title", "Website Carbon (ouvre un nouvel onglet)");
 
         wrapper.appendChild(scoreSpan);
         wrapper.appendChild(link);

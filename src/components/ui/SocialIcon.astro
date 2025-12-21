@@ -12,9 +12,10 @@ const { icon, url, label } = Astro.props;
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
 const isExternal = true; // Hardcoded in the template as target="_blank"
-const a11yLabel = label
-  ? `${label} (ouvre un nouvel onglet)`
-  : "Lien social (ouvre un nouvel onglet)";
+const a11yLabel =
+  label && !label.includes("(ouvre un nouvel onglet)")
+    ? `${label} (ouvre un nouvel onglet)`
+    : label || "Lien social (ouvre un nouvel onglet)";
 ---
 
 <a
