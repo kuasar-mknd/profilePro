@@ -65,7 +65,7 @@
   </button>
 
   <div class="lightbox-content">
-    <img src="" alt="" class="lightbox-image" />
+    <img src="" alt="" class="lightbox-image" decoding="async" />
   </div>
 
   <div class="lightbox-loader" aria-hidden="true">
@@ -528,6 +528,7 @@
     private preloadImage(src: string) {
       if (!src) return;
       const img = new Image();
+      img.decoding = "async";
       img.src = src;
     }
 
