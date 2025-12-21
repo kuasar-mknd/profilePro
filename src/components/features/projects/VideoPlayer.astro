@@ -8,8 +8,9 @@ const getVideoDetails = (url) => {
 
   // YouTube
   // 🛡️ Sentinel: Optimized regex to prevent ReDoS (removed leading ^.* and trailing .*)
+  // Enforces 11-char ID and safe delimiters to avoid catastrophic backtracking
   const youtubeRegExp =
-    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*)/;
+    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
   const youtubeMatch = url.match(youtubeRegExp);
   // 🛡️ Sentinel: Strict input validation for YouTube IDs (allowlist: alphanumeric + _ -)
   if (
@@ -21,8 +22,9 @@ const getVideoDetails = (url) => {
   }
 
   // Vimeo
+  // 🛡️ Sentinel: Safe regex avoiding nested quantifiers
   const vimeoRegExp =
-    /^(http\:\/\/|https\:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)(?:\/([a-z0-9]+))?$/;
+    /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
   if (vimeoMatch && vimeoMatch[4]) {
     // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
@@ -46,10 +48,13 @@ if (provider === "youtube" && videoId) {
     const data = await response.json();
     posterUrl = data.thumbnail_url;
   } catch (e) {
-    console.error(
-      `Failed to fetch Vimeo thumbnail for ${videoId}:`,
-      e instanceof Error ? e.message : "Unknown error",
-    );
+    // 🛡️ Sentinel: Silence detailed error logging in production
+    if (import.meta.env.DEV) {
+      console.error(
+        `Failed to fetch Vimeo thumbnail for ${videoId}:`,
+        e instanceof Error ? e.message : "Unknown error",
+      );
+    }
   }
 }
 
@@ -57,6 +62,9 @@ if (provider === "youtube" && videoId) {
 if (!posterUrl && poster) {
   posterUrl = poster;
 }
+
+// ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
+const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 ---
 
 <div
@@ -72,7 +80,7 @@ if (!posterUrl && poster) {
           class="absolute inset-0 z-10 transition-opacity duration-500"
           id={`poster-${videoId}`}
         >
-          {/* ⚡ Bolt: Used <img> tag instead of background-image for better LCP/loading performance */}
+          {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
           <img
             src={posterUrl}
             alt=""
@@ -112,25 +120,13 @@ if (!posterUrl && poster) {
             </div>
           </button>
         </div>
-        {provider === "vimeo" ? (
-          <div id={`player-${videoId}`} class="plyr__video-embed w-full h-full">
-            <iframe
-              src={`https://player.vimeo.com/video/${videoId}${hash ? `?h=${hash}` : ""}`}
-              allow="autoplay; fullscreen; picture-in-picture"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
-              allowfullscreen
-              class="w-full h-full"
-              title="Lecteur vidéo Vimeo"
-            />
-          </div>
-        ) : (
-          <div
-            id={`player-${videoId}`}
-            class="plyr__video-embed w-full h-full"
-            data-plyr-provider={provider}
-            data-plyr-embed-id={videoId}
-          />
-        )}
+        {/* ⚡ Bolt: Removed eager iframe for Vimeo. Both providers now use data attributes to defer loading until interaction. */}
+        <div
+          id={`player-${videoId}`}
+          class="plyr__video-embed w-full h-full"
+          data-plyr-provider={provider}
+          data-plyr-embed-id={embedId}
+        />
       </>
     ) : (
       <div class="flex items-center justify-center h-full text-white/50">
@@ -154,6 +150,7 @@ if (!posterUrl && poster) {
       // ⚡ Bolt: Preload poster image to hide skeleton when ready
       if (posterUrl && skeleton) {
         const img = new Image();
+        img.decoding = "async";
         img.src = posterUrl;
         img.onload = () => {
           skeleton.remove();
