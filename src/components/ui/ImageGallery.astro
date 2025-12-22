@@ -14,6 +14,7 @@ interface Props {
   images?: ImageMetadata[];
   columns?: 2 | 3 | 4;
   excludePatterns?: string[];
+  priorityCount?: number;
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   images: explicitImages,
   columns = 3,
   excludePatterns = [],
+  priorityCount = 0,
 } = Astro.props;
 
 let galleryImages: { src: ImageMetadata; filename: string; alt?: string }[] =
@@ -78,7 +80,7 @@ const columnClasses = {
       {galleryImages.map((image, index) => (
         <figure class="gallery-item group">
           <Skeleton class="absolute inset-0 z-10 transition-opacity duration-500" />
-          {/* ⚡ Bolt: Added loading="lazy" and decoding="async" for faster initial page load */}
+          {/* ⚡ Bolt: Smart Loading - Eager load priority images, lazy load the rest */}
           <Picture
             src={image.src}
             widths={[400, 800]}
@@ -91,9 +93,9 @@ const columnClasses = {
             tabindex="0"
             role="button"
             aria-label={`Ouvrir la photo ${index + 1} en plein écran`}
-            loading="lazy"
+            loading={index < priorityCount ? "eager" : "lazy"}
             decoding="async"
-            fetchpriority="low"
+            fetchpriority={index < priorityCount ? "high" : "low"}
           />
         </figure>
       ))}

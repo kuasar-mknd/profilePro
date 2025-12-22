@@ -1,5 +1,5 @@
 ---
-const { postData, num, bentoSize = "" } = Astro.props;
+const { postData, num, bentoSize = "", priority = false } = Astro.props;
 import { Image, Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
@@ -22,7 +22,7 @@ const isWide = bentoSize === "bento-item-wide";
   >
     <!-- Background Image with zoom effect -->
     <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
-      {/* ⚡ Bolt: Added lazy loading for faster project listing load */}
+      {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
       <Picture
         src={postData.data.image}
         widths={[400, 800, 1200]}
@@ -36,9 +36,9 @@ const isWide = bentoSize === "bento-item-wide";
         width={isLarge ? 800 : 400}
         height={isLarge ? 600 : 300}
         class="w-full h-full object-cover"
-        loading="lazy"
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
-        fetchpriority="low"
+        fetchpriority={priority ? "high" : "low"}
         transition:name={`project-image-${postData.slug}`}
       />
     </div>
