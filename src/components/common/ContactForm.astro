@@ -54,6 +54,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     style="display: none;"
   />
 
+  <!-- 🛡️ Sentinel: Timestamp trap to prevent spam -->
+  <input
+    type="hidden"
+    name="form-load-timestamp"
+    id="form-load-timestamp"
+    value=""
+  />
+
   <div class="space-y-6 relative z-10">
     <!-- Name Field -->
     <div class="form-group">
@@ -285,6 +293,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     if (!form || form.dataset.initialized === "true") return;
     form.dataset.initialized = "true";
 
+    // 🛡️ Sentinel: Set timestamp for spam trap
+    const timestampInput = form.querySelector(
+      "#form-load-timestamp",
+    ) as HTMLInputElement;
+    if (timestampInput) {
+      timestampInput.value = Date.now().toString();
+    }
+
     const submitButton = form.querySelector(".submit-btn") as HTMLButtonElement;
     const resetBtn = form.querySelector(".reset-form-btn") as HTMLButtonElement;
     const errorResetBtn = form.querySelector(
@@ -351,6 +367,17 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
       if (emailInput && !emailPattern.test(emailInput.value)) {
         showError("Veuillez entrer une adresse email valide.");
+        return;
+      }
+
+      // 🛡️ Sentinel: Timestamp trap validation
+      const loadTimestamp = parseInt(timestampInput.value, 10);
+      const submitTimestamp = Date.now();
+      if (submitTimestamp - loadTimestamp < 2000) {
+        // 2 seconds threshold
+        showError(
+          "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
+        );
         return;
       }
 
