@@ -26,9 +26,9 @@ const getVideoDetails = (url) => {
   const vimeoRegExp =
     /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
-  if (vimeoMatch && vimeoMatch[4]) {
+  if (vimeoMatch && vimeoMatch[1]) {
     // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
-    return { id: vimeoMatch[4], hash: vimeoMatch[5], provider: "vimeo" };
+    return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
   }
 
   return { id: null, hash: null, provider: null };
