@@ -234,6 +234,7 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
        */
       let backToTopObserver: IntersectionObserver | null = null;
       let cleanupScroll: (() => void) | null = null;
+      let cleanupBackToTop: (() => void) | null = null;
 
       function initBackToTop() {
         // ⚡ Cleanup previous listeners before initializing new ones
@@ -251,15 +252,8 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         // ⚡ Early return if elements don't exist
         if (!backToTopBtn || !sentinel || !progressCircle) return;
 
-        // ⚡ Cache metrics to avoid reflows during scroll
-        let docHeight = 0;
-        let clientHeight = 0;
+        // ⚡ RAF ID for animation tracking
         let rafId: number | null = null;
-
-        const updateMetrics = () => {
-          docHeight = document.documentElement.scrollHeight;
-          clientHeight = document.documentElement.clientHeight;
-        };
 
         // ⚡ Clean up previous listeners to prevent stacking on navigation
         if (cleanupScroll) {
@@ -336,7 +330,7 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           );
         }
 
-        observer.observe(sentinel);
+        backToTopObserver.observe(sentinel);
 
         // Scroll to top action
         const onClick = () => {
@@ -354,9 +348,7 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         // ⚡ Register cleanup
         cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
-          window.removeEventListener("resize", updateMetrics);
-          resizeObserver.disconnect();
-          observer.disconnect();
+          if (backToTopObserver) backToTopObserver.disconnect();
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
