@@ -5,6 +5,7 @@
   aria-controls="navigation_wrapper"
   aria-expanded="false"
   aria-label="Ouvrir le menu"
+  title="Ouvrir le menu"
 >
   <div
     class="relative w-8 h-6 flex flex-col justify-between items-center group-hover:scale-105 transition-transform duration-300"
@@ -45,6 +46,10 @@
         "aria-label",
         newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
       );
+      button.setAttribute(
+        "title",
+        newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
+      );
       document.documentElement.classList.toggle("overflow-hidden");
       nav.classList.toggle("translate-x-full");
       nav.classList.toggle("translate-x-0");
@@ -55,6 +60,7 @@
         document.documentElement.classList.remove("overflow-hidden");
         button.setAttribute("aria-expanded", "false");
         button.setAttribute("aria-label", "Ouvrir le menu");
+        button.setAttribute("title", "Ouvrir le menu");
         nav.classList.add("translate-x-full");
         nav.classList.remove("translate-x-0");
       });
