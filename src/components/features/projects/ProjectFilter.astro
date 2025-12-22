@@ -8,6 +8,9 @@ const { tags, activeTag } = Astro.props;
     class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
         ${!activeTag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
     aria-current={!activeTag ? "page" : undefined}
+    aria-label={!activeTag
+      ? "Filtre actif : Afficher tous les projets"
+      : "Afficher tous les projets"}
   >
     Tous
   </a>
@@ -18,6 +21,11 @@ const { tags, activeTag } = Astro.props;
         class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
             ${activeTag === tag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
         aria-current={activeTag === tag ? "page" : undefined}
+        aria-label={
+          activeTag === tag
+            ? `Filtre actif : ${tag}`
+            : `Filtrer par catégorie : ${tag}`
+        }
       >
         {tag}
       </a>
