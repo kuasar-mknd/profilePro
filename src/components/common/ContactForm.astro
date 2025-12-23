@@ -362,8 +362,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const emailInput = form.querySelector(
         'input[name="email"]',
       ) as HTMLInputElement;
+      // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
       const emailPattern =
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+        /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
       if (emailInput && !emailPattern.test(emailInput.value)) {
         showError("Veuillez entrer une adresse email valide.");
