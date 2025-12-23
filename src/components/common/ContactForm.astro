@@ -86,7 +86,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           placeholder="Votre nom"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -114,7 +114,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           placeholder="votre@email.com"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -225,10 +226,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </form>
 
 <style>
-  /* Input glow effect on focus */
+  /* ⚡ Bolt: Performance Optimization */
+  /* Define box-shadow statically so it's not recalculated on focus */
+  .input-glow {
+    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
+  }
+
+  /* Only transition opacity (compositor thread) */
   .form-input:focus + .input-glow {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
   }
 
   /* Button states */
