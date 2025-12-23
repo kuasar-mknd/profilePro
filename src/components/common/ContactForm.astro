@@ -9,6 +9,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   method="POST"
   class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
+  novalidate
 >
   <!-- Form Success Message -->
   <div
@@ -85,7 +86,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           placeholder="Votre nom"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -113,7 +114,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           placeholder="votre@email.com"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -224,10 +226,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </form>
 
 <style>
-  /* Input glow effect on focus */
+  /* ⚡ Bolt: Performance Optimization */
+  /* Define box-shadow statically so it's not recalculated on focus */
+  .input-glow {
+    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
+  }
+
+  /* Only transition opacity (compositor thread) */
   .form-input:focus + .input-glow {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
   }
 
   /* Button states */
@@ -348,11 +355,16 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     // Helper to display errors
-    function showError(message: string) {
+    function showError(message: string, fieldToFocus?: HTMLElement) {
       if (errorMessage && errorText) {
         errorText.textContent = message;
         errorMessage.classList.remove("hidden");
-        errorMessage.focus();
+        // Focus the field if provided, otherwise the error message container
+        if (fieldToFocus) {
+          fieldToFocus.focus();
+        } else {
+          errorMessage.focus();
+        }
       }
     }
 
@@ -362,11 +374,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const emailInput = form.querySelector(
         'input[name="email"]',
       ) as HTMLInputElement;
+      // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
       const emailPattern =
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+        /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+      // Clear previous validation state before re-validating
+      emailInput?.removeAttribute("aria-invalid");
+      emailInput?.removeAttribute("aria-describedby");
+      errorMessage?.classList.add("hidden");
 
       if (emailInput && !emailPattern.test(emailInput.value)) {
-        showError("Veuillez entrer une adresse email valide.");
+        emailInput.setAttribute("aria-invalid", "true");
+        emailInput.setAttribute("aria-describedby", "form-error-message");
+        showError("Veuillez entrer une adresse email valide.", emailInput);
         return;
       }
 

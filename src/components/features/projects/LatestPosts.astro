@@ -60,7 +60,12 @@ const remainingCount = allPosts.length - postLimit;
         const bentoClass = getBentoClass(index);
         return (
           <ScrollReveal delay={0.1 * index} class={bentoClass}>
-            <Post postData={post} num={index} bentoSize={bentoClass} />
+            <Post
+              postData={post}
+              num={index}
+              bentoSize={bentoClass}
+              priority={index < 2}
+            />
           </ScrollReveal>
         );
       })

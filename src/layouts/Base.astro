@@ -19,6 +19,16 @@ const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+
+// ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
+let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
+if (postData?.data?.image) {
+  lcpImage = await getImage({
+    src: postData.data.image,
+    width: 1600,
+    format: "avif",
+  });
+}
 ---
 
 <!doctype html>
@@ -52,6 +62,13 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     />
     <link
       rel="preload"
+      href="/fonts/outfit-light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="/fonts/outfit-regular.woff2"
       as="font"
       type="font/woff2"
@@ -63,6 +80,19 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         <link
           rel="preload"
           href={heroLogo.src}
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
+    {
+      lcpImage && (
+        <link
+          rel="preload"
+          href={lcpImage.src}
           as="image"
           type="image/avif"
           fetchpriority="high"
@@ -254,6 +284,9 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
         // ⚡ RAF ID for animation tracking
         let rafId: number | null = null;
+        // ⚡ Bolt: Cache document height to avoid layout thrashing
+        let cachedDocHeight = 0;
+        let resizeObserver: ResizeObserver | null = null;
 
         // ⚡ Clean up previous listeners to prevent stacking on navigation
         if (cleanupScroll) {
@@ -264,17 +297,21 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         // ⚡ Bolt: RAF throttling state
         let ticking = false;
 
+        // ⚡ Bolt: Efficiently update dimensions only when they change
+        const updateDimensions = () => {
+          cachedDocHeight =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+        };
+
         // 🎨 Palette: Scroll Progress Logic with RAF throttling
         const updateVisuals = () => {
           if (!progressCircle) return;
           const scrollTop = window.scrollY;
-          // Calculate height inside RAF loop to handle dynamic content (e.g., lazy loaded images)
-          const docHeight =
-            document.documentElement.scrollHeight -
-            document.documentElement.clientHeight;
-          // Protect against divide by zero or negative
+
+          // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
           const scrollPercent =
-            docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+            cachedDocHeight > 0 ? Math.min(scrollTop / cachedDocHeight, 1) : 0;
           const draw = scrollPercent * 100;
           progressCircle.style.strokeDashoffset = (100 - draw).toString();
           ticking = false;
@@ -292,13 +329,23 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
           passive: true,
         });
 
+        // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
+        resizeObserver = new ResizeObserver(() => {
+          updateDimensions();
+          // Update visuals immediately in case scroll pos stayed same but height changed
+          window.requestAnimationFrame(updateVisuals);
+        });
+        resizeObserver.observe(document.documentElement);
+
+        // Initial calculation
+        updateDimensions();
+        updateVisuals();
+
         // Register cleanup
         cleanupScroll = () => {
           window.removeEventListener("scroll", onScroll);
+          if (resizeObserver) resizeObserver.disconnect();
         };
-
-        // Initial update
-        updateVisuals();
 
         // ⚡ Early return if already initialized
         if (backToTopBtn.dataset.initialized === "true") return;
@@ -348,6 +395,7 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         // ⚡ Register cleanup
         cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
+          if (resizeObserver) resizeObserver.disconnect();
           if (backToTopObserver) backToTopObserver.disconnect();
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);

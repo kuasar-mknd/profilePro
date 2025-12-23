@@ -26,9 +26,9 @@ const getVideoDetails = (url) => {
   const vimeoRegExp =
     /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
-  if (vimeoMatch && vimeoMatch[4]) {
+  if (vimeoMatch && vimeoMatch[1]) {
     // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
-    return { id: vimeoMatch[4], hash: vimeoMatch[5], provider: "vimeo" };
+    return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
   }
 
   return { id: null, hash: null, provider: null };
@@ -145,16 +145,18 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
       const poster = wrapper.querySelector("[id^='poster-']");
       const playerDiv = wrapper.querySelector("[id^='player-']");
       const skeleton = wrapper.querySelector(".skeleton");
-      const posterUrl = wrapper.getAttribute("data-poster-url");
 
-      // ⚡ Bolt: Preload poster image to hide skeleton when ready
-      if (posterUrl && skeleton) {
-        const img = new Image();
-        img.decoding = "async";
-        img.src = posterUrl;
-        img.onload = () => {
+      // ⚡ Bolt: Use existing lazy-loaded image to trigger skeleton removal
+      // This avoids double-downloading the image via new Image() and respects loading="lazy"
+      const actualImg = wrapper.querySelector("img");
+      if (skeleton && actualImg) {
+        if (actualImg.complete) {
           skeleton.remove();
-        };
+        } else {
+          actualImg.addEventListener("load", () => {
+            skeleton.remove();
+          });
+        }
       }
 
       if (playBtn && playerDiv && poster) {
