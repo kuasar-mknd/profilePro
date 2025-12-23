@@ -10,6 +10,7 @@ import Tag from "../../components/ui/Tag.astro";
 import { Icon } from "astro-icon/components";
 import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
 import ImageGallery from "../../components/ui/ImageGallery.astro";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getCollection, getEntry } from "astro:content";
 import config from "../../config.mjs";
@@ -185,23 +186,14 @@ const jsonLd = {
             border border-white/20 dark:border-white/5"
       style="animation-delay: 0.8s;"
     >
-      <div
-        class="mb-8 flex items-center gap-2 text-sm text-pacamara-primary/50 dark:text-white/50"
-      >
-        <a href="/" class="hover:text-pacamara-accent transition-colors"
-          >Accueil</a
-        >
-        <span>/</span>
-        <a
-          href={`/project/tag/${entry.data.tag}`}
-          class="hover:text-pacamara-accent transition-colors capitalize"
-          >{entry.data.tag}</a
-        >
-        <span>/</span>
-        <span class="text-pacamara-primary dark:text-white truncate"
-          >{entry.data.title}</span
-        >
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: "Accueil", href: "/" },
+          { label: "Projets", href: "/project" },
+          { label: entry.data.tag, href: `/project/tag/${entry.data.tag}` },
+          { label: entry.data.title },
+        ]}
+      />
       <Content />
 
       <!-- Share Button & Navigation -->

@@ -8,6 +8,7 @@ import Base from "../../layouts/Base.astro";
 import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 export async function getStaticPaths({
   paginate,
@@ -40,6 +41,9 @@ const { page, allTags } = Astro.props;
 <Base>
   <section class="container mx-auto max-w-7xl px-7 pt-10 pb-20">
     <ScrollReveal class="text-center mb-10">
+      <Breadcrumbs
+        items={[{ label: "Accueil", href: "/" }, { label: "Projets" }]}
+      />
       <h1
         class="text-3xl md:text-5xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white relative inline-block"
       >

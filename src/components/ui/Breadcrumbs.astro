@@ -1,0 +1,69 @@
+---
+interface Props {
+  items: {
+    label: string;
+    href?: string;
+  }[];
+}
+
+const { items } = Astro.props;
+
+// Schema.org Structured Data
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: item.href ? new URL(item.href, Astro.url).href : undefined,
+  })),
+};
+---
+
+<nav aria-label="Fil d'Ariane" class="mb-8 font-outfit">
+  <ol
+    class="flex items-center flex-wrap gap-2 text-sm text-pacamara-primary/60 dark:text-white/60"
+  >
+    {
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+
+        return (
+          <li class="flex items-center gap-2">
+            {index > 0 && (
+              <span
+                class="select-none opacity-40 text-pacamara-primary/40 dark:text-white/40"
+                aria-hidden="true"
+              >
+                /
+              </span>
+            )}
+
+            {isLast ? (
+              <span
+                class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-xs"
+                aria-current="page"
+                title={item.label}
+              >
+                {item.label}
+              </span>
+            ) : (
+              <a
+                href={item.href}
+                class="hover:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-md px-1 -mx-1"
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
+/>
