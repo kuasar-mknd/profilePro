@@ -38,7 +38,7 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
     *   Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    *   Lancez `bun install --force` pour reconstruire les binaires natifs.
+    *   Lancez `bun install` pour reconstruire les binaires natifs.
 2.  **Erreur `bun run` introuvable** :
     *   Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
 3.  **Problèmes d'environnement** :
@@ -111,6 +111,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run build` : Générer le build de production.
 - `bun run check` : Vérifier le code (linting + formatage).
 - `bun run lighthouse` : Lancer l'audit de performance.
+- `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
 
 ### API Access (Flux RSS)
 

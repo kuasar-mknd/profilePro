@@ -13,6 +13,7 @@ Le projet suit une architecture de site statique (SSG) généré par Astro, avec
 - **Type Checking**: `astro check` (via CI)
 - **Contenu**: MDX (Markdown + Components)
 - **Package Manager**: Bun (Utilisé pour le développement et le build)
+- **Testing**: Playwright (E2E)
 
 ## Structure des Dossiers
 
@@ -53,6 +54,11 @@ La navigation SPA (Single Page Application) est simulée grâce à l'API View Tr
 - **Images**: Optimisées au build via Sharp (`<Picture />` et `getImage`).
 - **Scripts**: Chargement différé et exécution conditionnelle.
 - **CSS**: Inliné pour réduire les requêtes bloquantes (Critical CSS).
+
+### 5. Testing
+Les tests End-to-End (E2E) sont gérés par Playwright.
+- Commande: `bun run test:e2e`
+- Configuration: `playwright.config.ts` (si présent) ou configuration par défaut.
 
 ## Extension du Projet
 
