@@ -7,12 +7,14 @@ Ce document décrit l'architecture technique du portfolio, construit avec Astro 
 Le projet suit une architecture de site statique (SSG) généré par Astro, avec des composants interactifs hydratés côté client (Islands Architecture) uniquement lorsque nécessaire.
 
 ### Stack Technique
+
 - **Core**: Astro 5 (Static Site Generation)
 - **Styling**: Tailwind CSS 4 (CSS-first config)
 - **Scripting**: TypeScript (Strict mode)
 - **Type Checking**: `astro check` (via CI)
 - **Contenu**: MDX (Markdown + Components)
 - **Package Manager**: Bun (Utilisé pour le développement et le build)
+- **Testing**: Playwright (E2E)
 
 ## Structure des Dossiers
 
@@ -40,24 +42,37 @@ src/
 ## Concepts Clés
 
 ### 1. Islands Architecture
+
 Le site est statique par défaut. L'interactivité est ajoutée via des "îlots" interactifs.
 Exemple : Le formulaire de contact (`ContactForm.astro`) est hydraté avec `client:visible` ou des scripts inline optimisés.
 
 ### 2. Content Collections
+
 Les projets sont gérés via les Content Collections d'Astro (`src/content/project`). Chaque projet est un fichier `.mdx` avec un frontmatter typé (validé par Zod dans `src/content/config.ts`).
 
 ### 3. View Transitions
+
 La navigation SPA (Single Page Application) est simulée grâce à l'API View Transitions d'Astro, offrant des transitions fluides sans rechargement complet de la page.
 
 ### 4. Performance
+
 - **Images**: Optimisées au build via Sharp (`<Picture />` et `getImage`).
 - **Scripts**: Chargement différé et exécution conditionnelle.
 - **CSS**: Inliné pour réduire les requêtes bloquantes (Critical CSS).
 
+### 5. Testing
+
+Les tests End-to-End (E2E) sont gérés par Playwright.
+
+- Commande: `bun run test:e2e`
+- Configuration: `playwright.config.ts` (si présent) ou configuration par défaut.
+
 ## Extension du Projet
 
 ### Ajouter une nouvelle page
+
 Créer un fichier `.astro` dans `src/pages/`. Il sera automatiquement accessible via son nom de fichier.
 
 ### Ajouter un composant UI
+
 Créer le composant dans `src/components/ui/` et l'importer là où nécessaire. Privilégier les composants `.astro` purs quand c'est possible.
