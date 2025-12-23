@@ -15,100 +15,109 @@ const isWide = bentoSize === "bento-item-wide";
     isWide ? "min-h-[280px]" : "",
   ]}
 >
+  <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
     href={`/project/${postData.slug}`}
     aria-label={`Voir le projet ${postData.data.title}`}
-    class="block h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-2xl"
+    class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
   >
-    <!-- Background Image with zoom effect -->
-    <div class="absolute inset-0 image-zoom overflow-hidden rounded-2xl">
-      {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
-      <Picture
-        src={postData.data.image}
-        widths={[400, 800, 1200]}
-        sizes={isLarge
-          ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-          : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
-        formats={["avif", "webp"]}
-        fallbackFormat="webp"
-        quality={65}
-        alt={postData.data.title}
-        width={isLarge ? 800 : 400}
-        height={isLarge ? 600 : 300}
-        class="w-full h-full object-cover"
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        fetchpriority={priority ? "high" : "low"}
-        transition:name={`project-image-${postData.slug}`}
-      />
-    </div>
+  </a>
 
-    <!-- Gradient Overlay - smooth transition on hover -->
+  <!-- 2. Background Image (absolute) -->
+  <div
+    class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none"
+  >
+    {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
+    <Picture
+      src={postData.data.image}
+      widths={[400, 800, 1200]}
+      sizes={isLarge
+        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+        : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      quality={65}
+      alt={postData.data.title}
+      width={isLarge ? 800 : 400}
+      height={isLarge ? 600 : 300}
+      class="w-full h-full object-cover"
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchpriority={priority ? "high" : "low"}
+      transition:name={`project-image-${postData.slug}`}
+    />
+  </div>
+
+  <!-- 3. Gradient Overlay - smooth transition on hover -->
+  <div
+    class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500 ease-out rounded-2xl pointer-events-none"
+  >
+  </div>
+
+  <!-- 4. Content Overlay -->
+  <div class="absolute inset-x-0 bottom-0 pointer-events-none">
+    <!-- Content container - fixed height aligned from top -->
     <div
-      class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500 ease-out rounded-2xl"
+      class:list={[
+        "relative z-10 p-4 md:p-5 flex flex-col justify-start",
+        isLarge ? "min-h-[160px] pb-12" : "min-h-[110px]",
+      ]}
     >
-    </div>
-
-    <!-- Content Overlay -->
-    <div class="absolute inset-x-0 bottom-0">
-      <!-- Content container - fixed height aligned from top -->
+      <!-- Tags - slides up on hover -->
+      <!-- 🎨 Palette: Tag is now clickable and sits above the card link -->
       <div
+        class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
+      >
+        <Tag
+          tag={postData.data.tag}
+          variant="dark"
+          href={`/project/tag/${postData.data.tag}`}
+        />
+      </div>
+
+      <!-- Title - slides up on hover -->
+      <h3
         class:list={[
-          "relative z-10 p-4 md:p-5 flex flex-col justify-start",
-          isLarge ? "min-h-[160px] pb-12" : "min-h-[110px]",
+          "font-pacamara-space font-bold text-white mb-1 transition-all duration-300 ease-out group-hover:text-pacamara-accent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2 transform translate-y-1 group-hover:translate-y-0",
+          isLarge
+            ? "text-xl md:text-2xl min-h-14"
+            : "text-base md:text-lg min-h-11",
         ]}
       >
-        <!-- Tags - slides up on hover -->
-        <div
-          class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300 ease-out"
-        >
-          <Tag tag={postData.data.tag} variant="dark" />
-        </div>
+        {postData.data.title}
+      </h3>
 
-        <!-- Title - slides up on hover -->
-        <h3
+      <!-- Description - collapses when hidden, expands on hover -->
+      <div
+        class:list={[
+          "transition-all duration-300 ease-out",
+          isLarge ? "" : "overflow-hidden max-h-0 group-hover:max-h-20",
+        ]}
+      >
+        <p
           class:list={[
-            "font-pacamara-space font-bold text-white mb-1 transition-all duration-300 ease-out group-hover:text-pacamara-accent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2 transform translate-y-1 group-hover:translate-y-0",
+            "font-outfit text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out",
             isLarge
-              ? "text-xl md:text-2xl min-h-14"
-              : "text-base md:text-lg min-h-11",
+              ? "text-sm line-clamp-3"
+              : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0",
           ]}
         >
-          {postData.data.title}
-        </h3>
+          {postData.data.intro}
+        </p>
+      </div>
 
-        <!-- Description - collapses when hidden, expands on hover -->
-        <div
-          class:list={[
-            "transition-all duration-300 ease-out",
-            isLarge ? "" : "overflow-hidden max-h-0 group-hover:max-h-20",
-          ]}
-        >
-          <p
-            class:list={[
-              "font-outfit text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out",
-              isLarge
-                ? "text-sm line-clamp-3"
-                : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0",
-            ]}
-          >
-            {postData.data.intro}
-          </p>
-        </div>
-
-        <!-- Date - slight scale on hover -->
-        <div
-          class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 origin-left"
-        >
-          <PublishDate date={postData.data.pubDate} />
-        </div>
+      <!-- Date - slight scale on hover -->
+      <div
+        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 origin-left"
+      >
+        <PublishDate date={postData.data.pubDate} />
       </div>
     </div>
+  </div>
 
-    <!-- Hover border effect -->
-    <div
-      class="absolute inset-0 border-2 border-transparent group-hover:border-pacamara-accent/50 rounded-2xl transition-colors duration-500 pointer-events-none"
-    >
-    </div>
-  </a>
+  <!-- Hover border effect -->
+  <div
+    class="absolute inset-0 border-2 border-transparent group-hover:border-pacamara-accent/50 rounded-2xl transition-colors duration-500 pointer-events-none"
+  >
+  </div>
 </article>
