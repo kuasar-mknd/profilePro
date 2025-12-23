@@ -19,6 +19,16 @@ const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+
+// ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
+let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
+if (postData?.data?.image) {
+  lcpImage = await getImage({
+    src: postData.data.image,
+    width: 1600,
+    format: "avif",
+  });
+}
 ---
 
 <!doctype html>
@@ -52,6 +62,13 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     />
     <link
       rel="preload"
+      href="/fonts/outfit-light.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
       href="/fonts/outfit-regular.woff2"
       as="font"
       type="font/woff2"
@@ -63,6 +80,19 @@ const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
         <link
           rel="preload"
           href={heroLogo.src}
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
+    {
+      lcpImage && (
+        <link
+          rel="preload"
+          href={lcpImage.src}
           as="image"
           type="image/avif"
           fetchpriority="high"
