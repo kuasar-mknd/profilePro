@@ -368,6 +368,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     }
 
+    // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
+    function sanitizeInput(str: string): string {
+      const map: Record<string, string> = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "/": "&#x2F;",
+      };
+      const reg = /[&<>"'/]/gi;
+      return str.replace(reg, (match) => map[match]);
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -420,13 +434,26 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
 
       try {
+        // 🛡️ Sentinel: Sanitize form data before sending
+        const formData = new FormData(form);
+        const data: Record<string, string> = {};
+        formData.forEach((value, key) => {
+          if (typeof value === "string") {
+            // Only sanitize text fields that might contain user input
+            // Avoid sanitizing hidden fields like access_key if they don't need it (though safe to do so)
+            data[key] = sanitizeInput(value);
+          } else {
+            data[key] = value.toString();
+          }
+        });
+
         const response = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+          body: JSON.stringify(data),
         });
 
         const result = await response.json();
