@@ -368,8 +368,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const emailInput = form.querySelector(
         'input[name="email"]',
       ) as HTMLInputElement;
+      // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
       const emailPattern =
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
+        /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
       // Clear previous validation state before re-validating
       emailInput?.removeAttribute("aria-invalid");
