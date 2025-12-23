@@ -13,7 +13,6 @@ import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getCollection, getEntry } from "astro:content";
-import config from "../../config.mjs";
 
 export async function getStaticPaths() {
   const projectEntries = (await getCollection("project")).sort(
@@ -200,24 +199,34 @@ const jsonLd = {
       <div
         class="mt-12 pt-8 border-t border-pacamara-secondary/10 flex flex-col md:flex-row justify-between items-center gap-6"
       >
+        <!-- 🎨 Palette: Enhanced Share Button
+             Improved feedback, transitions, and accessibility (ARIA live)
+        -->
         <button
           id="share-btn"
-          class="flex items-center gap-2 px-4 py-2 rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 text-pacamara-primary dark:text-white transition-colors cursor-pointer group"
+          class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 min-w-[200px]"
+          aria-label="Partager ce projet"
           aria-live="polite"
         >
-          <Icon
-            name="mdi:share-variant"
-            class="w-5 h-5 group-[.copied]:hidden"
-          />
-          <Icon
-            name="mdi:check"
-            class="w-5 h-5 text-green-600 dark:text-green-400 hidden group-[.copied]:block"
-          />
-          <span
-            class="font-medium group-[.copied]:text-green-600 dark:group-[.copied]:text-green-400"
-            >Partager ce projet</span
-          >
+          <div class="relative px-6 py-3">
+            <!-- Normal State -->
+            <div
+              class="flex items-center justify-center gap-2 transition-all duration-300 group-[.copied]:opacity-0 group-[.copied]:translate-y-2"
+            >
+              <Icon name="mdi:share-variant" class="w-5 h-5" />
+              <span class="font-medium">Partager ce projet</span>
+            </div>
+            <!-- Copied State -->
+            <div
+              class="absolute inset-0 flex items-center justify-center gap-2 transition-all duration-300 opacity-0 -translate-y-2 group-[.copied]:opacity-100 group-[.copied]:translate-y-0 text-green-600 dark:text-green-400"
+            >
+              <Icon name="mdi:check" class="w-5 h-5" />
+              <span class="font-medium">Lien copié !</span>
+            </div>
+          </div>
         </button>
+        <!-- Screen reader announcer for better accessibility support -->
+        <div id="share-announcer" class="sr-only" aria-live="polite"></div>
       </div>
 
       <!-- Script for interactions -->
@@ -260,6 +269,8 @@ const jsonLd = {
 
         // Share functionality
         const shareBtn = document.getElementById("share-btn");
+        const announcer = document.getElementById("share-announcer");
+
         if (shareBtn) {
           shareBtn.addEventListener("click", async () => {
             if (navigator.share) {
@@ -279,18 +290,27 @@ const jsonLd = {
               }
             } else {
               // Fallback: Copy to clipboard
-              navigator.clipboard.writeText(window.location.href);
-              const span = shareBtn.querySelector("span");
+              try {
+                await navigator.clipboard.writeText(window.location.href);
 
-              if (span && !shareBtn.classList.contains("copied")) {
-                const originalText = span.innerText;
-                span.innerText = "Lien copié !";
-                shareBtn.classList.add("copied");
+                // 🎨 Palette: Visual and Audible Feedback
+                if (!shareBtn.classList.contains("copied")) {
+                  shareBtn.classList.add("copied");
 
-                setTimeout(() => {
-                  span.innerText = originalText;
-                  shareBtn.classList.remove("copied");
-                }, 2000);
+                  // Accessibility update
+                  if (announcer) {
+                    announcer.textContent = "Lien copié dans le presse-papier";
+                  }
+
+                  setTimeout(() => {
+                    shareBtn.classList.remove("copied");
+                    if (announcer) {
+                      announcer.textContent = "";
+                    }
+                  }, 2000);
+                }
+              } catch (err) {
+                console.error("Failed to copy", err);
               }
             }
           });
