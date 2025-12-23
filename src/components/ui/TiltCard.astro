@@ -27,8 +27,9 @@ const {
 <script>
   /**
    * ⚡ Bolt: TiltCard performance optimization
-   * Caches DOM references and uses requestAnimationFrame to reduce overhead
-   * during frequent mousemove events.
+   * - Lazy listener attachment: 'mousemove' is only attached during interaction
+   * - Caches DOM references
+   * - RAF throttling
    */
   function initTiltCards() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -72,11 +73,6 @@ const {
         frameId = null;
       }
 
-      function onMouseEnter() {
-        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
-        bounds = el.getBoundingClientRect();
-      }
-
       function onMouseMove(e: MouseEvent) {
         if (!bounds) return;
 
@@ -101,11 +97,22 @@ const {
         cardStyle.setProperty("--rotate-y", "0deg");
 
         bounds = null;
+
+        // ⚡ Bolt: Cleanup high-frequency listeners when not needed
+        card.removeEventListener("mousemove", onMouseMove);
+        card.removeEventListener("mouseleave", onMouseLeave);
+      }
+
+      function onMouseEnter() {
+        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
+        bounds = el.getBoundingClientRect();
+
+        // ⚡ Bolt: Lazy attach listeners only when interacting
+        card.addEventListener("mousemove", onMouseMove);
+        card.addEventListener("mouseleave", onMouseLeave);
       }
 
       card.addEventListener("mouseenter", onMouseEnter);
-      card.addEventListener("mousemove", onMouseMove);
-      card.addEventListener("mouseleave", onMouseLeave);
     });
   }
 
