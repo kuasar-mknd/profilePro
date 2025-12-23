@@ -1,5 +1,5 @@
 ---
-const { videoUrl, poster } = Astro.props;
+const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
@@ -83,7 +83,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
           <img
             src={posterUrl}
-            alt=""
+            alt={`Aperçu de ${videoTitle}`}
             class="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
             decoding="async"
@@ -92,8 +92,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           <button
             class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
             id={`play-btn-${videoId}`}
-            aria-label="Lire la vidéo"
-            title="Lire la vidéo"
+            aria-label={`Lire ${videoTitle}`}
+            title={`Lire ${videoTitle}`}
             type="button"
           >
             <div
