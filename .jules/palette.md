@@ -1,11 +1,19 @@
-## 2024-07-25 - Icon-Only Button UX
+# Palette's Journal
 
-**Learning:** For icon-only buttons, providing a `title` attribute in addition to a dynamic `aria-label` offers a better user experience. The `aria-label` serves screen readers, while the `title` attribute provides a native browser tooltip on hover for sighted mouse users, clarifying the button's function without needing a visible label.
+## 🎨 Palette's Design System Notes
 
-**Action:** When implementing icon-only buttons, ensure both `aria-label` and `title` attributes are present and dynamically updated to reflect the button's current state (e.g., "Open menu" vs. "Close menu"). This pattern was successfully applied to the `HamburgerButton.astro` component.
+### Accessibility Patterns
 
-## 2025-02-18 - Descriptive Filter Labels
+- **Focus Rings:**
+    - Small/Icon buttons: `focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2`
+    - Large Cards/Surfaces: `focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2`
+    - Inputs: `focus:ring-4 focus:ring-pacamara-accent/10` (border handles the main color)
 
-**Learning:** When using links to filter content (e.g., list of tags), simple labels like "Design" or "Marketing" lack context for screen reader users. By using a dynamic `aria-label` that includes the state (e.g., "Filtre actif : Design") or the action (e.g., "Filtrer par catégorie : Marketing"), we provide much clearer guidance. This helps distinguish between a link to a "Design" page and a link that *filters* the current view by "Design".
+- **Stretched Link Pattern:**
+    - Use a transparent `absolute inset-0 z-10` anchor for the main card action.
+    - Nested interactive elements (buttons/tags) must have `z-20` and `relative` to sit above the stretched link.
 
-**Action:** For filter lists, use `aria-label` to explicitly describe the filter action and its current state (active/inactive), rather than relying solely on `aria-current`.
+- **Feedback:**
+    - Forms must announce errors via `aria-live="assertive"`.
+    - Success messages use `aria-live="polite"`.
+    - Buttons should show a loading spinner and disable themselves during async operations.
