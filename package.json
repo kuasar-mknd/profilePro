@@ -40,6 +40,7 @@
     "analyze": "bun run build && open dist/stats.html",
     "check": "bun run format:check && bun run lint && bun run typecheck",
     "typecheck": "astro check",
+    "test:e2e": "playwright test",
     "prepare": "husky"
   },
   "dependencies": {

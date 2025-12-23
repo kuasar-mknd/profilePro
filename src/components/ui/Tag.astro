@@ -1,19 +1,25 @@
 ---
-const { tag, variant = "default" } = Astro.props;
+const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
+const Element = href ? "a" : "span";
+const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
 ---
 
 {
   tag && (
-    <span
+    <Element
+      href={href}
+      aria-label={ariaLabel}
       class:list={[
         "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm",
         isDark
           ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
           : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
+        href &&
+          "hover:scale-105 hover:bg-white/30 transition-all duration-300 relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
       ]}
     >
       <span>{tag}</span>
-    </span>
+    </Element>
   )
 }
