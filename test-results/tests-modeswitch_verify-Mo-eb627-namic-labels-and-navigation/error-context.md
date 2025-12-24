@@ -2,337 +2,337 @@
 
 ```yaml
 - generic [ref=e1]:
-  - link "Aller au contenu principal" [ref=e2] [cursor=pointer]:
-    - /url: "#main-content"
-  - banner [ref=e3]:
-    - generic [ref=e4]:
-      - link "Samuel Dulex" [ref=e5] [cursor=pointer]:
-        - /url: /
-        - generic [ref=e8]: Samuel Dulex
-      - generic [ref=e9]:
-        - navigation "Menu principal" [ref=e10]:
-          - list [ref=e11]:
-            - listitem [ref=e12]:
-              - link "Accueil" [ref=e13] [cursor=pointer]:
+    - link "Aller au contenu principal" [ref=e2] [cursor=pointer]:
+        - /url: "#main-content"
+    - banner [ref=e3]:
+        - generic [ref=e4]:
+            - link "Samuel Dulex" [ref=e5] [cursor=pointer]:
                 - /url: /
-            - listitem [ref=e14]:
-              - link "Projets" [ref=e15] [cursor=pointer]:
-                - /url: /project
-            - listitem [ref=e16]:
-              - link "À propos" [ref=e17] [cursor=pointer]:
-                - /url: /about
-        - button "Activer le mode clair" [active] [ref=e18]:
-          - img [ref=e19]
-          - img
-          - generic [ref=e21]: Activer le mode clair
-  - main [ref=e22]:
-    - main [ref=e23]:
-      - generic [ref=e24]:
-        - generic [ref=e25]:
-          - img "Logo Samuel Dulex" [ref=e27]
-          - heading "Connecter. Captiver." [level=1] [ref=e28]:
-            - generic [ref=e29]: Connecter.
-            - generic [ref=e30]:
-              - generic [ref=e31]: C
-              - generic [ref=e32]: o
-              - generic [ref=e33]: "n"
-              - generic [ref=e34]: "n"
-              - generic [ref=e35]: e
-              - generic [ref=e36]: c
-              - generic [ref=e37]: t
-              - generic [ref=e38]: e
-              - generic [ref=e39]: r
-              - generic [ref=e40]: .
-            - generic [ref=e41]: Captiver.
-            - generic [ref=e42]:
-              - generic [ref=e43]: C
-              - generic [ref=e44]: a
-              - generic [ref=e45]: p
-              - generic [ref=e46]: t
-              - generic [ref=e47]: i
-              - generic [ref=e48]: v
-              - generic [ref=e49]: e
-              - generic [ref=e50]: r
-              - generic [ref=e51]: .
-          - paragraph [ref=e52]: L'Art de transformer chaque événement en Histoire.
-          - generic [ref=e53]:
-            - link "Voir mes projets" [ref=e54] [cursor=pointer]:
-              - /url: /project
-              - text: Voir mes projets
-            - link "Me contacter" [ref=e56] [cursor=pointer]:
-              - /url: "#contact-form"
-        - generic [ref=e58]:
-          - img "478 - Lamia" [ref=e61]
-          - img "Le Magicien d'Oz | La Paternelle" [ref=e65]
-          - img "Songe | 48H Genève 2024" [ref=e69]
-          - img "Nuage | 1minute2court" [ref=e73]
-          - img "Après l'averse. | 48H Lausanne 2024" [ref=e77]
-          - img "Les Quesaco - Fête de la Musique 2024" [ref=e81]
-          - img "La Paternelle" [ref=e85]
-          - img "Proud Rebel - Izia Jeen" [ref=e89]
-          - img "Gamines | 48H Genève 2025" [ref=e93]
-          - img "Cactus Heart - Frencha" [ref=e97]
-          - img "Bruit Blanc | 48H VIFFF 2025" [ref=e101]
-          - img "Le Voyage du Petit Prince | La Paternelle" [ref=e105]
-          - img "Fly Away - Lola" [ref=e109]
-          - img "Jimmy Capdevila" [ref=e113]
-          - img "Corps & Âme" [ref=e117]
-          - img "Beaucoup de Bruit pour Rien" [ref=e121]
-          - img "Sourire d'un pleur - Symbiony" [ref=e125]
-          - img "Production Vidéo" [ref=e129]
-          - img "478 - Lamia" [ref=e133]
-          - img "Le Magicien d'Oz | La Paternelle" [ref=e137]
-          - img "Songe | 48H Genève 2024" [ref=e141]
-          - img "Nuage | 1minute2court" [ref=e145]
-          - img "Après l'averse. | 48H Lausanne 2024" [ref=e149]
-          - img "Les Quesaco - Fête de la Musique 2024" [ref=e153]
-          - img "La Paternelle" [ref=e157]
-          - img "Proud Rebel - Izia Jeen" [ref=e161]
-          - img "Gamines | 48H Genève 2025" [ref=e165]
-          - img "Cactus Heart - Frencha" [ref=e169]
-          - img "Bruit Blanc | 48H VIFFF 2025" [ref=e173]
-          - img "Le Voyage du Petit Prince | La Paternelle" [ref=e177]
-          - img "Fly Away - Lola" [ref=e181]
-          - img "Jimmy Capdevila" [ref=e185]
-          - img "Corps & Âme" [ref=e189]
-          - img "Beaucoup de Bruit pour Rien" [ref=e193]
-          - img "Sourire d'un pleur - Symbiony" [ref=e197]
-          - img "Production Vidéo" [ref=e201]
-      - generic [ref=e207]:
-        - generic [ref=e208]:
-          - heading "Mes Expertises" [level=2] [ref=e209]
-          - paragraph [ref=e210]: Une approche globale pour votre communication visuelle et digitale.
-        - list [ref=e211]:
-          - listitem [ref=e212]:
-            - generic [ref=e216]:
-              - img [ref=e218]
-              - heading "Production Vidéo" [level=3] [ref=e220]
-              - paragraph [ref=e221]: Clips, aftermovies, corporate. Une esthétique cinématographique.
-          - listitem [ref=e222]:
-            - generic [ref=e226]:
-              - img [ref=e228]
-              - heading "Développement Web" [level=3] [ref=e230]
-              - paragraph [ref=e231]: Applications Fullstack, SaaS & Sites vitrines. Performants et évolutifs.
-          - listitem [ref=e232]:
-            - generic [ref=e236]:
-              - img [ref=e238]
-              - heading "Photographie" [level=3] [ref=e240]
-              - paragraph [ref=e241]: Portraits & événements. Des images qui racontent une histoire.
-          - listitem [ref=e242]:
-            - generic [ref=e246]:
-              - img [ref=e248]
-              - heading "Stratégie Digitale" [level=3] [ref=e250]
-              - paragraph [ref=e251]: SEO & Social Ads. Boostez votre visibilité en ligne.
-        - link "Découvrir mon parcours complet" [ref=e253] [cursor=pointer]:
-          - /url: /about
-          - generic [ref=e254]: Découvrir mon parcours complet
-          - img [ref=e255]
-      - generic [ref=e257]:
-        - generic [ref=e258]:
-          - heading "Projets Récents" [level=2] [ref=e259]
-          - paragraph [ref=e260]: Découvrez mes dernières réalisations en production vidéo, photographie et développement web.
-        - generic [ref=e261]:
-          - article [ref=e263]:
-            - link "Voir le projet Le Voyage du Petit Prince | La Paternelle" [ref=e264] [cursor=pointer]:
-              - /url: /project/paternelle-2025
-            - generic:
-              - generic:
-                - img "Le Voyage du Petit Prince | La Paternelle"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag communication" [ref=e266] [cursor=pointer]:
-                  - /url: /project/tag/communication
-                  - generic [ref=e267]: communication
-                - heading "Le Voyage du Petit Prince | La Paternelle" [level=3]
-                - generic:
-                  - paragraph: "Communication et promotion pour l'édition 2025 de La Paternelle : Le Voyage du Petit Prince. Gestion 360° de l'image, affichage, presse et réseaux sociaux pour un spectacle jouant à guichets fermés."
-                - generic:
-                  - time: 05-12-2025
-          - article [ref=e269]:
-            - link "Voir le projet Gamines | 48H Genève 2025" [ref=e270] [cursor=pointer]:
-              - /url: /project/48h-geneve-2025
-            - generic:
-              - generic:
-                - img "Gamines | 48H Genève 2025"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag court-métrage" [ref=e272] [cursor=pointer]:
-                  - /url: /project/tag/court-métrage
-                  - generic [ref=e273]: court-métrage
-                - heading "Gamines | 48H Genève 2025" [level=3]
-                - generic:
-                  - paragraph: Gamines. Deux sœurs s'isolent dans une forêt d'automne. Mais ce qui devait être un moment de deuil partagé se transforme en tribunal.
-                - generic:
-                  - time: 18-10-2025
-          - article [ref=e275]:
-            - link "Voir le projet Bruit Blanc | 48H VIFFF 2025" [ref=e276] [cursor=pointer]:
-              - /url: /project/48h-vevey-2025
-            - generic:
-              - generic:
-                - img "Bruit Blanc | 48H VIFFF 2025"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag court-métrage" [ref=e278] [cursor=pointer]:
-                  - /url: /project/tag/court-métrage
-                  - generic [ref=e279]: court-métrage
-                - heading "Bruit Blanc | 48H VIFFF 2025" [level=3]
-                - generic:
-                  - paragraph: Participation au concours 'Tournez court !' du VIFFF (Vevey International Funny Film Festival). Un court-métrage réalisé en 48 heures sur le thème de l'Utopie.
-                - generic:
-                  - time: 27-09-2025
-          - article [ref=e281]:
-            - link "Voir le projet 478 - Lamia" [ref=e282] [cursor=pointer]:
-              - /url: /project/lamia-clip
-            - generic:
-              - generic:
-                - img "478 - Lamia"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag clip musical" [ref=e284] [cursor=pointer]:
-                  - /url: /project/tag/clip musical
-                  - generic [ref=e285]: clip musical
-                - heading "478 - Lamia" [level=3]
-                - generic:
-                  - paragraph: Une atmosphère envoûtante pour le titre '478'. Sur ce tournage, j'ai œuvré en tant qu'assistant et photographe de plateau pour capturer la magie de l'instant.
-                - generic:
-                  - time: 18-07-2025
-          - article [ref=e287]:
-            - link "Voir le projet Nuage | 1minute2court" [ref=e288] [cursor=pointer]:
-              - /url: /project/nuage
-            - generic:
-              - generic:
-                - img "Nuage | 1minute2court"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag court-métrage" [ref=e290] [cursor=pointer]:
-                  - /url: /project/tag/court-métrage
-                  - generic [ref=e291]: court-métrage
-                - heading "Nuage | 1minute2court" [level=3]
-                - generic:
-                  - paragraph: Une exploration visuelle et narrative signée Sébastien Gerner. J'ai eu le plaisir d'assister la mise en scène de ce court-métrage ambitieux.
-                - generic:
-                  - time: 11-05-2025
-          - article [ref=e293]:
-            - link "Voir le projet Corps & Âme" [ref=e294] [cursor=pointer]:
-              - /url: /project/corps-et-ame
-            - generic:
-              - generic:
-                - img "Corps & Âme"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag documentaire" [ref=e296] [cursor=pointer]:
-                  - /url: /project/tag/documentaire
-                  - generic [ref=e297]: documentaire
-                - heading "Corps & Âme" [level=3]
-                - generic:
-                  - paragraph: Un portrait intime de Lalie, jeune danseuse passionnée. 'Corps & Âme' explore les frontières entre le physique et le mental, le rêve et la réalité. J'ai contribué à ce projet en tant qu'assistant de production et image.
-                - generic:
-                  - time: 27-04-2025
-          - article [ref=e299]:
-            - link "Voir le projet Le Magicien d'Oz | La Paternelle" [ref=e300] [cursor=pointer]:
-              - /url: /project/paternelle-2024
-            - generic:
-              - generic:
-                - img "Le Magicien d'Oz | La Paternelle"
-            - generic:
-              - generic:
-                - link "Voir les projets avec le tag communication" [ref=e302] [cursor=pointer]:
-                  - /url: /project/tag/communication
-                  - generic [ref=e303]: communication
-                - heading "Le Magicien d'Oz | La Paternelle" [level=3]
-                - generic:
-                  - paragraph: Communication pour 'Le Magicien d'Oz' de La Paternelle (2024). Une campagne féérique couronnée de succès avec plus de 8000 spectateurs et des salles combles.
-                - generic:
-                  - time: 01-12-2024
-          - link "Voir tous les projets +11 autres réalisations Explorer" [ref=e305] [cursor=pointer]:
-            - /url: /project
-            - generic [ref=e307]:
-              - img [ref=e309]
-              - heading "Voir tous les projets" [level=3] [ref=e311]
-              - paragraph [ref=e312]: +11 autres réalisations
-              - generic [ref=e313]:
-                - generic [ref=e314]: Explorer
-                - img [ref=e315]
-      - generic [ref=e325]:
-        - generic [ref=e327]:
-          - heading "Prêt à donner vie à votre vision ?" [level=2] [ref=e328]:
-            - text: Prêt à donner vie à
-            - text: votre vision ?
-          - paragraph [ref=e329]: Que ce soit pour une vidéo percutante, un site web moderne ou une stratégie digitale complète, je suis là pour vous accompagner.
-          - paragraph [ref=e330]: Basé à Lausanne, disponible dans toute la Suisse romande
-          - link "Voir mes réalisations" [ref=e333] [cursor=pointer]:
-            - /url: /project
-        - generic [ref=e336]:
-          - generic [ref=e337]:
-            - generic [ref=e338]:
-              - generic [ref=e339]: Nom complet *
-              - textbox "Nom complet *" [ref=e341]:
-                - /placeholder: Votre nom
-            - generic [ref=e342]:
-              - generic [ref=e343]: Email *
-              - textbox "Email *" [ref=e345]:
-                - /placeholder: votre@email.com
-            - generic [ref=e346]:
-              - generic [ref=e347]: Message *
-              - textbox "Message *" [ref=e349]:
-                - /placeholder: Parlez-moi de votre projet...
-            - button "Envoyer le message" [ref=e350]:
-              - generic [ref=e351]: Envoyer le message
-              - img [ref=e352]
-          - paragraph [ref=e354]: Les champs marqués d'un * sont obligatoires.
-          - paragraph [ref=e355]: Powered by Web3Forms
-  - contentinfo [ref=e356]:
-    - generic [ref=e357]:
-      - generic [ref=e358]:
-        - link "Samuel Dulex" [ref=e359] [cursor=pointer]:
-          - /url: /
-        - paragraph [ref=e360]:
-          - text: Connecter, Communiquer, Captiver.
-          - text: Créateur de contenu visuel et digital.
-        - generic [ref=e361]:
-          - generic [ref=e362]: 📍
-          - generic [ref=e363]: Lausanne, Suisse romande
-      - generic [ref=e364]:
-        - list [ref=e365]:
-          - listitem [ref=e366]:
-            - link "GitHub (ouvre un nouvel onglet)" [ref=e367] [cursor=pointer]:
-              - /url: https://github.com/kuasar-mknd
-              - img [ref=e368]
-              - generic [ref=e370]: GitHub (ouvre un nouvel onglet)
-          - listitem [ref=e371]:
-            - link "Instagram (ouvre un nouvel onglet)" [ref=e372] [cursor=pointer]:
-              - /url: https://www.instagram.com/kuasar.mknd
-              - img [ref=e373]
-              - generic [ref=e375]: Instagram (ouvre un nouvel onglet)
-          - listitem [ref=e376]:
-            - link "YouTube (ouvre un nouvel onglet)" [ref=e377] [cursor=pointer]:
-              - /url: https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w
-              - img [ref=e378]
-              - generic [ref=e380]: YouTube (ouvre un nouvel onglet)
-        - generic [ref=e381]: © 2025 Samuel Dulex. Tous droits réservés.
-      - generic [ref=e382]:
-        - generic "Website Carbon Badge"
-        - generic [ref=e383]:
-          - text: Fait avec
-          - generic [ref=e384]: ♥
-          - text: et
-          - link "Astro (ouvre un nouvel onglet)" [ref=e385] [cursor=pointer]:
-            - /url: https://astro.build
-            - text: Astro
-  - generic [ref=e388]:
-    - button "Menu" [ref=e389]:
-      - img [ref=e391]
-      - generic: Menu
-    - button "Inspect" [ref=e395]:
-      - img [ref=e397]
-      - generic: Inspect
-    - button "Audit" [ref=e399]:
-      - generic [ref=e400]:
-        - img [ref=e401]
-        - img [ref=e404]
-      - generic: Audit
-    - button "Settings" [ref=e407]:
-      - img [ref=e409]
-      - generic: Settings
-  - generic [ref=e412]: Samuel Dulex | Connecter, Communiquer, Captiver
+                - generic [ref=e8]: Samuel Dulex
+            - generic [ref=e9]:
+                - navigation "Menu principal" [ref=e10]:
+                    - list [ref=e11]:
+                        - listitem [ref=e12]:
+                            - link "Accueil" [ref=e13] [cursor=pointer]:
+                                - /url: /
+                        - listitem [ref=e14]:
+                            - link "Projets" [ref=e15] [cursor=pointer]:
+                                - /url: /project
+                        - listitem [ref=e16]:
+                            - link "À propos" [ref=e17] [cursor=pointer]:
+                                - /url: /about
+                - button "Activer le mode clair" [active] [ref=e18]:
+                    - img [ref=e19]
+                    - img
+                    - generic [ref=e21]: Activer le mode clair
+    - main [ref=e22]:
+        - main [ref=e23]:
+            - generic [ref=e24]:
+                - generic [ref=e25]:
+                    - img "Logo Samuel Dulex" [ref=e27]
+                    - heading "Connecter. Captiver." [level=1] [ref=e28]:
+                        - generic [ref=e29]: Connecter.
+                        - generic [ref=e30]:
+                            - generic [ref=e31]: C
+                            - generic [ref=e32]: o
+                            - generic [ref=e33]: "n"
+                            - generic [ref=e34]: "n"
+                            - generic [ref=e35]: e
+                            - generic [ref=e36]: c
+                            - generic [ref=e37]: t
+                            - generic [ref=e38]: e
+                            - generic [ref=e39]: r
+                            - generic [ref=e40]: .
+                        - generic [ref=e41]: Captiver.
+                        - generic [ref=e42]:
+                            - generic [ref=e43]: C
+                            - generic [ref=e44]: a
+                            - generic [ref=e45]: p
+                            - generic [ref=e46]: t
+                            - generic [ref=e47]: i
+                            - generic [ref=e48]: v
+                            - generic [ref=e49]: e
+                            - generic [ref=e50]: r
+                            - generic [ref=e51]: .
+                    - paragraph [ref=e52]: L'Art de transformer chaque événement en Histoire.
+                    - generic [ref=e53]:
+                        - link "Voir mes projets" [ref=e54] [cursor=pointer]:
+                            - /url: /project
+                            - text: Voir mes projets
+                        - link "Me contacter" [ref=e56] [cursor=pointer]:
+                            - /url: "#contact-form"
+                - generic [ref=e58]:
+                    - img "478 - Lamia" [ref=e61]
+                    - img "Le Magicien d'Oz | La Paternelle" [ref=e65]
+                    - img "Songe | 48H Genève 2024" [ref=e69]
+                    - img "Nuage | 1minute2court" [ref=e73]
+                    - img "Après l'averse. | 48H Lausanne 2024" [ref=e77]
+                    - img "Les Quesaco - Fête de la Musique 2024" [ref=e81]
+                    - img "La Paternelle" [ref=e85]
+                    - img "Proud Rebel - Izia Jeen" [ref=e89]
+                    - img "Gamines | 48H Genève 2025" [ref=e93]
+                    - img "Cactus Heart - Frencha" [ref=e97]
+                    - img "Bruit Blanc | 48H VIFFF 2025" [ref=e101]
+                    - img "Le Voyage du Petit Prince | La Paternelle" [ref=e105]
+                    - img "Fly Away - Lola" [ref=e109]
+                    - img "Jimmy Capdevila" [ref=e113]
+                    - img "Corps & Âme" [ref=e117]
+                    - img "Beaucoup de Bruit pour Rien" [ref=e121]
+                    - img "Sourire d'un pleur - Symbiony" [ref=e125]
+                    - img "Production Vidéo" [ref=e129]
+                    - img "478 - Lamia" [ref=e133]
+                    - img "Le Magicien d'Oz | La Paternelle" [ref=e137]
+                    - img "Songe | 48H Genève 2024" [ref=e141]
+                    - img "Nuage | 1minute2court" [ref=e145]
+                    - img "Après l'averse. | 48H Lausanne 2024" [ref=e149]
+                    - img "Les Quesaco - Fête de la Musique 2024" [ref=e153]
+                    - img "La Paternelle" [ref=e157]
+                    - img "Proud Rebel - Izia Jeen" [ref=e161]
+                    - img "Gamines | 48H Genève 2025" [ref=e165]
+                    - img "Cactus Heart - Frencha" [ref=e169]
+                    - img "Bruit Blanc | 48H VIFFF 2025" [ref=e173]
+                    - img "Le Voyage du Petit Prince | La Paternelle" [ref=e177]
+                    - img "Fly Away - Lola" [ref=e181]
+                    - img "Jimmy Capdevila" [ref=e185]
+                    - img "Corps & Âme" [ref=e189]
+                    - img "Beaucoup de Bruit pour Rien" [ref=e193]
+                    - img "Sourire d'un pleur - Symbiony" [ref=e197]
+                    - img "Production Vidéo" [ref=e201]
+            - generic [ref=e207]:
+                - generic [ref=e208]:
+                    - heading "Mes Expertises" [level=2] [ref=e209]
+                    - paragraph [ref=e210]: Une approche globale pour votre communication visuelle et digitale.
+                - list [ref=e211]:
+                    - listitem [ref=e212]:
+                        - generic [ref=e216]:
+                            - img [ref=e218]
+                            - heading "Production Vidéo" [level=3] [ref=e220]
+                            - paragraph [ref=e221]: Clips, aftermovies, corporate. Une esthétique cinématographique.
+                    - listitem [ref=e222]:
+                        - generic [ref=e226]:
+                            - img [ref=e228]
+                            - heading "Développement Web" [level=3] [ref=e230]
+                            - paragraph [ref=e231]: Applications Fullstack, SaaS & Sites vitrines. Performants et évolutifs.
+                    - listitem [ref=e232]:
+                        - generic [ref=e236]:
+                            - img [ref=e238]
+                            - heading "Photographie" [level=3] [ref=e240]
+                            - paragraph [ref=e241]: Portraits & événements. Des images qui racontent une histoire.
+                    - listitem [ref=e242]:
+                        - generic [ref=e246]:
+                            - img [ref=e248]
+                            - heading "Stratégie Digitale" [level=3] [ref=e250]
+                            - paragraph [ref=e251]: SEO & Social Ads. Boostez votre visibilité en ligne.
+                - link "Découvrir mon parcours complet" [ref=e253] [cursor=pointer]:
+                    - /url: /about
+                    - generic [ref=e254]: Découvrir mon parcours complet
+                    - img [ref=e255]
+            - generic [ref=e257]:
+                - generic [ref=e258]:
+                    - heading "Projets Récents" [level=2] [ref=e259]
+                    - paragraph [ref=e260]: Découvrez mes dernières réalisations en production vidéo, photographie et développement web.
+                - generic [ref=e261]:
+                    - article [ref=e263]:
+                        - link "Voir le projet Le Voyage du Petit Prince | La Paternelle" [ref=e264] [cursor=pointer]:
+                            - /url: /project/paternelle-2025
+                        - generic:
+                            - generic:
+                                - img "Le Voyage du Petit Prince | La Paternelle"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag communication" [ref=e266] [cursor=pointer]:
+                                    - /url: /project/tag/communication
+                                    - generic [ref=e267]: communication
+                                - heading "Le Voyage du Petit Prince | La Paternelle" [level=3]
+                                - generic:
+                                    - paragraph: "Communication et promotion pour l'édition 2025 de La Paternelle : Le Voyage du Petit Prince. Gestion 360° de l'image, affichage, presse et réseaux sociaux pour un spectacle jouant à guichets fermés."
+                                - generic:
+                                    - time: 05-12-2025
+                    - article [ref=e269]:
+                        - link "Voir le projet Gamines | 48H Genève 2025" [ref=e270] [cursor=pointer]:
+                            - /url: /project/48h-geneve-2025
+                        - generic:
+                            - generic:
+                                - img "Gamines | 48H Genève 2025"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag court-métrage" [ref=e272] [cursor=pointer]:
+                                    - /url: /project/tag/court-métrage
+                                    - generic [ref=e273]: court-métrage
+                                - heading "Gamines | 48H Genève 2025" [level=3]
+                                - generic:
+                                    - paragraph: Gamines. Deux sœurs s'isolent dans une forêt d'automne. Mais ce qui devait être un moment de deuil partagé se transforme en tribunal.
+                                - generic:
+                                    - time: 18-10-2025
+                    - article [ref=e275]:
+                        - link "Voir le projet Bruit Blanc | 48H VIFFF 2025" [ref=e276] [cursor=pointer]:
+                            - /url: /project/48h-vevey-2025
+                        - generic:
+                            - generic:
+                                - img "Bruit Blanc | 48H VIFFF 2025"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag court-métrage" [ref=e278] [cursor=pointer]:
+                                    - /url: /project/tag/court-métrage
+                                    - generic [ref=e279]: court-métrage
+                                - heading "Bruit Blanc | 48H VIFFF 2025" [level=3]
+                                - generic:
+                                    - paragraph: Participation au concours 'Tournez court !' du VIFFF (Vevey International Funny Film Festival). Un court-métrage réalisé en 48 heures sur le thème de l'Utopie.
+                                - generic:
+                                    - time: 27-09-2025
+                    - article [ref=e281]:
+                        - link "Voir le projet 478 - Lamia" [ref=e282] [cursor=pointer]:
+                            - /url: /project/lamia-clip
+                        - generic:
+                            - generic:
+                                - img "478 - Lamia"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag clip musical" [ref=e284] [cursor=pointer]:
+                                    - /url: /project/tag/clip musical
+                                    - generic [ref=e285]: clip musical
+                                - heading "478 - Lamia" [level=3]
+                                - generic:
+                                    - paragraph: Une atmosphère envoûtante pour le titre '478'. Sur ce tournage, j'ai œuvré en tant qu'assistant et photographe de plateau pour capturer la magie de l'instant.
+                                - generic:
+                                    - time: 18-07-2025
+                    - article [ref=e287]:
+                        - link "Voir le projet Nuage | 1minute2court" [ref=e288] [cursor=pointer]:
+                            - /url: /project/nuage
+                        - generic:
+                            - generic:
+                                - img "Nuage | 1minute2court"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag court-métrage" [ref=e290] [cursor=pointer]:
+                                    - /url: /project/tag/court-métrage
+                                    - generic [ref=e291]: court-métrage
+                                - heading "Nuage | 1minute2court" [level=3]
+                                - generic:
+                                    - paragraph: Une exploration visuelle et narrative signée Sébastien Gerner. J'ai eu le plaisir d'assister la mise en scène de ce court-métrage ambitieux.
+                                - generic:
+                                    - time: 11-05-2025
+                    - article [ref=e293]:
+                        - link "Voir le projet Corps & Âme" [ref=e294] [cursor=pointer]:
+                            - /url: /project/corps-et-ame
+                        - generic:
+                            - generic:
+                                - img "Corps & Âme"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag documentaire" [ref=e296] [cursor=pointer]:
+                                    - /url: /project/tag/documentaire
+                                    - generic [ref=e297]: documentaire
+                                - heading "Corps & Âme" [level=3]
+                                - generic:
+                                    - paragraph: Un portrait intime de Lalie, jeune danseuse passionnée. 'Corps & Âme' explore les frontières entre le physique et le mental, le rêve et la réalité. J'ai contribué à ce projet en tant qu'assistant de production et image.
+                                - generic:
+                                    - time: 27-04-2025
+                    - article [ref=e299]:
+                        - link "Voir le projet Le Magicien d'Oz | La Paternelle" [ref=e300] [cursor=pointer]:
+                            - /url: /project/paternelle-2024
+                        - generic:
+                            - generic:
+                                - img "Le Magicien d'Oz | La Paternelle"
+                        - generic:
+                            - generic:
+                                - link "Voir les projets avec le tag communication" [ref=e302] [cursor=pointer]:
+                                    - /url: /project/tag/communication
+                                    - generic [ref=e303]: communication
+                                - heading "Le Magicien d'Oz | La Paternelle" [level=3]
+                                - generic:
+                                    - paragraph: Communication pour 'Le Magicien d'Oz' de La Paternelle (2024). Une campagne féérique couronnée de succès avec plus de 8000 spectateurs et des salles combles.
+                                - generic:
+                                    - time: 01-12-2024
+                    - link "Voir tous les projets +11 autres réalisations Explorer" [ref=e305] [cursor=pointer]:
+                        - /url: /project
+                        - generic [ref=e307]:
+                            - img [ref=e309]
+                            - heading "Voir tous les projets" [level=3] [ref=e311]
+                            - paragraph [ref=e312]: +11 autres réalisations
+                            - generic [ref=e313]:
+                                - generic [ref=e314]: Explorer
+                                - img [ref=e315]
+            - generic [ref=e325]:
+                - generic [ref=e327]:
+                    - heading "Prêt à donner vie à votre vision ?" [level=2] [ref=e328]:
+                        - text: Prêt à donner vie à
+                        - text: votre vision ?
+                    - paragraph [ref=e329]: Que ce soit pour une vidéo percutante, un site web moderne ou une stratégie digitale complète, je suis là pour vous accompagner.
+                    - paragraph [ref=e330]: Basé à Lausanne, disponible dans toute la Suisse romande
+                    - link "Voir mes réalisations" [ref=e333] [cursor=pointer]:
+                        - /url: /project
+                - generic [ref=e336]:
+                    - generic [ref=e337]:
+                        - generic [ref=e338]:
+                            - generic [ref=e339]: Nom complet *
+                            - textbox "Nom complet *" [ref=e341]:
+                                - /placeholder: Votre nom
+                        - generic [ref=e342]:
+                            - generic [ref=e343]: Email *
+                            - textbox "Email *" [ref=e345]:
+                                - /placeholder: votre@email.com
+                        - generic [ref=e346]:
+                            - generic [ref=e347]: Message *
+                            - textbox "Message *" [ref=e349]:
+                                - /placeholder: Parlez-moi de votre projet...
+                        - button "Envoyer le message" [ref=e350]:
+                            - generic [ref=e351]: Envoyer le message
+                            - img [ref=e352]
+                    - paragraph [ref=e354]: Les champs marqués d'un * sont obligatoires.
+                    - paragraph [ref=e355]: Powered by Web3Forms
+    - contentinfo [ref=e356]:
+        - generic [ref=e357]:
+            - generic [ref=e358]:
+                - link "Samuel Dulex" [ref=e359] [cursor=pointer]:
+                    - /url: /
+                - paragraph [ref=e360]:
+                    - text: Connecter, Communiquer, Captiver.
+                    - text: Créateur de contenu visuel et digital.
+                - generic [ref=e361]:
+                    - generic [ref=e362]: 📍
+                    - generic [ref=e363]: Lausanne, Suisse romande
+            - generic [ref=e364]:
+                - list [ref=e365]:
+                    - listitem [ref=e366]:
+                        - link "GitHub (ouvre un nouvel onglet)" [ref=e367] [cursor=pointer]:
+                            - /url: https://github.com/kuasar-mknd
+                            - img [ref=e368]
+                            - generic [ref=e370]: GitHub (ouvre un nouvel onglet)
+                    - listitem [ref=e371]:
+                        - link "Instagram (ouvre un nouvel onglet)" [ref=e372] [cursor=pointer]:
+                            - /url: https://www.instagram.com/kuasar.mknd
+                            - img [ref=e373]
+                            - generic [ref=e375]: Instagram (ouvre un nouvel onglet)
+                    - listitem [ref=e376]:
+                        - link "YouTube (ouvre un nouvel onglet)" [ref=e377] [cursor=pointer]:
+                            - /url: https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w
+                            - img [ref=e378]
+                            - generic [ref=e380]: YouTube (ouvre un nouvel onglet)
+                - generic [ref=e381]: © 2025 Samuel Dulex. Tous droits réservés.
+            - generic [ref=e382]:
+                - generic "Website Carbon Badge"
+                - generic [ref=e383]:
+                    - text: Fait avec
+                    - generic [ref=e384]: ♥
+                    - text: et
+                    - link "Astro (ouvre un nouvel onglet)" [ref=e385] [cursor=pointer]:
+                        - /url: https://astro.build
+                        - text: Astro
+    - generic [ref=e388]:
+        - button "Menu" [ref=e389]:
+            - img [ref=e391]
+            - generic: Menu
+        - button "Inspect" [ref=e395]:
+            - img [ref=e397]
+            - generic: Inspect
+        - button "Audit" [ref=e399]:
+            - generic [ref=e400]:
+                - img [ref=e401]
+                - img [ref=e404]
+            - generic: Audit
+        - button "Settings" [ref=e407]:
+            - img [ref=e409]
+            - generic: Settings
+    - generic [ref=e412]: Samuel Dulex | Connecter, Communiquer, Captiver
 ```
