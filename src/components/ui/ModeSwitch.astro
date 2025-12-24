@@ -17,6 +17,7 @@ import { Icon } from "astro-icon/components";
     class="absolute h-5 w-5 rotate-90 scale-0 transition-all duration-300 dark:rotate-0 dark:scale-100"
   />
   <span class="sr-only">Activer le mode sombre</span>
+  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
 <script>
@@ -28,8 +29,9 @@ import { Icon } from "astro-icon/components";
    */
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
+    const liveRegion = document.getElementById("theme-live-region");
 
-    const updateLabels = (isDark: boolean) => {
+    const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
@@ -37,6 +39,12 @@ import { Icon } from "astro-icon/components";
         const span = btn.querySelector(".sr-only");
         if (span) span.textContent = label;
       });
+
+      if (announce && liveRegion) {
+        liveRegion.textContent = isDark
+          ? "Mode sombre activé"
+          : "Mode clair activé";
+      }
     };
 
     // Initialize state
@@ -54,7 +62,7 @@ import { Icon } from "astro-icon/components";
 
         const isDarkNow = element.classList.contains("dark");
         localStorage.setItem("theme", isDarkNow ? "dark" : "light");
-        updateLabels(isDarkNow);
+        updateLabels(isDarkNow, true);
       });
     });
   }
