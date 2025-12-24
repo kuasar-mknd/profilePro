@@ -377,8 +377,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         '"': "&quot;",
         "'": "&#x27;",
         "/": "&#x2F;",
+        "`": "&#96;",
+        "=": "&#61;",
       };
-      const reg = /[&<>"'/]/gi;
+      const reg = /[&<>"'\/`=]/gi;
       return str.replace(reg, (match) => map[match]);
     }
 
