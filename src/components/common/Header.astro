@@ -75,12 +75,20 @@ import logo from "../../assets/logo.avif";
 
 <script>
   let headerObserver: MutationObserver | null = null;
+  // ⚡ Bolt: Store cleanup function to remove previous listeners on navigation
+  let cleanupTrap: (() => void) | null = null;
 
   function initMobileMenuAccessibility() {
     // ⚡ Bolt: Cleanup previous observer to prevent stacking and memory leaks
     if (headerObserver) {
       headerObserver.disconnect();
       headerObserver = null;
+    }
+
+    // ⚡ Bolt: Ensure previous focus trap listeners are removed if they were active
+    if (cleanupTrap) {
+      cleanupTrap();
+      cleanupTrap = null;
     }
 
     const navWrapper = document.getElementById("navigation_wrapper");
@@ -149,11 +157,15 @@ import logo from "../../assets/logo.avif";
       const firstLink = navWrapper?.querySelector("a");
       if (firstLink instanceof HTMLElement)
         setTimeout(() => firstLink.focus(), 100);
+
+      // ⚡ Bolt: Register cleanup function for this specific instance
+      cleanupTrap = removeFocusTrap;
     }
 
     function removeFocusTrap() {
       document.removeEventListener("keydown", handleEscape);
       navWrapper?.removeEventListener("keydown", handleTab);
+      cleanupTrap = null;
     }
   }
 
