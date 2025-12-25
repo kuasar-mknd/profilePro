@@ -3,7 +3,7 @@ const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
-const getVideoDetails = (url) => {
+const getVideoDetails = (url: string) => {
   if (!url) return { id: null, provider: null };
 
   // YouTube

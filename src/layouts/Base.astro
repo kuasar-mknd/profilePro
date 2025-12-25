@@ -103,6 +103,7 @@ if (postData?.data?.image) {
     <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
     <script
       type="speculationrules"
+      is:inline
       set:html={JSON.stringify({
         prerender: [
           {
@@ -481,6 +482,7 @@ if (postData?.data?.image) {
     <!-- Cloudflare Web Analytics -->
     <script
       defer
+      is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={JSON.stringify({
         token: PUBLIC_CF_ANALYTICS_TOKEN,

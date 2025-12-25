@@ -1,9 +1,9 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 
 import Base from "../layouts/Base.astro";
 
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection("project");
