@@ -49,3 +49,6 @@ stats.html
 *.tmp
 .tmp/
 
+# Playwright
+playwright-report/
+test-results/
