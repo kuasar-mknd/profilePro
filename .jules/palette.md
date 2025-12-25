@@ -17,3 +17,7 @@
   - Forms must announce errors via `aria-live="assertive"`.
   - Success messages use `aria-live="polite"`.
   - Buttons should show a loading spinner and disable themselves during async operations.
+
+## 2025-02-18 - Label Highlighting on Focus
+**Learning:** Highlighting the label in the accent color when an input is focused (`group-focus-within:text-pacamara-accent`) significantly improves the visual association between the active field and its label, especially in long forms.
+**Action:** Apply the `group` class to form containers and `group-focus-within:text-accent` to labels in all future form components.
