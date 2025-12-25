@@ -310,7 +310,10 @@ const jsonLd = {
                   }, 2000);
                 }
               } catch (err) {
-                console.error("Failed to copy", err);
+                // 🛡️ Sentinel: Dev-only logging
+                if (import.meta.env.DEV) {
+                  console.error("Failed to copy", err);
+                }
               }
             }
           });
