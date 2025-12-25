@@ -291,6 +291,7 @@
     private boundKeyHandler: (e: KeyboardEvent) => void;
     private boundClickHandler: (e: MouseEvent) => void;
     private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
+    private preloadCache = new Set<string>();
 
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
@@ -528,7 +529,8 @@
     }
 
     private preloadImage(src: string) {
-      if (!src) return;
+      if (!src || this.preloadCache.has(src)) return;
+      this.preloadCache.add(src);
       const img = new Image();
       img.decoding = "async";
       img.src = src;
