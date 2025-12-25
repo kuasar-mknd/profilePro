@@ -317,6 +317,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       "#form-error-message",
     ) as HTMLElement;
     const errorText = form.querySelector("#error-text") as HTMLParagraphElement;
+    const nameInput = form.querySelector(
+      'input[name="name"]',
+    ) as HTMLInputElement;
+    const emailInput = form.querySelector(
+      'input[name="email"]',
+    ) as HTMLInputElement;
+    const messageInput = form.querySelector(
+      'textarea[name="message"]',
+    ) as HTMLTextAreaElement;
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -385,22 +394,41 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const emailInput = form.querySelector(
-        'input[name="email"]',
-      ) as HTMLInputElement;
       // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
       const emailPattern =
         /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
       // Clear previous validation state before re-validating
-      emailInput?.removeAttribute("aria-invalid");
-      emailInput?.removeAttribute("aria-describedby");
+      form
+        .querySelectorAll("[aria-invalid]")
+        .forEach((el) => el.removeAttribute("aria-invalid"));
       errorMessage?.classList.add("hidden");
+
+      // 🎨 Palette: Add validation for required fields
+      if (nameInput && nameInput.value.trim().length < 2) {
+        nameInput.setAttribute("aria-invalid", "true");
+        nameInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer votre nom (minimum 2 caractères).",
+          nameInput,
+        );
+        return;
+      }
 
       if (emailInput && !emailPattern.test(emailInput.value)) {
         emailInput.setAttribute("aria-invalid", "true");
         emailInput.setAttribute("aria-describedby", "form-error-message");
         showError("Veuillez entrer une adresse email valide.", emailInput);
+        return;
+      }
+
+      if (messageInput && messageInput.value.trim().length < 10) {
+        messageInput.setAttribute("aria-invalid", "true");
+        messageInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer un message d'au moins 10 caractères.",
+          messageInput,
+        );
         return;
       }
 
