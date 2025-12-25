@@ -282,6 +282,8 @@
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
+    private inertElements: HTMLElement[] = [];
+    private preloadedUrls = new Set<string>();
     private currentIndex: number = 0;
     private touchStartX: number = 0;
     private touchEndX: number = 0;
@@ -318,6 +320,13 @@
     }
 
     private init() {
+      // ⚡ Bolt: Cache inert targets once
+      this.inertElements = Array.from(
+        document.querySelectorAll(
+          "#main-header, #main-content, footer, #back-to-top, .skip-link",
+        ),
+      ) as HTMLElement[];
+
       // Close button
       this.lightbox
         .querySelector(".lightbox-close")
@@ -452,16 +461,7 @@
      * This ensures screen readers and keyboard navigation stay within the lightbox.
      */
     private toggleInert(enable: boolean) {
-      const selectors = [
-        "#main-header",
-        "#main-content",
-        "footer",
-        "#back-to-top",
-        ".skip-link",
-      ];
-      const elements = document.querySelectorAll(selectors.join(", "));
-
-      elements.forEach((el) => {
+      this.inertElements.forEach((el) => {
         if (enable) {
           el.setAttribute("inert", "");
           el.setAttribute("aria-hidden", "true");
@@ -528,7 +528,8 @@
     }
 
     private preloadImage(src: string) {
-      if (!src) return;
+      if (!src || this.preloadedUrls.has(src)) return;
+      this.preloadedUrls.add(src);
       const img = new Image();
       img.decoding = "async";
       img.src = src;
