@@ -102,6 +102,14 @@
     <span class="sr-only"> sur </span>
     <span class="lightbox-total">1</span>
   </div>
+  <!-- 🎨 Palette: Announcement region for image alt text -->
+  <div
+    id="lightbox-announcer"
+    class="sr-only"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+  </div>
 </div>
 
 <style>
@@ -295,6 +303,7 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
+    private announcer: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
     // ⚡ Bolt: Cache to prevent GC of preloaded images
@@ -321,6 +330,7 @@
       ) as HTMLImageElement;
       this.currentSpan = this.lightbox.querySelector(".lightbox-current")!;
       this.totalSpan = this.lightbox.querySelector(".lightbox-total")!;
+      this.announcer = this.lightbox.querySelector("#lightbox-announcer")!;
 
       // Identify focusable elements
       const focusableSelector =
@@ -512,6 +522,11 @@
       this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.galleryElements.length);
+
+      // 🎨 Palette: Announce image description
+      if (this.announcer) {
+        this.announcer.textContent = alt || "Image sans description";
+      }
 
       // Loading state
       this.lightbox.classList.add("loading");
