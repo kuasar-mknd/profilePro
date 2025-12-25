@@ -415,16 +415,27 @@ if (postData?.data?.image) {
         }
       }
 
-      // Observer for class changes on html to trigger theme color update
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            updateThemeColor();
-          }
-        });
-      });
+      // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
+      // Moved to module scope to prevent memory leaks from stacking observers
+      let themeObserver: MutationObserver | null = null;
 
-      themeObserver.observe(document.documentElement, { attributes: true });
+      function initThemeObserver() {
+        if (themeObserver) return; // Already initialized
+
+        themeObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              updateThemeColor();
+            }
+          });
+        });
+
+        themeObserver.observe(document.documentElement, { attributes: true });
+      }
+
+      initThemeObserver();
+      // Note: We don't need to re-init on swap because document.documentElement persists
+      // and the observer stays attached.
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"

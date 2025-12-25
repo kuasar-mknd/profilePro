@@ -639,6 +639,10 @@
       document.removeEventListener("keydown", this.boundKeyHandler);
       document.removeEventListener("click", this.boundClickHandler);
       document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
+      // ⚡ Bolt: Clear cache references to allow GC
+      this.preloadCache = [];
+      this.preloadedUrls.clear();
+      this.galleryElements = [];
     }
   }
 
