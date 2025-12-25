@@ -7,3 +7,4 @@
 | 2025-12-21 | DocOps Refresh     | .github/workflows/ci.yml, README.md                                     | Added Bun dependency caching to CI, added Troubleshooting and API Access sections to README    |
 | 2025-12-23 | DocOps Consistency | docs/_, README.md, .github/workflows/_                                  | Refined CI (split checks), updated Architecture/AI/API/ENV docs to match Astro 5 & Bun reality |
 | 2025-12-22 | DocOps Final       | package.json, README.md, docs/ARCHITECTURE.md, .github/workflows/ci.yml | Added test:e2e script, updated CI action versions (v4), documented testing strategy            |
+| 2025-12-23 | DocOps Prod + E2E  | .github/workflows/*, docs/*, README.md                                  | Added E2E CI job, fixed security workflow actions (v4), ensured robust docs for SSG & Bun      |
