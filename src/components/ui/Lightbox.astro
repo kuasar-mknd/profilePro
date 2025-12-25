@@ -297,8 +297,8 @@
     private totalSpan: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
-    // ⚡ Bolt: Cache to prevent GC of preloaded images
-    private preloadCache: HTMLImageElement[] = [];
+    // ⚡ Bolt: Cache to prevent GC of preloaded images (keep references to Image objects)
+    private preloadImageRefs: HTMLImageElement[] = [];
     private touchStartX: number = 0;
     private touchEndX: number = 0;
     private focusableElements: HTMLElement[] = [];
@@ -552,10 +552,10 @@
       img.src = src;
 
       // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
-      this.preloadCache.push(img);
+      this.preloadImageRefs.push(img);
       // Keep cache small
-      if (this.preloadCache.length > 10) {
-        this.preloadCache.shift();
+      if (this.preloadImageRefs.length > 10) {
+        this.preloadImageRefs.shift();
       }
     }
 
