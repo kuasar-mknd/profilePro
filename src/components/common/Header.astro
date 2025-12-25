@@ -2,7 +2,7 @@
 import Navigation from "./Navigation.astro";
 import ModeSwitch from "../ui/ModeSwitch.astro";
 import HamburgerButton from "../ui/HamburgerButton.astro";
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 import logo from "../../assets/logo.avif";
 ---
 
@@ -97,15 +97,24 @@ import logo from "../../assets/logo.avif";
     // Guard clause if header elements aren't found
     if (!navWrapper) return;
 
+    // ⚡ Bolt: Track state to avoid redundant operations
+    let wasOpen = html.classList.contains("overflow-hidden");
+
     // Observer to detect when menu is opened (via class change on html)
     headerObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           const isOpen = html.classList.contains("overflow-hidden");
-          if (isOpen) {
-            setupFocusTrap();
-          } else {
-            removeFocusTrap();
+
+          // ⚡ Bolt: Only toggle trap if state actually changed
+          // Prevents re-running setup logic on unrelated class changes (e.g. theme toggle)
+          if (isOpen !== wasOpen) {
+            wasOpen = isOpen;
+            if (isOpen) {
+              setupFocusTrap();
+            } else {
+              removeFocusTrap();
+            }
           }
         }
       });
