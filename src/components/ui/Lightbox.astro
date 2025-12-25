@@ -299,6 +299,8 @@
     private currentIndex: number = 0;
     // ⚡ Bolt: Cache to prevent GC of preloaded images
     private preloadCache: HTMLImageElement[] = [];
+    // ⚡ Bolt: Set to track already preloaded URLs and avoid redundant requests
+    private preloadedUrls = new Set<string>();
     private touchStartX: number = 0;
     private touchEndX: number = 0;
     private focusableElements: HTMLElement[] = [];
@@ -307,7 +309,6 @@
     private boundKeyHandler: (e: KeyboardEvent) => void;
     private boundClickHandler: (e: MouseEvent) => void;
     private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
-    private preloadCache = new Set<string>();
 
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
@@ -545,16 +546,22 @@
     }
 
     private preloadImage(src: string) {
-      if (!src || this.preloadCache.has(src)) return;
-      this.preloadCache.add(src);
+      // ⚡ Bolt: Optimization - Check both validity and duplication
+      if (!src || this.preloadedUrls.has(src)) return;
+
+      this.preloadedUrls.add(src);
       const img = new Image();
       img.decoding = "async";
       img.src = src;
 
       // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
       this.preloadCache.push(img);
-      // Keep cache small
+
+      // Keep cache small to balance memory usage
       if (this.preloadCache.length > 10) {
+        // Note: We don't remove from preloadedUrls Set because we still want to avoid
+        // re-triggering the request even if the image object is dropped from our GC hold.
+        // The browser cache should handle the actual asset if needed again.
         this.preloadCache.shift();
       }
     }
