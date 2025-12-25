@@ -18,7 +18,13 @@
   aria-modal="true"
   aria-label="Galerie photos en plein écran"
 >
-  <div class="lightbox-backdrop"></div>
+  <div
+    class="lightbox-backdrop"
+    role="button"
+    aria-label="Fermer la galerie"
+    tabindex="0"
+  >
+  </div>
 
   <button
     type="button"
@@ -352,9 +358,14 @@
         ?.addEventListener("click", () => this.close());
 
       // Backdrop click
-      this.lightbox
-        .querySelector(".lightbox-backdrop")
-        ?.addEventListener("click", () => this.close());
+      const backdrop = this.lightbox.querySelector(".lightbox-backdrop");
+      backdrop?.addEventListener("click", () => this.close());
+      backdrop?.addEventListener("keydown", (e: Event) => {
+        const keyEvent = e as KeyboardEvent;
+        if (keyEvent.key === "Enter" || keyEvent.key === " ") {
+          this.close();
+        }
+      });
 
       // Navigation
       this.lightbox
