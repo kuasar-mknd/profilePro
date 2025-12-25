@@ -151,6 +151,13 @@
     transform: scale(1.1);
   }
 
+  .lightbox-close:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
+  }
+
   .lightbox-content {
     position: relative;
     z-index: 5;
@@ -196,6 +203,13 @@
   .lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
+  }
+
+  .lightbox-nav:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
   .lightbox-prev {
