@@ -380,7 +380,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         "`": "&#x60;", // Prevent template injection
         "=": "&#x3D;", // Prevent unquoted attribute injection
       };
-      const reg = /[&<>"'/`=]/gi;
+      const reg = /[&<>"'\/`=]/gi;
       return str.replace(reg, (match) => map[match]);
     }
 
