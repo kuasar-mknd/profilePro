@@ -297,6 +297,8 @@
     private totalSpan: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
+    // ⚡ Bolt: Cache to prevent GC of preloaded images
+    private preloadCache: HTMLImageElement[] = [];
     private touchStartX: number = 0;
     private touchEndX: number = 0;
     private focusableElements: HTMLElement[] = [];
@@ -548,6 +550,13 @@
       const img = new Image();
       img.decoding = "async";
       img.src = src;
+
+      // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
+      this.preloadCache.push(img);
+      // Keep cache small
+      if (this.preloadCache.length > 10) {
+        this.preloadCache.shift();
+      }
     }
 
     private handleKeyboard(e: KeyboardEvent) {
