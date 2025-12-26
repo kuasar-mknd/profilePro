@@ -467,11 +467,16 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         // 🛡️ Sentinel: Sanitize form data before sending
         const formData = new FormData(form);
         const data: Record<string, string> = {};
+        const fieldsToSanitize = new Set(["name", "email", "message"]);
+
         formData.forEach((value, key) => {
           if (typeof value === "string") {
-            // Only sanitize text fields that might contain user input
-            // Avoid sanitizing hidden fields like access_key if they don't need it (though safe to do so)
-            data[key] = sanitizeInput(value);
+            // Sanitize only user-provided fields to prevent corrupting system values.
+            if (fieldsToSanitize.has(key)) {
+              data[key] = sanitizeInput(value);
+            } else {
+              data[key] = value;
+            }
           } else {
             data[key] = value.toString();
           }
