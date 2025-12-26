@@ -117,7 +117,10 @@ const jsonLd = {
         <Tag tag={entry.data.tag} />
         <PublishDate date={entry.data.pubDate} />
 
-        <span class="text-pacamara-primary/60 dark:text-white/60">•</span>
+        <span
+          class="text-pacamara-primary/60 dark:text-white/60"
+          aria-hidden="true">•</span
+        >
         <span
           class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
           >{readingTime} min de lecture</span
