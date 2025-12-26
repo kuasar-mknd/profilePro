@@ -35,3 +35,5 @@ Le site ne expose pas d'API REST publique. Cependant, il génère les fichiers s
 
 - **Sitemap**: `/sitemap-index.xml`
 - **RSS Feed**: `/rss.xml` (Contient les derniers projets)
+
+_La documentation API sera mise à jour si de nouveaux endpoints sont ajoutés._
