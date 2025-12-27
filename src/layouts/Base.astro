@@ -45,6 +45,15 @@ if (postData?.data?.image) {
     <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
     <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
     <link rel="preconnect" href="https://player.vimeo.com" />
+    <link rel="dns-prefetch" href="https://player.vimeo.com" />
+    <link rel="preconnect" href="https://i.ytimg.com" />
+    <link rel="dns-prefetch" href="https://i.ytimg.com" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://vimeo.com" />
+    <link rel="dns-prefetch" href="https://vimeo.com" />
+    <link rel="preconnect" href="https://api.web3forms.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -146,14 +155,6 @@ if (postData?.data?.image) {
         font-display: swap;
       }
     </style>
-    <!-- Critical preconnects - must be early in head for effectiveness -->
-    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://static.cloudflareinsights.com"
-      crossorigin
-    />
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
       // Early theme detection to prevent FOUC
@@ -208,7 +209,7 @@ if (postData?.data?.image) {
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
-      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2 group"
+      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 group"
       aria-label="Retour en haut de page"
       title="Retour en haut de page"
       tabindex="-1"
@@ -415,16 +416,27 @@ if (postData?.data?.image) {
         }
       }
 
-      // Observer for class changes on html to trigger theme color update
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            updateThemeColor();
-          }
-        });
-      });
+      // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
+      // Moved to module scope to prevent memory leaks from stacking observers
+      let themeObserver: MutationObserver | null = null;
 
-      themeObserver.observe(document.documentElement, { attributes: true });
+      function initThemeObserver() {
+        if (themeObserver) return; // Already initialized
+
+        themeObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              updateThemeColor();
+            }
+          });
+        });
+
+        themeObserver.observe(document.documentElement, { attributes: true });
+      }
+
+      initThemeObserver();
+      // Note: We don't need to re-init on swap because document.documentElement persists
+      // and the observer stays attached.
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"

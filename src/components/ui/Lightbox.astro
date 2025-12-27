@@ -102,6 +102,14 @@
     <span class="sr-only"> sur </span>
     <span class="lightbox-total">1</span>
   </div>
+  <!-- 🎨 Palette: Announcement region for image alt text -->
+  <div
+    id="lightbox-announcer"
+    class="sr-only"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+  </div>
 </div>
 
 <style>
@@ -151,6 +159,13 @@
     transform: scale(1.1);
   }
 
+  .lightbox-close:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
+  }
+
   .lightbox-content {
     position: relative;
     z-index: 5;
@@ -196,6 +211,13 @@
   .lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
+  }
+
+  .lightbox-nav:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
   .lightbox-prev {
@@ -281,8 +303,13 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
+    private announcer: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
+    // ⚡ Bolt: Cache to prevent GC of preloaded images
+    private preloadCache: HTMLImageElement[] = [];
+    // ⚡ Bolt: Set to track already preloaded URLs and avoid redundant requests
+    private preloadedUrls = new Set<string>();
     private touchStartX: number = 0;
     private touchEndX: number = 0;
     private focusableElements: HTMLElement[] = [];
@@ -303,6 +330,7 @@
       ) as HTMLImageElement;
       this.currentSpan = this.lightbox.querySelector(".lightbox-current")!;
       this.totalSpan = this.lightbox.querySelector(".lightbox-total")!;
+      this.announcer = this.lightbox.querySelector("#lightbox-announcer")!;
 
       // Identify focusable elements
       const focusableSelector =
@@ -495,6 +523,11 @@
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.galleryElements.length);
 
+      // 🎨 Palette: Announce image description
+      if (this.announcer) {
+        this.announcer.textContent = alt || "Image sans description";
+      }
+
       // Loading state
       this.lightbox.classList.add("loading");
       this.image.style.opacity = "0";
@@ -528,10 +561,24 @@
     }
 
     private preloadImage(src: string) {
-      if (!src) return;
+      // ⚡ Bolt: Optimization - Check both validity and duplication
+      if (!src || this.preloadedUrls.has(src)) return;
+
+      this.preloadedUrls.add(src);
       const img = new Image();
       img.decoding = "async";
       img.src = src;
+
+      // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
+      this.preloadCache.push(img);
+
+      // Keep cache small to balance memory usage
+      if (this.preloadCache.length > 10) {
+        // Note: We don't remove from preloadedUrls Set because we still want to avoid
+        // re-triggering the request even if the image object is dropped from our GC hold.
+        // The browser cache should handle the actual asset if needed again.
+        this.preloadCache.shift();
+      }
     }
 
     private handleKeyboard(e: KeyboardEvent) {
@@ -592,6 +639,10 @@
       document.removeEventListener("keydown", this.boundKeyHandler);
       document.removeEventListener("click", this.boundClickHandler);
       document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
+      // ⚡ Bolt: Clear cache references to allow GC
+      this.preloadCache = [];
+      this.preloadedUrls.clear();
+      this.galleryElements = [];
     }
   }
 
