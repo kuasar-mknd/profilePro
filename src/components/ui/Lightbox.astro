@@ -22,7 +22,7 @@
 
   <button
     type="button"
-    class="lightbox-close"
+    class="lightbox-close group"
     aria-label="Fermer"
     title="Fermer (Esc)"
     aria-keyshortcuts="Escape"
@@ -41,11 +41,15 @@
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
+    <span
+      class="hidden md:block absolute top-full right-0 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">Esc</span
+    >
   </button>
 
   <button
     type="button"
-    class="lightbox-nav lightbox-prev"
+    class="lightbox-nav lightbox-prev group"
     aria-label="Image précédente"
     title="Image précédente (←)"
     aria-keyshortcuts="ArrowLeft"
@@ -63,6 +67,10 @@
     >
       <polyline points="15 18 9 12 15 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">←</span
+    >
   </button>
 
   <div class="lightbox-content">
@@ -75,7 +83,7 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-next"
+    class="lightbox-nav lightbox-next group"
     aria-label="Image suivante"
     title="Image suivante (→)"
     aria-keyshortcuts="ArrowRight"
@@ -93,6 +101,10 @@
     >
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">→</span
+    >
   </button>
 
   <div class="lightbox-counter" aria-live="polite" aria-atomic="true">
@@ -639,6 +651,10 @@
       document.removeEventListener("keydown", this.boundKeyHandler);
       document.removeEventListener("click", this.boundClickHandler);
       document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
+      // ⚡ Bolt: Clear cache references to allow GC
+      this.preloadCache = [];
+      this.preloadedUrls.clear();
+      this.galleryElements = [];
     }
   }
 
