@@ -1,6 +1,6 @@
 # Documentation API
 
-Ce site est principalement statique, mais il interagit avec quelques services externes.
+Ce site est statique (SSG), il ne possède pas de backend serveur (API REST/GraphQL) propre au runtime. Cependant, il interagit avec des services externes et génère des endpoints de données au moment du build.
 
 ## Services Externes
 
@@ -9,7 +9,7 @@ Ce site est principalement statique, mais il interagit avec quelques services ex
 Utilisé pour gérer les soumissions du formulaire de contact sans backend serveur.
 
 - **Endpoint**: `POST https://api.web3forms.com/submit`
-- **Authentification**: Via `access_key` (champ caché dans le formulaire).
+- **Authentification**: Via `access_key` (champ caché dans le formulaire, voir `docs/ENV.md`).
 - **Payload (JSON)**:
   ```json
   {
@@ -31,7 +31,14 @@ Utilisé pour afficher l'impact écologique de la page.
 
 ## API Interne (Build-time)
 
-Le site ne expose pas d'API REST publique. Cependant, il génère les fichiers suivants au build :
+Le site génère les fichiers de données suivants lors de la compilation (`bun run build`), accessibles comme des fichiers statiques :
 
-- **Sitemap**: `/sitemap-index.xml`
-- **RSS Feed**: `/rss.xml` (Contient les derniers projets)
+- **Sitemap**: `/sitemap-index.xml` (Index des pages pour les moteurs de recherche)
+- **RSS Feed**: `/rss.xml` (Flux des derniers projets publiés)
+
+Exemple d'accès :
+```bash
+curl https://portfolio.kuasar.xyz/rss.xml
+```
+
+_La documentation API sera mise à jour si de nouveaux endpoints sont ajoutés._
