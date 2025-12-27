@@ -27,3 +27,5 @@ Ces variables sont configurées dans les secrets du dépôt GitHub pour le dépl
 |--------|-------------|
 | `CLOUDFLARE_API_TOKEN` | Token d'authentification pour l'API Cloudflare. |
 | `CLOUDFLARE_ACCOUNT_ID` | ID du compte Cloudflare. |
+
+_Note: Ne jamais committer le fichier `.env` avec des valeurs réelles._

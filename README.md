@@ -152,6 +152,8 @@ Le workflow assure :
 2. Scan de sécurité (`CodeQL`, `Dependency Review`).
 3. Build et déploiement via Wrangler.
 
+Pour plus de détails sur le pipeline, voir [ARCHITECTURE.md](docs/ARCHITECTURE.md#cicd-pipeline).
+
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!
