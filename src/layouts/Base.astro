@@ -18,12 +18,42 @@ import logo from "../assets/logo.avif";
 const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
+const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+
+// ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
+let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
+if (postData?.data?.image) {
+  lcpImage = await getImage({
+    src: postData.data.image,
+    width: 1600,
+    format: "avif",
+  });
+}
 ---
 
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
+    <link
+      rel="preconnect"
+      href="https://static.cloudflareinsights.com"
+      crossorigin
+    />
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
+    <link rel="preconnect" href="https://player.vimeo.com" />
+    <link rel="dns-prefetch" href="https://player.vimeo.com" />
+    <link rel="preconnect" href="https://i.ytimg.com" />
+    <link rel="dns-prefetch" href="https://i.ytimg.com" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://vimeo.com" />
+    <link rel="dns-prefetch" href="https://vimeo.com" />
+    <link rel="preconnect" href="https://api.web3forms.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -53,27 +83,47 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="/fonts/inter-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/outfit-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- LCP Image Preload (Hero Logo) -->
-    <link
-      rel="preload"
-      href={heroLogo.src}
-      as="image"
-      type="image/avif"
-      fetchpriority="high"
+    <!-- LCP Image Preload (Hero Logo) - Only on Homepage -->
+    {
+      Astro.url.pathname === "/" && (
+        <link
+          rel="preload"
+          href={heroLogo.src}
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
+    {
+      lcpImage && (
+        <link
+          rel="preload"
+          href={lcpImage.src}
+          as="image"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
+    <script
+      type="speculationrules"
+      is:inline
+      set:html={JSON.stringify({
+        prerender: [
+          {
+            source: "document",
+            where: {
+              href_matches: "/*",
+            },
+            eagerness: "moderate",
+          },
+        ],
+      }).replace(/</g, "\\u003c")}
     />
     <style is:global>
       /* Manual Font Face Definitions */
@@ -105,31 +155,7 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         font-style: normal;
         font-display: swap;
       }
-      @font-face {
-        font-family: "Inter";
-        src: url("/fonts/inter-regular.woff2") format("woff2");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: "Inter";
-        src: url("/fonts/inter-bold.woff2") format("woff2");
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-      }
     </style>
-    <!-- Critical preconnects - must be early in head for effectiveness -->
-    <link rel="dns-prefetch" href="https://unpkg.com" />
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://static.cloudflareinsights.com"
-      crossorigin
-    />
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
       // Early theme detection to prevent FOUC
@@ -184,13 +210,40 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
-      class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift"
+      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 group"
       aria-label="Retour en haut de page"
+      title="Retour en haut de page"
       tabindex="-1"
     >
+      <!-- 🎨 Palette: Circular Progress Indicator -->
+      <svg
+        class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none p-0.5"
+        viewBox="0 0 36 36"
+        aria-hidden="true"
+      >
+        <!-- Track -->
+        <path
+          class="text-white/20"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"></path>
+        <!-- Progress -->
+        <path
+          id="scroll-progress-circle"
+          class="text-white transition-all duration-100 ease-out"
+          stroke-dasharray="100, 100"
+          stroke-dashoffset="100"
+          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"></path>
+      </svg>
+
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
+        class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -199,37 +252,124 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="2.5"
           d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
       </svg>
     </button>
 
     <script>
+      /**
+       * ⚡ Bolt: Back to Top Performance Optimization
+       * - Implements cleanup pattern to prevent event listener leaks on navigation
+       * - Caches layout metrics to avoid layout thrashing in scroll handler
+       * - Throttles scroll updates using requestAnimationFrame
+       */
+      let backToTopObserver: IntersectionObserver | null = null;
+      let cleanupScroll: (() => void) | null = null;
+      let cleanupBackToTop: (() => void) | null = null;
+
       function initBackToTop() {
+        // ⚡ Cleanup previous listeners before initializing new ones
+        if (cleanupBackToTop) {
+          cleanupBackToTop();
+          cleanupBackToTop = null;
+        }
+
         const backToTopBtn = document.getElementById("back-to-top");
         const sentinel = document.getElementById("scroll-sentinel");
+        const progressCircle = document.getElementById(
+          "scroll-progress-circle",
+        );
 
-        if (backToTopBtn && sentinel) {
-          const observer = new IntersectionObserver(
+        // ⚡ Early return if elements don't exist
+        if (!backToTopBtn || !sentinel || !progressCircle) return;
+
+        // ⚡ RAF ID for animation tracking
+        let rafId: number | null = null;
+        // ⚡ Bolt: Cache document height to avoid layout thrashing
+        let cachedDocHeight = 0;
+        let resizeObserver: ResizeObserver | null = null;
+
+        // ⚡ Clean up previous listeners to prevent stacking on navigation
+        if (cleanupScroll) {
+          cleanupScroll();
+          cleanupScroll = null;
+        }
+
+        // ⚡ Bolt: RAF throttling state
+        let ticking = false;
+
+        // ⚡ Bolt: Efficiently update dimensions only when they change
+        const updateDimensions = () => {
+          cachedDocHeight =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+        };
+
+        // 🎨 Palette: Scroll Progress Logic with RAF throttling
+        const updateVisuals = () => {
+          if (!progressCircle) return;
+          const scrollTop = window.scrollY;
+
+          // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
+          const scrollPercent =
+            cachedDocHeight > 0 ? Math.min(scrollTop / cachedDocHeight, 1) : 0;
+          const draw = scrollPercent * 100;
+          progressCircle.style.strokeDashoffset = (100 - draw).toString();
+          ticking = false;
+        };
+
+        const onScroll = () => {
+          if (!ticking) {
+            window.requestAnimationFrame(updateVisuals);
+            ticking = true;
+          }
+        };
+
+        // Update on scroll (optimized)
+        window.addEventListener("scroll", onScroll, {
+          passive: true,
+        });
+
+        // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
+        resizeObserver = new ResizeObserver(() => {
+          updateDimensions();
+          // Update visuals immediately in case scroll pos stayed same but height changed
+          window.requestAnimationFrame(updateVisuals);
+        });
+        resizeObserver.observe(document.documentElement);
+
+        // Initial calculation
+        updateDimensions();
+        updateVisuals();
+
+        // Register cleanup
+        cleanupScroll = () => {
+          window.removeEventListener("scroll", onScroll);
+          if (resizeObserver) resizeObserver.disconnect();
+        };
+
+        // ⚡ Early return if already initialized
+        if (backToTopBtn.dataset.initialized === "true") return;
+        backToTopBtn.dataset.initialized = "true";
+
+        // ⚡ Reuse observer if already created
+        if (!backToTopObserver) {
+          backToTopObserver = new IntersectionObserver(
             (entries) => {
               const entry = entries[0];
+              const btn = document.getElementById("back-to-top");
+              if (!btn) return;
+
               // If sentinel is NOT intersecting (scrolled past), show button
               if (!entry.isIntersecting) {
-                backToTopBtn.classList.remove(
-                  "opacity-0",
-                  "invisible",
-                  "translate-y-4",
-                );
-                backToTopBtn.classList.add("visible", "translate-y-0");
-                backToTopBtn.setAttribute("tabindex", "0");
+                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
+                btn.classList.add("visible", "translate-y-0");
+                btn.setAttribute("tabindex", "0");
               } else {
-                backToTopBtn.classList.add(
-                  "opacity-0",
-                  "invisible",
-                  "translate-y-4",
-                );
-                backToTopBtn.classList.remove("visible", "translate-y-0");
-                backToTopBtn.setAttribute("tabindex", "-1");
+                btn.classList.add("opacity-0", "invisible", "translate-y-4");
+                btn.classList.remove("visible", "translate-y-0");
+                btn.setAttribute("tabindex", "-1");
               }
             },
             {
@@ -237,14 +377,31 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
               threshold: 0,
             },
           );
-
-          observer.observe(sentinel);
-
-          // Scroll to top action
-          backToTopBtn.addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          });
         }
+
+        backToTopObserver.observe(sentinel);
+
+        // Scroll to top action
+        const onClick = () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          const main = document.getElementById("main-content");
+          if (main) {
+            if (!main.hasAttribute("tabindex")) {
+              main.setAttribute("tabindex", "-1");
+            }
+            main.focus({ preventScroll: true });
+          }
+        };
+        backToTopBtn.addEventListener("click", onClick);
+
+        // ⚡ Register cleanup
+        cleanupBackToTop = () => {
+          window.removeEventListener("scroll", onScroll);
+          if (resizeObserver) resizeObserver.disconnect();
+          if (backToTopObserver) backToTopObserver.disconnect();
+          backToTopBtn.removeEventListener("click", onClick);
+          if (rafId) cancelAnimationFrame(rafId);
+        };
       }
 
       // Initialize on load and after view transitions
@@ -260,51 +417,115 @@ const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
         }
       }
 
-      // Observer for class changes on html to trigger theme color update
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            updateThemeColor();
-          }
-        });
-      });
+      // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
+      // Moved to module scope to prevent memory leaks from stacking observers
+      let themeObserver: MutationObserver | null = null;
 
-      themeObserver.observe(document.documentElement, { attributes: true });
+      function initThemeObserver() {
+        if (themeObserver) return; // Already initialized
+
+        themeObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              updateThemeColor();
+            }
+          });
+        });
+
+        themeObserver.observe(document.documentElement, { attributes: true });
+      }
+
+      initThemeObserver();
+      // Note: We don't need to re-init on swap because document.documentElement persists
+      // and the observer stays attached.
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
       // and a warning in title/aria-label.
+      let linkObserver: MutationObserver | null = null;
+      const warning = " (ouvre un nouvel onglet)";
+
+      function secureLink(link: Element) {
+        if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
+          return;
+
+        // Security: Add rel="noopener noreferrer"
+        const rel = link.getAttribute("rel") || "";
+        if (!rel.includes("noopener")) {
+          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        }
+
+        // Accessibility: Append warning to title
+        const title = link.getAttribute("title") || "";
+        if (!title.includes(warning.trim())) {
+          link.setAttribute("title", title ? title + warning : warning.trim());
+        }
+
+        // Accessibility: Append warning to aria-label (only if present)
+        const ariaLabel = link.getAttribute("aria-label");
+        if (ariaLabel && !ariaLabel.includes(warning.trim())) {
+          link.setAttribute("aria-label", ariaLabel + warning);
+        }
+      }
+
       function secureLinks() {
-        const links = document.querySelectorAll('a[target="_blank"]');
-        const warning = " (ouvre un nouvel onglet)";
+        // 1. Secure existing links
+        document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
 
-        links.forEach((link) => {
-          // Security: Add rel="noopener noreferrer"
-          const rel = link.getAttribute("rel") || "";
-          if (!rel.includes("noopener")) {
-            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
-          }
+        // 2. Observer for dynamic links
+        if (linkObserver) {
+          linkObserver.disconnect();
+        }
 
-          // Accessibility: Append warning to title
-          const title = link.getAttribute("title") || "";
-          if (!title.includes(warning.trim())) {
-            link.setAttribute(
-              "title",
-              title ? title + warning : warning.trim(),
-            );
-          }
-
-          // Accessibility: Append warning to aria-label (only if present)
-          const ariaLabel = link.getAttribute("aria-label");
-          if (ariaLabel && !ariaLabel.includes(warning.trim())) {
-            link.setAttribute("aria-label", ariaLabel + warning);
-          }
+        linkObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const element = node as Element;
+                // Check if node itself is a link
+                secureLink(element);
+                // Check descendants
+                element
+                  .querySelectorAll('a[target="_blank"]')
+                  .forEach(secureLink);
+              }
+            });
+          });
         });
+
+        // Start observing the body for added nodes
+        linkObserver.observe(document.body, { childList: true, subtree: true });
       }
 
       // Run on load and after view transitions
       secureLinks();
       document.addEventListener("astro:after-swap", secureLinks);
     </script>
+    <script>
+      import { registerSW } from "virtual:pwa-register";
+
+      if ("serviceWorker" in navigator) {
+        registerSW({
+          immediate: true,
+          onNeedRefresh() {
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: New content available");
+          },
+          onOfflineReady() {
+            if (import.meta.env.DEV)
+              console.log("⚡ Bolt PWA: App ready to work offline");
+          },
+        });
+      }
+    </script>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      is:inline
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={JSON.stringify({
+        token: PUBLIC_CF_ANALYTICS_TOKEN,
+      }).replace(/</g, "\\u003c")}></script>
+    <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

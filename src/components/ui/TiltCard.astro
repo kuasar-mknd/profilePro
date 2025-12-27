@@ -25,6 +25,12 @@ const {
 </div>
 
 <script>
+  /**
+   * ⚡ Bolt: TiltCard performance optimization
+   * - Lazy listener attachment: 'mousemove' is only attached during interaction
+   * - Caches DOM references
+   * - RAF throttling
+   */
   function initTiltCards() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -35,35 +41,81 @@ const {
     cards.forEach((card) => {
       const el = card as HTMLElement;
       const maxTilt = Number(el.dataset.maxTilt) || 10;
-
       card.classList.add("tilt-initialized");
 
-      card.addEventListener("mousemove", (e) => {
-        const event = e as MouseEvent;
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+      // ⚡ Cache the style object reference to avoid repeated lookups
+      const cardStyle = el.style;
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+      let bounds: DOMRect | null = null;
+      let frameId: number | null = null;
+      let targetX = 0;
+      let targetY = 0;
 
-        const rotateX = ((y - centerY) / centerY) * -maxTilt;
-        const rotateY = ((x - centerX) / centerX) * maxTilt;
+      function update() {
+        if (!bounds) return;
 
-        (card as HTMLElement).style.setProperty("--rotate-x", `${rotateX}deg`);
-        (card as HTMLElement).style.setProperty("--rotate-y", `${rotateY}deg`);
-      });
+        // ⚡ Pre-calculate center coordinates using cached bounds
+        const centerX = bounds.width * 0.5;
+        const centerY = bounds.height * 0.5;
 
-      card.addEventListener("mouseleave", () => {
-        (card as HTMLElement).style.setProperty("--rotate-x", "0deg");
-        (card as HTMLElement).style.setProperty("--rotate-y", "0deg");
-      });
+        // ⚡ Calculate relative position
+        const relativeX = targetX - bounds.left - centerX;
+        const relativeY = targetY - bounds.top - centerY;
+
+        // ⚡ Calculate rotation with division by center values
+        const rotateX = (relativeY / centerY) * -maxTilt;
+        const rotateY = (relativeX / centerX) * maxTilt;
+
+        // ⚡ Set CSS custom properties using cached style reference
+        cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
+        cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
+
+        frameId = null;
+      }
+
+      function onMouseMove(e: MouseEvent) {
+        if (!bounds) return;
+
+        targetX = e.clientX;
+        targetY = e.clientY;
+
+        // ⚡ Use requestAnimationFrame to throttle visual updates
+        if (!frameId) {
+          frameId = requestAnimationFrame(update);
+        }
+      }
+
+      function onMouseLeave() {
+        // ⚡ Cancel pending frame
+        if (frameId) {
+          cancelAnimationFrame(frameId);
+          frameId = null;
+        }
+
+        // ⚡ Reset styles
+        cardStyle.setProperty("--rotate-x", "0deg");
+        cardStyle.setProperty("--rotate-y", "0deg");
+
+        bounds = null;
+
+        // ⚡ Bolt: Cleanup high-frequency listeners when not needed
+        card.removeEventListener("mousemove", onMouseMove);
+        card.removeEventListener("mouseleave", onMouseLeave);
+      }
+
+      function onMouseEnter() {
+        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
+        bounds = el.getBoundingClientRect();
+
+        // ⚡ Bolt: Lazy attach listeners only when interacting
+        card.addEventListener("mousemove", onMouseMove);
+        card.addEventListener("mouseleave", onMouseLeave);
+      }
+
+      card.addEventListener("mouseenter", onMouseEnter);
     });
   }
 
-  // Run on initial load
-  initTiltCards();
-
-  // Re-run on page transitions
+  // Re-run on page transitions (astro:page-load fires on initial load too)
   document.addEventListener("astro:page-load", initTiltCards);
 </script>

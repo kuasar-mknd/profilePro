@@ -5,13 +5,13 @@
 <div class="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
   <!-- Blob 1: Behind "Connecter" (Top Left-ish) -->
   <div
-    class="absolute top-[20%] left-[20%] w-[300px] h-[300px] bg-pacamara-secondary/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 will-change-transform translate-z-0"
+    class="absolute top-[20%] left-[20%] w-[300px] h-[300px] bg-pacamara-secondary/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 translate-z-0"
   >
   </div>
 
   <!-- Blob 2: Behind "Captiver" (Bottom Right-ish relative to text) -->
   <div
-    class="absolute top-[35%] left-[55%] w-[300px] h-[300px] bg-pacamara-accent/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 will-change-transform translate-z-0"
+    class="absolute top-[35%] left-[55%] w-[300px] h-[300px] bg-pacamara-accent/20 rounded-full blur-[80px] mix-blend-screen dark:mix-blend-screen filter opacity-40 translate-z-0"
   >
   </div>
 
@@ -25,37 +25,84 @@
 </div>
 
 <script>
-  const blob = document.getElementById("mouse-blob");
-  const container = blob?.parentElement;
+  /**
+   * ⚡ Bolt: BackgroundAnimation Performance Optimizations
+   * - Initialization guard to prevent duplicate listeners
+   * - Reduced motion check for accessibility
+   * - DOM caching for animation loop
+   * - RAF throttling for mousemove
+   * - Pre-calculated coordinates to avoid layout thrashing (getBoundingClientRect)
+   * - Visibility Observer to pause mouse tracking when off-screen
+   */
 
-  if (blob && container) {
+  let cleanup: (() => void) | null = null;
+
+  function initMouseBlob() {
+    // ⚡ Cleanup previous listeners if they exist (prevents memory leaks on navigation)
+    if (cleanup) {
+      cleanup();
+      cleanup = null;
+    }
+
+    const blob = document.getElementById("mouse-blob");
+    const container = blob?.parentElement;
+
+    // ⚡ Early return guards
+    if (!blob || !container) return;
+
+    // ⚡ Skip for reduced motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      blob.style.display = "none";
+      return;
+    }
+
     let mouseX = 0;
     let mouseY = 0;
     let blobX = 0;
     let blobY = 0;
     let isVisible = false;
+    let animationFrameId: number | null = null;
+
+    // ⚡ Cache style reference
+    const blobStyle = blob.style;
 
     // Smoothness factor (lower = smoother/slower)
     const ease = 0.08;
 
-    // Track mouse position
-    document.addEventListener("mousemove", (e) => {
+    // ⚡ Cache container metrics to avoid getBoundingClientRect() in hot path
+    let containerLeft = 0;
+    let containerTop = 0;
+
+    const updateMetrics = () => {
       const rect = container.getBoundingClientRect();
-      // Calculate relative position
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
+      containerLeft = rect.left + window.scrollX;
+      containerTop = rect.top + window.scrollY;
+    };
+
+    // Initial calculation
+    updateMetrics();
+
+    // Update on resize
+    window.addEventListener("resize", updateMetrics, { passive: true });
+
+    // ⚡ Optimized mousemove handler
+    const onMouseMove = (e: MouseEvent) => {
+      // ⚡ FAST: Use page coordinates and cached offset
+      // Eliminates forced reflows from getBoundingClientRect()
+      mouseX = e.pageX - containerLeft;
+      mouseY = e.pageY - containerTop;
 
       if (!isVisible) {
         isVisible = true;
-        blob.style.opacity = "1";
+        blobStyle.opacity = "1";
         // Initialize position to prevent jump
         blobX = mouseX;
         blobY = mouseY;
-        requestAnimationFrame(animate);
+        animate();
       }
-    });
+    };
 
-    // Animation loop
+    // ⚡ Optimized animation loop with cached references
     function animate() {
       if (!isVisible) return;
 
@@ -66,17 +113,53 @@
       blobX += dx * ease;
       blobY += dy * ease;
 
-      if (blob) {
-        blob.style.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
-      }
+      // ⚡ Use cached style reference
+      blobStyle.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
 
       // Stop loop if close enough to target
       if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
         isVisible = false;
+        animationFrameId = null;
         return;
       }
 
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     }
+
+    // ⚡ Bolt: Visibility Observer to pause mouse tracking when off-screen
+    // Saves CPU/Battery by removing the high-frequency mousemove listener
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          document.addEventListener("mousemove", onMouseMove, {
+            passive: true,
+          });
+        } else {
+          document.removeEventListener("mousemove", onMouseMove);
+          // Also stop any ongoing animation
+          isVisible = false;
+          blobStyle.opacity = "0"; // Fade out when off-screen
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+        }
+      },
+      { rootMargin: "200px" }, // Start tracking slightly before it enters viewport
+    );
+
+    observer.observe(container);
+
+    // Register cleanup function
+    cleanup = () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateMetrics);
+      document.removeEventListener("mousemove", onMouseMove);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }
+
+  // Initialize only via event listener to avoid double execution on initial load
+  document.addEventListener("astro:page-load", initMouseBlob);
 </script>

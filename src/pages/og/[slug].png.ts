@@ -136,7 +136,7 @@ export const GET: APIRoute = async ({ props }) => {
 
   const image = resvg.render();
 
-  return new Response(image.asPng() as any, {
+  return new Response(image.asPng() as BodyInit, {
     headers: {
       "Content-Type": "image/png",
     },

@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+# Cancel in-progress deploys if a new one is triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Quality is already checked in CI workflow, but we re-check here to be safe before deploy
+  # Or we could rely on CI status check if configured in repo settings.
+  # For safety, we keep it but it runs in parallel with other checks if needed.
+  quality:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Run Quality Checks
+        run: bun run check
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build & Deploy
+    needs: [quality]
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Cache Astro Generated Images
+        uses: actions/cache@v5
+        with:
+          path: node_modules/.astro
+          key: ${{ runner.os }}-astro-images-${{ hashFiles('src/assets/**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-images-
+
+      - name: Build Astro
+        run: bun run build
+        timeout-minutes: 20
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=profilepro --branch=master

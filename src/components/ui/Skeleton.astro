@@ -36,40 +36,60 @@ const roundedClasses = {
 
 <style>
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      var(--color-pacamara-primary, #1a1a2e) 0%,
-      rgba(255, 255, 255, 0.1) 20%,
-      rgba(255, 255, 255, 0.15) 60%,
-      var(--color-pacamara-primary, #1a1a2e) 100%
-    );
-    background-size: 200% 100%;
-    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    /* ⚡ Bolt: Performance optimization
+       - Use GPU-accelerated transform instead of background-position
+       - Avoid layout thrashing on every frame
+    */
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-pacamara-primary, #1a1a2e); /* Fallback */
+    /* Use a slightly lighter/darker base depending on theme via opacity */
+    background: rgba(26, 26, 46, 0.5); /* Default base */
   }
 
   :global(.dark) .skeleton {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.1) 20%,
-      rgba(255, 255, 255, 0.15) 60%,
-      rgba(255, 255, 255, 0.05) 100%
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.1) 60%,
+      transparent 100%
     );
-    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    /* ⚡ Bolt: Promotes to compositor layer */
+    will-change: transform;
+  }
+
+  :global(.dark) .skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.1) 60%,
+      transparent 100%
+    );
   }
 
   @keyframes skeleton-shimmer {
-    0% {
-      background-position: 200% 0;
-    }
     100% {
-      background-position: -200% 0;
+      transform: translateX(100%);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .skeleton {
+    .skeleton::after {
       animation: none;
+      background: none;
+    }
+    .skeleton {
       background: rgba(255, 255, 255, 0.1);
     }
   }

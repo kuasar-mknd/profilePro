@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
 <form
@@ -7,6 +9,7 @@ import { Icon } from "astro-icon/components";
   method="POST"
   class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
+  novalidate
 >
   <!-- Form Success Message -->
   <div
@@ -23,6 +26,12 @@ import { Icon } from "astro-icon/components";
       <p class="text-pacamara-primary/80 dark:text-white/80">
         Merci de m'avoir contacté. Je vous répondrai dans les plus brefs délais.
       </p>
+      <button
+        type="button"
+        class="reset-form-btn mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+      >
+        Envoyer un autre message
+      </button>
     </div>
   </div>
 
@@ -33,31 +42,42 @@ import { Icon } from "astro-icon/components";
   </div>
 
   <!-- Access Key -->
-  <input
-    type="hidden"
-    name="access_key"
-    value={import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY}
-  />
+  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
   <!-- Optional: Honeypot -->
+  <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
   <input
     type="checkbox"
     name="botcheck"
     class="hidden"
     style="display: none;"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+  />
+
+  <!-- 🛡️ Sentinel: Timestamp trap to prevent spam -->
+  <input
+    type="hidden"
+    name="form-load-timestamp"
+    id="form-load-timestamp"
+    value=""
   />
 
   <div class="space-y-6 relative z-10">
     <!-- Name Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="name"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Nom complet <span class="text-pacamara-accent">*</span>
+        Nom complet <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -67,24 +87,28 @@ import { Icon } from "astro-icon/components";
           autocomplete="name"
           required
           maxlength="100"
+          minlength="2"
           inputmode="text"
           class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
           placeholder="Votre nom"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
     </div>
 
     <!-- Email Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="email"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Email <span class="text-pacamara-accent">*</span>
+        Email <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -100,19 +124,22 @@ import { Icon } from "astro-icon/components";
           placeholder="votre@email.com"
         />
         <div
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
     </div>
 
     <!-- Message Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="message"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Message <span class="text-pacamara-accent">*</span>
+        Message <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <textarea
@@ -121,6 +148,7 @@ import { Icon } from "astro-icon/components";
           rows="4"
           required
           maxlength="5000"
+          minlength="10"
           class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
@@ -133,7 +161,7 @@ import { Icon } from "astro-icon/components";
     <!-- Submit Button -->
     <button
       type="submit"
-      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group"
+      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
       aria-live="polite"
     >
       <span class="btn-text relative z-10">Envoyer le message</span>
@@ -181,19 +209,29 @@ import { Icon } from "astro-icon/components";
     <!-- Inline Error Message -->
     <div
       id="form-error-message"
-      class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center outline-none"
+      class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-pacamara-dark"
       role="alert"
       aria-live="assertive"
       tabindex="-1"
     >
-      Une erreur est survenue. Veuillez réessayer.
+      <p id="error-text">Une erreur est survenue. Veuillez réessayer.</p>
+      <button
+        type="button"
+        id="reset-error-btn"
+        class="mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+      >
+        Réessayer
+      </button>
     </div>
   </div>
 
   <p
     class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
   >
-    Les champs marqués d'un <span class="text-pacamara-accent">*</span> sont obligatoires.
+    Les champs marqués d'un <span class="sr-only">astérisque</span><span
+      class="text-pacamara-accent"
+      aria-hidden="true">*</span
+    > sont obligatoires.
   </p>
   <p
     class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
@@ -203,10 +241,15 @@ import { Icon } from "astro-icon/components";
 </form>
 
 <style>
-  /* Input glow effect on focus */
+  /* ⚡ Bolt: Performance Optimization */
+  /* Define box-shadow statically so it's not recalculated on focus */
+  .input-glow {
+    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
+  }
+
+  /* Only transition opacity (compositor thread) */
   .form-input:focus + .input-glow {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
   }
 
   /* Button states */
@@ -261,107 +304,241 @@ import { Icon } from "astro-icon/components";
 </style>
 
 <script>
+  /**
+   * ⚡ Bolt: ContactForm Performance Optimization
+   * Uses early return pattern and initialization guard to prevent duplicate bindings.
+   */
   function initContactForm() {
     const form = document.getElementById("contact-form") as HTMLFormElement;
 
-    if (form && !form.dataset.initialized) {
-      form.dataset.initialized = "true";
+    // ⚡ Early return if form doesn't exist or already initialized
+    if (!form || form.dataset.initialized === "true") return;
+    form.dataset.initialized = "true";
 
-      const submitButton = form.querySelector(
-        ".submit-btn",
-      ) as HTMLButtonElement;
+    // 🛡️ Sentinel: Set timestamp for spam trap
+    const timestampInput = form.querySelector(
+      "#form-load-timestamp",
+    ) as HTMLInputElement;
+    if (timestampInput) {
+      timestampInput.value = Date.now().toString();
+    }
 
-      // Ripple effect
-      submitButton?.addEventListener("click", (e) => {
-        // Accessibility: Skip ripple if user prefers reduced motion
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          return;
+    const submitButton = form.querySelector(".submit-btn") as HTMLButtonElement;
+    const resetBtn = form.querySelector(".reset-form-btn") as HTMLButtonElement;
+    const errorResetBtn = form.querySelector(
+      "#reset-error-btn",
+    ) as HTMLButtonElement;
+    const errorMessage = form.querySelector(
+      "#form-error-message",
+    ) as HTMLElement;
+    const errorText = form.querySelector("#error-text") as HTMLParagraphElement;
+    const nameInput = form.querySelector(
+      'input[name="name"]',
+    ) as HTMLInputElement;
+    const emailInput = form.querySelector(
+      'input[name="email"]',
+    ) as HTMLInputElement;
+    const messageInput = form.querySelector(
+      'textarea[name="message"]',
+    ) as HTMLTextAreaElement;
+
+    // Reset form from success message
+    resetBtn?.addEventListener("click", () => {
+      const successMessage = form.querySelector("#form-success-message");
+      successMessage?.classList.add("hidden");
+      successMessage?.classList.remove("flex");
+      form.reset();
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.classList.remove("loading");
+      }
+      (form.querySelector("input") as HTMLInputElement)?.focus();
+    });
+
+    // Reset form from error message
+    errorResetBtn?.addEventListener("click", () => {
+      errorMessage?.classList.add("hidden");
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+      (form.querySelector("input") as HTMLInputElement)?.focus();
+    });
+
+    // Ripple effect
+    submitButton?.addEventListener("click", (e) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const rect = submitButton.getBoundingClientRect();
+      const ripple = document.createElement("span");
+      ripple.className = "ripple-circle";
+      ripple.style.width =
+        ripple.style.height = `${Math.max(rect.width, rect.height)}px`;
+      ripple.style.left = `${e.clientX - rect.left - rect.width / 2}px`;
+      ripple.style.top = `${e.clientY - rect.top - rect.height / 2}px`;
+      submitButton.querySelector(".btn-ripple")?.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+
+    // Helper to display errors
+    function showError(message: string, fieldToFocus?: HTMLElement) {
+      if (errorMessage && errorText) {
+        errorText.textContent = message;
+        errorMessage.classList.remove("hidden");
+        // Focus the field if provided, otherwise the error message container
+        if (fieldToFocus) {
+          fieldToFocus.focus();
+        } else {
+          errorMessage.focus();
         }
+      }
+    }
 
-        const rect = submitButton.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        ripple.className = "ripple-circle";
-        ripple.style.width = ripple.style.height =
-          Math.max(rect.width, rect.height) + "px";
-        ripple.style.left = e.clientX - rect.left - rect.width / 2 + "px";
-        ripple.style.top = e.clientY - rect.top - rect.height / 2 + "px";
+    // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
+    // Reverted to efficient regex-based sanitization as per review feedback
+    function sanitizeInput(str: string): string {
+      const map: Record<string, string> = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#x27;",
+        "/": "&#x2F;",
+        "`": "&#x60;", // Prevent template injection
+        "=": "&#x3D;", // Prevent unquoted attribute injection
+      };
+      const reg = /[&<>"'\/`=]/gi;
 
-        const rippleContainer = submitButton.querySelector(".btn-ripple");
-        rippleContainer?.appendChild(ripple);
+      return str.replace(reg, (match) => map[match]);
+    }
 
-        setTimeout(() => ripple.remove(), 600);
-      });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
+      const emailPattern =
+        /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+      // Clear previous validation state before re-validating
+      form
+        .querySelectorAll("[aria-invalid]")
+        .forEach((el) => el.removeAttribute("aria-invalid"));
+      errorMessage?.classList.add("hidden");
+
+      // 🎨 Palette: Add validation for required fields
+      if (nameInput && nameInput.value.trim().length < 2) {
+        nameInput.setAttribute("aria-invalid", "true");
+        nameInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer votre nom (minimum 2 caractères).",
+          nameInput,
+        );
+        return;
+      }
+
+      if (emailInput && !emailPattern.test(emailInput.value)) {
+        emailInput.setAttribute("aria-invalid", "true");
+        emailInput.setAttribute("aria-describedby", "form-error-message");
+        showError("Veuillez entrer une adresse email valide.", emailInput);
+        return;
+      }
+
+      if (messageInput && messageInput.value.trim().length < 10) {
+        messageInput.setAttribute("aria-invalid", "true");
+        messageInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer un message d'au moins 10 caractères.",
+          messageInput,
+        );
+        return;
+      }
+
+      // 🛡️ Sentinel: Timestamp trap validation
+      const loadTimestamp = parseInt(timestampInput.value, 10);
+      const submitTimestamp = Date.now();
+      if (submitTimestamp - loadTimestamp < 2000) {
+        // 2 seconds threshold
+        showError(
+          "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
+        );
+        return;
+      }
+
+      const lastSubmission = localStorage.getItem(
+        "contact_form_last_submission",
+      );
+      if (
+        lastSubmission &&
+        Date.now() - parseInt(lastSubmission, 10) < 120000
+      ) {
+        showError(
+          "Veuillez attendre quelques minutes avant de renvoyer un message.",
+        );
+        return;
+      }
+
+      if (submitButton) {
+        submitButton.classList.add("loading");
+        submitButton.disabled = true;
+      }
+
+      try {
+        // 🛡️ Sentinel: Sanitize form data before sending
         const formData = new FormData(form);
-        const object = Object.fromEntries(formData);
-        const json = JSON.stringify(object);
+        const data: Record<string, string> = {};
+        const fieldsToSanitize = new Set(["name", "email", "message"]);
 
-        const successMessage = form.querySelector("#form-success-message");
-        const errorMessage = form.querySelector("#form-error-message");
+        formData.forEach((value, key) => {
+          if (typeof value === "string") {
+            // Sanitize only user-provided fields to prevent corrupting system values.
+            if (fieldsToSanitize.has(key)) {
+              data[key] = sanitizeInput(value);
+            } else {
+              data[key] = value;
+            }
+          } else {
+            data[key] = value.toString();
+          }
+        });
+
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          errorMessage?.classList.add("hidden");
+          form.removeAttribute("aria-describedby");
+          const successMessage = form.querySelector("#form-success-message");
+          if (successMessage) {
+            successMessage.classList.remove("hidden");
+            successMessage.classList.add("flex");
+          }
+          localStorage.setItem(
+            "contact_form_last_submission",
+            Date.now().toString(),
+          );
+          form.reset();
+        } else {
+          throw new Error(result.message || "Submission failed");
+        }
+      } catch (error) {
+        // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
+        if (import.meta.env.DEV) {
+          console.error("Form submission failed:", error);
+        }
 
         if (submitButton) {
-          submitButton.classList.add("loading");
-          submitButton.disabled = true;
+          submitButton.classList.remove("loading");
         }
-
-        try {
-          const response = await fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: json,
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            // Hide error message if it was visible
-            errorMessage?.classList.add("hidden");
-
-            // Show success message overlay
-            if (successMessage) {
-              successMessage.classList.remove("hidden");
-              successMessage.classList.add("flex"); // Uses flex for centering
-            }
-            form.reset();
-            // The form is now covered, button remains disabled.
-          } else {
-            throw new Error(result.message || "Submission failed");
-          }
-        } catch (error) {
-          console.error(error);
-          submitButton?.classList.remove("loading");
-          if (submitButton) {
-            submitButton.disabled = false;
-          }
-          // Show general error message
-          if (errorMessage) {
-            errorMessage.classList.remove("hidden");
-            errorMessage.textContent =
-              "Une erreur est survenue. Veuillez réessayer plus tard.";
-            (errorMessage as HTMLElement).focus();
-          }
-
-          // Add visual feedback that something went wrong
-          form.querySelectorAll("input, textarea").forEach((el) => {
-            // Check if the element has a `name` attribute and is not a hidden field
-            if (
-              el.getAttribute("name") &&
-              el.getAttribute("type") !== "hidden" &&
-              el.getAttribute("name") !== "botcheck" &&
-              el.getAttribute("name") !== "subject" &&
-              el.getAttribute("name") !== "access_key"
-            ) {
-              el.setAttribute("aria-invalid", "true");
-            }
-          });
-        }
-      });
-    }
+        showError("Une erreur est survenue. Veuillez réessayer plus tard.");
+        form.setAttribute("aria-describedby", "form-error-message");
+      }
+    });
   }
 
   initContactForm();

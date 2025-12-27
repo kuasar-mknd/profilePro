@@ -13,11 +13,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: Inter;
-  font-display: swap;
-}
-
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -30,7 +25,6 @@
   --color-glass-black: rgb(0 0 0 / 40%);
   --color-neon-blue: #00f3ff;
   --color-neon-purple: #bc13fe;
-  --font-pacamara-inter: "Inter", sans-serif;
   --font-pacamara-space: "Space Grotesk", sans-serif;
   --font-outfit: "Outfit", sans-serif;
   --animate-fade-in: fade-in 0.5s ease-out forwards;
@@ -156,7 +150,6 @@
 @media print {
   header,
   footer,
-  .magnetic-btn,
   .hero-buttons,
   .hero-carousel,
   #lightbox,
@@ -215,8 +208,15 @@
   }
 
   footer {
+    /* ⚡ Bolt: Skip rendering of off-screen footer content */
     content-visibility: auto;
     contain-intrinsic-size: 1px 300px;
+  }
+
+  /* ⚡ Bolt: Optimization for below-the-fold content */
+  .bento-grid {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
   }
 
   /* Ensure content is visible if JS is disabled */
@@ -305,7 +305,6 @@
 
   /* Universal Active State for Buttons */
   button:active:not(:disabled),
-  .magnetic-btn:active,
   a.button:active:not(:disabled) {
     transform: scale(0.98);
   }
@@ -548,11 +547,6 @@
   }
 }
 
-.magnetic-btn {
-  position: relative;
-  transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
 @keyframes shimmer {
   0% {
     background-position: -200% center;
@@ -596,6 +590,9 @@
 
 .floating-slow {
   animation: float 8s ease-in-out infinite;
+
+  /* ⚡ Bolt: Match will-change with .floating for consistency */
+  will-change: transform;
 }
 
 .floating-delayed {
@@ -642,6 +639,9 @@
 
 .card-glow {
   position: relative;
+
+  /* ⚡ Bolt: CSS containment for layout optimization */
+  contain: layout style;
 }
 
 .card-glow::before {
@@ -659,6 +659,9 @@
   z-index: -1;
   transition: opacity 0.3s ease;
   filter: blur(8px);
+
+  /* ⚡ Bolt: Pre-composite for smoother hover transition */
+  will-change: opacity;
 }
 
 .card-glow:hover::before {

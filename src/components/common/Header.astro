@@ -2,8 +2,23 @@
 import Navigation from "./Navigation.astro";
 import ModeSwitch from "../ui/ModeSwitch.astro";
 import HamburgerButton from "../ui/HamburgerButton.astro";
-import { Image, Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import logo from "../../assets/logo.avif";
+
+// ⚡ Bolt: Optimize logo loading with explicit dimensions for LCP/CLS
+// Generating 1x and 2x assets ensures crisp rendering on high-DPI screens without the overhead of <Picture>
+const logo1x = await getImage({
+  src: logo,
+  width: 40,
+  height: 40,
+  format: "avif",
+});
+const logo2x = await getImage({
+  src: logo,
+  width: 80,
+  height: 80,
+  format: "avif",
+});
 ---
 
 <header
@@ -13,23 +28,26 @@ import logo from "../../assets/logo.avif";
   <div class="container mx-auto px-7 h-20 flex items-center justify-between">
     <a
       href="/"
-      class="flex items-center gap-3 group"
+      class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-xl p-2 -m-2"
       aria-current={Astro.url.pathname === "/" ? "page" : undefined}
     >
       <div
         class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors"
       >
-        <Picture
-          src={logo}
-          width={40}
-          height={40}
-          widths={[80]}
-          sizes="(min-resolution: 2dppx) 80px, 40px"
-          formats={["avif"]}
-          fallbackFormat="avif"
+        <!-- ⚡ Bolt: Optimized Header Logo
+             Replaced <Picture> with <img> + srcset to reduce DOM size and improve parsing speed for this tiny 40px asset.
+             Uses AVIF which matches the Hero logo format.
+        -->
+        <img
+          src={logo1x.src}
+          srcset={`${logo1x.src} 1x, ${logo2x.src} 2x`}
           alt=""
+          width="40"
+          height="40"
           class="w-10 h-10 rounded-full object-cover"
           loading="eager"
+          decoding="sync"
+          fetchpriority="high"
         />
       </div>
       <span
@@ -73,25 +91,56 @@ import logo from "../../assets/logo.avif";
 </style>
 
 <script>
+  // ⚡ Bolt: Singleton Pattern for Header Observer
+  let headerObserver: MutationObserver | null = null;
+  let cleanupTrap: (() => void) | null = null;
+
   function initMobileMenuAccessibility() {
+    // ⚡ Bolt: Cleanup previous observer to prevent stacking and memory leaks
+    if (headerObserver) {
+      headerObserver.disconnect();
+      headerObserver = null;
+    }
+
+    // ⚡ Bolt: Ensure previous focus trap listeners are removed if they were active
+    if (cleanupTrap) {
+      cleanupTrap();
+      cleanupTrap = null;
+    }
+
     const navWrapper = document.getElementById("navigation_wrapper");
     const html = document.documentElement;
 
+    // Guard clause if header elements aren't found
+    if (!navWrapper) return;
+
+    // ⚡ Bolt: Track state to avoid redundant operations
+    let wasOpen = html.classList.contains("overflow-hidden");
+
     // Observer to detect when menu is opened (via class change on html)
-    const observer = new MutationObserver((mutations) => {
+    headerObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           const isOpen = html.classList.contains("overflow-hidden");
-          if (isOpen) {
-            setupFocusTrap();
-          } else {
-            removeFocusTrap();
+
+          // ⚡ Bolt: Only toggle trap if state actually changed
+          // Prevents re-running setup logic on unrelated class changes (e.g. theme toggle)
+          if (isOpen !== wasOpen) {
+            wasOpen = isOpen;
+            if (isOpen) {
+              setupFocusTrap();
+            } else {
+              removeFocusTrap();
+            }
           }
         }
       });
     });
 
-    observer.observe(html, { attributes: true });
+    headerObserver.observe(html, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape" && html.classList.contains("overflow-hidden")) {
@@ -134,15 +183,18 @@ import logo from "../../assets/logo.avif";
       const firstLink = navWrapper?.querySelector("a");
       if (firstLink instanceof HTMLElement)
         setTimeout(() => firstLink.focus(), 100);
+
+      // ⚡ Bolt: Register cleanup function for this specific instance
+      cleanupTrap = removeFocusTrap;
     }
 
     function removeFocusTrap() {
       document.removeEventListener("keydown", handleEscape);
       navWrapper?.removeEventListener("keydown", handleTab);
+      cleanupTrap = null;
     }
   }
 
-  // Initialize
-  initMobileMenuAccessibility();
+  // Initialize only via event listener to avoid double execution on initial load
   document.addEventListener("astro:page-load", initMobileMenuAccessibility);
 </script>

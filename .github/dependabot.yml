@@ -1,62 +1,16 @@
-# Dependabot configuration for automated dependency updates
-# Documentation: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
+# Managed by DocOps - Verified
 version: 2
 updates:
-  # NPM dependencies (production + development)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "America/Toronto"
-    # Limit the number of open PRs to avoid spam
-    open-pull-requests-limit: 5
-    # Group updates to reduce PR noise
+    open-pull-requests-limit: 10
     groups:
-      # Group all patch and minor updates together
       dependencies:
         patterns:
           - "*"
-        update-types:
-          - "minor"
-          - "patch"
-      # Group major updates separately for careful review
-      major-dependencies:
-        patterns:
-          - "*"
-        update-types:
-          - "major"
-    # Add labels to PRs for easy filtering
-    labels:
-      - "dependencies"
-      - "automated"
-    # Assign reviewers (optional - uncomment and add GitHub username)
-    # reviewers:
-    #   - "kuasar-mknd"
-    # Use conventional commit prefix
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-    # Ignore specific dependencies if needed
-    # ignore:
-    #   - dependency-name: "package-name"
-    #     versions: [">=1.0.0"]
-
-  # GitHub Actions updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "America/Toronto"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "github-actions"
-      - "automated"
-    commit-message:
-      prefix: "ci"
-      include: "scope"

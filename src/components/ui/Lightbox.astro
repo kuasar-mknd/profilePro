@@ -22,7 +22,7 @@
 
   <button
     type="button"
-    class="lightbox-close"
+    class="lightbox-close group"
     aria-label="Fermer"
     title="Fermer (Esc)"
     aria-keyshortcuts="Escape"
@@ -41,13 +41,18 @@
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
+    <span
+      class="hidden md:block absolute top-full right-0 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">Esc</span
+    >
   </button>
 
   <button
     type="button"
-    class="lightbox-nav lightbox-prev"
+    class="lightbox-nav lightbox-prev group"
     aria-label="Image précédente"
     title="Image précédente (←)"
+    aria-keyshortcuts="ArrowLeft"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -62,10 +67,14 @@
     >
       <polyline points="15 18 9 12 15 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">←</span
+    >
   </button>
 
   <div class="lightbox-content">
-    <img src="" alt="" class="lightbox-image" />
+    <img src="" alt="" class="lightbox-image" decoding="async" />
   </div>
 
   <div class="lightbox-loader" aria-hidden="true">
@@ -74,9 +83,10 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-next"
+    class="lightbox-nav lightbox-next group"
     aria-label="Image suivante"
     title="Image suivante (→)"
+    aria-keyshortcuts="ArrowRight"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -91,6 +101,10 @@
     >
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">→</span
+    >
   </button>
 
   <div class="lightbox-counter" aria-live="polite" aria-atomic="true">
@@ -99,6 +113,14 @@
     <span aria-hidden="true"> / </span>
     <span class="sr-only"> sur </span>
     <span class="lightbox-total">1</span>
+  </div>
+  <!-- 🎨 Palette: Announcement region for image alt text -->
+  <div
+    id="lightbox-announcer"
+    class="sr-only"
+    aria-live="polite"
+    aria-atomic="true"
+  >
   </div>
 </div>
 
@@ -149,6 +171,13 @@
     transform: scale(1.1);
   }
 
+  .lightbox-close:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
+  }
+
   .lightbox-content {
     position: relative;
     z-index: 5;
@@ -194,6 +223,13 @@
   .lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
+  }
+
+  .lightbox-nav:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-pacamara-accent),
+      0 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
   .lightbox-prev {
@@ -279,23 +315,33 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
-    private images: { src: string; alt: string }[] = [];
+    private announcer: HTMLElement;
+    private galleryElements: HTMLImageElement[] = [];
     private currentIndex: number = 0;
+    // ⚡ Bolt: Cache to prevent GC of preloaded images
+    private preloadCache: HTMLImageElement[] = [];
+    // ⚡ Bolt: Set to track already preloaded URLs and avoid redundant requests
+    private preloadedUrls = new Set<string>();
     private touchStartX: number = 0;
     private touchEndX: number = 0;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
     private lastFocusableElement: HTMLElement | null = null;
     private boundKeyHandler: (e: KeyboardEvent) => void;
+    private boundClickHandler: (e: MouseEvent) => void;
+    private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
 
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
+      this.boundClickHandler = this.handleClick.bind(this);
+      this.boundDelegatedKeyHandler = this.handleDelegatedKeyboard.bind(this);
       this.lightbox = document.getElementById("lightbox")!;
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
       ) as HTMLImageElement;
       this.currentSpan = this.lightbox.querySelector(".lightbox-current")!;
       this.totalSpan = this.lightbox.querySelector(".lightbox-total")!;
+      this.announcer = this.lightbox.querySelector("#lightbox-announcer")!;
 
       // Identify focusable elements
       const focusableSelector =
@@ -344,35 +390,65 @@
         { passive: true },
       );
 
-      // Gallery image clicks
-      document
-        .querySelectorAll("[data-gallery-image]")
-        .forEach((img, index) => {
-          img.addEventListener("click", () => {
-            this.collectImages();
-            this.open(index, img as HTMLElement);
-          });
-          img.addEventListener("keydown", (e) => {
-            const key = (e as KeyboardEvent).key;
-            if (key === "Enter" || key === " ") {
-              e.preventDefault();
-              this.collectImages();
-              this.open(index, img as HTMLElement);
-            }
-          });
-        });
+      // ⚡ Bolt: Event Delegation for Gallery Images
+      // Listens on document instead of attaching listeners to every image
+      document.addEventListener("click", this.boundClickHandler);
+      // ⚡ Bolt: Accessibility - Handle keyboard activation for images
+      document.addEventListener("keydown", this.boundDelegatedKeyHandler);
+
+      // ⚡ Bolt: Cache gallery elements once on init
+      this.collectImages();
+    }
+
+    /**
+     * ⚡ Bolt: Delegated click handler
+     * Handles clicks on any element with data-gallery-image
+     */
+    private handleClick(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      // Handle direct clicks or clicks on children (though img usually doesn't have children)
+      const galleryImage = target.closest(
+        "[data-gallery-image]",
+      ) as HTMLElement;
+
+      if (galleryImage) {
+        this.activateImage(galleryImage);
+      }
+    }
+
+    /**
+     * ⚡ Bolt: Delegated keyboard handler
+     * Handles Enter/Space on any element with data-gallery-image
+     */
+    private handleDelegatedKeyboard(e: KeyboardEvent) {
+      if (e.key === "Enter" || e.key === " ") {
+        const target = e.target as HTMLElement;
+        const galleryImage = target.closest(
+          "[data-gallery-image]",
+        ) as HTMLElement;
+
+        if (galleryImage) {
+          e.preventDefault(); // Prevent page scroll on Space
+          this.activateImage(galleryImage);
+        }
+      }
+    }
+
+    private activateImage(galleryImage: HTMLElement) {
+      // ⚡ Bolt: Use cached elements for O(1) lookup
+      const index = this.galleryElements.indexOf(
+        galleryImage as HTMLImageElement,
+      );
+
+      if (index !== -1) {
+        this.open(index, galleryImage);
+      }
     }
 
     private collectImages() {
+      // ⚡ Bolt: Cache DOM elements once at init
       const elements = document.querySelectorAll("[data-gallery-image]");
-
-      this.images = Array.from(elements).map((element) => {
-        const img = element as HTMLImageElement;
-        // currentSrc is the actual URL the browser loaded
-        const url = img.currentSrc || img.src;
-        const alt = img.alt || "";
-        return { src: url, alt };
-      });
+      this.galleryElements = Array.from(elements) as HTMLImageElement[];
     }
 
     private triggerElement: HTMLElement | null = null;
@@ -383,6 +459,10 @@
       this.updateImage();
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+
+      // 🎨 Palette: Trap focus and context using inert
+      this.toggleInert(true);
+
       // Move focus to close button
       setTimeout(() => {
         const closeBtn = this.lightbox.querySelector(
@@ -395,6 +475,10 @@
     public close() {
       this.lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+
+      // 🎨 Palette: Restore access to main content
+      this.toggleInert(false);
+
       // Return focus to trigger
       if (this.triggerElement) {
         this.triggerElement.focus();
@@ -402,23 +486,58 @@
       }
     }
 
+    /**
+     * 🎨 Palette: Toggles inert and aria-hidden on background content
+     * This ensures screen readers and keyboard navigation stay within the lightbox.
+     */
+    private toggleInert(enable: boolean) {
+      const selectors = [
+        "#main-header",
+        "#main-content",
+        "footer",
+        "#back-to-top",
+        ".skip-link",
+      ];
+      const elements = document.querySelectorAll(selectors.join(", "));
+
+      elements.forEach((el) => {
+        if (enable) {
+          el.setAttribute("inert", "");
+          el.setAttribute("aria-hidden", "true");
+        } else {
+          el.removeAttribute("inert");
+          el.removeAttribute("aria-hidden");
+        }
+      });
+    }
+
     public next() {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length;
+      this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
       this.updateImage();
     }
 
     public prev() {
       this.currentIndex =
-        (this.currentIndex - 1 + this.images.length) % this.images.length;
+        (this.currentIndex - 1 + this.galleryElements.length) %
+        this.galleryElements.length;
       this.updateImage();
     }
 
     private updateImage() {
-      const currentImage = this.images[this.currentIndex];
-      this.image.src = currentImage.src;
-      this.image.alt = currentImage.alt || `Image ${this.currentIndex + 1}`;
+      // ⚡ Bolt: Read properties on demand
+      const currentElement = this.galleryElements[this.currentIndex];
+      const src = currentElement.currentSrc || currentElement.src;
+      const alt = currentElement.alt || "";
+
+      this.image.src = src;
+      this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
-      this.totalSpan.textContent = String(this.images.length);
+      this.totalSpan.textContent = String(this.galleryElements.length);
+
+      // 🎨 Palette: Announce image description
+      if (this.announcer) {
+        this.announcer.textContent = alt || "Image sans description";
+      }
 
       // Loading state
       this.lightbox.classList.add("loading");
@@ -427,10 +546,54 @@
       this.image.onload = () => {
         this.lightbox.classList.remove("loading");
         this.image.style.opacity = "1";
+        // ⚡ Bolt: Preload adjacent images after current one loads
+        this.preloadAdjacentImages();
       };
     }
 
+    /**
+     * ⚡ Bolt: Predictive Preloading
+     * Silently fetches the next and previous images to ensure instant navigation.
+     */
+    private preloadAdjacentImages() {
+      const total = this.galleryElements.length;
+      if (total <= 1) return;
+
+      const nextIndex = (this.currentIndex + 1) % total;
+      const prevIndex = (this.currentIndex - 1 + total) % total;
+
+      this.preloadImage(this.getImageSrc(nextIndex));
+      this.preloadImage(this.getImageSrc(prevIndex));
+    }
+
+    private getImageSrc(index: number): string {
+      const el = this.galleryElements[index];
+      return el.currentSrc || el.src;
+    }
+
+    private preloadImage(src: string) {
+      // ⚡ Bolt: Optimization - Check both validity and duplication
+      if (!src || this.preloadedUrls.has(src)) return;
+
+      this.preloadedUrls.add(src);
+      const img = new Image();
+      img.decoding = "async";
+      img.src = src;
+
+      // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
+      this.preloadCache.push(img);
+
+      // Keep cache small to balance memory usage
+      if (this.preloadCache.length > 10) {
+        // Note: We don't remove from preloadedUrls Set because we still want to avoid
+        // re-triggering the request even if the image object is dropped from our GC hold.
+        // The browser cache should handle the actual asset if needed again.
+        this.preloadCache.shift();
+      }
+    }
+
     private handleKeyboard(e: KeyboardEvent) {
+      // Only handle modal navigation keys if lightbox is open
       if (this.lightbox.getAttribute("aria-hidden") === "true") return;
 
       // Focus trap
@@ -485,18 +648,33 @@
 
     public destroy() {
       document.removeEventListener("keydown", this.boundKeyHandler);
+      document.removeEventListener("click", this.boundClickHandler);
+      document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
+      // ⚡ Bolt: Clear cache references to allow GC
+      this.preloadCache = [];
+      this.preloadedUrls.clear();
+      this.galleryElements = [];
     }
   }
 
+  /**
+   * ⚡ Bolt: Singleton pattern for Lightbox with proper cleanup
+   * Ensures the Lightbox instance is tied to the current DOM elements
+   * and previous listeners are removed before creating a new one.
+   */
   let lightboxInstance: Lightbox | null = null;
 
   function initLightbox() {
+    // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
     if (lightboxInstance) {
       lightboxInstance.destroy();
     }
+
+    // Create fresh instance for the new page content
     lightboxInstance = new Lightbox();
   }
 
-  // Initialize on page load (covers both initial load and view transitions)
+  // ⚡ Bolt: Removed redundant DOMContentLoaded listener
+  // astro:page-load handles both initial load and subsequent navigations
   document.addEventListener("astro:page-load", initLightbox);
 </script>

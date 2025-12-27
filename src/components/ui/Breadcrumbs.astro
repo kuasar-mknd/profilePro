@@ -1,114 +1,70 @@
 ---
-const { title, category } = Astro.props;
+interface Props {
+  items: {
+    label: string;
+    href?: string;
+  }[];
+}
 
-const tagTranslations = {
-  "behind-the-scenes": "Coulisses",
-  photo: "Photographie",
-  video: "Vidéo",
-  general: "Général",
-  music: "Musique",
-  concert: "Concert",
-};
+const { items } = Astro.props;
 
-const displayCategory = category
-  ? tagTranslations[category] || category.replace(/-/g, " ")
-  : "";
-
-const breadcrumbSchema = {
+// Schema.org Structured Data
+const schema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Accueil",
-      item: new URL("/", Astro.url).toString(),
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Projets",
-      item: new URL("/project", Astro.url).toString(),
-    },
-    ...(category
-      ? [
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: displayCategory,
-            item: new URL(`/project/tag/${category}`, Astro.url).toString(),
-          },
-        ]
-      : []),
-    {
-      "@type": "ListItem",
-      position: category ? 4 : 3,
-      name: title,
-      item: Astro.url.toString(),
-    },
-  ],
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: item.href ? new URL(item.href, Astro.url).href : undefined,
+  })),
 };
 ---
 
-<script
-  type="application/ld+json"
-  set:html={JSON.stringify(breadcrumbSchema)}
-/>
-
-<nav
-  aria-label="Breadcrumb"
-  class="mb-8 animate-fade-in opacity-0"
-  style="animation-delay: 0.1s;"
->
-  <style>
-    @media (prefers-reduced-motion: reduce) {
-      .animate-fade-in {
-        animation: none !important;
-        opacity: 1 !important;
-      }
-    }
-  </style>
+<nav aria-label="Fil d'Ariane" class="mb-8 font-outfit">
   <ol
-    class="flex items-center space-x-2 text-pacamara-primary dark:text-white list-none pl-0"
+    class="flex items-center flex-wrap gap-2 text-sm text-pacamara-primary/60 dark:text-white/60"
   >
-    <li>
-      <a href="/" class="hover:text-pacamara-accent transition-colors"
-        >Accueil</a
-      >
-    </li>
-    <li>
-      <span class="opacity-50" aria-hidden="true">/</span>
-    </li>
-    <li>
-      <a href="/project" class="hover:text-pacamara-accent transition-colors"
-        >Projets</a
-      >
-    </li>
     {
-      category && (
-        <>
-          <li>
-            <span class="opacity-50">/</span>
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+
+        return (
+          <li class="flex items-center gap-2">
+            {index > 0 && (
+              <span
+                class="select-none opacity-40 text-pacamara-primary/40 dark:text-white/40"
+                aria-hidden="true"
+              >
+                /
+              </span>
+            )}
+
+            {isLast ? (
+              <span
+                class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-xs"
+                aria-current="page"
+                title={item.label}
+              >
+                {item.label}
+              </span>
+            ) : (
+              <a
+                href={item.href}
+                class="hover:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-md px-1 -mx-1"
+              >
+                {item.label}
+              </a>
+            )}
           </li>
-          <li>
-            <a
-              href={`/project/tag/${category}`}
-              class="hover:text-pacamara-accent transition-colors capitalize"
-            >
-              {displayCategory}
-            </a>
-          </li>
-        </>
-      )
+        );
+      })
     }
-    <li>
-      <span class="opacity-50" aria-hidden="true">/</span>
-    </li>
-    <li
-      class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-none"
-      aria-current="page"
-    >
-      {title}
-    </li>
   </ol>
 </nav>
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
+/>

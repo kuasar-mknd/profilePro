@@ -1,10 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
+import LatestPosts from "../components/features/projects/LatestPosts.astro";
 ---
 
 <Base postData={{ data: { title: "Page introuvable" } }}>
   <section
-    class="container mx-auto px-7 py-24 flex flex-col items-center justify-center min-h-[70vh] text-center"
+    class="container mx-auto px-7 py-24 flex flex-col items-center justify-center min-h-[50vh] text-center"
   >
     <div class="relative mb-10">
       <div
@@ -31,28 +32,46 @@ import Base from "../layouts/Base.astro";
 
     <a
       href="/"
-      class="inline-block bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
+      class="inline-block bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
     >
       Retour à l'accueil
     </a>
     <button
-      onclick="history.back()"
-      class="inline-block ml-4 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer"
+      id="go-back-btn"
+      class="inline-block ml-4 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
     >
       Page précédente
     </button>
   </section>
+
+  <!-- Suggest recent projects to keep user engaged -->
+  <div class="border-t border-pacamara-secondary/10">
+    <LatestPosts
+      postLimit={3}
+      title="Plutôt intéressé par..."
+      subtitle="Voici quelques projets qui pourraient vous plaire au lieu de cette page vide."
+    />
+  </div>
 </Base>
 <script>
-  const facts = [
-    "Le premier bug informatique était littéralement un insecte (moth).",
-    "Le premier langage de haut niveau était Plankalkül.",
-    "Il y a 10 types de personnes : ceux qui comprennent le binaire, et les autres.",
-    "Un octet (byte) fait 8 bits, mais un 'nibble' fait 4 bits.",
-    "Astro est construit sur l'architecture 'Islands'.",
-    "Le code le plus propre est celui qui n'est pas écrit.",
-  ];
-  console.log(
-    "Did you know? " + facts[Math.floor(Math.random() * facts.length)],
-  );
+  /**
+   * 🛡️ Sentinel: CSP Compliance
+   * Replaced inline `onclick` with event listener to support `script-src-attr 'none'`.
+   */
+  function initBackBtn() {
+    const btn = document.getElementById("go-back-btn");
+    // Guard: Check if button exists and hasn't been initialized yet
+    // Note: View Transitions might replace the body, so we always re-bind if found.
+    // But to be safe against double-binding on the same element instance:
+    if (!btn || btn.dataset.initialized === "true") return;
+
+    btn.dataset.initialized = "true";
+    btn.addEventListener("click", () => {
+      history.back();
+    });
+  }
+
+  // Initialize on load and after navigation (View Transitions)
+  initBackBtn();
+  document.addEventListener("astro:page-load", initBackBtn);
 </script>

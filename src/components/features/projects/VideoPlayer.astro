@@ -1,26 +1,34 @@
 ---
-import "plyr/dist/plyr.css";
-
-const { videoUrl, poster } = Astro.props;
+const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
+import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
-const getVideoDetails = (url) => {
+const getVideoDetails = (url: string) => {
   if (!url) return { id: null, provider: null };
 
   // YouTube
+  // 🛡️ Sentinel: Optimized regex to prevent ReDoS (removed leading ^.* and trailing .*)
+  // Enforces 11-char ID and safe delimiters to avoid catastrophic backtracking
   const youtubeRegExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
   const youtubeMatch = url.match(youtubeRegExp);
-  if (youtubeMatch && youtubeMatch[2].length === 11) {
-    return { id: youtubeMatch[2], hash: null, provider: "youtube" };
+  // 🛡️ Sentinel: Strict input validation for YouTube IDs (allowlist: alphanumeric + _ -)
+  if (
+    youtubeMatch &&
+    youtubeMatch[1].length === 11 &&
+    /^[a-zA-Z0-9_-]{11}$/.test(youtubeMatch[1])
+  ) {
+    return { id: youtubeMatch[1], hash: null, provider: "youtube" };
   }
 
   // Vimeo
+  // 🛡️ Sentinel: Safe regex avoiding nested quantifiers
   const vimeoRegExp =
-    /^(http\:\/\/|https\:\/\/)?(www\.)?(vimeo\.com\/)([0-9]+)(?:\/([a-z0-9]+))?$/;
+    /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
   const vimeoMatch = url.match(vimeoRegExp);
-  if (vimeoMatch && vimeoMatch[4]) {
-    return { id: vimeoMatch[4], hash: vimeoMatch[5], provider: "vimeo" };
+  if (vimeoMatch && vimeoMatch[1]) {
+    // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
+    return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
   }
 
   return { id: null, hash: null, provider: null };
@@ -40,7 +48,13 @@ if (provider === "youtube" && videoId) {
     const data = await response.json();
     posterUrl = data.thumbnail_url;
   } catch (e) {
-    console.error(`Failed to fetch Vimeo thumbnail for ${videoId}:`, e);
+    // 🛡️ Sentinel: Silence detailed error logging in production
+    if (import.meta.env.DEV) {
+      console.error(
+        `Failed to fetch Vimeo thumbnail for ${videoId}:`,
+        e instanceof Error ? e.message : "Unknown error",
+      );
+    }
   }
 }
 
@@ -48,24 +62,38 @@ if (provider === "youtube" && videoId) {
 if (!posterUrl && poster) {
   posterUrl = poster;
 }
+
+// ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
+const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 ---
 
 <div
   class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
+  style="contain: layout style;"
+  data-poster-url={posterUrl}
 >
+  <Skeleton class="absolute inset-0 z-0" />
   {
     videoId ? (
       <>
         <div
-          class="absolute inset-0 bg-cover bg-center z-10 transition-opacity duration-500"
-          style={`background-image: url(${posterUrl})`}
+          class="absolute inset-0 z-10 transition-opacity duration-500"
           id={`poster-${videoId}`}
         >
+          {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
+          <img
+            src={posterUrl}
+            alt={`Aperçu de ${videoTitle}`}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+          />
           <button
-            class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40"
+            class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
             id={`play-btn-${videoId}`}
-            aria-label="Lire la vidéo"
-            title="Lire la vidéo"
+            aria-label={`Lire ${videoTitle}`}
+            title={`Lire ${videoTitle}`}
             type="button"
           >
             <div
@@ -92,24 +120,13 @@ if (!posterUrl && poster) {
             </div>
           </button>
         </div>
-        {provider === "vimeo" ? (
-          <div id={`player-${videoId}`} class="plyr__video-embed w-full h-full">
-            <iframe
-              src={`https://player.vimeo.com/video/${videoId}${hash ? `?h=${hash}` : ""}`}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-              class="w-full h-full"
-              title="Lecteur vidéo Vimeo"
-            />
-          </div>
-        ) : (
-          <div
-            id={`player-${videoId}`}
-            class="plyr__video-embed w-full h-full"
-            data-plyr-provider={provider}
-            data-plyr-embed-id={videoId}
-          />
-        )}
+        {/* ⚡ Bolt: Removed eager iframe for Vimeo. Both providers now use data attributes to defer loading until interaction. */}
+        <div
+          id={`player-${videoId}`}
+          class="plyr__video-embed w-full h-full"
+          data-plyr-provider={provider}
+          data-plyr-embed-id={embedId}
+        />
       </>
     ) : (
       <div class="flex items-center justify-center h-full text-white/50">
@@ -120,53 +137,90 @@ if (!posterUrl && poster) {
 </div>
 
 <script>
-  // @ts-ignore
-  import Plyr from "plyr";
+  // ⚡ Bolt: Event Delegation for Video Players
+  // Reduces listener count from N (videos) to 1 (document)
+  // Handles initializing new players on interaction instead of on load
 
+  async function handleVideoClick(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const playBtn = target.closest("button[id^='play-btn-']");
+
+    if (!playBtn) return;
+
+    const wrapper = playBtn.closest(".video-player-wrapper") as HTMLElement;
+    if (!wrapper) return;
+
+    // Prevent double initialization
+    if (wrapper.dataset.playing === "true") return;
+    wrapper.dataset.playing = "true";
+
+    const poster = wrapper.querySelector("[id^='poster-']");
+    const playerDiv = wrapper.querySelector("[id^='player-']");
+
+    if (!playerDiv || !poster) return;
+
+    // Show spinner
+    const spinner = wrapper.querySelector(`[id^='spinner-']`) as HTMLElement;
+    const svgIcon = playBtn.querySelector("svg");
+
+    if (spinner) spinner.style.opacity = "1";
+    if (svgIcon) svgIcon.style.opacity = "0";
+
+    // Dynamically import Plyr and its CSS only when needed
+    // @ts-ignore
+    await import("plyr/dist/plyr.css");
+    // @ts-ignore
+    const { default: Plyr } = await import("plyr");
+
+    // Initialize Plyr only on click
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const player = new Plyr(playerDiv as HTMLElement, {
+      autoplay: true,
+      controls: [
+        "play-large",
+        "play",
+        "progress",
+        "current-time",
+        "mute",
+        "volume",
+        "captions",
+        "settings",
+        "pip",
+        "airplay",
+        "fullscreen",
+      ],
+      // 🛡️ Sentinel: Privacy enhancements
+      youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 },
+      vimeo: { dnt: true, title: 0, byline: 0, portrait: 0 },
+    });
+
+    // Hide poster
+    (poster as HTMLElement).style.opacity = "0";
+    setTimeout(() => {
+      (poster as HTMLElement).style.display = "none";
+    }, 500);
+  }
+
+  // ⚡ Bolt: Singleton event listener
+  document.removeEventListener("click", handleVideoClick);
+  document.addEventListener("click", handleVideoClick);
+
+  // ⚡ Bolt: Initialize Skeletons (must be per-element as it depends on individual load)
   document.addEventListener("astro:page-load", () => {
     const wrappers = document.querySelectorAll(".video-player-wrapper");
-
     wrappers.forEach((wrapper) => {
-      const playBtn = wrapper.querySelector("[id^='play-btn-']");
-      const poster = wrapper.querySelector("[id^='poster-']");
-      const playerDiv = wrapper.querySelector("[id^='player-']");
-
-      if (playBtn && playerDiv && poster) {
-        playBtn.addEventListener("click", () => {
-          // Show spinner
-          const spinner = wrapper.querySelector(
-            `[id^='spinner-']`,
-          ) as HTMLElement;
-          const svgIcon = playBtn.querySelector("svg");
-
-          if (spinner) spinner.style.opacity = "1";
-          if (svgIcon) svgIcon.style.opacity = "0";
-
-          // Initialize Plyr only on click
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const player = new Plyr(playerDiv as HTMLElement, {
-            autoplay: true,
-            controls: [
-              "play-large",
-              "play",
-              "progress",
-              "current-time",
-              "mute",
-              "volume",
-              "captions",
-              "settings",
-              "pip",
-              "airplay",
-              "fullscreen",
-            ],
-          });
-
-          // Hide poster
-          (poster as HTMLElement).style.opacity = "0";
-          setTimeout(() => {
-            (poster as HTMLElement).style.display = "none";
-          }, 500);
-        });
+      const posterImg = wrapper.querySelector("img");
+      const skeleton = wrapper.querySelector(".skeleton");
+      if (posterImg && skeleton) {
+        const removeSkeleton = () => {
+          skeleton.classList.add("opacity-0");
+          setTimeout(() => skeleton.remove(), 500);
+        };
+        if (posterImg.complete) {
+          removeSkeleton();
+        } else {
+          posterImg.addEventListener("load", removeSkeleton, { once: true });
+        }
       }
     });
   });

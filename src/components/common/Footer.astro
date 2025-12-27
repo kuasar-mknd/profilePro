@@ -16,7 +16,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <a
         href="/"
         aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-        class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300"
+        class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-1 -m-1"
       >
         Samuel Dulex
       </a>
@@ -35,30 +35,40 @@ import SocialIcon from "../ui/SocialIcon.astro";
     <!-- Column 2: Socials & Copyright (Centered) -->
     <div class="flex flex-col items-center justify-center space-y-6">
       <ul class="flex flex-wrap justify-center gap-4">
-        <SocialIcon
-          socialUrl={config?.social?.dribbble}
-          socialType="dribbble"
-        />
-        <SocialIcon
-          socialUrl={config?.social?.facebook}
-          socialType="facebook"
-        />
-        <SocialIcon socialUrl={config?.social?.github} socialType="github" />
-        <SocialIcon
-          socialUrl={config?.social?.instagram}
-          socialType="instagram"
-        />
-        <SocialIcon
-          socialUrl={config?.social?.mastodon}
-          socialType="mastodon"
-        />
-        <SocialIcon
-          socialUrl={config?.social?.pinterest}
-          socialType="pinterest"
-        />
-        <SocialIcon socialUrl={config?.social?.skype} socialType="skype" />
-        <SocialIcon socialUrl={config?.social?.twitter} socialType="twitter" />
-        <SocialIcon socialUrl={config?.social?.youtube} socialType="youtube" />
+        {
+          config?.social?.github && (
+            <li>
+              <SocialIcon
+                url={config.social.github}
+                icon="mdi:github"
+                label="GitHub"
+              />
+            </li>
+          )
+        }
+        {
+          config?.social?.instagram && (
+            <li>
+              <SocialIcon
+                url={config.social.instagram}
+                icon="mdi:instagram"
+                label="Instagram"
+              />
+            </li>
+          )
+        }
+
+        {
+          config?.social?.youtube && (
+            <li>
+              <SocialIcon
+                url={config.social.youtube}
+                icon="mdi:youtube"
+                label="YouTube"
+              />
+            </li>
+          )
+        }
       </ul>
       <div
         class="text-sm text-pacamara-primary/80 dark:text-white/80 text-center"
@@ -74,55 +84,182 @@ import SocialIcon from "../ui/SocialIcon.astro";
       class="flex flex-col items-center lg:items-end text-center lg:text-right space-y-4"
     >
       <!-- Website Carbon Badge -->
-      <div id="wcb" class="carbonbadge wcb-d" aria-label="Website Carbon Badge">
+      <div
+        id="wcb"
+        class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
+        aria-label="Website Carbon Badge"
+      >
         <!-- Badge injected by script -->
       </div>
 
       <span class="text-sm text-pacamara-primary/80 dark:text-white/80">
         Fait avec <span
-          class="text-red-500 animate-pulse inline-block align-middle"
-          >&hearts;</span
-        > avec <a
+          class="text-red-500 animate-pulse motion-reduce:animate-none inline-block align-middle"
+          role="img"
+          aria-label="amour">&#9829;</span
+        > et <a
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
-          class="font-medium hover:text-pacamara-accent transition-colors"
-          >Astro</a
+          class="font-medium hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg px-2 -mx-2"
+          aria-label="Astro (ouvre un nouvel onglet)"
+          title="Astro (ouvre un nouvel onglet)">Astro</a
         >
       </span>
     </div>
   </div>
 
   <script is:inline>
-    // Load Website Carbon Badge only in production/preview
-    if (
-      window.location.hostname !== "localhost" &&
-      window.location.hostname !== "127.0.0.1"
-    ) {
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/website-carbon-badges@1.1.3/b.min.js";
-      script.defer = true;
-      script.onerror = function () {
-        const wcb = document.getElementById("wcb");
-        if (wcb) wcb.style.display = "none";
-        console.warn("Carbon Badge script failed to load");
-      };
-      document.body.appendChild(script);
-    } else {
+    /**
+     * ⚡ Bolt: Custom Website Carbon Badge Implementation
+     * Re-implemented locally to avoid global scope pollution issues with external script
+     * during View Transitions (SPAs).
+     */
+    function initCarbonBadge() {
+      const isProduction =
+        window.location.hostname !== "localhost" &&
+        window.location.hostname !== "127.0.0.1";
+
       const wcb = document.getElementById("wcb");
-      if (wcb) {
-        wcb.innerHTML =
-          '<div class="text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded">Carbon Badge (Dev)</div>';
+      if (!wcb) return;
+
+      if (!isProduction) {
+        wcb.textContent = "";
+        const devBadge = document.createElement("div");
+        devBadge.className =
+          "text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded";
+        devBadge.textContent = "Carbon Badge (Dev)";
+        wcb.appendChild(devBadge);
+        return;
+      }
+
+      const wcU = encodeURIComponent(window.location.href);
+      const cacheKey = "wcb_" + wcU;
+
+      // Render function
+      const render = (data) => {
+        if (!wcb) return;
+        wcb.replaceChildren(); // Clear loading state
+
+        const wrapper = document.createElement("div");
+        wrapper.id = "wcb_p";
+        wrapper.className = "flex items-center text-[15px] leading-[1.15]";
+
+        const scoreSpan = document.createElement("span");
+        scoreSpan.id = "wcb_g";
+        scoreSpan.className =
+          "bg-white border-r-0 border border-[#00ffbc] py-[0.3em] px-[0.5em] rounded-l-[0.3em] min-w-[8.2em] text-[#0e11a8] text-center";
+
+        // Safe text content construction
+        scoreSpan.textContent = "";
+        const sub = document.createElement("sub");
+        sub.textContent = "2";
+        scoreSpan.append(data.c + "g of CO", sub, "/view");
+
+        const link = document.createElement("a");
+        link.id = "wcb_a";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.href = "https://websitecarbon.com";
+        link.className =
+          "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent rounded-lg";
+        link.textContent = "Website Carbon";
+        link.setAttribute(
+          "aria-label",
+          "Website Carbon (ouvre un nouvel onglet)",
+        );
+        link.setAttribute("title", "Website Carbon (ouvre un nouvel onglet)");
+
+        wrapper.appendChild(scoreSpan);
+        wrapper.appendChild(link);
+
+        const percentSpan = document.createElement("span");
+        percentSpan.id = "wcb_2";
+        percentSpan.className =
+          "block text-center text-sm mt-1 text-[#0e11a8] dark:text-white/80";
+        percentSpan.textContent =
+          "Cleaner than " + data.p + "% of pages tested";
+
+        wcb.appendChild(wrapper);
+        wcb.appendChild(percentSpan);
+      };
+
+      // Fetch logic
+      const fetchData = () => {
+        wcb.textContent = "";
+        const loading = document.createElement("div");
+        loading.className =
+          "animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60";
+        loading.textContent = "Measuring CO2...";
+        // Use sub for the '2'
+        const sub = document.createElement("sub");
+        sub.textContent = "2";
+        // To reconstruct "CO<sub>2</sub>...", we need to append nodes manually or use a different structure.
+        // Let's just use "Measuring CO2..." as text for simplicity and security, or append correctly.
+        loading.textContent = "Measuring CO";
+        loading.appendChild(sub);
+        loading.append("...");
+        wcb.appendChild(loading);
+
+        fetch("https://api.websitecarbon.com/b?url=" + wcU)
+          .then((r) => {
+            if (!r.ok) throw new Error("Network error");
+            return r.json();
+          })
+          .then((data) => {
+            render(data);
+            data.t = new Date().getTime();
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+          })
+          .catch((e) => {
+            // 🛡️ Sentinel: Dev-only logging
+            if (import.meta.env.DEV) {
+              console.error(
+                "Carbon Badge update failed:",
+                e instanceof Error ? e.message : "Unknown error",
+              );
+            }
+            wcb.textContent = "No Result";
+            localStorage.removeItem(cacheKey);
+          });
+      };
+
+      // Cache Check
+      const cached = localStorage.getItem(cacheKey);
+      let isValidCache = false;
+
+      if (cached) {
+        const data = JSON.parse(cached);
+        const now = new Date().getTime();
+        // Cache validity: 1 day (86400000 ms)
+        if (now - data.t < 86400000) {
+          render(data);
+          isValidCache = true;
+        }
+      }
+
+      // ⚡ Bolt: Lazy load if not cached or expired to save initial bandwidth
+      if (!isValidCache) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries[0].isIntersecting) {
+              fetchData();
+              observer.disconnect();
+            }
+          },
+          { rootMargin: "200px" },
+        );
+        observer.observe(wcb);
       }
     }
+
+    // Initialize on initial load and every view transition
+    document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
-    /* Fix Carbon Badge Contrast */
-    #wcb #wcb_2 {
-      color: var(--color-pacamara-primary) !important;
-    }
-    .dark #wcb #wcb_2 {
-      color: rgba(255, 255, 255, 0.8) !important;
+    /* Custom styles for the badge to match theme */
+    #wcb_g {
+      color: var(--color-pacamara-primary);
     }
   </style>
 </footer>

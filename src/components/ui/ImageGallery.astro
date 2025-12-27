@@ -7,12 +7,14 @@
  * 2. Explicit image array: <ImageGallery images={myImagesArray} />
  */
 import { Picture } from "astro:assets";
+import Skeleton from "./Skeleton.astro";
 
 interface Props {
   folder?: string;
   images?: ImageMetadata[];
   columns?: 2 | 3 | 4;
   excludePatterns?: string[];
+  priorityCount?: number;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   images: explicitImages,
   columns = 3,
   excludePatterns = [],
+  priorityCount = 0,
 } = Astro.props;
 
 let galleryImages: { src: ImageMetadata; filename: string; alt?: string }[] =
@@ -70,21 +73,29 @@ const columnClasses = {
 
 {
   galleryImages.length > 0 ? (
-    <div class={`image-gallery ${columnClasses[columns]}`}>
+    <div
+      class={`image-gallery ${columnClasses[columns]}`}
+      data-gallery-container
+    >
       {galleryImages.map((image, index) => (
-        <figure class="gallery-item">
+        <figure class="gallery-item group">
+          <Skeleton class="absolute inset-0 z-10 transition-opacity duration-500" />
+          {/* ⚡ Bolt: Smart Loading - Eager load priority images, lazy load the rest */}
           <Picture
             src={image.src}
-            widths={[800]}
+            widths={[400, 800]}
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-            formats={["avif"]}
-            fallbackFormat="avif"
+            formats={["avif", "webp"]}
+            fallbackFormat="webp"
             alt={image.alt || `Photo ${index + 1}`}
-            class="gallery-image"
+            class="gallery-image focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             data-gallery-image
             tabindex="0"
             role="button"
             aria-label={`Ouvrir la photo ${index + 1} en plein écran`}
+            loading={index < priorityCount ? "eager" : "lazy"}
+            decoding="async"
+            fetchpriority={index < priorityCount ? "high" : "low"}
           />
         </figure>
       ))}
@@ -163,22 +174,58 @@ const columnClasses = {
 </style>
 
 <script>
+  /**
+   * ⚡ Bolt: Event delegation optimization
+   * Uses a single event listener on the container instead of individual listeners per image
+   * Reduces memory usage and event handler overhead for large galleries
+   */
   function initGalleryKeyboard() {
-    const images = document.querySelectorAll("[data-gallery-image]");
-    images.forEach((img) => {
-      img.addEventListener("keydown", (e) => {
+    const galleries = document.querySelectorAll(
+      "[data-gallery-container]:not(.gallery-initialized)",
+    );
+
+    galleries.forEach((gallery) => {
+      // ⚡ Bolt: Initialize Skeleton loaders
+      const images = gallery.querySelectorAll(
+        "img[data-gallery-image]",
+      ) as NodeListOf<HTMLImageElement>;
+
+      images.forEach((img) => {
+        const figure = img.closest("figure");
+        const skeleton = figure?.querySelector(".skeleton");
+
+        if (figure && skeleton) {
+          const removeSkeleton = () => {
+            skeleton.classList.add("opacity-0");
+            setTimeout(() => skeleton.remove(), 500);
+          };
+
+          if (img.complete) {
+            removeSkeleton();
+          } else {
+            img.addEventListener("load", removeSkeleton);
+          }
+        }
+      });
+
+      gallery.classList.add("gallery-initialized");
+
+      // ⚡ Single delegated listener instead of one per image
+      gallery.addEventListener("keydown", (e) => {
+        const target = (e as KeyboardEvent).target as HTMLElement;
+
         if (
-          (e as KeyboardEvent).key === "Enter" ||
-          (e as KeyboardEvent).key === " "
+          target.hasAttribute("data-gallery-image") &&
+          ((e as KeyboardEvent).key === "Enter" ||
+            (e as KeyboardEvent).key === " ")
         ) {
           e.preventDefault();
-          (img as HTMLElement).click();
+          target.click();
         }
       });
     });
   }
 
-  // Initialize
-  initGalleryKeyboard();
+  // Initialize only via event listener to avoid double execution on initial load
   document.addEventListener("astro:page-load", initGalleryKeyboard);
 </script>
