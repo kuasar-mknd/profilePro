@@ -3,7 +3,7 @@ const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
-const getVideoDetails = (url) => {
+const getVideoDetails = (url: string) => {
   if (!url) return { id: null, provider: null };
 
   // YouTube
@@ -189,6 +189,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
         "airplay",
         "fullscreen",
       ],
+      // 🛡️ Sentinel: Privacy enhancements
+      youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 },
+      vimeo: { dnt: true, title: 0, byline: 0, portrait: 0 },
     });
 
     // Hide poster

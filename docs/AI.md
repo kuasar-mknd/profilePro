@@ -20,3 +20,4 @@ Aucune configuration spécifique (clés API IA) n'est requise pour exécuter le 
 ## Roadmap
 
 L'intégration d'un modèle local pour la génération de résumés de projets est à l'étude.
+(Voir les tickets associés pour plus de détails).

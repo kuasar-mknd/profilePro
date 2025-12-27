@@ -112,6 +112,7 @@ if (postData?.data?.image) {
     <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
     <script
       type="speculationrules"
+      is:inline
       set:html={JSON.stringify({
         prerender: [
           {
@@ -441,32 +442,59 @@ if (postData?.data?.image) {
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
       // and a warning in title/aria-label.
+      let linkObserver: MutationObserver | null = null;
+      const warning = " (ouvre un nouvel onglet)";
+
+      function secureLink(link: Element) {
+        if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
+          return;
+
+        // Security: Add rel="noopener noreferrer"
+        const rel = link.getAttribute("rel") || "";
+        if (!rel.includes("noopener")) {
+          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        }
+
+        // Accessibility: Append warning to title
+        const title = link.getAttribute("title") || "";
+        if (!title.includes(warning.trim())) {
+          link.setAttribute("title", title ? title + warning : warning.trim());
+        }
+
+        // Accessibility: Append warning to aria-label (only if present)
+        const ariaLabel = link.getAttribute("aria-label");
+        if (ariaLabel && !ariaLabel.includes(warning.trim())) {
+          link.setAttribute("aria-label", ariaLabel + warning);
+        }
+      }
+
       function secureLinks() {
-        const links = document.querySelectorAll('a[target="_blank"]');
-        const warning = " (ouvre un nouvel onglet)";
+        // 1. Secure existing links
+        document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
 
-        links.forEach((link) => {
-          // Security: Add rel="noopener noreferrer"
-          const rel = link.getAttribute("rel") || "";
-          if (!rel.includes("noopener")) {
-            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
-          }
+        // 2. Observer for dynamic links
+        if (linkObserver) {
+          linkObserver.disconnect();
+        }
 
-          // Accessibility: Append warning to title
-          const title = link.getAttribute("title") || "";
-          if (!title.includes(warning.trim())) {
-            link.setAttribute(
-              "title",
-              title ? title + warning : warning.trim(),
-            );
-          }
-
-          // Accessibility: Append warning to aria-label (only if present)
-          const ariaLabel = link.getAttribute("aria-label");
-          if (ariaLabel && !ariaLabel.includes(warning.trim())) {
-            link.setAttribute("aria-label", ariaLabel + warning);
-          }
+        linkObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const element = node as Element;
+                // Check if node itself is a link
+                secureLink(element);
+                // Check descendants
+                element
+                  .querySelectorAll('a[target="_blank"]')
+                  .forEach(secureLink);
+              }
+            });
+          });
         });
+
+        // Start observing the body for added nodes
+        linkObserver.observe(document.body, { childList: true, subtree: true });
       }
 
       // Run on load and after view transitions
@@ -493,6 +521,7 @@ if (postData?.data?.image) {
     <!-- Cloudflare Web Analytics -->
     <script
       defer
+      is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={JSON.stringify({
         token: PUBLIC_CF_ANALYTICS_TOKEN,

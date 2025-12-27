@@ -44,6 +44,8 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `PUBLIC_` sont nécessaires au build.
+4.  **Tests Playwright** :
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
 
 ## 📖 À propos
 
@@ -99,6 +101,9 @@ cd profilePro
 # Installer les dépendances
 bun install
 
+# Installer les navigateurs pour les tests E2E
+bun x playwright install --with-deps
+
 # Lancer le serveur de développement
 bun run dev
 ```
@@ -113,13 +118,16 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run lighthouse` : Lancer l'audit de performance.
 - `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
 
-### API Access (Flux RSS)
+### API Access
 
-Le site propose un flux RSS pour suivre les nouveaux projets :
+Le site est statique mais expose des données via des endpoints générés au build :
 
 ```bash
 # Récupérer le flux RSS (XML)
 curl https://portfolio.kuasar.xyz/rss.xml
+
+# Récupérer le Sitemap (XML)
+curl https://portfolio.kuasar.xyz/sitemap-index.xml
 ```
 
 ## 📂 Structure du projet
@@ -149,8 +157,9 @@ Le déploiement est automatisé sur **Cloudflare Pages** via GitHub Actions.
 Le workflow assure :
 
 1. Vérification de la qualité (`check`).
-2. Scan de sécurité (`CodeQL`, `Dependency Review`).
-3. Build et déploiement via Wrangler.
+2. Tests End-to-End (`test:e2e`).
+3. Scan de sécurité (`CodeQL`, `Dependency Review`).
+4. Build et déploiement via Wrangler.
 
 Pour plus de détails sur le pipeline, voir [ARCHITECTURE.md](docs/ARCHITECTURE.md#cicd-pipeline).
 

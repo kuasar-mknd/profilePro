@@ -34,6 +34,10 @@ const logo2x = await getImage({
       <div
         class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors"
       >
+        <!-- ⚡ Bolt: Optimized Header Logo
+             Replaced <Picture> with <img> + srcset to reduce DOM size and improve parsing speed for this tiny 40px asset.
+             Uses AVIF which matches the Hero logo format.
+        -->
         <img
           src={logo1x.src}
           srcset={`${logo1x.src} 1x, ${logo2x.src} 2x`}
@@ -42,7 +46,7 @@ const logo2x = await getImage({
           height="40"
           class="w-10 h-10 rounded-full object-cover"
           loading="eager"
-          decoding="async"
+          decoding="sync"
           fetchpriority="high"
         />
       </div>
