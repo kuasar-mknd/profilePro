@@ -116,9 +116,6 @@ const {
     });
   }
 
-  // Run on initial load
-  initTiltCards();
-
-  // Re-run on page transitions
+  // Re-run on page transitions (astro:page-load fires on initial load too)
   document.addEventListener("astro:page-load", initTiltCards);
 </script>

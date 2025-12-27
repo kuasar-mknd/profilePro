@@ -36,15 +36,20 @@ if (postData?.data?.image) {
   <head>
     <meta charset="UTF-8" />
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
-    <link
-      rel="preconnect"
-      href="https://static.cloudflareinsights.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin />
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
     <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
     <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
+    <link rel="preconnect" href="https://api.web3forms.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
+    <link rel="preconnect" href="https://i.ytimg.com" />
+    <link rel="dns-prefetch" href="https://i.ytimg.com" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://vimeo.com" />
+    <link rel="dns-prefetch" href="https://vimeo.com" />
     <link rel="preconnect" href="https://player.vimeo.com" />
+    <link rel="dns-prefetch" href="https://player.vimeo.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -103,6 +108,7 @@ if (postData?.data?.image) {
     <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
     <script
       type="speculationrules"
+      is:inline
       set:html={JSON.stringify({
         prerender: [
           {
@@ -147,13 +153,6 @@ if (postData?.data?.image) {
       }
     </style>
     <!-- Critical preconnects - must be early in head for effectiveness -->
-    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://static.cloudflareinsights.com"
-      crossorigin
-    />
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
       // Early theme detection to prevent FOUC
@@ -185,7 +184,7 @@ if (postData?.data?.image) {
 
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
     >
       Aller au contenu principal
     </a>
@@ -208,7 +207,7 @@ if (postData?.data?.image) {
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
-      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus:outline-none focus:ring-2 focus:ring-pacamara-accent focus:ring-offset-2 group"
+      class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 group"
       aria-label="Retour en haut de page"
       title="Retour en haut de page"
       tabindex="-1"
@@ -415,46 +414,84 @@ if (postData?.data?.image) {
         }
       }
 
-      // Observer for class changes on html to trigger theme color update
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            updateThemeColor();
-          }
-        });
-      });
+      // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
+      // Moved to module scope to prevent memory leaks from stacking observers
+      let themeObserver: MutationObserver | null = null;
 
-      themeObserver.observe(document.documentElement, { attributes: true });
+      function initThemeObserver() {
+        if (themeObserver) return; // Already initialized
+
+        themeObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              updateThemeColor();
+            }
+          });
+        });
+
+        themeObserver.observe(document.documentElement, { attributes: true });
+      }
+
+      initThemeObserver();
+      // Note: We don't need to re-init on swap because document.documentElement persists
+      // and the observer stays attached.
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
       // and a warning in title/aria-label.
+      let linkObserver: MutationObserver | null = null;
+      const warning = " (ouvre un nouvel onglet)";
+
+      function secureLink(link: Element) {
+        if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
+          return;
+
+        // Security: Add rel="noopener noreferrer"
+        const rel = link.getAttribute("rel") || "";
+        if (!rel.includes("noopener")) {
+          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        }
+
+        // Accessibility: Append warning to title
+        const title = link.getAttribute("title") || "";
+        if (!title.includes(warning.trim())) {
+          link.setAttribute("title", title ? title + warning : warning.trim());
+        }
+
+        // Accessibility: Append warning to aria-label (only if present)
+        const ariaLabel = link.getAttribute("aria-label");
+        if (ariaLabel && !ariaLabel.includes(warning.trim())) {
+          link.setAttribute("aria-label", ariaLabel + warning);
+        }
+      }
+
       function secureLinks() {
-        const links = document.querySelectorAll('a[target="_blank"]');
-        const warning = " (ouvre un nouvel onglet)";
+        // 1. Secure existing links
+        document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
 
-        links.forEach((link) => {
-          // Security: Add rel="noopener noreferrer"
-          const rel = link.getAttribute("rel") || "";
-          if (!rel.includes("noopener")) {
-            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
-          }
+        // 2. Observer for dynamic links
+        if (linkObserver) {
+          linkObserver.disconnect();
+        }
 
-          // Accessibility: Append warning to title
-          const title = link.getAttribute("title") || "";
-          if (!title.includes(warning.trim())) {
-            link.setAttribute(
-              "title",
-              title ? title + warning : warning.trim(),
-            );
-          }
-
-          // Accessibility: Append warning to aria-label (only if present)
-          const ariaLabel = link.getAttribute("aria-label");
-          if (ariaLabel && !ariaLabel.includes(warning.trim())) {
-            link.setAttribute("aria-label", ariaLabel + warning);
-          }
+        linkObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const element = node as Element;
+                // Check if node itself is a link
+                secureLink(element);
+                // Check descendants
+                element
+                  .querySelectorAll('a[target="_blank"]')
+                  .forEach(secureLink);
+              }
+            });
+          });
         });
+
+        // Start observing the body for added nodes
+        linkObserver.observe(document.body, { childList: true, subtree: true });
       }
 
       // Run on load and after view transitions
@@ -481,6 +518,7 @@ if (postData?.data?.image) {
     <!-- Cloudflare Web Analytics -->
     <script
       defer
+      is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
       data-cf-beacon={JSON.stringify({
         token: PUBLIC_CF_ANALYTICS_TOKEN,
