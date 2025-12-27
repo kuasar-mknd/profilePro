@@ -5,8 +5,20 @@ import HamburgerButton from "../ui/HamburgerButton.astro";
 import { getImage } from "astro:assets";
 import logo from "../../assets/logo.avif";
 
-const logoAvif = await getImage({ src: logo, width: 40, format: "avif" });
-const logoAvif2x = await getImage({ src: logo, width: 80, format: "avif" });
+// ⚡ Bolt: Optimize logo loading with explicit dimensions for LCP/CLS
+// Generating 1x and 2x assets ensures crisp rendering on high-DPI screens without the overhead of <Picture>
+const logo1x = await getImage({
+  src: logo,
+  width: 40,
+  height: 40,
+  format: "avif",
+});
+const logo2x = await getImage({
+  src: logo,
+  width: 80,
+  height: 80,
+  format: "avif",
+});
 ---
 
 <header
@@ -27,11 +39,11 @@ const logoAvif2x = await getImage({ src: logo, width: 80, format: "avif" });
              Uses AVIF which matches the Hero logo format.
         -->
         <img
-          src={logoAvif.src}
-          srcset={`${logoAvif.src} 1x, ${logoAvif2x.src} 2x`}
+          src={logo1x.src}
+          srcset={`${logo1x.src} 1x, ${logo2x.src} 2x`}
+          alt=""
           width="40"
           height="40"
-          alt=""
           class="w-10 h-10 rounded-full object-cover"
           loading="eager"
           decoding="sync"

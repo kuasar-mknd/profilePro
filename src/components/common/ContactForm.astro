@@ -48,11 +48,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
   <!-- Optional: Honeypot -->
+  <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
   <input
     type="checkbox"
     name="botcheck"
     class="hidden"
     style="display: none;"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
   />
 
   <!-- 🛡️ Sentinel: Timestamp trap to prevent spam -->
@@ -70,7 +74,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="name"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Nom complet <span class="text-pacamara-accent">*</span>
+        Nom complet <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -98,7 +105,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="email"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Email <span class="text-pacamara-accent">*</span>
+        Email <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -115,7 +125,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         />
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -127,7 +136,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="message"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Message <span class="text-pacamara-accent">*</span>
+        Message <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <textarea
@@ -216,7 +228,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <p
     class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
   >
-    Les champs marqués d'un <span class="text-pacamara-accent">*</span> sont obligatoires.
+    Les champs marqués d'un <span class="sr-only">astérisque</span><span
+      class="text-pacamara-accent"
+      aria-hidden="true">*</span
+    > sont obligatoires.
   </p>
   <p
     class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
@@ -378,6 +393,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     }
 
     // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
+    // Reverted to efficient regex-based sanitization as per review feedback
     function sanitizeInput(str: string): string {
       const map: Record<string, string> = {
         "&": "&amp;",
@@ -386,10 +402,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         '"': "&quot;",
         "'": "&#x27;",
         "/": "&#x2F;",
-        "`": "&#x60;",
-        "=": "&#x3D;",
+        "`": "&#x60;", // Prevent template injection
+        "=": "&#x3D;", // Prevent unquoted attribute injection
       };
-      const reg = /[&<>"'/`=]/gi;
+      const reg = /[&<>"'\/`=]/gi;
+
       return str.replace(reg, (match) => map[match]);
     }
 
