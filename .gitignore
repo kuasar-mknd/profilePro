@@ -29,6 +29,10 @@ dev.log
 .lighthouseci/
 lighthouseci/
 
+# Playwright
+playwright-report/
+test-results/
+
 # Bundle analyzer
 stats.html
 
@@ -49,3 +53,6 @@ stats.html
 *.tmp
 .tmp/
 
+# Playwright
+playwright-report/
+test-results/

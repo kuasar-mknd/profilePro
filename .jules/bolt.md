@@ -1,3 +1,5 @@
-## 2024-05-23 - Astro View Transitions & Event Listeners
-**Learning:** In Astro with View Transitions (`ClientRouter`), `document` persists across navigations. Adding event listeners to `document` inside component scripts (which re-run on every navigation) creates memory leaks and duplicate handlers if not explicitly cleaned up.
-**Action:** Always store cleanup functions for global listeners in module-scoped variables and call them before re-initialization. Closure-based listeners (defined inside `init`) must be captured for removal.
+# Bolt's Journal ⚡
+
+## 2025-02-19 - Critical External Resource Preconnects
+**Learning:** External services like `api.web3forms.com` (Contact Form) and `i.ytimg.com` (YouTube Thumbnails) significantly impact interactivity and visual completeness but were missing `preconnect` headers. This causes unnecessary latency during critical user interactions (form submit) or initial page load (thumbnails).
+**Action:** Always audit network requests for 3rd party services and add `preconnect` (for interaction) or `dns-prefetch` (for speculative) in `Base.astro`, ensuring correct `crossorigin` attributes.

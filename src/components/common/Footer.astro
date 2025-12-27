@@ -16,6 +16,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <a
         href="/"
         aria-current={Astro.url.pathname === "/" ? "page" : undefined}
+        aria-label="Retour à l'accueil"
         class="font-bold font-pacamara-space text-2xl text-pacamara-primary dark:text-white hover:text-pacamara-accent transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-1 -m-1"
       >
         Samuel Dulex
@@ -95,7 +96,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <span class="text-sm text-pacamara-primary/80 dark:text-white/80">
         Fait avec <span
           class="text-red-500 animate-pulse motion-reduce:animate-none inline-block align-middle"
-          >&#9829;</span
+          role="img"
+          aria-label="amour">&#9829;</span
         > et <a
           href="https://astro.build"
           target="_blank"
@@ -123,8 +125,12 @@ import SocialIcon from "../ui/SocialIcon.astro";
       if (!wcb) return;
 
       if (!isProduction) {
-        wcb.innerHTML =
-          '<div class="text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded">Carbon Badge (Dev)</div>';
+        wcb.textContent = "";
+        const devBadge = document.createElement("div");
+        devBadge.className =
+          "text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded";
+        devBadge.textContent = "Carbon Badge (Dev)";
+        wcb.appendChild(devBadge);
         return;
       }
 
@@ -134,7 +140,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       // Render function
       const render = (data) => {
         if (!wcb) return;
-        wcb.innerHTML = ""; // Clear loading state
+        wcb.replaceChildren(); // Clear loading state
 
         const wrapper = document.createElement("div");
         wrapper.id = "wcb_p";
@@ -181,8 +187,20 @@ import SocialIcon from "../ui/SocialIcon.astro";
 
       // Fetch logic
       const fetchData = () => {
-        wcb.innerHTML =
-          '<div class="animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60">Measuring CO<sub>2</sub>...</div>';
+        wcb.textContent = "";
+        const loading = document.createElement("div");
+        loading.className =
+          "animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60";
+        loading.textContent = "Measuring CO2...";
+        // Use sub for the '2'
+        const sub = document.createElement("sub");
+        sub.textContent = "2";
+        // To reconstruct "CO<sub>2</sub>...", we need to append nodes manually or use a different structure.
+        // Let's just use "Measuring CO2..." as text for simplicity and security, or append correctly.
+        loading.textContent = "Measuring CO";
+        loading.appendChild(sub);
+        loading.append("...");
+        wcb.appendChild(loading);
 
         fetch("https://api.websitecarbon.com/b?url=" + wcU)
           .then((r) => {
@@ -202,7 +220,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
                 e instanceof Error ? e.message : "Unknown error",
               );
             }
-            wcb.innerHTML = "No Result";
+            wcb.textContent = "No Result";
             localStorage.removeItem(cacheKey);
           });
       };
