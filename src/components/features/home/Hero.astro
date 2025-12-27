@@ -317,6 +317,8 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     let isDragging = false;
     let startX = 0;
     let currentTranslate = 0;
+    let rafId: number | null = null;
+    let lastTouchX = 0;
 
     carousel.addEventListener(
       "touchstart",
@@ -331,13 +333,20 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       { passive: true },
     );
 
+    // ⚡ Bolt: Use requestAnimationFrame for smooth 60fps tracking
     carousel.addEventListener(
       "touchmove",
       (e) => {
         if (!isDragging) return;
-        const x = e.touches[0].clientX;
-        const diff = x - startX;
-        track.style.transform = `translateX(${currentTranslate + diff}px)`;
+        lastTouchX = e.touches[0].clientX;
+
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            const diff = lastTouchX - startX;
+            track.style.transform = `translateX(${currentTranslate + diff}px)`;
+            rafId = null;
+          });
+        }
       },
       { passive: true },
     );
@@ -347,6 +356,10 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       "touchend",
       () => {
         isDragging = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
         track.style.transform = "";
         track.style.animationPlayState = "running";
       },

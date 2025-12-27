@@ -48,11 +48,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
   <!-- Optional: Honeypot -->
+  <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
   <input
     type="checkbox"
     name="botcheck"
     class="hidden"
     style="display: none;"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
   />
 
   <!-- 🛡️ Sentinel: Timestamp trap to prevent spam -->
@@ -65,12 +69,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   <div class="space-y-6 relative z-10">
     <!-- Name Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="name"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Nom complet <span class="text-pacamara-accent">*</span>
+        Nom complet <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -93,12 +100,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     </div>
 
     <!-- Email Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="email"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Email <span class="text-pacamara-accent">*</span>
+        Email <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -122,12 +132,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     </div>
 
     <!-- Message Field -->
-    <div class="form-group">
+    <div class="form-group group">
       <label
         for="message"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white"
+        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Message <span class="text-pacamara-accent">*</span>
+        Message <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <textarea
@@ -216,7 +229,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <p
     class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
   >
-    Les champs marqués d'un <span class="text-pacamara-accent">*</span> sont obligatoires.
+    Les champs marqués d'un <span class="sr-only">astérisque</span><span
+      class="text-pacamara-accent"
+      aria-hidden="true">*</span
+    > sont obligatoires.
   </p>
   <p
     class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
@@ -317,6 +333,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       "#form-error-message",
     ) as HTMLElement;
     const errorText = form.querySelector("#error-text") as HTMLParagraphElement;
+    const nameInput = form.querySelector(
+      'input[name="name"]',
+    ) as HTMLInputElement;
+    const emailInput = form.querySelector(
+      'input[name="email"]',
+    ) as HTMLInputElement;
+    const messageInput = form.querySelector(
+      'textarea[name="message"]',
+    ) as HTMLTextAreaElement;
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -369,6 +394,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     }
 
     // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
+    // Reverted to efficient regex-based sanitization as per review feedback
     function sanitizeInput(str: string): string {
       const map: Record<string, string> = {
         "&": "&amp;",
@@ -387,22 +413,41 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const emailInput = form.querySelector(
-        'input[name="email"]',
-      ) as HTMLInputElement;
       // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
       const emailPattern =
         /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
       // Clear previous validation state before re-validating
-      emailInput?.removeAttribute("aria-invalid");
-      emailInput?.removeAttribute("aria-describedby");
+      form
+        .querySelectorAll("[aria-invalid]")
+        .forEach((el) => el.removeAttribute("aria-invalid"));
       errorMessage?.classList.add("hidden");
+
+      // 🎨 Palette: Add validation for required fields
+      if (nameInput && nameInput.value.trim().length < 2) {
+        nameInput.setAttribute("aria-invalid", "true");
+        nameInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer votre nom (minimum 2 caractères).",
+          nameInput,
+        );
+        return;
+      }
 
       if (emailInput && !emailPattern.test(emailInput.value)) {
         emailInput.setAttribute("aria-invalid", "true");
         emailInput.setAttribute("aria-describedby", "form-error-message");
         showError("Veuillez entrer une adresse email valide.", emailInput);
+        return;
+      }
+
+      if (messageInput && messageInput.value.trim().length < 10) {
+        messageInput.setAttribute("aria-invalid", "true");
+        messageInput.setAttribute("aria-describedby", "form-error-message");
+        showError(
+          "Veuillez entrer un message d'au moins 10 caractères.",
+          messageInput,
+        );
         return;
       }
 
@@ -439,11 +484,16 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         // 🛡️ Sentinel: Sanitize form data before sending
         const formData = new FormData(form);
         const data: Record<string, string> = {};
+        const fieldsToSanitize = new Set(["name", "email", "message"]);
+
         formData.forEach((value, key) => {
           if (typeof value === "string") {
-            // Only sanitize text fields that might contain user input
-            // Avoid sanitizing hidden fields like access_key if they don't need it (though safe to do so)
-            data[key] = sanitizeInput(value);
+            // Sanitize only user-provided fields to prevent corrupting system values.
+            if (fieldsToSanitize.has(key)) {
+              data[key] = sanitizeInput(value);
+            } else {
+              data[key] = value;
+            }
           } else {
             data[key] = value.toString();
           }
@@ -480,11 +530,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
         if (import.meta.env.DEV) {
           console.error("Form submission failed:", error);
-        } else {
-          console.error(
-            "Form submission failed: An unexpected error occurred.",
-          );
         }
+
         if (submitButton) {
           submitButton.classList.remove("loading");
         }
