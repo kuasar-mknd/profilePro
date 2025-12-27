@@ -317,7 +317,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     // 🛡️ Sentinel: Set timestamp for spam trap
     const timestampInput = form.querySelector(
-      "#form-load-timestamp"
+      "#form-load-timestamp",
     ) as HTMLInputElement;
     if (timestampInput) {
       timestampInput.value = Date.now().toString();
@@ -326,20 +326,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const submitButton = form.querySelector(".submit-btn") as HTMLButtonElement;
     const resetBtn = form.querySelector(".reset-form-btn") as HTMLButtonElement;
     const errorResetBtn = form.querySelector(
-      "#reset-error-btn"
+      "#reset-error-btn",
     ) as HTMLButtonElement;
     const errorMessage = form.querySelector(
-      "#form-error-message"
+      "#form-error-message",
     ) as HTMLElement;
     const errorText = form.querySelector("#error-text") as HTMLParagraphElement;
     const nameInput = form.querySelector(
-      'input[name="name"]'
+      'input[name="name"]',
     ) as HTMLInputElement;
     const emailInput = form.querySelector(
-      'input[name="email"]'
+      'input[name="email"]',
     ) as HTMLInputElement;
     const messageInput = form.querySelector(
-      'textarea[name="message"]'
+      'textarea[name="message"]',
     ) as HTMLTextAreaElement;
 
     // Reset form from success message
@@ -429,7 +429,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         nameInput.setAttribute("aria-describedby", "form-error-message");
         showError(
           "Veuillez entrer votre nom (minimum 2 caractères).",
-          nameInput
+          nameInput,
         );
         return;
       }
@@ -446,7 +446,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         messageInput.setAttribute("aria-describedby", "form-error-message");
         showError(
           "Veuillez entrer un message d'au moins 10 caractères.",
-          messageInput
+          messageInput,
         );
         return;
       }
@@ -457,20 +457,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       if (submitTimestamp - loadTimestamp < 2000) {
         // 2 seconds threshold
         showError(
-          "Le formulaire a été soumis trop rapidement. Veuillez réessayer."
+          "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
         );
         return;
       }
 
       const lastSubmission = localStorage.getItem(
-        "contact_form_last_submission"
+        "contact_form_last_submission",
       );
       if (
         lastSubmission &&
         Date.now() - parseInt(lastSubmission, 10) < 120000
       ) {
         showError(
-          "Veuillez attendre quelques minutes avant de renvoyer un message."
+          "Veuillez attendre quelques minutes avant de renvoyer un message.",
         );
         return;
       }
@@ -520,7 +520,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           }
           localStorage.setItem(
             "contact_form_last_submission",
-            Date.now().toString()
+            Date.now().toString(),
           );
           form.reset();
         } else {
