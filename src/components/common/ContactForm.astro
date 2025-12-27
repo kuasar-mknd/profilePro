@@ -9,7 +9,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   method="POST"
   class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
-  novalidate
 >
   <!-- Form Success Message -->
   <div
@@ -314,6 +313,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     // ⚡ Early return if form doesn't exist or already initialized
     if (!form || form.dataset.initialized === "true") return;
     form.dataset.initialized = "true";
+
+    // 🛡️ Sentinel: Progressive Enhancement - Disable native validation only when JS is active
+    // This ensures browser-native validation serves as a fallback if JS fails.
+    form.setAttribute("novalidate", "true");
 
     // 🛡️ Sentinel: Set timestamp for spam trap
     const timestampInput = form.querySelector(
