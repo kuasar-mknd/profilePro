@@ -66,7 +66,7 @@ const jsonLd = {
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
   <!-- Scroll Progress Bar -->
   <div
-    class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none"
+    class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none print:hidden"
   >
     <div
       class="h-full bg-pacamara-accent w-0 transition-all duration-100 ease-out"
@@ -150,7 +150,7 @@ const jsonLd = {
     {
       entry.data.type === "video" && entry.data.videoUrl && (
         <div
-          class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 mt-12 animate-slide-up opacity-0 ring-1 ring-white/10"
+          class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 mt-12 animate-slide-up opacity-0 ring-1 ring-white/10 print:hidden"
           style="animation-delay: 0.6s;"
         >
           <VideoPlayer
@@ -200,7 +200,7 @@ const jsonLd = {
 
       <!-- Share Button & Navigation -->
       <div
-        class="mt-12 pt-8 border-t border-pacamara-secondary/10 flex flex-col md:flex-row justify-between items-center gap-6"
+        class="mt-12 pt-8 border-t border-pacamara-secondary/10 flex flex-col md:flex-row justify-between items-center gap-6 print:hidden"
       >
         <!-- 🎨 Palette: Enhanced Share Button
              Improved feedback, transitions, and accessibility (ARIA live)
@@ -329,7 +329,7 @@ const jsonLd = {
 
   <!-- Project Navigation -->
   <nav
-    class="container mx-auto max-w-5xl px-7 mb-12 mt-12"
+    class="container mx-auto max-w-5xl px-7 mb-12 mt-12 print:hidden"
     aria-label="Navigation entre projets"
   >
     <div class="flex flex-col md:flex-row justify-between gap-4">
@@ -388,7 +388,7 @@ const jsonLd = {
   </nav>
 
   <!-- CTA Section -->
-  <div class="container mx-auto max-w-5xl px-7 mt-12 mb-20">
+  <div class="container mx-auto max-w-5xl px-7 mt-12 mb-20 print:hidden">
     <div
       class="bg-pacamara-accent/10 dark:bg-pacamara-accent/5 rounded-3xl p-8 md:p-12 text-center border border-pacamara-accent/20"
     >
@@ -417,7 +417,7 @@ const jsonLd = {
   <div class="container mx-auto max-w-5xl px-7 mb-20">
     <AuthorInfo authorData={author} />
 
-    <div class="mt-20 pt-10 border-t border-pacamara-secondary/20">
+    <div class="mt-20 pt-10 border-t border-pacamara-secondary/20 print:hidden">
       <h2
         class="text-2xl font-pacamara-space font-bold mb-10 text-center dark:text-white"
       >
