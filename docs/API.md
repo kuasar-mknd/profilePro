@@ -40,3 +40,5 @@ Exemple d'accès :
 ```bash
 curl https://portfolio.kuasar.xyz/rss.xml
 ```
+
+_La documentation API sera mise à jour si de nouveaux endpoints sont ajoutés._

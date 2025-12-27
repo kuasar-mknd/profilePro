@@ -6,6 +6,10 @@ import Tag from "../../ui/Tag.astro";
 
 const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
+
+// 🎨 Palette: Calculate reading time for better UX
+const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
+const readingTime = Math.ceil(wordCount / 200);
 ---
 
 <article
@@ -18,7 +22,7 @@ const isWide = bentoSize === "bento-item-wide";
   <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
     href={`/project/${postData.slug}`}
-    aria-label={`Voir le projet ${postData.data.title}`}
+    aria-label={`Voir le projet ${postData.data.title} - Lecture estimée ${readingTime} minutes`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
   >
   </a>
@@ -106,11 +110,24 @@ const isWide = bentoSize === "bento-item-wide";
         </p>
       </div>
 
-      <!-- Date - slight scale on hover -->
+      <!-- Date & Reading Time - slight scale on hover -->
       <div
-        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 origin-left"
+        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 origin-left flex items-center gap-2"
       >
         <PublishDate date={postData.data.pubDate} />
+        {
+          readingTime > 0 && (
+            <>
+              <span class="opacity-60" aria-hidden="true">
+                •
+              </span>
+              <span class="opacity-90 font-medium">
+                {readingTime} min
+                <span class="sr-only">de lecture</span>
+              </span>
+            </>
+          )
+        }
       </div>
     </div>
   </div>

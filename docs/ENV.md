@@ -31,3 +31,5 @@ Ces variables sont configurées dans les secrets du dépôt GitHub pour le dépl
 ## Validation
 
 Les variables d'environnement sont typées via `env.d.ts` et peuvent être validées via `src/content/config.ts` ou `astro.config.mjs` si configuré.
+
+_Note: Ne jamais committer le fichier `.env` avec des valeurs réelles._

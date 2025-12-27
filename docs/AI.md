@@ -10,7 +10,7 @@ Ce projet n'intègre actuellement **aucune** fonctionnalité d'IA générative (
 
 ## Usage en Développement
 
-L'IA peut être utilisée par les développeurs pour :
+L'IA (Copilot, LLMs locaux) peut être utilisée par les développeurs pour :
 - La génération de code assistée (Copilot, Cursor).
 - La rédaction de documentation.
 - L'optimisation des assets.
