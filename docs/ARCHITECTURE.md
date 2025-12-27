@@ -62,10 +62,19 @@ La navigation SPA (Single Page Application) est simulée grâce à l'API View Tr
 
 ### 5. Testing
 
-Les tests End-to-End (E2E) sont gérés par Playwright.
+Les tests End-to-End (E2E) sont gérés par Playwright pour vérifier le rendu et l'interactivité critique (comme le formulaire de contact).
 
-- Commande: `bun run test:e2e`
-- Configuration: `playwright.config.ts` (si présent) ou configuration par défaut.
+- Commande locale: `bun run test:e2e`
+- CI/CD: Exécuté automatiquement sur chaque Pull Request via GitHub Actions (`ci.yml`).
+- Configuration: `playwright.config.ts`.
+
+### CI/CD Pipeline
+
+Le projet utilise GitHub Actions pour l'intégration et le déploiement continu.
+
+- **Quality (`ci.yml`)**: Exécuté à chaque Push/PR. Vérifie le formatage (Prettier), le linting (ESLint/Stylelint) et les types (Astro Check).
+- **Security (`codeql.yml`, `dependency-review.yml`)**: Analyse statique du code et vérification des dépendances vulnérables.
+- **Deploy (`deploy.yml`)**: Construit et déploie le site sur Cloudflare Pages après validation.
 
 ## Extension du Projet
 

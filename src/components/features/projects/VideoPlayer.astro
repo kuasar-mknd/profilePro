@@ -3,7 +3,7 @@ const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
 
 // Extract video ID and provider
-const getVideoDetails = (url) => {
+const getVideoDetails = (url: string) => {
   if (!url) return { id: null, provider: null };
 
   // YouTube
@@ -137,73 +137,90 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 </div>
 
 <script>
+  // ⚡ Bolt: Event Delegation for Video Players
+  // Reduces listener count from N (videos) to 1 (document)
+  // Handles initializing new players on interaction instead of on load
+
+  async function handleVideoClick(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const playBtn = target.closest("button[id^='play-btn-']");
+
+    if (!playBtn) return;
+
+    const wrapper = playBtn.closest(".video-player-wrapper") as HTMLElement;
+    if (!wrapper) return;
+
+    // Prevent double initialization
+    if (wrapper.dataset.playing === "true") return;
+    wrapper.dataset.playing = "true";
+
+    const poster = wrapper.querySelector("[id^='poster-']");
+    const playerDiv = wrapper.querySelector("[id^='player-']");
+
+    if (!playerDiv || !poster) return;
+
+    // Show spinner
+    const spinner = wrapper.querySelector(`[id^='spinner-']`) as HTMLElement;
+    const svgIcon = playBtn.querySelector("svg");
+
+    if (spinner) spinner.style.opacity = "1";
+    if (svgIcon) svgIcon.style.opacity = "0";
+
+    // Dynamically import Plyr and its CSS only when needed
+    // @ts-ignore
+    await import("plyr/dist/plyr.css");
+    // @ts-ignore
+    const { default: Plyr } = await import("plyr");
+
+    // Initialize Plyr only on click
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const player = new Plyr(playerDiv as HTMLElement, {
+      autoplay: true,
+      controls: [
+        "play-large",
+        "play",
+        "progress",
+        "current-time",
+        "mute",
+        "volume",
+        "captions",
+        "settings",
+        "pip",
+        "airplay",
+        "fullscreen",
+      ],
+      // 🛡️ Sentinel: Privacy enhancements
+      youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 },
+      vimeo: { dnt: true, title: 0, byline: 0, portrait: 0 },
+    });
+
+    // Hide poster
+    (poster as HTMLElement).style.opacity = "0";
+    setTimeout(() => {
+      (poster as HTMLElement).style.display = "none";
+    }, 500);
+  }
+
+  // ⚡ Bolt: Singleton event listener
+  document.removeEventListener("click", handleVideoClick);
+  document.addEventListener("click", handleVideoClick);
+
+  // ⚡ Bolt: Initialize Skeletons (must be per-element as it depends on individual load)
   document.addEventListener("astro:page-load", () => {
     const wrappers = document.querySelectorAll(".video-player-wrapper");
-
     wrappers.forEach((wrapper) => {
-      const playBtn = wrapper.querySelector("[id^='play-btn-']");
-      const poster = wrapper.querySelector("[id^='poster-']");
-      const playerDiv = wrapper.querySelector("[id^='player-']");
-      const skeleton = wrapper.querySelector(".skeleton");
-
-      // ⚡ Bolt: Use existing image load event to hide skeleton
-      // This respects loading="lazy" and avoids duplicate network requests
       const posterImg = wrapper.querySelector("img");
+      const skeleton = wrapper.querySelector(".skeleton");
       if (posterImg && skeleton) {
         const removeSkeleton = () => {
           skeleton.classList.add("opacity-0");
           setTimeout(() => skeleton.remove(), 500);
         };
-
         if (posterImg.complete) {
           removeSkeleton();
         } else {
-          posterImg.addEventListener("load", removeSkeleton);
+          posterImg.addEventListener("load", removeSkeleton, { once: true });
         }
-      }
-
-      if (playBtn && playerDiv && poster) {
-        playBtn.addEventListener("click", async () => {
-          // Show spinner
-          const spinner = wrapper.querySelector(
-            `[id^='spinner-']`,
-          ) as HTMLElement;
-          const svgIcon = playBtn.querySelector("svg");
-
-          if (spinner) spinner.style.opacity = "1";
-          if (svgIcon) svgIcon.style.opacity = "0";
-
-          // Dynamically import Plyr and its CSS only when needed
-          // @ts-ignore
-          await import("plyr/dist/plyr.css");
-          // @ts-ignore
-          const { default: Plyr } = await import("plyr");
-
-          // Initialize Plyr only on click
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const player = new Plyr(playerDiv as HTMLElement, {
-            autoplay: true,
-            controls: [
-              "play-large",
-              "play",
-              "progress",
-              "current-time",
-              "mute",
-              "volume",
-              "captions",
-              "settings",
-              "pip",
-              "airplay",
-              "fullscreen",
-            ],
-          });
-
-          // Hide poster
-          (poster as HTMLElement).style.opacity = "0";
-          setTimeout(() => {
-            (poster as HTMLElement).style.display = "none";
-          }, 500);
-        });
       }
     });
   });

@@ -1,4 +1,4 @@
-# Managed by DocOps
+# Managed by DocOps - Verified
 version: 2
 updates:
   - package-ecosystem: "npm"

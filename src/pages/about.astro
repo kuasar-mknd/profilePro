@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 import logo from "../assets/logo.avif";
 import CTASection from "../components/common/CTASection.astro";
 import { Icon } from "astro-icon/components";
@@ -115,7 +115,7 @@ const skills = [
             >
               <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
               ></span>
-              📍 Basé en Suisse
+              <span role="img" aria-label="Localisation">📍</span> Basé en Suisse
             </div>
           </div>
 
@@ -136,7 +136,7 @@ const skills = [
             <div
               class="inline-block px-4 py-2 rounded-full bg-pacamara-secondary/10 text-pacamara-secondary dark:text-pacamara-accent font-bold text-sm mb-6"
             >
-              👋 Enchanté, moi c'est Samuel
+              <span role="img" aria-label="Salut">👋</span> Enchanté, moi c'est Samuel
             </div>
           </ScrollReveal>
 
@@ -191,13 +191,13 @@ const skills = [
             <div class="flex flex-wrap gap-4">
               <a
                 href="#contact-form"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 active:scale-95"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
               >
                 Me contacter
               </a>
               <a
                 href="/project"
-                class="px-8 py-4 border border-pacamara-primary/20 dark:border-white/20 text-pacamara-primary dark:text-white rounded-full font-bold text-lg hover:bg-pacamara-primary/5 dark:hover:bg-white/10 transition-all duration-300 active:scale-95"
+                class="px-8 py-4 border border-pacamara-primary/20 dark:border-white/20 text-pacamara-primary dark:text-white rounded-full font-bold text-lg hover:bg-pacamara-primary/5 dark:hover:bg-white/10 transition-all duration-300 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
               >
                 Voir mon portfolio
               </a>
