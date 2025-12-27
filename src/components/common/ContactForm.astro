@@ -70,7 +70,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="name"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Nom complet <span class="text-pacamara-accent">*</span>
+        Nom complet <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -98,7 +101,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="email"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Email <span class="text-pacamara-accent">*</span>
+        Email <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <input
@@ -127,7 +133,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         for="message"
         class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
       >
-        Message <span class="text-pacamara-accent">*</span>
+        Message <span class="sr-only">(obligatoire)</span><span
+          aria-hidden="true"
+          class="text-pacamara-accent">*</span
+        >
       </label>
       <div class="relative">
         <textarea
@@ -216,7 +225,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <p
     class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
   >
-    Les champs marqués d'un <span class="text-pacamara-accent">*</span> sont obligatoires.
+    Les champs marqués d'un <span class="sr-only">astérisque</span><span
+      class="text-pacamara-accent"
+      aria-hidden="true">*</span
+    > sont obligatoires.
   </p>
   <p
     class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
