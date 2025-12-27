@@ -179,6 +179,17 @@
     color: black !important;
     text-shadow: none !important;
   }
+
+  /* 🎨 Palette: Ensure animated content is visible in print */
+  .reveal-on-scroll,
+  .animate-slide-up,
+  .animate-fade-in,
+  [class*="opacity-0"] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 :root {
