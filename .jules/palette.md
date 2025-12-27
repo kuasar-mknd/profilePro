@@ -21,3 +21,7 @@
 ## 2025-02-18 - Label Highlighting on Focus
 **Learning:** Highlighting the label in the accent color when an input is focused (`group-focus-within:text-pacamara-accent`) significantly improves the visual association between the active field and its label, especially in long forms.
 **Action:** Apply the `group` class to form containers and `group-focus-within:text-accent` to labels in all future form components.
+
+## 2025-07-22 - Accessible Required Field Indicators
+**Learning:** Announcing required fields via a footnote is inaccessible. The best pattern is to include visually hidden text (e.g., `<span class="sr-only">(obligatoire)</span>`) directly within the `<label>`, which allows screen readers to announce the requirement when the field receives focus. The visual indicator (e.g., `*`) should be hidden from screen readers with `aria-hidden="true"` to prevent redundant announcements ("star," "asterisk").
+**Action:** Apply this `Label <span class="sr-only">(required)</span><span aria-hidden="true">*</span>` pattern to all required form fields going forward and remove any separate, redundant explanatory text.
