@@ -170,6 +170,16 @@ const columnClasses = {
     .gallery-cols-4 {
       column-count: 1;
     }
+
+    /* ⚡ Bolt: Mobile Rendering Optimization
+       On mobile (single column), we can safely skip rendering off-screen items
+       without breaking masonry layout flow. This significantly reduces main-thread
+       work during scrolling on lower-end devices.
+    */
+    .gallery-item {
+      content-visibility: auto;
+      contain-intrinsic-size: 300px; /* Approximate height of a gallery item */
+    }
   }
 </style>
 
