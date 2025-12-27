@@ -160,7 +160,6 @@
     };
   }
 
-  // Initialize
-  initMouseBlob();
+  // Initialize only via event listener to avoid double execution on initial load
   document.addEventListener("astro:page-load", initMouseBlob);
 </script>
