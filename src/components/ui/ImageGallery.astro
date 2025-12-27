@@ -7,6 +7,7 @@
  * 2. Explicit image array: <ImageGallery images={myImagesArray} />
  */
 import { Picture } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 
 interface Props {
@@ -78,7 +79,7 @@ const columnClasses = {
       data-gallery-container
     >
       {galleryImages.map((image, index) => (
-        <figure class="gallery-item group">
+        <figure class="gallery-item group relative cursor-pointer">
           <Skeleton class="absolute inset-0 z-10 transition-opacity duration-500" />
           {/* ⚡ Bolt: Smart Loading - Eager load priority images, lazy load the rest */}
           <Picture
@@ -97,6 +98,12 @@ const columnClasses = {
             decoding="async"
             fetchpriority={index < priorityCount ? "high" : "low"}
           />
+          {/* 🎨 Palette: Zoom Affordance Overlay */}
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20">
+            <div class="bg-white/90 dark:bg-pacamara-dark/90 text-pacamara-primary dark:text-white p-3 rounded-full shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300">
+              <Icon name="mdi:magnify-plus-outline" class="w-6 h-6" />
+            </div>
+          </div>
         </figure>
       ))}
     </div>
