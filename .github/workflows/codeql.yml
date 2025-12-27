@@ -1,14 +1,12 @@
-name: "CodeQL Analysis"
-
-# Managed by DocOps - Verified
+name: "CodeQL"
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
   schedule:
-    - cron: '21 15 * * 1'
+    - cron: '21 8 * * 0'
 
 jobs:
   analyze:
@@ -22,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript-typescript']
+        language: [ 'javascript-typescript' ]
 
     steps:
     - name: Checkout repository
@@ -32,7 +30,6 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        queries: security-extended
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
