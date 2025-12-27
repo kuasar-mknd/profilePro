@@ -1,6 +1,5 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "profilepro",
@@ -22,6 +21,7 @@
         "glob": "^13.0.0",
         "iconify-icon": "^3.0.2",
         "plyr": "^3.8.3",
+        "prettier-plugin-astro": "^0.14.1",
         "react": "^19.2.3",
         "react-dom": "^19.2.3",
         "rehype-external-links": "^3.0.0",
