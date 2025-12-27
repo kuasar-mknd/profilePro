@@ -6,7 +6,7 @@
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
-[![CI Quality](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
+[![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
 
 <!-- Tech Stack -->
 
@@ -80,7 +80,6 @@ Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de d
 Une documentation détaillée est disponible dans le dossier `docs/` :
 
 - [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
-- [🔌 API](docs/API.md) : Services externes (Web3Forms) et API internes.
 - [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
 - [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 

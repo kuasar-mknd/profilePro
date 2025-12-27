@@ -1,23 +1,22 @@
-# Intelligence Artificielle
+# AI Integration Documentation
 
-## État Actuel
+> **Status:** No active AI integration.
+> **Plan:** Future integration for project summarization.
 
-Ce projet n'intègre actuellement **aucune** fonctionnalité d'IA générative (LLM) au runtime.
+## 🤖 Models & Configuration
 
-- Pas d'appel à OpenAI/Anthropic/Google API.
-- Pas de chatbot.
-- Pas de génération de contenu dynamique par IA.
+Currently, this project does not integrate live AI models. The roadmap includes plans for a local AI model to summarize project descriptions.
 
-## Usage en Développement
+### Future Configuration
+- **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
+- **Env Vars**: TBD (e.g., `AI_API_KEY`).
 
-L'IA (Copilot, LLMs locaux) peut être utilisée par les développeurs pour :
-- La génération de code assistée (Copilot, Cursor).
-- La rédaction de documentation.
-- L'optimisation des assets.
+## 🫰 Cost & Limits
 
-Aucune configuration spécifique (clés API IA) n'est requise pour exécuter le projet.
+- **Strategy**: Static Generation (SSG).
+- **Explanation**: AI operations will be performed at **build time** to generate summaries/metadata. This avoids runtime costs and latency for users.
 
-## Roadmap
+## 🛡 Policy
 
-L'intégration d'un modèle local pour la génération de résumés de projets est à l'étude.
-(Voir les tickets associés pour plus de détails).
+- All AI-generated content must be reviewed by a human before publishing.
+- No user data is sent to AI endpoints.
