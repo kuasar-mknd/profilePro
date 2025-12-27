@@ -125,7 +125,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         />
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
-          class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
       </div>
@@ -407,6 +406,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         "=": "&#x3D;", // Prevent unquoted attribute injection
       };
       const reg = /[&<>"'\/`=]/gi;
+
       return str.replace(reg, (match) => map[match]);
     }
 

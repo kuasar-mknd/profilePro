@@ -11,7 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: "always", // Inline le CSS pour éliminer les requêtes bloquantes
+    inlineStylesheets: "auto", // Use "auto" to allow external CSS files for better caching
   },
   image: {
     domains: ["kuasar.xyz"],
