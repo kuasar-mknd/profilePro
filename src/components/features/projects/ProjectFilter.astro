@@ -15,7 +15,7 @@ const { tags, activeTag } = Astro.props;
     Tous
   </a>
   {
-    tags.map((tag) => (
+    tags.map((tag: string) => (
       <a
         href={`/project/tag/${tag}`}
         class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2

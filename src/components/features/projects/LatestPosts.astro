@@ -56,6 +56,20 @@ const remainingCount = allPosts.length - postLimit;
 
   <div class="bento-grid">
     {
+      posts.length === 0 && (
+        <div class="col-span-full py-12 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm">
+          <Icon
+            name="mdi:alert-circle-outline"
+            class="w-12 h-12 mx-auto text-pacamara-secondary/50 dark:text-white/50 mb-4"
+          />
+          <p class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit">
+            Aucun projet ne correspond à ces critères pour le moment.
+          </p>
+        </div>
+      )
+    }
+
+    {
       posts.map((post, index) => {
         const bentoClass = getBentoClass(index);
         return (
