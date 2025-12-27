@@ -48,11 +48,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
   <!-- Optional: Honeypot -->
+  <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
   <input
     type="checkbox"
     name="botcheck"
     class="hidden"
     style="display: none;"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
   />
 
   <!-- 🛡️ Sentinel: Timestamp trap to prevent spam -->
@@ -390,6 +394,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     }
 
     // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
+    // Reverted to efficient regex-based sanitization as per review feedback
     function sanitizeInput(str: string): string {
       const map: Record<string, string> = {
         "&": "&amp;",
