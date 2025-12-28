@@ -155,6 +155,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         >
         </div>
       </div>
+      <!-- 🎨 Palette: Character Counter -->
+      <div class="text-right mt-1.5">
+        <span
+          id="char-count"
+          class="text-xs font-medium text-pacamara-primary/40 dark:text-white/40 transition-colors duration-300"
+          >0/5000</span
+        >
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -344,6 +352,34 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+    const charCount = form.querySelector("#char-count") as HTMLElement;
+
+    // 🎨 Palette: Character Counter Logic
+    if (messageInput && charCount) {
+      const updateCount = () => {
+        const currentLength = messageInput.value.length;
+        const maxLength = messageInput.maxLength;
+        charCount.textContent = `${currentLength}/${maxLength}`;
+
+        if (currentLength >= maxLength * 0.9) {
+          charCount.classList.remove(
+            "text-pacamara-primary/40",
+            "dark:text-white/40",
+          );
+          charCount.classList.add("text-amber-500", "dark:text-amber-400");
+        } else {
+          charCount.classList.add(
+            "text-pacamara-primary/40",
+            "dark:text-white/40",
+          );
+          charCount.classList.remove("text-amber-500", "dark:text-amber-400");
+        }
+      };
+
+      messageInput.addEventListener("input", updateCount);
+      // Initialize count
+      updateCount();
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -356,6 +392,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         submitButton.classList.remove("loading");
       }
       (form.querySelector("input") as HTMLInputElement)?.focus();
+      // Reset character count
+      if (messageInput) {
+        messageInput.dispatchEvent(new Event("input"));
+      }
     });
 
     // Reset form from error message
