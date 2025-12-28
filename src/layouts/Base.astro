@@ -13,6 +13,7 @@ import "../css/style.css";
 import { ClientRouter } from "astro:transitions";
 import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
+import { safeJson } from "../utils/security";
 
 // Precompute LCP image URL for preloading
 const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
@@ -108,7 +109,7 @@ if (postData?.data?.image) {
     <script
       type="speculationrules"
       is:inline
-      set:html={JSON.stringify({
+      set:html={safeJson({
         prerender: [
           {
             source: "document",
@@ -118,7 +119,7 @@ if (postData?.data?.image) {
             eagerness: "moderate",
           },
         ],
-      }).replace(/</g, "\\u003c")}
+      })}
     />
     <style is:global>
       /* Manual Font Face Definitions */
@@ -519,9 +520,9 @@ if (postData?.data?.image) {
       defer
       is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({
+      data-cf-beacon={safeJson({
         token: PUBLIC_CF_ANALYTICS_TOKEN,
-      }).replace(/</g, "\\u003c")}></script>
+      })}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
