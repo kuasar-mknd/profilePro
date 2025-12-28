@@ -155,6 +155,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         >
         </div>
       </div>
+      <!-- 🎨 Palette: Character counter -->
+      <div class="flex justify-end mt-1">
+        <span
+          id="char-count"
+          class="text-xs text-pacamara-primary/50 dark:text-white/50 font-outfit transition-colors duration-300"
+        >
+          0 / 5000
+        </span>
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -345,12 +354,46 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
 
+    // 🎨 Palette: Character counter initialization
+    const charCount = form.querySelector("#char-count") as HTMLElement;
+    if (messageInput && charCount) {
+      const maxLength = messageInput.maxLength || 5000;
+
+      const updateCount = () => {
+        const currentLength = messageInput.value.length;
+        charCount.textContent = `${currentLength} / ${maxLength}`;
+
+        // Visual warning when reaching 90% of limit
+        if (currentLength >= maxLength * 0.9) {
+          charCount.classList.add("text-amber-500", "dark:text-amber-400");
+          charCount.classList.remove(
+            "text-pacamara-primary/50",
+            "dark:text-white/50",
+          );
+        } else {
+          charCount.classList.remove("text-amber-500", "dark:text-amber-400");
+          charCount.classList.add(
+            "text-pacamara-primary/50",
+            "dark:text-white/50",
+          );
+        }
+      };
+
+      messageInput.addEventListener("input", updateCount);
+      // Initialize state
+      updateCount();
+    }
+
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
       const successMessage = form.querySelector("#form-success-message");
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      // 🎨 Palette: Reset character counter
+      if (messageInput) {
+        messageInput.dispatchEvent(new Event("input"));
+      }
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
@@ -529,6 +572,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             Date.now().toString(),
           );
           form.reset();
+          // 🎨 Palette: Reset character counter after success
+          if (messageInput) {
+            messageInput.dispatchEvent(new Event("input"));
+          }
         } else {
           throw new Error(result.message || "Submission failed");
         }
