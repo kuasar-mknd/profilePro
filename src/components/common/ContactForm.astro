@@ -131,15 +131,24 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     <!-- Message Field -->
     <div class="form-group group">
-      <label
-        for="message"
-        class="block mb-2 text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
-      >
-        Message <span class="sr-only">(obligatoire)</span><span
-          aria-hidden="true"
-          class="text-pacamara-accent">*</span
+      <div class="flex justify-between items-baseline mb-2">
+        <label
+          for="message"
+          class="block text-sm font-medium text-pacamara-primary dark:text-white group-focus-within:text-pacamara-accent transition-colors duration-300"
         >
-      </label>
+          Message <span class="sr-only">(obligatoire)</span><span
+            aria-hidden="true"
+            class="text-pacamara-accent">*</span
+          >
+        </label>
+        <span
+          id="char-counter"
+          class="text-xs font-mono text-pacamara-primary/60 dark:text-white/60"
+          aria-live="polite"
+        >
+          0 / 5000
+        </span>
+      </div>
       <div class="relative">
         <textarea
           name="message"
@@ -344,6 +353,26 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+    const charCounter = document.getElementById(
+      "char-counter",
+    ) as HTMLSpanElement;
+
+    // 🎨 Palette: Add character counter logic
+    if (messageInput && charCounter) {
+      const maxLength = messageInput.getAttribute("maxlength") || "5000";
+      // Update counter on input
+      messageInput.addEventListener("input", () => {
+        const currentLength = messageInput.value.length;
+        charCounter.textContent = `${currentLength} / ${maxLength}`;
+      });
+      // Reset counter when form is reset
+      form.addEventListener("reset", () => {
+        // Use a microtask delay to ensure the value has been cleared before updating
+        setTimeout(() => {
+          charCounter.textContent = `0 / ${maxLength}`;
+        }, 0);
+      });
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
