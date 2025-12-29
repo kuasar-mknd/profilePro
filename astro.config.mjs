@@ -11,7 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: "auto", // Use "auto" to allow external CSS files for better caching
+    inlineStylesheets: "always", // Enforce inline styles for critical path performance and CSP strictness
   },
   image: {
     domains: ["kuasar.xyz"],
