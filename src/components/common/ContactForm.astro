@@ -151,6 +151,13 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
+          id="char-counter"
+          class="absolute bottom-3 right-3 text-xs text-pacamara-primary/50 dark:text-white/50"
+          aria-live="polite"
+        >
+          <span id="current-chars">0</span> / <span id="max-chars">5000</span>
+        </div>
+        <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
         >
         </div>
@@ -298,7 +305,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   /* Invalid Input Styling */
   [aria-invalid="true"] {
     border-color: #ef4444; /* red-500 */
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68,.2);
   }
 </style>
 
@@ -344,6 +351,57 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+    const charCounter = form.querySelector("#char-counter") as HTMLElement;
+    const currentChars = form.querySelector("#current-chars") as HTMLSpanElement;
+    const maxChars = form.querySelector("#max-chars") as HTMLSpanElement;
+
+    // 🎨 Palette: Character counter for message textarea
+    if (messageInput && charCounter && currentChars && maxChars) {
+      const maxLength = parseInt(
+        messageInput.getAttribute("maxlength") || "5000",
+        10,
+      );
+
+      // Dynamically set the max length in the UI
+      maxChars.textContent = maxLength.toString();
+
+      // Initialize counter in case of browser autofill
+      currentChars.textContent = messageInput.value.length.toString();
+
+      messageInput.addEventListener("input", () => {
+        const currentLength = messageInput.value.length;
+        currentChars.textContent = currentLength.toString();
+
+        const warningThreshold = maxLength * 0.9;
+
+        const defaultClasses = ["text-pacamara-primary/50", "dark:text-white/50"];
+        const warningClasses = ["text-amber-500", "dark:text-amber-400"];
+        const errorClasses = ["text-red-500", "dark:text-red-400"];
+
+        charCounter.classList.remove(...warningClasses, ...errorClasses);
+        charCounter.classList.add(...defaultClasses);
+
+        if (currentLength >= maxLength) {
+          charCounter.classList.remove(...defaultClasses, ...warningClasses);
+          charCounter.classList.add(...errorClasses);
+        } else if (currentLength >= warningThreshold) {
+          charCounter.classList.remove(...defaultClasses);
+          charCounter.classList.add(...warningClasses);
+        }
+      });
+    }
+
+    // Helper to reset counter state
+    function resetCharCounter() {
+      if (currentChars && charCounter) {
+        currentChars.textContent = "0";
+        const warningClasses = ["text-amber-500", "dark:text-amber-400"];
+        const errorClasses = ["text-red-500", "dark:text-red-400"];
+        const defaultClasses = ["text-pacamara-primary/50", "dark:text-white/50"];
+        charCounter.classList.remove(...warningClasses, ...errorClasses);
+        charCounter.classList.add(...defaultClasses);
+      }
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -351,6 +409,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      resetCharCounter();
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
