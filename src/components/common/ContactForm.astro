@@ -155,6 +155,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         >
         </div>
       </div>
+      <!-- 🎨 Palette: Character Counter -->
+      <div
+        id="character-counter"
+        class="text-xs text-right mt-1 text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+        aria-hidden="true"
+      >
+        0 / 5000
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -344,6 +352,48 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+
+    // 🎨 Palette: Character Counter Logic
+    const charCounter = form.querySelector("#character-counter");
+    if (messageInput && charCounter) {
+      const maxLength = messageInput.getAttribute("maxlength") || "5000";
+      const updateCounter = () => {
+        const currentLength = messageInput.value.length;
+        charCounter.textContent = `${currentLength} / ${maxLength}`;
+
+        const limit = parseInt(maxLength, 10);
+        if (currentLength >= limit) {
+          charCounter.classList.remove(
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+            "text-orange-500",
+          );
+          charCounter.classList.add("text-red-500", "font-bold");
+        } else if (currentLength >= limit * 0.9) {
+          charCounter.classList.remove(
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+            "text-red-500",
+            "font-bold",
+          );
+          charCounter.classList.add("text-orange-500");
+        } else {
+          charCounter.classList.remove(
+            "text-orange-500",
+            "text-red-500",
+            "font-bold",
+          );
+          charCounter.classList.add(
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+        }
+      };
+
+      messageInput.addEventListener("input", updateCounter);
+      // Initialize
+      updateCounter();
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
