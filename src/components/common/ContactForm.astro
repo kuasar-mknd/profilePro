@@ -155,6 +155,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         >
         </div>
       </div>
+      <!-- 🎨 Palette: Character counter -->
+      <div
+        id="message-counter"
+        class="text-right text-xs mt-1 text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+        aria-hidden="true"
+      >
+        0 / 5000
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -344,6 +352,57 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+    const messageCounter = form.querySelector(
+      "#message-counter",
+    ) as HTMLElement;
+
+    // 🎨 Palette: Character counter logic
+    if (messageInput && messageCounter) {
+      const maxLength = messageInput.getAttribute("maxlength") || "5000";
+      const max = parseInt(maxLength, 10);
+
+      const updateCounter = () => {
+        const currentLength = messageInput.value.length;
+        messageCounter.textContent = `${currentLength} / ${max}`;
+
+        // Visual feedback at 90% and 100%
+        if (currentLength >= max) {
+          messageCounter.classList.add("text-red-500", "dark:text-red-400");
+          messageCounter.classList.remove(
+            "text-orange-500",
+            "dark:text-orange-400",
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+        } else if (currentLength >= max * 0.9) {
+          messageCounter.classList.add(
+            "text-orange-500",
+            "dark:text-orange-400",
+          );
+          messageCounter.classList.remove(
+            "text-red-500",
+            "dark:text-red-400",
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+        } else {
+          messageCounter.classList.add(
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+          messageCounter.classList.remove(
+            "text-red-500",
+            "dark:text-red-400",
+            "text-orange-500",
+            "dark:text-orange-400",
+          );
+        }
+      };
+
+      messageInput.addEventListener("input", updateCounter);
+      // Initialize
+      updateCounter();
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -351,6 +410,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      // Reset counter
+      if (messageCounter && messageInput) {
+        messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
+        messageCounter.classList.remove(
+          "text-red-500",
+          "dark:text-red-400",
+          "text-orange-500",
+          "dark:text-orange-400",
+        );
+        messageCounter.classList.add(
+          "text-pacamara-primary/60",
+          "dark:text-white/60",
+        );
+      }
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
