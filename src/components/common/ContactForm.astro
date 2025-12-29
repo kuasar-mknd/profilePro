@@ -303,6 +303,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </style>
 
 <script>
+  import { sanitizeInput } from "../../utils/security";
+
   /**
    * ⚡ Bolt: ContactForm Performance Optimization
    * Uses early return pattern and initialization guard to prevent duplicate bindings.
@@ -393,24 +395,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           errorMessage.focus();
         }
       }
-    }
-
-    // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
-    // Reverted to efficient regex-based sanitization as per review feedback
-    function sanitizeInput(str: string): string {
-      const map: Record<string, string> = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#x27;",
-        "/": "&#x2F;",
-        "`": "&#x60;", // Prevent template injection
-        "=": "&#x3D;", // Prevent unquoted attribute injection
-      };
-      const reg = /[&<>"'\/`=]/gi;
-
-      return str.replace(reg, (match) => map[match]);
     }
 
     form.addEventListener("submit", async (e) => {
