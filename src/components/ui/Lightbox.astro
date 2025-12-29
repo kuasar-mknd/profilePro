@@ -587,6 +587,8 @@
       this.preloadedUrls.add(src);
       const img = new Image();
       img.decoding = "async";
+      // ⚡ Bolt: Lower priority for speculative preloads to protect LCP
+      img.fetchPriority = "low";
       img.src = src;
 
       // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
