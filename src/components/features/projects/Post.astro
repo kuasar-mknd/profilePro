@@ -46,8 +46,8 @@ const readingTime = Math.ceil(wordCount / 200);
       height={isLarge ? 600 : 300}
       class="w-full h-full object-cover"
       loading={priority ? "eager" : "lazy"}
-      decoding="async"
       fetchpriority={priority ? "high" : "low"}
+      decoding={priority ? "sync" : "async"}
       transition:name={`project-image-${postData.slug}`}
     />
   </div>
