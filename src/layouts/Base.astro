@@ -295,6 +295,7 @@ if (postData?.data?.image) {
 
         // ⚡ Bolt: RAF throttling state
         let ticking = false;
+        let isScrollListenerAttached = false;
 
         // ⚡ Bolt: Efficiently update dimensions only when they change
         const updateDimensions = () => {
@@ -323,10 +324,18 @@ if (postData?.data?.image) {
           }
         };
 
-        // Update on scroll (optimized)
-        window.addEventListener("scroll", onScroll, {
-          passive: true,
-        });
+        // ⚡ Bolt: Dynamically toggle scroll listener based on visibility
+        const toggleScrollListener = (shouldListen: boolean) => {
+          if (shouldListen && !isScrollListenerAttached) {
+            window.addEventListener("scroll", onScroll, { passive: true });
+            isScrollListenerAttached = true;
+            // Update visuals immediately when attaching
+            window.requestAnimationFrame(updateVisuals);
+          } else if (!shouldListen && isScrollListenerAttached) {
+            window.removeEventListener("scroll", onScroll);
+            isScrollListenerAttached = false;
+          }
+        };
 
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
@@ -338,11 +347,12 @@ if (postData?.data?.image) {
 
         // Initial calculation
         updateDimensions();
-        updateVisuals();
+        // Note: We don't call updateVisuals() here or attach scroll listener yet.
+        // The IntersectionObserver will handle it when the button becomes visible.
 
         // Register cleanup
         cleanupScroll = () => {
-          window.removeEventListener("scroll", onScroll);
+          toggleScrollListener(false);
           if (resizeObserver) resizeObserver.disconnect();
         };
 
@@ -350,31 +360,39 @@ if (postData?.data?.image) {
         if (backToTopBtn.dataset.initialized === "true") return;
         backToTopBtn.dataset.initialized = "true";
 
-        // ⚡ Reuse observer if already created
-        if (!backToTopObserver) {
-          backToTopObserver = new IntersectionObserver(
-            (entries) => {
-              const entry = entries[0];
-              const btn = document.getElementById("back-to-top");
-              if (!btn) return;
-
-              // If sentinel is NOT intersecting (scrolled past), show button
-              if (!entry.isIntersecting) {
-                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
-                btn.classList.add("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "0");
-              } else {
-                btn.classList.add("opacity-0", "invisible", "translate-y-4");
-                btn.classList.remove("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "-1");
-              }
-            },
-            {
-              root: null, // viewport
-              threshold: 0,
-            },
-          );
+        // ⚡ Bolt: Force fresh observer for each page load to capture current closures
+        // This fixes a potential stale closure issue with View Transitions
+        if (backToTopObserver) {
+          backToTopObserver.disconnect();
+          backToTopObserver = null;
         }
+
+        backToTopObserver = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            const btn = document.getElementById("back-to-top");
+            if (!btn) return;
+
+            // If sentinel is NOT intersecting (scrolled past), show button
+            if (!entry.isIntersecting) {
+              btn.classList.remove("opacity-0", "invisible", "translate-y-4");
+              btn.classList.add("visible", "translate-y-0");
+              btn.setAttribute("tabindex", "0");
+              // ⚡ Bolt: Start listening to scroll only when visible
+              toggleScrollListener(true);
+            } else {
+              btn.classList.add("opacity-0", "invisible", "translate-y-4");
+              btn.classList.remove("visible", "translate-y-0");
+              btn.setAttribute("tabindex", "-1");
+              // ⚡ Bolt: Stop listening to scroll when hidden
+              toggleScrollListener(false);
+            }
+          },
+          {
+            root: null, // viewport
+            threshold: 0,
+          },
+        );
 
         backToTopObserver.observe(sentinel);
 
@@ -393,9 +411,12 @@ if (postData?.data?.image) {
 
         // ⚡ Register cleanup
         cleanupBackToTop = () => {
-          window.removeEventListener("scroll", onScroll);
+          toggleScrollListener(false);
           if (resizeObserver) resizeObserver.disconnect();
-          if (backToTopObserver) backToTopObserver.disconnect();
+          if (backToTopObserver) {
+            backToTopObserver.disconnect();
+            backToTopObserver = null;
+          }
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
