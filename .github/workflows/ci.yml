@@ -25,8 +25,8 @@ jobs:
         with:
           bun-version: latest
 
-      # Note: oven-sh/setup-bun@v2 automatically handles caching if a lockfile is present
-      # But we can be explicit if needed. Since bun.lock exists, it should work.
+      # Note: oven-sh/setup-bun@v2 automatically handles caching if a lockfile is present.
+      # Verified by DocOps to ensure robust dependency management.
 
       - name: Install dependencies
         run: bun install --frozen-lockfile

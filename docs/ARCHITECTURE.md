@@ -8,24 +8,24 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 ### 1. Layers
 
-- **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes.
+- **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes using file-based routing.
 - **Component Layer (UI)**: Located in `src/components/`.
-  - `common/`: Global components (Header, Footer).
+  - `common/`: Global components (Header, Footer, SEO).
   - `ui/`: Reusable primitives (Buttons, Cards, Lightbox).
-  - `features/`: Complex, domain-specific logic (Projects, VideoPlayer).
+  - `features/`: Domain-specific logic (Projects, VideoPlayer).
 - **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
 - **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
 
 ### 2. Data Flow
 
 1.  **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files.
-2.  **SSG**: HTML pages are generated static at build time.
-3.  **Hydration**: Interactive components (React, Svelte, or vanilla JS scripts) are hydrated only when needed (`client:load`, `client:visible`).
+2.  **SSG**: HTML pages are generated statically at build time.
+3.  **Hydration**: Interactive components (using `<script>` tags or framework components) are hydrated only when needed (`client:load`, `client:visible`).
 
 ### 3. Key Technologies
 
 - **Astro 5**: Core framework.
-- **Tailwind CSS 4**: Styling engine.
+- **Tailwind CSS 4**: Styling engine (via Vite plugin).
 - **Bun**: Runtime & Package Manager.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
@@ -87,10 +87,8 @@ Workflows are defined in `.github/workflows/`:
 
 ---
 
-## 🧩 Clean Architecture Mapping
+## 🧩 Architectural Concepts
 
-While this is a frontend-heavy SSG project, principles still apply:
-
-- **Domain**: Content Collections (`src/content/`) define the business entities (Projects, Posts).
-- **Application**: `src/utils/` and Logic components (`features/`) handle data processing.
-- **Infrastructure**: Astro config, Cloudflare adapter, `src/pages/rss.xml.js`.
+- **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
+- **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
+- **Content Collections**: Type-safe content management for Markdown/MDX.
