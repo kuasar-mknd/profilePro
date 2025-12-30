@@ -5,6 +5,7 @@ import Post from "../../../components/features/projects/Post.astro";
 import ProjectFilter from "../../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../../components/ui/ScrollReveal.astro";
 import Breadcrumbs from "../../../components/ui/Breadcrumbs.astro";
+import EmptyState from "../../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -51,6 +52,13 @@ const { projects, allTags } = Astro.props;
     </ScrollReveal>
 
     <div class="flex flex-wrap justify-center gap-8 mb-16">
+      {
+        projects.length === 0 && (
+          <EmptyState
+            message={`Aucun projet trouvé avec l'étiquette "${tag}".`}
+          />
+        )
+      }
       {
         projects.map((post, index) => (
           <ScrollReveal
