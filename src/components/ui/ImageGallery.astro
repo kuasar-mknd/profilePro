@@ -220,7 +220,7 @@ const columnClasses = {
           if (img.complete) {
             removeSkeleton();
           } else {
-            img.addEventListener("load", removeSkeleton);
+            img.addEventListener("load", removeSkeleton, { once: true });
           }
         }
       });
