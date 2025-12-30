@@ -32,21 +32,6 @@
 
 ---
 
-## ❓ Troubleshooting
-
-Si vous rencontrez des problèmes lors de l'installation ou du lancement :
-
-1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    - Lancez `bun install` pour reconstruire les binaires natifs.
-2.  **Erreur `bun run` introuvable** :
-    - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
-3.  **Problèmes d'environnement** :
-    - Vérifiez que `.env` existe (copié depuis `.env.example`).
-    - Les variables `PUBLIC_` sont nécessaires au build.
-4.  **Tests Playwright** :
-    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
-
 ## 📖 À propos
 
 Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de contenu vidéo et la captation d'événements. Ce site présente mes projets de manière dynamique et immersive, avec un focus sur l'expérience utilisateur et la performance.
@@ -128,6 +113,21 @@ curl https://portfolio.kuasar.xyz/rss.xml
 # Récupérer le Sitemap (XML)
 curl https://portfolio.kuasar.xyz/sitemap-index.xml
 ```
+
+## ❓ Troubleshooting
+
+Si vous rencontrez des problèmes lors de l'installation ou du lancement :
+
+1.  **Erreur `sharp` ou optimisation d'images** :
+    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    - Lancez `bun install` pour reconstruire les binaires natifs.
+2.  **Erreur `bun run` introuvable** :
+    - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
+3.  **Problèmes d'environnement** :
+    - Vérifiez que `.env` existe (copié depuis `.env.example`).
+    - Les variables `PUBLIC_` sont nécessaires au build.
+4.  **Tests Playwright** :
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
 
 ## 📂 Structure du projet
 
