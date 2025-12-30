@@ -1,5 +1,6 @@
 ---
 import config from "../../config.mjs";
+import { safeJson } from "../../utils/security";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -48,8 +49,4 @@ const jsonLd = {
 };
 ---
 
-<script
-  type="application/ld+json"
-  is:inline
-  set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
-/>
+<script type="application/ld+json" is:inline set:html={safeJson(jsonLd)} />
