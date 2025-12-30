@@ -95,6 +95,8 @@ const {
         // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
+        // ⚡ Bolt: Remove layer promotion
+        cardStyle.removeProperty("will-change");
 
         bounds = null;
 
@@ -106,6 +108,9 @@ const {
       function onMouseEnter() {
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
+
+        // ⚡ Bolt: Promote to compositor layer only during interaction
+        cardStyle.setProperty("will-change", "transform");
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);
