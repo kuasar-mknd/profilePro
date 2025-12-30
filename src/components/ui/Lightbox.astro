@@ -415,8 +415,10 @@
       // ⚡ Bolt: Accessibility - Handle keyboard activation for images
       document.addEventListener("keydown", this.boundDelegatedKeyHandler);
 
-      // ⚡ Bolt: Cache gallery elements once on init
-      this.collectImages();
+      // ⚡ Bolt: Optimization - REMOVED eager image collection
+      // We now collect images lazily only when the user interacts with the gallery
+      // to avoid querySelectorAll on every page load.
+      // this.collectImages();
     }
 
     /**
@@ -454,6 +456,12 @@
     }
 
     private activateImage(galleryImage: HTMLElement) {
+      // ⚡ Bolt: Lazy-load gallery elements on first interaction
+      // This saves a querySelectorAll on pages without galleries or before interaction
+      if (this.galleryElements.length === 0) {
+        this.collectImages();
+      }
+
       // ⚡ Bolt: Use cached elements for O(1) lookup
       const index = this.galleryElements.indexOf(
         galleryImage as HTMLImageElement,
@@ -465,7 +473,7 @@
     }
 
     private collectImages() {
-      // ⚡ Bolt: Cache DOM elements once at init
+      // ⚡ Bolt: Cache DOM elements once at init (or lazily)
       const elements = document.querySelectorAll("[data-gallery-image]");
       this.galleryElements = Array.from(elements) as HTMLImageElement[];
     }
