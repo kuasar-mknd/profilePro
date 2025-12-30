@@ -20,6 +20,7 @@
       class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:-rotate-45 group-aria-expanded:translate-x-1"
     ></span>
   </div>
+  <span class="sr-only" aria-live="polite" id="menu-live-region"></span>
 </button>
 
 <script>
@@ -50,6 +51,13 @@
         "title",
         newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
       );
+
+      // 🎨 Palette: Announce menu state change to screen readers
+      const liveRegion = document.getElementById("menu-live-region");
+      if (liveRegion) {
+        liveRegion.textContent = newIsExpanded ? "Menu ouvert" : "Menu fermé";
+      }
+
       document.documentElement.classList.toggle("overflow-hidden");
       nav.classList.toggle("translate-x-full");
       nav.classList.toggle("translate-x-0");
