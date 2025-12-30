@@ -544,14 +544,24 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         // 🛡️ Sentinel: Sanitize form data before sending
         const formData = new FormData(form);
         const data: Record<string, string> = {};
-        // 🛡️ Sentinel: Fields to exclude from sanitization to prevent corruption of system values
-        // access_key: UUID/Token (strict match required, cannot be escaped)
-        // form-load-timestamp: Numeric string
+
+        // 🛡️ Sentinel: Define allowed fields to prevent mass assignment/injection of unknown fields
+        const allowedFields = new Set([
+          "access_key",
+          "subject",
+          "botcheck",
+          "form-load-timestamp",
+          "name",
+          "email",
+          "message",
+        ]);
+
         const fieldsToSanitize = new Set(["name", "email", "message"]);
 
         formData.forEach((value, key) => {
+          if (!allowedFields.has(key)) return; // Drop unknown fields
+
           if (typeof value === "string") {
-            // Sanitize only user-provided fields to prevent corrupting system values.
             if (fieldsToSanitize.has(key)) {
               data[key] = sanitizeInput(value);
             } else {
