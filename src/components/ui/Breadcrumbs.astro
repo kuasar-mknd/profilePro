@@ -1,4 +1,6 @@
 ---
+import { safeJson } from "../../utils/security";
+
 interface Props {
   items: {
     label: string;
@@ -63,8 +65,4 @@ const schema = {
   </ol>
 </nav>
 
-<script
-  type="application/ld+json"
-  is:inline
-  set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
-/>
+<script type="application/ld+json" is:inline set:html={safeJson(schema)} />
