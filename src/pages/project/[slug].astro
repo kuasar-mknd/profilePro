@@ -337,9 +337,19 @@ const jsonLd = {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
-            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+            id="nav-project-prev"
+            class="group relative flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            aria-keyshortcuts="ArrowLeft"
+            title="Projet précédent (←)"
           >
+            {/* 🎨 Palette: Visual Keyboard Hint */}
+            <span
+              class="hidden md:block absolute top-2 right-2 text-xs font-medium text-pacamara-primary/40 dark:text-white/40 border border-pacamara-secondary/20 rounded px-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none select-none"
+              aria-hidden="true"
+            >
+              ←
+            </span>
             <Icon
               name="mdi:arrow-left"
               class="w-8 h-8 text-pacamara-accent/60 group-hover:text-pacamara-accent group-hover:-translate-x-1 transition-all duration-300"
@@ -363,9 +373,19 @@ const jsonLd = {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
-            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+            id="nav-project-next"
+            class="group relative flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            aria-keyshortcuts="ArrowRight"
+            title="Projet suivant (→)"
           >
+            {/* 🎨 Palette: Visual Keyboard Hint */}
+            <span
+              class="hidden md:block absolute top-2 left-2 text-xs font-medium text-pacamara-primary/40 dark:text-white/40 border border-pacamara-secondary/20 rounded px-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none select-none"
+              aria-hidden="true"
+            >
+              →
+            </span>
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet suivant
@@ -426,4 +446,49 @@ const jsonLd = {
       <LatestPosts postLimit="2" skipPost={entry.data.title} />
     </div>
   </div>
+
+  <!-- 🎨 Palette: Keyboard Navigation Script -->
+  <script>
+    function initProjectNav() {
+      const handleKeydown = (e: KeyboardEvent) => {
+        // Ignore if focus is in an input/textarea
+        const target = e.target as HTMLElement;
+        if (target.matches("input, textarea, select, [contenteditable]"))
+          return;
+        // Ignore if modifier keys are pressed
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        // Ignore if lightbox is open (it traps focus)
+        if (document.querySelector('#lightbox[aria-hidden="false"]')) return;
+
+        if (e.key === "ArrowLeft") {
+          const prevBtn = document.getElementById("nav-project-prev");
+          if (prevBtn) {
+            // Visual feedback before click
+            prevBtn.classList.add("ring-2", "ring-pacamara-accent");
+            setTimeout(() => prevBtn.click(), 50);
+          }
+        }
+        if (e.key === "ArrowRight") {
+          const nextBtn = document.getElementById("nav-project-next");
+          if (nextBtn) {
+            nextBtn.classList.add("ring-2", "ring-pacamara-accent");
+            setTimeout(() => nextBtn.click(), 50);
+          }
+        }
+      };
+
+      document.addEventListener("keydown", handleKeydown);
+
+      // Cleanup on navigation
+      document.addEventListener(
+        "astro:before-swap",
+        () => {
+          document.removeEventListener("keydown", handleKeydown);
+        },
+        { once: true },
+      );
+    }
+
+    initProjectNav();
+  </script>
 </Base>
