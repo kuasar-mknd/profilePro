@@ -9,6 +9,7 @@ import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import EmptyState from "../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths({
   paginate,
@@ -58,6 +59,11 @@ const { page, allTags } = Astro.props;
     </ScrollReveal>
     <div class="flex flex-wrap justify-center gap-8 mb-16">
       {
+        page.data.length === 0 && (
+          <EmptyState message="Aucun projet trouvé pour cette page." />
+        )
+      }
+      {
         page.data.map((post, index) => {
           return (
             <ScrollReveal
@@ -78,7 +84,7 @@ const { page, allTags } = Astro.props;
             class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
             aria-label="Page précédente"
           >
-            &larr; Previous
+            &larr; Précédent
           </a>
         ) : null
       }
@@ -89,7 +95,7 @@ const { page, allTags } = Astro.props;
             class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
             aria-label="Page suivante"
           >
-            Next &rarr;
+            Suivant &rarr;
           </a>
         ) : null
       }
