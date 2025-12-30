@@ -23,6 +23,7 @@ const readingTime = Math.ceil(wordCount / 200);
   <a
     href={`/project/${postData.slug}`}
     aria-label={`Voir le projet ${postData.data.title} - Lecture estimée ${readingTime} minutes`}
+    title={`Voir le projet ${postData.data.title}`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
   >
   </a>
