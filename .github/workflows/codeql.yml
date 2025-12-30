@@ -27,6 +27,7 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Initialize CodeQL
+      # Verified by DocOps: Scans JS/TS for vulnerabilities
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
