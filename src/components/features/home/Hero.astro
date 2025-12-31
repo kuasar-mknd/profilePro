@@ -20,7 +20,8 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const slides = shuffle([...projectImages]);
+// ⚡ Bolt: Limit carousel items to avoid excessive DOM nodes
+const slides = shuffle([...projectImages]).slice(0, 15);
 // Ensure we have enough slides for the loop (duplicate if needed)
 const allSlides = [...slides, ...slides];
 
