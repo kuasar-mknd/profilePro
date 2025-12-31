@@ -1,6 +1,7 @@
 # Architecture Documentation
 
 > **Note:** This project is a statically generated site (SSG) built with **Astro 5**.
+> **Update:** While this repository may be referenced as a "backend", it functions primarily as a frontend-heavy static site with generated endpoints.
 
 ## 🏗 High-Level Architecture
 
