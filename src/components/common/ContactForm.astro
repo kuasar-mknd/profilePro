@@ -159,9 +159,16 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       <div
         id="message-counter"
         class="text-right text-xs mt-1 text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
-        aria-hidden="true"
       >
         0 / 5000
+      </div>
+      <!-- 🎨 Palette: Accessible live region for character count announcements -->
+      <div
+        id="sr-char-counter"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      >
       </div>
     </div>
 
@@ -363,6 +370,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
 
+      // State for SR announcements to prevent spamming
+      let lastAnnouncementState = "normal"; // normal | warning | limit
+      const srCounter = form.querySelector("#sr-char-counter");
+
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
@@ -376,6 +387,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+
+          // 🎨 Palette: Announce limit
+          if (lastAnnouncementState !== "limit" && srCounter) {
+            srCounter.textContent = `Limite de ${max} caractères atteinte.`;
+            lastAnnouncementState = "limit";
+          }
         } else if (currentLength >= max * 0.9) {
           messageCounter.classList.add(
             "text-orange-500",
@@ -387,6 +404,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+
+          // 🎨 Palette: Announce warning
+          if (lastAnnouncementState !== "warning" && srCounter) {
+            srCounter.textContent = `Attention : moins de ${max - Math.floor(max * 0.9)} caractères restants.`;
+            lastAnnouncementState = "warning";
+          }
         } else {
           messageCounter.classList.add(
             "text-pacamara-primary/60",
@@ -398,6 +421,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+
+          // Reset state if we go back to normal safe zone
+          if (lastAnnouncementState !== "normal") {
+            if (srCounter) srCounter.textContent = "";
+            lastAnnouncementState = "normal";
+          }
         }
       };
 
