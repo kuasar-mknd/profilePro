@@ -156,12 +156,22 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         </div>
       </div>
       <!-- 🎨 Palette: Character counter -->
-      <div
-        id="message-counter"
-        class="text-right text-xs mt-1 text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
-        aria-hidden="true"
-      >
-        0 / 5000
+      <div class="flex justify-end mt-1">
+        <div
+          id="message-counter"
+          class="text-xs text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+          aria-hidden="true"
+        >
+          0 / 5000
+        </div>
+        <!-- 🎨 Palette: Screen reader announcer for character limit -->
+        <div
+          id="message-counter-announcer"
+          class="sr-only"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+        </div>
       </div>
     </div>
 
@@ -357,18 +367,25 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const messageCounterAnnouncer = form.querySelector(
+      "#message-counter-announcer",
+    ) as HTMLElement;
 
-    // 🎨 Palette: Character counter logic
+    // 🎨 Palette: Character counter logic with accessibility announcement
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
+      let lastAnnouncedState = "normal"; // normal, warning, limit
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
 
+        let currentState = "normal";
+
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
+          currentState = "limit";
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
             "text-orange-500",
@@ -377,6 +394,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "dark:text-white/60",
           );
         } else if (currentLength >= max * 0.9) {
+          currentState = "warning";
           messageCounter.classList.add(
             "text-orange-500",
             "dark:text-orange-400",
@@ -398,6 +416,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+        }
+
+        // 🎨 Palette: Announce only on state change to avoid spamming
+        // Updated to be less specific about exact count to avoid stale information
+        if (messageCounterAnnouncer && currentState !== lastAnnouncedState) {
+          if (currentState === "warning") {
+            messageCounterAnnouncer.textContent =
+              "Attention, vous approchez de la limite de caractères.";
+          } else if (currentState === "limit") {
+            messageCounterAnnouncer.textContent = `Limite de ${max} caractères atteinte.`;
+          } else {
+            messageCounterAnnouncer.textContent = ""; // Clear when back to normal
+          }
+          lastAnnouncedState = currentState;
         }
       };
 
@@ -425,6 +457,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "text-pacamara-primary/60",
           "dark:text-white/60",
         );
+        if (messageCounterAnnouncer) {
+          messageCounterAnnouncer.textContent = "";
+        }
       }
       if (submitButton) {
         submitButton.disabled = false;
