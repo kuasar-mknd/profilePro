@@ -19,7 +19,11 @@ const {
   data-max-tilt={maxTilt}
   data-scale={scale}
   data-perspective={perspective}
+  style="contain: layout style;"
 >
+  {
+    /* ⚡ Bolt: contain: layout style isolates the card's layout/paint from the rest of the page */
+  }
   <div class="tilt-shine"></div>
   <slot />
 </div>

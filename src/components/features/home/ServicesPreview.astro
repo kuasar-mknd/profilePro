@@ -38,7 +38,13 @@ const services = [
 ];
 ---
 
-<section class="py-24 relative overflow-hidden">
+<section
+  class="py-24 relative overflow-hidden"
+  style="content-visibility: auto; contain-intrinsic-size: auto 600px;"
+>
+  {
+    /* ⚡ Bolt: content-visibility skips rendering off-screen content to improve initial load performance */
+  }
   <!-- Animated background gradient -->
   <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
     <div
