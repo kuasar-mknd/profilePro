@@ -32,7 +32,11 @@ const allPosts = await getCollection("project");
 const remainingCount = allPosts.length - postLimit;
 ---
 
-<section class="container mx-auto max-w-7xl px-7 py-16">
+<section
+  class="container mx-auto max-w-7xl px-7 py-16"
+  style="content-visibility: auto; contain-intrinsic-size: auto 1000px;"
+>
+  {/* ⚡ Bolt: content-visibility skips rendering off-screen content */}
   <ScrollReveal class="text-center mb-12">
     <h2
       class="text-3xl md:text-4xl font-pacamara-space font-bold mb-4 text-pacamara-dark dark:text-white"
