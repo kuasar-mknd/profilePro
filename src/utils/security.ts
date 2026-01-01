@@ -7,13 +7,18 @@
 
 /**
  * Safely serializes a value to JSON for injection into HTML (e.g., script tags, data attributes).
- * Escapes the '<' character to prevent Script Injection via JSON in HTML context.
+ * Escapes dangerous characters to prevent Script Injection and other XSS vectors via JSON.
  *
  * @param value - The value to serialize
- * @returns The JSON string with '<' escaped as '\u003c'
+ * @returns The JSON string with dangerous characters escaped
  */
 export function safeJson(value: any): string {
-  return JSON.stringify(value).replace(/</g, "\\u003c");
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 
 /**
