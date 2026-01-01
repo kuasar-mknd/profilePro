@@ -439,7 +439,6 @@ if (postData?.data?.image) {
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
       // and a warning in title/aria-label.
-      let linkObserver: MutationObserver | null = null;
       const warning = " (ouvre un nouvel onglet)";
 
       function secureLink(link: Element) {
@@ -466,37 +465,14 @@ if (postData?.data?.image) {
       }
 
       function secureLinks() {
-        // 1. Secure existing links
+        // ⚡ Bolt: Removed MutationObserver. Astro View Transitions handle page swaps,
+        // and there are no client-side frameworks injecting links dynamically.
+        // This saves main thread resources on every DOM mutation.
         document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
-
-        // 2. Observer for dynamic links
-        if (linkObserver) {
-          linkObserver.disconnect();
-        }
-
-        linkObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === 1) {
-                const element = node as Element;
-                // Check if node itself is a link
-                secureLink(element);
-                // Check descendants
-                element
-                  .querySelectorAll('a[target="_blank"]')
-                  .forEach(secureLink);
-              }
-            });
-          });
-        });
-
-        // Start observing the body for added nodes
-        linkObserver.observe(document.body, { childList: true, subtree: true });
       }
 
-      // Run on load and after view transitions
-      secureLinks();
-      document.addEventListener("astro:after-swap", secureLinks);
+      // Run on load and after view transitions (astro:page-load covers both)
+      document.addEventListener("astro:page-load", secureLinks);
     </script>
     <script>
       import { registerSW } from "virtual:pwa-register";

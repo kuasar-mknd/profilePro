@@ -1,3 +1,3 @@
-## 2024-05-23 - Event Delegation for Global Components
-**Learning:** When using a global interactive component (like `Lightbox.astro` in `Base.astro`) that handles events for distributed elements (like gallery images), do not duplicate event listeners in the child components.
-**Action:** Rely on the global component's delegated listeners (`document.addEventListener`) to handle interactions. This reduces memory usage (N listeners -> 1 listener) and prevents potential double-handling logic or race conditions. Ensure the global component is always present (e.g., in the Layout) before removing child listeners.
+## 2024-05-23 - MutationObserver and Astro View Transitions
+**Learning:** In Astro sites using View Transitions (`<ClientRouter />`), global `MutationObserver` instances on `document.body` can be overkill if the site content is mostly static. Astro's `astro:page-load` event is sufficient for re-running initialization logic on navigation, and observing the entire subtree is expensive.
+**Action:** Replace global body observers with scoped initialization on `astro:page-load` unless there is unpredictable client-side injection (like from third-party scripts).
