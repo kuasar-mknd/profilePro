@@ -91,11 +91,13 @@ const readingTime = Math.ceil(wordCount / 200);
         {postData.data.title}
       </h3>
 
-      <!-- Description - collapses when hidden, expands on hover -->
+      <!-- Description - collapses when hidden, expands on hover or focus within -->
       <div
         class:list={[
           "transition-all duration-300 ease-out",
-          isLarge ? "" : "overflow-hidden max-h-0 group-hover:max-h-20",
+          isLarge
+            ? ""
+            : "overflow-hidden max-h-0 group-hover:max-h-20 group-focus-within:max-h-20",
         ]}
       >
         <p
