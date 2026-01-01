@@ -1,4 +1,7 @@
+# This file is machine-readable and follows RFC 9116.
+# Please report security vulnerabilities according to the policy below.
+
 Contact: mailto:samuel@edulex.ch
-Policy: https://github.com/kuasar-mknd/profilePro/blob/main/SECURITY.md
-Preferred-Languages: fr, en
-Expires: 2025-12-31T23:59:59.000Z
+Policy: https://github.com/kuasar-mknd/profilePro/blob/master/SECURITY.md
+Expires: 2026-01-01T00:00:00.000Z
+Preferred-Languages: en, fr
