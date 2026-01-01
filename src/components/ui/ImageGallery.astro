@@ -94,6 +94,7 @@ const columnClasses = {
             tabindex="0"
             role="button"
             aria-label={`Ouvrir la photo ${index + 1} en plein écran`}
+            aria-haspopup="dialog"
             loading={index < priorityCount ? "eager" : "lazy"}
             decoding="async"
             fetchpriority={index < priorityCount ? "high" : "low"}
@@ -108,11 +109,14 @@ const columnClasses = {
       ))}
     </div>
   ) : (
-    <p class="text-pacamara-primary/50 dark:text-white/50 text-center py-8">
-      {folder
-        ? `Aucune image trouvée dans le dossier "${folder}"`
-        : "Aucune image à afficher."}
-    </p>
+    <div class="flex flex-col items-center justify-center py-12 text-pacamara-primary/50 dark:text-white/50">
+      <Icon name="mdi:image-off" class="w-12 h-12 mb-4 opacity-50" />
+      <p class="text-center">
+        {folder
+          ? `Aucune image trouvée dans le dossier "${folder}"`
+          : "Aucune image à afficher."}
+      </p>
+    </div>
   )
 }
 
