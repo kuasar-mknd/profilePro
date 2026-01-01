@@ -505,10 +505,12 @@ if (postData?.data?.image) {
         registerSW({
           immediate: true,
           onNeedRefresh() {
+            // 🛡️ Sentinel: Dev-only logging
             if (import.meta.env.DEV)
               console.log("⚡ Bolt PWA: New content available");
           },
           onOfflineReady() {
+            // 🛡️ Sentinel: Dev-only logging
             if (import.meta.env.DEV)
               console.log("⚡ Bolt PWA: App ready to work offline");
           },
