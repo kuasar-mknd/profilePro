@@ -1,0 +1,4 @@
+## 2024-05-23 - Centralized JSON Security Logic
+**Vulnerability:** Inconsistent JSON serialization logic for injection into HTML contexts (specifically JSON-LD). While `src/layouts/Base.astro` used a centralized `safeJson` utility, `src/components/common/SeoHead.astro` manually implemented a partial fix (only escaping `<`).
+**Learning:** Manual implementations of security logic often miss edge cases. In this instance, while XSS via `<` was handled, the manual implementation missed escaping Line Separator (`U+2028`) and Paragraph Separator (`U+2029`) characters, which are valid in JSON but cause syntax errors in JavaScript string contexts.
+**Prevention:** Always use centralized security utilities (like `safeJson`) instead of ad-hoc fixes. Extended `safeJson` to escape `U+2028` and `U+2029` to ensure robustness against JavaScript syntax errors in all injection contexts.
