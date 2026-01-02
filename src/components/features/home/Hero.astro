@@ -20,7 +20,12 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const slides = shuffle([...projectImages]);
+// ⚡ Bolt: Cap the number of projects in the carousel to prevent DOM bloat
+// 15 projects * 2 (duplication) = 30 images, which is plenty for a visual effect
+// while keeping the initial HTML size and request count constant O(1).
+const CAROUSEL_LIMIT = 15;
+
+const slides = shuffle([...projectImages]).slice(0, CAROUSEL_LIMIT);
 // Ensure we have enough slides for the loop (duplicate if needed)
 const allSlides = [...slides, ...slides];
 
