@@ -7,7 +7,7 @@ export default {
   catchmentArea: ["Lausanne", "Vaud", "Suisse romande", "Genève", "Fribourg"],
   defaultOgImage: "./defaultog.jpg",
   latestPosts: 20,
-  postsPerPage: 20,
+  postsPerPage: 2,
   url: "https://kuasar.xyz",
   social: {
     dribbble: false,

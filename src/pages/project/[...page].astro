@@ -9,6 +9,7 @@ import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import { Icon } from "astro-icon/components";
 
 export async function getStaticPaths({
   paginate,
@@ -75,10 +76,14 @@ const { page, allTags } = Astro.props;
         page.url.prev ? (
           <a
             href={page.url.prev}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            class="group inline-flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label="Page précédente"
           >
-            &larr; Previous
+            <Icon
+              name="mdi:arrow-left"
+              class="w-5 h-5 transition-transform group-hover:-translate-x-1"
+            />
+            <span>Précédent</span>
           </a>
         ) : null
       }
@@ -86,10 +91,14 @@ const { page, allTags } = Astro.props;
         page.url.next ? (
           <a
             href={page.url.next}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            class="group inline-flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label="Page suivante"
           >
-            Next &rarr;
+            <span>Suivant</span>
+            <Icon
+              name="mdi:arrow-right"
+              class="w-5 h-5 transition-transform group-hover:translate-x-1"
+            />
           </a>
         ) : null
       }
