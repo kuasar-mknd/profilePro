@@ -163,6 +163,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessibility Enhancement for Character Counter -->
+      <div id="message-counter-announcer" class="sr-only" aria-live="polite">
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -357,15 +360,46 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const messageCounterAnnouncer = form.querySelector(
+      "#message-counter-announcer",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
-    if (messageInput && messageCounter) {
+    let hasAnnouncedWarning = false;
+    let hasAnnouncedLimit = false;
+
+    if (messageInput && messageCounter && messageCounterAnnouncer) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
+      const warningThreshold = Math.floor(max * 0.9);
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
+
+        // 🎨 Palette: Announce warnings for screen readers at thresholds
+        if (currentLength >= max) {
+          if (!hasAnnouncedLimit) {
+            messageCounterAnnouncer.textContent = `Limite de ${max} caractères atteinte.`;
+            hasAnnouncedLimit = true;
+          }
+        } else if (currentLength >= warningThreshold) {
+          if (!hasAnnouncedWarning) {
+            const remaining = max - warningThreshold;
+            messageCounterAnnouncer.textContent = `Attention : il vous reste moins de ${remaining} caractères.`;
+            hasAnnouncedWarning = true;
+          }
+          if (hasAnnouncedLimit) {
+            messageCounterAnnouncer.textContent = "";
+            hasAnnouncedLimit = false;
+          }
+        } else {
+          if (hasAnnouncedWarning || hasAnnouncedLimit) {
+            messageCounterAnnouncer.textContent = "";
+            hasAnnouncedWarning = false;
+            hasAnnouncedLimit = false;
+          }
+        }
 
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
@@ -376,7 +410,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
-        } else if (currentLength >= max * 0.9) {
+        } else if (currentLength >= warningThreshold) {
           messageCounter.classList.add(
             "text-orange-500",
             "dark:text-orange-400",
@@ -412,6 +446,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+
+      // Reset announcer state
+      hasAnnouncedWarning = false;
+      hasAnnouncedLimit = false;
+      if (messageCounterAnnouncer) messageCounterAnnouncer.textContent = "";
+
       // Reset counter
       if (messageCounter && messageInput) {
         messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
