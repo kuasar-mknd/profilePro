@@ -64,6 +64,17 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 1.  Create `src/components/ui/MyComponent.astro`.
 2.  If it needs interactivity, script logic goes into a `<script>` tag or a framework component (e.g., React).
 
+### Adding New API Endpoints
+Since this is an SSG, "endpoints" are static files generated at build time.
+1.  Create a file `src/pages/my-endpoint.json.js` (or `.xml.js`).
+2.  Export a `GET` function:
+    ```js
+    export async function GET(context) {
+      return new Response(JSON.stringify({ hello: "world" }));
+    }
+    ```
+3.  It will be accessible at `/my-endpoint.json` after build.
+
 ---
 
 ## 🔄 CI/CD Pipeline
