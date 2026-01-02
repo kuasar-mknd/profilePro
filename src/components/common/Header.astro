@@ -88,6 +88,11 @@ const logo2x = await getImage({
   html.overflow-hidden #navigation_wrapper {
     transform: translateX(0);
   }
+
+  /* ⚡ Bolt: Promote layer for large animation */
+  #navigation_wrapper {
+    will-change: transform;
+  }
 </style>
 
 <script>
