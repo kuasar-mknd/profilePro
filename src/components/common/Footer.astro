@@ -160,16 +160,16 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const link = document.createElement("a");
         link.id = "wcb_a";
         link.target = "_blank";
+        // ⚡ Bolt: Security & Accessibility (Manual impl. as global observer was removed)
         link.rel = "noopener noreferrer";
         link.href = "https://websitecarbon.com";
         link.className =
           "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent rounded-lg";
         link.textContent = "Website Carbon";
-        link.setAttribute(
-          "aria-label",
-          "Website Carbon (ouvre un nouvel onglet)",
-        );
-        link.setAttribute("title", "Website Carbon (ouvre un nouvel onglet)");
+
+        const warning = " (ouvre un nouvel onglet)";
+        link.setAttribute("aria-label", "Website Carbon" + warning);
+        link.setAttribute("title", "Website Carbon" + warning);
 
         wrapper.appendChild(scoreSpan);
         wrapper.appendChild(link);
