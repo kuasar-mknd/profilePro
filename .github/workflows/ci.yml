@@ -18,15 +18,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      # Note: oven-sh/setup-bun@v2 automatically handles caching if a lockfile is present
-      # But we can be explicit if needed. Since bun.lock exists, it should work.
+      # Note: oven-sh/setup-bun@v2 automatically handles caching if a lockfile is present.
+      # We ensure sharp compatibility by having Node 20.
 
       - name: Install dependencies
         run: bun install --frozen-lockfile

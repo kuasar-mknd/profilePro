@@ -10,7 +10,6 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 |---|---|---|---|
 | `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for Web3Forms (Contact Form) | Yes | `abc-123` |
 | `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics | No | `abc-123` |
-| `PUBLIC_SITE_URL` | Canonical URL of the site | Yes | `https://portfolio.kuasar.xyz` |
 
 ## 🛡 Secrets
 
@@ -22,8 +21,5 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 # Public Keys (Safe to expose in client bundle, but managed via env for flexibility)
 PUBLIC_WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
 PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
-PUBLIC_SITE_URL="http://localhost:4321"
-
-# Private Secrets (Server-side only - Not currently used in this static build)
-# SECRET_API_KEY=...
+# PUBLIC_SITE_URL is managed via astro.config.mjs "site" property for SSG
 ```

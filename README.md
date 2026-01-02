@@ -5,7 +5,7 @@
 <!-- Status & Build -->
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
-[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
 
 <!-- Tech Stack -->
@@ -31,21 +31,6 @@
 [🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 
 ---
-
-## ❓ Troubleshooting
-
-Si vous rencontrez des problèmes lors de l'installation ou du lancement :
-
-1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    - Lancez `bun install` pour reconstruire les binaires natifs.
-2.  **Erreur `bun run` introuvable** :
-    - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
-3.  **Problèmes d'environnement** :
-    - Vérifiez que `.env` existe (copié depuis `.env.example`).
-    - Les variables `PUBLIC_` sont nécessaires au build.
-4.  **Tests Playwright** :
-    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
 
 ## 📖 À propos
 
@@ -80,6 +65,7 @@ Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de d
 Une documentation détaillée est disponible dans le dossier `docs/` :
 
 - [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
+- [📡 API & Endpoints](docs/API.md) : Détails sur les flux RSS et Sitemap.
 - [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
 - [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 
@@ -87,8 +73,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
+- **Node.js 20+** (Requis pour l'optimisation des images via `sharp`)
+- **Bun 1.0+** (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 
@@ -113,21 +99,34 @@ Le site sera accessible sur `http://localhost:4321`.
 
 - `bun run dev` : Lancer le serveur de développement.
 - `bun run build` : Générer le build de production.
-- `bun run check` : Vérifier le code (linting + formatage).
+- `bun run check` : Vérifier le code (linting + formatage + types).
 - `bun run lighthouse` : Lancer l'audit de performance.
 - `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
 
 ### API Access
 
-Le site est statique mais expose des données via des endpoints générés au build :
+Le site est statique mais expose des données via des endpoints générés au build. Voir [docs/API.md](docs/API.md) pour plus de détails.
 
 ```bash
 # Récupérer le flux RSS (XML)
 curl https://portfolio.kuasar.xyz/rss.xml
-
-# Récupérer le Sitemap (XML)
-curl https://portfolio.kuasar.xyz/sitemap-index.xml
 ```
+
+## ❓ Troubleshooting
+
+Si vous rencontrez des problèmes lors de l'installation ou du lancement :
+
+1.  **Erreur `sharp` ou optimisation d'images** :
+    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    - Lancez `rm -rf node_modules bun.lock && bun install` pour forcer une réinstallation propre.
+2.  **Erreur `bun run` introuvable** :
+    - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
+3.  **Problèmes d'environnement** :
+    - Vérifiez que `.env` existe (copié depuis `.env.example`).
+    - Les variables `PUBLIC_` sont nécessaires au build.
+4.  **Tests Playwright** :
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps`.
+    - Assurez-vous que le serveur de dev n'est pas déjà lancé sur le port 4321 si le test tente de le lancer (ou vice versa).
 
 ## 📂 Structure du projet
 
