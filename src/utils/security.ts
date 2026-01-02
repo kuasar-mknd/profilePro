@@ -13,6 +13,7 @@
  * @returns The JSON string with '<' escaped as '\u003c'
  */
 export function safeJson(value: any): string {
+  // 🛡️ Sentinel: Prevent script injection by escaping HTML tags in JSON
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
