@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 interface Props {
   items: {
     label: string;
@@ -30,19 +32,18 @@ const schema = {
         const isLast = index === items.length - 1;
 
         return (
-          <li class="flex items-center gap-2">
+          <li class="flex items-center gap-1">
             {index > 0 && (
-              <span
-                class="select-none opacity-40 text-pacamara-primary/40 dark:text-white/40"
+              <Icon
+                name="mdi:chevron-right"
+                class="w-4 h-4 text-pacamara-primary/40 dark:text-white/40"
                 aria-hidden="true"
-              >
-                /
-              </span>
+              />
             )}
 
             {isLast ? (
               <span
-                class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-xs"
+                class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-xs ml-1"
                 aria-current="page"
                 title={item.label}
               >
