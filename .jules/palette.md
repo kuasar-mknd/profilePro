@@ -1,3 +1,3 @@
-## 2024-05-22 - [Enhancing 404 Page Actions]
-**Learning:** Users on error pages need clear, comforting navigation paths. Text-only buttons can feel colder/broken compared to icon-rich primary navigation. Adding icons (Home, Back) provides visual anchors that reduce cognitive load during a stress state (getting a 404).
-**Action:** When designing error states or empty states, always couple action buttons with recognizable icons to signal functionality and maintain design system consistency.
+## 2024-05-23 - Pagination Localization & Icons
+**Learning:** Pagination links ("Previous/Next") are often overlooked in localization. Standardizing them with `mdi` icons (arrow-left/right) and local language labels ("Précédent/Suivant") significantly improves the polish and usability for non-English users, especially when the rest of the site is localized.
+**Action:** Always check pagination components in list views for localization and consistent icon usage. Use `text-pacamara-white` design token for hover states on dark buttons instead of generic `text-white`.
