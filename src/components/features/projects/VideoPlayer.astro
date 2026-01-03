@@ -84,6 +84,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           <img
             src={posterUrl}
             alt={`Aperçu de ${videoTitle}`}
+            width="1280"
+            height="720"
             class="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
             decoding="async"
