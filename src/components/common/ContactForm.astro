@@ -551,7 +551,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
         formData.forEach((value, key) => {
           if (typeof value === "string") {
-            // Sanitize only user-provided fields to prevent corrupting system values.
+            // 🛡️ Sentinel: Sanitize user input to prevent XSS/Injection
+            // We sanitize client-side before sending to Web3Forms as a Defense in Depth measure.
+            // Even though Web3Forms handles the data, we want to ensure we aren't sending
+            // malicious payloads that could be interpreted by email clients.
             if (fieldsToSanitize.has(key)) {
               data[key] = sanitizeInput(value);
             } else {
