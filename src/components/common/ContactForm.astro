@@ -163,6 +163,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessible character announcer -->
+      <div id="character-announcer" class="sr-only" aria-live="polite"></div>
     </div>
 
     <!-- Submit Button -->
@@ -357,15 +359,43 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const characterAnnouncer = form.querySelector(
+      "#character-announcer",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
+      let lastAnnouncedBucket = -1;
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
+        const remaining = max - currentLength;
         messageCounter.textContent = `${currentLength} / ${max}`;
+
+        // Accessible announcement logic
+        if (characterAnnouncer) {
+          let bucket = -1;
+          if (remaining === 0) bucket = 0;
+          else if (remaining <= 50) bucket = 50;
+          else if (remaining <= 500) bucket = Math.floor(remaining / 100) * 100;
+
+          if (bucket !== lastAnnouncedBucket) {
+            if (bucket === 0) {
+              characterAnnouncer.textContent =
+                "Limite de caractères atteinte. 5000 sur 5000.";
+            } else if (bucket === 50) {
+              characterAnnouncer.textContent =
+                "Attention : moins de 50 caractères restants.";
+            } else if (bucket > 0) {
+              characterAnnouncer.textContent = `Il vous reste environ ${bucket} caractères.`;
+            } else {
+              characterAnnouncer.textContent = "";
+            }
+            lastAnnouncedBucket = bucket;
+          }
+        }
 
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
