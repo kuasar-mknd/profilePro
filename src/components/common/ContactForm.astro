@@ -163,6 +163,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessibility Enhancement for Character Counter -->
+      <div
+        id="message-counter-announcer"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -357,17 +365,21 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const counterAnnouncer = form.querySelector(
+      "#message-counter-announcer",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
-    if (messageInput && messageCounter) {
+    if (messageInput && messageCounter && counterAnnouncer) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
+      const warningThreshold = max * 0.9;
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
 
-        // Visual feedback at 90% and 100%
+        // 🎨 Palette: Announce warnings for screen readers
         if (currentLength >= max) {
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
@@ -376,7 +388,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
-        } else if (currentLength >= max * 0.9) {
+          counterAnnouncer.textContent = "Limite de caractères atteinte.";
+        } else if (currentLength >= warningThreshold) {
           messageCounter.classList.add(
             "text-orange-500",
             "dark:text-orange-400",
@@ -387,6 +400,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          const remaining = max - currentLength;
+          counterAnnouncer.textContent = `Attention, il vous reste ${remaining} caractère${remaining > 1 ? "s" : ""}.`;
         } else {
           messageCounter.classList.add(
             "text-pacamara-primary/60",
@@ -398,6 +413,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+          counterAnnouncer.textContent = "";
         }
       };
 
