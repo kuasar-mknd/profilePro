@@ -163,6 +163,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessible announcer for character limit warnings -->
+      <div
+        id="character-counter-announcer"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -357,18 +365,25 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const characterAnnouncer = form.querySelector(
+      "#character-counter-announcer",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
+      let lastAnnouncementState = "normal"; // normal, warning, limit
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
+        const remaining = max - currentLength;
+        let currentState = "normal";
 
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
+          currentState = "limit";
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
             "text-orange-500",
@@ -377,6 +392,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "dark:text-white/60",
           );
         } else if (currentLength >= max * 0.9) {
+          currentState = "warning";
           messageCounter.classList.add(
             "text-orange-500",
             "dark:text-orange-400",
@@ -398,6 +414,25 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+        }
+
+        // 🎨 Palette: Accessibility Announcement
+        // Only announce on state change to avoid spamming screen readers
+        if (characterAnnouncer && currentState !== lastAnnouncementState) {
+          const charText = remaining <= 1 ? "caractère" : "caractères";
+
+          if (currentState === "limit") {
+            characterAnnouncer.textContent = `Limite de ${max} caractères atteinte.`;
+          } else if (
+            lastAnnouncementState === "limit" &&
+            currentState === "warning"
+          ) {
+            // Provide feedback when correcting from limit
+            characterAnnouncer.textContent = `Vous pouvez à nouveau écrire. ${remaining} ${charText} restants.`;
+          } else if (currentState === "warning") {
+            characterAnnouncer.textContent = `Attention : il ne vous reste que ${remaining} ${charText}.`;
+          }
+          lastAnnouncementState = currentState;
         }
       };
 
