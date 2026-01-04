@@ -1,3 +1,3 @@
-## 2024-05-22 - [Enhancing 404 Page Actions]
-**Learning:** Users on error pages need clear, comforting navigation paths. Text-only buttons can feel colder/broken compared to icon-rich primary navigation. Adding icons (Home, Back) provides visual anchors that reduce cognitive load during a stress state (getting a 404).
-**Action:** When designing error states or empty states, always couple action buttons with recognizable icons to signal functionality and maintain design system consistency.
+## 2024-05-22 - [Keyboard Affordance Parity]
+**Learning:** Interactive elements that reveal additional UI on hover (like zoom icons or tooltips) must also reveal them on keyboard focus (`focus-within` or `focus-visible`). Relying solely on focus rings is often insufficient for conveying the *function* of the element (e.g., "this zooms in" vs "this navigates away").
+**Action:** When using `group-hover:opacity-100`, always pair it with `group-focus-within:opacity-100` (or similar) to ensure functional parity for keyboard users.
