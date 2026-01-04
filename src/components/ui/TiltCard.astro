@@ -96,6 +96,9 @@ const {
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
 
+        // ⚡ Bolt: Remove composite layer promotion to save memory
+        cardStyle.willChange = "auto";
+
         bounds = null;
 
         // ⚡ Bolt: Cleanup high-frequency listeners when not needed
@@ -104,6 +107,9 @@ const {
       }
 
       function onMouseEnter() {
+        // ⚡ Bolt: Promote to composite layer only on interaction
+        cardStyle.willChange = "transform";
+
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
 
