@@ -94,3 +94,9 @@ While this is a frontend-heavy SSG project, principles still apply:
 - **Domain**: Content Collections (`src/content/`) define the business entities (Projects, Posts).
 - **Application**: `src/utils/` and Logic components (`features/`) handle data processing.
 - **Infrastructure**: Astro config, Cloudflare adapter, `src/pages/rss.xml.js`.
+
+## 🧪 Testing Strategy
+
+- **E2E Testing**: [Playwright](https://playwright.dev/) is used for end-to-end testing. It verifies critical user flows (Navigation, Lightbox, Contact Form).
+- **Static Analysis**: `bun run check` handles TypeScript type checking, ESLint rules, and Prettier formatting.
+- **Visual Regression**: Playwright can be extended for visual comparisons if needed (currently verifying critical UI visibility).

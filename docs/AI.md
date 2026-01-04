@@ -10,11 +10,41 @@ Currently, this project does not integrate live AI models. The roadmap includes 
 ### Future Configuration
 - **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
 - **Env Vars**: TBD (e.g., `AI_API_KEY`).
+- **Models**: Small language models like `llama3` or `mistral` optimized for summarization.
+
+## 📄 JSON Schemas (Planned)
+
+When the AI adapter is implemented, it will be expected to return structured data for project metadata.
+
+**Expected Schema for Project Summary:**
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "A concise 2-sentence summary of the project."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Suggested tags based on content."
+    },
+    "sentiment": {
+      "type": "string",
+      "enum": ["positive", "neutral", "inspiring"]
+    }
+  }
+}
+```
 
 ## 🫰 Cost & Limits
 
 - **Strategy**: Static Generation (SSG).
 - **Explanation**: AI operations will be performed at **build time** to generate summaries/metadata. This avoids runtime costs and latency for users.
+- **Caching**: Results will be cached (e.g., in `.astro/cache`) to prevent re-generating summaries for unchanged content.
+- **Rate Limits**: If using a paid API, the build script will implement concurrency limits (e.g., `p-limit`) to stay within tier quotas.
 
 ## 🛡 Policy
 
