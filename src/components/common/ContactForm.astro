@@ -163,6 +163,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessible announcer for character counter -->
+      <div
+        id="message-counter-announcer"
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -357,9 +365,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const counterAnnouncer = form.querySelector(
+      "#message-counter-announcer",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
-    if (messageInput && messageCounter) {
+    if (messageInput && messageCounter && counterAnnouncer) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
 
@@ -376,6 +387,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          counterAnnouncer.textContent = "Limite de caractères atteinte.";
         } else if (currentLength >= max * 0.9) {
           messageCounter.classList.add(
             "text-orange-500",
@@ -387,6 +399,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          counterAnnouncer.textContent =
+            "Attention : vous approchez de la limite de caractères.";
         } else {
           messageCounter.classList.add(
             "text-pacamara-primary/60",
@@ -398,6 +412,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+          counterAnnouncer.textContent = ""; // Clear message when not needed
         }
       };
 
