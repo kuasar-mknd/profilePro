@@ -402,8 +402,7 @@ if (postData?.data?.image) {
       }
 
       // Initialize on load and after view transitions
-      initBackToTop();
-      document.addEventListener("astro:after-swap", initBackToTop);
+      document.addEventListener("astro:page-load", initBackToTop);
 
       // Update theme-color meta tag based on current theme
       function updateThemeColor() {
@@ -432,14 +431,12 @@ if (postData?.data?.image) {
         themeObserver.observe(document.documentElement, { attributes: true });
       }
 
-      initThemeObserver();
-      // Note: We don't need to re-init on swap because document.documentElement persists
-      // and the observer stays attached.
+      // Initialize on load
+      document.addEventListener("astro:page-load", initThemeObserver);
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
       // and a warning in title/aria-label.
-      let linkObserver: MutationObserver | null = null;
       const warning = " (ouvre un nouvel onglet)";
 
       function secureLink(link: Element) {
@@ -466,37 +463,15 @@ if (postData?.data?.image) {
       }
 
       function secureLinks() {
-        // 1. Secure existing links
+        // ⚡ Bolt: Removed expensive MutationObserver(subtree: true) on body.
+        // Links are now secured only on initial load and navigation (astro:page-load),
+        // effectively reducing main-thread CPU usage during general interaction.
+        // Dynamic components (Footer, etc.) handle their own link security.
         document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
-
-        // 2. Observer for dynamic links
-        if (linkObserver) {
-          linkObserver.disconnect();
-        }
-
-        linkObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === 1) {
-                const element = node as Element;
-                // Check if node itself is a link
-                secureLink(element);
-                // Check descendants
-                element
-                  .querySelectorAll('a[target="_blank"]')
-                  .forEach(secureLink);
-              }
-            });
-          });
-        });
-
-        // Start observing the body for added nodes
-        linkObserver.observe(document.body, { childList: true, subtree: true });
       }
 
       // Run on load and after view transitions
-      secureLinks();
-      document.addEventListener("astro:after-swap", secureLinks);
+      document.addEventListener("astro:page-load", secureLinks);
     </script>
     <script>
       import { registerSW } from "virtual:pwa-register";
