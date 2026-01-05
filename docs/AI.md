@@ -1,22 +1,22 @@
-# AI Integration Documentation
+# AI Policy & Roadmap
 
-> **Status:** No active AI integration.
-> **Plan:** Future integration for project summarization.
+> **Note:** This document outlines the use of Artificial Intelligence in the development and content of this project.
 
-## 🤖 Models & Configuration
+## 🤖 Current AI Usage
 
-Currently, this project does not integrate live AI models. The roadmap includes plans for a local AI model to summarize project descriptions.
+- **Code Generation**: AI assistants (like Jules, GitHub Copilot) are used to assist in coding, testing, and documentation tasks.
+- **Content Creation**: Project descriptions and summaries may be drafted with AI assistance, then reviewed by humans.
+- **Optimization**: AI tools are used for image compression advice and code refactoring suggestions.
 
-### Future Configuration
-- **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
-- **Env Vars**: TBD (e.g., `AI_API_KEY`).
+## 🚀 Roadmap: Local AI Integration
 
-## 🫰 Cost & Limits
+There is a planned feature to integrate a local AI model for generating dynamic project summaries.
 
-- **Strategy**: Static Generation (SSG).
-- **Explanation**: AI operations will be performed at **build time** to generate summaries/metadata. This avoids runtime costs and latency for users.
+### Architecture (Draft)
+- **Model**: Small Language Model (SLM) capable of running in a browser or edge environment.
+- **Goal**: Provide personalized content summaries without external API calls.
+- **Privacy**: No user data will be sent to external AI APIs.
 
-## 🛡 Policy
+## ⚠️ Configuration
 
-- All AI-generated content must be reviewed by a human before publishing.
-- No user data is sent to AI endpoints.
+*Currently, no specific AI API keys are required for the deployed site.*

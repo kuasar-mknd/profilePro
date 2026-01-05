@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Repository'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         with:
-          fail-on-severity: high
+          # Fails if any dependency is licensed under GPL-2.0 or later
+          # deny-licenses: GPL-2.0, GPL-2.0+, GPL-3.0, GPL-3.0+
+          comment-summary-in-pr: always

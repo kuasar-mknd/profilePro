@@ -2,55 +2,58 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ master, main ]
 
+# Cancel in-progress runs on new pushes
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build & Test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
+      # Setup Node 20 first (required for 'sharp' and other native deps)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Setup Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      # Note: oven-sh/setup-bun@v2 automatically handles caching if a lockfile is present
-      # But we can be explicit if needed. Since bun.lock exists, it should work.
-
-      - name: Install dependencies
+      # Install dependencies
+      - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Verify Code (Lint + Format + Types)
+      # Install Playwright browsers (with caching if possible, but standard here)
+      - name: Install Playwright Browsers
+        run: bun x playwright install --with-deps chromium
+
+      # Run Checks (Lint, Format, Typecheck)
+      - name: Run Checks
         run: bun run check
 
-      - name: Install Playwright Browsers
-        run: bun x playwright install --with-deps
-
+      # Run Tests
       - name: Run E2E Tests
         run: bun run test:e2e
-
-      - name: Build Project
-        run: bun run build
         env:
+          PUBLIC_SITE_URL: "http://localhost:4321"
           PUBLIC_WEB3FORMS_ACCESS_KEY: "mock_key"
           PUBLIC_CF_ANALYTICS_TOKEN: "mock_token"
-          PUBLIC_SITE_URL: "http://localhost:4321"
 
-      - name: Upload Playwright Report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 5
+      # Build Project
+      - name: Build
+        run: bun run build
+        env:
+          PUBLIC_SITE_URL: "http://localhost:4321"
+          PUBLIC_WEB3FORMS_ACCESS_KEY: "mock_key"
+          PUBLIC_CF_ANALYTICS_TOKEN: "mock_token"

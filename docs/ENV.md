@@ -1,29 +1,27 @@
-# Environment Variables
+# Environment Variables Documentation
 
-> **Note:** This project uses Astro's type-safe environment variables. See `src/env.d.ts` and `astro.config.mjs`.
+This project uses environment variables for configuration and API integration. These are loaded from `.env` in development and set in the Cloudflare Pages dashboard for production.
 
-## 🌍 Required Variables
+## 🔐 Required Variables
 
-The following variables must be set in your `.env` file (locally) or in your CI/Deployment environment.
+The following variables are **required** for the site to function correctly during build and runtime.
 
-| Variable | Description | Required | Example |
-|---|---|---|---|
-| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for Web3Forms (Contact Form) | Yes | `abc-123` |
-| `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics | No | `abc-123` |
-| `PUBLIC_SITE_URL` | Canonical URL of the site | Yes | `https://portfolio.kuasar.xyz` |
+| Variable | Description | Example |
+|---|---|---|
+| `PUBLIC_SITE_URL` | The canonical URL of the deployed site. Used for SEO and sitemaps. | `https://portfolio.kuasar.xyz` |
+| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for the Web3Forms service (Contact Form). | `YOUR_ACCESS_KEY` |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics. | `YOUR_TOKEN` |
 
-## 🛡 Secrets
+## 🛠 Setup
 
-**NEVER** commit your `.env` file. Use `.env.example` as a template.
+1.  Copy the example file:
+    ```bash
+    cp .env.example .env
+    ```
+2.  Edit `.env` and fill in your values.
 
-### `.env.example` content:
+> **Warning:** Never commit your `.env` file to version control. It is ignored by default in `.gitignore`.
 
-```bash
-# Public Keys (Safe to expose in client bundle, but managed via env for flexibility)
-PUBLIC_WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
-PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
-PUBLIC_SITE_URL="http://localhost:4321"
+## 🤖 Type Safety
 
-# Private Secrets (Server-side only - Not currently used in this static build)
-# SECRET_API_KEY=...
-```
+Environment variables are type-checked using Astro's `env.schema` (if configured) or manually validated in `src/config.mjs` or usage points. Ensure values are present before building for production.
