@@ -163,6 +163,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       >
         0 / 5000
       </div>
+      <!-- 🎨 Palette: Accessible announcer for character count -->
+      <div
+        id="message-counter-announcer"
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+      >
+      </div>
     </div>
 
     <!-- Submit Button -->
@@ -357,9 +365,13 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const messageCounterAnnouncer = form.querySelector(
+      "#message-counter-announcer",
+    ) as HTMLElement;
+    let charCounterHasWarned = false; // 🎨 Palette: State for debouncing announcements
 
     // 🎨 Palette: Character counter logic
-    if (messageInput && messageCounter) {
+    if (messageInput && messageCounter && messageCounterAnnouncer) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
 
@@ -367,7 +379,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         const currentLength = messageInput.value.length;
         messageCounter.textContent = `${currentLength} / ${max}`;
 
-        // Visual feedback at 90% and 100%
+        // Visual and accessible feedback at 90% and 100%
         if (currentLength >= max) {
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
@@ -376,6 +388,13 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          if (
+            messageCounterAnnouncer.textContent !==
+            "Limite de caractères atteinte."
+          ) {
+            messageCounterAnnouncer.textContent =
+              "Limite de caractères atteinte.";
+          }
         } else if (currentLength >= max * 0.9) {
           messageCounter.classList.add(
             "text-orange-500",
@@ -387,6 +406,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          if (!charCounterHasWarned) {
+            messageCounterAnnouncer.textContent =
+              "Avertissement : limite de caractères bientôt atteinte.";
+            charCounterHasWarned = true;
+          }
         } else {
           messageCounter.classList.add(
             "text-pacamara-primary/60",
@@ -398,6 +422,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-500",
             "dark:text-orange-400",
           );
+          messageCounterAnnouncer.textContent = "";
+          charCounterHasWarned = false;
         }
       };
 
@@ -425,6 +451,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "text-pacamara-primary/60",
           "dark:text-white/60",
         );
+        // 🎨 Palette: Reset announcer state
+        if (messageCounterAnnouncer) {
+          messageCounterAnnouncer.textContent = "";
+          charCounterHasWarned = false;
+        }
       }
       if (submitButton) {
         submitButton.disabled = false;
