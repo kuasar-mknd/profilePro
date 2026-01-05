@@ -20,8 +20,9 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const slides = shuffle([...projectImages]);
-// Ensure we have enough slides for the loop (duplicate if needed)
+const slides = shuffle([...projectImages]).slice(0, 15);
+// ⚡ Bolt: Duplicate slides for seamless infinite scroll
+// Limited to 15 unique items (30 total) to cap DOM nodes and memory usage
 const allSlides = [...slides, ...slides];
 
 // ⚡ Bolt: Precompute LCP image URL to match Base.astro preload exactly
