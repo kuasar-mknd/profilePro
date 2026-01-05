@@ -1,3 +1,3 @@
-## 2024-05-22 - [Enhancing 404 Page Actions]
-**Learning:** Users on error pages need clear, comforting navigation paths. Text-only buttons can feel colder/broken compared to icon-rich primary navigation. Adding icons (Home, Back) provides visual anchors that reduce cognitive load during a stress state (getting a 404).
-**Action:** When designing error states or empty states, always couple action buttons with recognizable icons to signal functionality and maintain design system consistency.
+## 2025-02-23 - Consistent Focus & Hover States
+**Learning:** Interactive elements often have rich visual feedback on hover (scaling, tooltips, expansion) that is missing on keyboard focus, creating a degraded experience for keyboard users.
+**Action:** Always pair `hover:` classes with corresponding `focus-visible:` or `group-focus-visible:` classes to ensure feature parity (e.g., `hover:scale-110` -> `focus-visible:scale-110`).

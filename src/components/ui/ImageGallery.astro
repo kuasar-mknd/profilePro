@@ -99,8 +99,8 @@ const columnClasses = {
             fetchpriority={index < priorityCount ? "high" : "low"}
           />
           {/* 🎨 Palette: Zoom Affordance Overlay */}
-          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20">
-            <div class="bg-white/90 dark:bg-pacamara-dark/90 text-pacamara-primary dark:text-white p-3 rounded-full shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300">
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20">
+            <div class="bg-white/90 dark:bg-pacamara-dark/90 text-pacamara-primary dark:text-white p-3 rounded-full shadow-lg transform scale-75 group-hover:scale-100 group-focus-visible:scale-100 transition-transform duration-300">
               <Icon name="mdi:magnify-plus-outline" class="w-6 h-6" />
             </div>
           </div>
