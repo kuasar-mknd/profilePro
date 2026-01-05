@@ -1,3 +1,6 @@
-## 2024-05-22 - [Enhancing 404 Page Actions]
-**Learning:** Users on error pages need clear, comforting navigation paths. Text-only buttons can feel colder/broken compared to icon-rich primary navigation. Adding icons (Home, Back) provides visual anchors that reduce cognitive load during a stress state (getting a 404).
-**Action:** When designing error states or empty states, always couple action buttons with recognizable icons to signal functionality and maintain design system consistency.
+# Palette's Journal
+
+## Interaction & Accessibility Polish
+*   **Focus Visibility:** Used `group-focus-within` to reveal overlays (like zoom icons) that are normally only visible on hover. This ensures keyboard users perceive the same affordances as mouse users.
+*   **Localization:** Consistent French translation for navigation elements ("Précédent"/"Suivant") is crucial for a unified user experience.
+*   **Micro-Guidance:** Used `aria-description` to provide supplemental context (e.g., "Ferme la fenêtre modale") alongside the primary label, enhancing the experience for screen reader users without cluttering the visual UI.
