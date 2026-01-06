@@ -36,8 +36,15 @@ export function sanitizeInput(str: string): string {
     "/": "&#x2F;",
     "`": "&#x60;", // Prevent template injection
     "=": "&#x3D;", // Prevent unquoted attribute injection
+    "(": "&#40;", // Prevent function injection
+    ")": "&#41;",
+    "{": "&#123;", // Prevent object/block injection
+    "}": "&#125;",
+    "[": "&#91;", // Prevent array/accessor injection
+    "]": "&#93;",
   };
-  const reg = /[&<>"'\/`=]/gi;
+  // 🛡️ Sentinel: Enhanced regex to catch brackets and parentheses
+  const reg = /[&<>"'\/`=(){}\[\]]/gi;
 
   return str.replace(reg, (match) => map[match] || match);
 }
