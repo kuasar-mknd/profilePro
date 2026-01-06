@@ -89,8 +89,15 @@ Workflows are defined in `.github/workflows/`:
 
 ## 🧩 Clean Architecture Mapping
 
-While this is a frontend-heavy SSG project, principles still apply:
+Although this is a static site (SSG), we apply Clean Architecture principles to separate concerns:
 
-- **Domain**: Content Collections (`src/content/`) define the business entities (Projects, Posts).
-- **Application**: `src/utils/` and Logic components (`features/`) handle data processing.
-- **Infrastructure**: Astro config, Cloudflare adapter, `src/pages/rss.xml.js`.
+- **Domain Layer (Entities)**:
+  - `src/content/`: Defines the data models (Schemas) for Projects and Blog Posts.
+  - `src/types/`: TypeScript definitions shared across the project.
+- **Application Layer (Use Cases)**:
+  - `src/utils/`: Pure functions for data transformation (e.g., date formatting, reading time).
+  - `src/components/features/`: Business logic components (e.g., Project Filter, Video Player).
+- **Infrastructure Layer (External Interfaces)**:
+  - `src/pages/`: The entry points (Controllers) that map routes to views.
+  - `src/pages/rss.xml.js`: Output adapters for external consumption.
+  - `astro.config.mjs`: Framework configuration and build settings.
