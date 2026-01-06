@@ -20,7 +20,8 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const slides = shuffle([...projectImages]);
+// ⚡ Bolt: Limit to 15 items to prevent excessive DOM nodes (2x15=30 images max)
+const slides = shuffle([...projectImages]).slice(0, 15);
 // Ensure we have enough slides for the loop (duplicate if needed)
 const allSlides = [...slides, ...slides];
 
