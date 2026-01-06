@@ -460,8 +460,19 @@ if (postData?.data?.image) {
 
         // Accessibility: Append warning to aria-label (only if present)
         const ariaLabel = link.getAttribute("aria-label");
-        if (ariaLabel && !ariaLabel.includes(warning.trim())) {
-          link.setAttribute("aria-label", ariaLabel + warning);
+        if (ariaLabel) {
+          if (!ariaLabel.includes(warning.trim())) {
+            link.setAttribute("aria-label", ariaLabel + warning);
+          }
+        } else {
+          // 🎨 Palette: If no aria-label, inject SR-only span to preserve accessible name calculation (text + alt)
+          // This ensures "Image Alt (opens in new tab)" or "Link Text (opens in new tab)" works automatically
+          if (!link.querySelector(".external-link-warning")) {
+            const span = document.createElement("span");
+            span.className = "sr-only external-link-warning";
+            span.textContent = warning;
+            link.appendChild(span);
+          }
         }
       }
 
