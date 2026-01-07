@@ -75,10 +75,10 @@ const { page, allTags } = Astro.props;
         page.url.prev ? (
           <a
             href={page.url.prev}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label="Page précédente"
           >
-            &larr; Previous
+            &larr; Précédent
           </a>
         ) : null
       }
@@ -86,10 +86,10 @@ const { page, allTags } = Astro.props;
         page.url.next ? (
           <a
             href={page.url.next}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm"
+            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label="Page suivante"
           >
-            Next &rarr;
+            Suivant &rarr;
           </a>
         ) : null
       }
