@@ -17,7 +17,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     role="status"
     aria-live="polite"
   >
-    <div class="space-y-4">
+    <div class="space-y-4 animate-fade-in-up">
       <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
       <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
         Message envoyé !
@@ -315,6 +315,22 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     border-color: #ef4444; /* red-500 */
     box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   }
+
+  /* 🎨 Palette: Success Message Entrance */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
 </style>
 
 <script>
@@ -382,7 +398,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         if (currentLength >= max) {
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
             "text-pacamara-primary/60",
             "dark:text-white/60",
@@ -392,7 +408,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
               "Limite de caractères atteinte. 0 caractères restants.";
         } else if (currentLength >= max * 0.9) {
           messageCounter.classList.add(
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
           );
           messageCounter.classList.remove(
@@ -413,7 +429,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           messageCounter.classList.remove(
             "text-red-500",
             "dark:text-red-400",
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
           );
           // Clear announcer when safe to avoid noise
@@ -438,7 +454,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         messageCounter.classList.remove(
           "text-red-500",
           "dark:text-red-400",
-          "text-orange-500",
+          "text-orange-600",
           "dark:text-orange-400",
         );
         messageCounter.classList.add(
