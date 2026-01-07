@@ -214,7 +214,11 @@
   }
 
   /* ⚡ Bolt: Optimization for below-the-fold content */
-  .bento-grid {
+
+  /* Applied to large components like LatestPosts (bento-grid), ServicesPreview, and ContactForm */
+  .bento-grid,
+  .services-section,
+  .contact-form-section {
     content-visibility: auto;
     contain-intrinsic-size: auto 600px;
   }
