@@ -159,13 +159,22 @@
     observer.observe(container);
 
     // Register cleanup function
-    cleanup = () => {
+    const onCleanup = () => {
       observer.disconnect();
       window.removeEventListener("resize", onResize);
       if (resizeTimeout) clearTimeout(resizeTimeout);
       document.removeEventListener("mousemove", onMouseMove);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      // Remove self from swap event to prevent duplicates
+      document.removeEventListener("astro:before-swap", onCleanup);
+      cleanup = null;
     };
+
+    cleanup = onCleanup;
+
+    // Ensure cleanup runs on navigation (Astro View Transitions)
+    document.addEventListener("astro:before-swap", onCleanup);
   }
 
   // Initialize only via event listener to avoid double execution on initial load
