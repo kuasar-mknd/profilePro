@@ -23,6 +23,7 @@
       class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:-rotate-45 group-aria-expanded:translate-x-1"
     ></span>
   </div>
+  <span class="sr-only" aria-live="polite" id="menu-live-region"></span>
 </button>
 
 <script>
@@ -62,10 +63,16 @@
 
     button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
+      
+      // 🎨 Palette: Announce menu state change to screen readers
+      const liveRegion = document.getElementById("menu-live-region");
+      
       if (isExpanded) {
         closeMenu();
+        if (liveRegion) liveRegion.textContent = "Menu fermé";
       } else {
         openMenu();
+        if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
     });
 
