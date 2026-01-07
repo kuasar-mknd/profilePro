@@ -37,15 +37,16 @@
 Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    - Lancez `bun install` pour reconstruire les binaires natifs.
+    - Ce projet utilise `sharp` pour le traitement d'images, qui nécessite des binaires natifs.
+    - Assurez-vous d'utiliser **Node.js 20+** (même si vous utilisez Bun, `sharp` dépend de l'environnement Node).
+    - En cas d'erreur, supprimez `node_modules` et relancez `bun install`.
 2.  **Erreur `bun run` introuvable** :
     - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `PUBLIC_` sont nécessaires au build.
 4.  **Tests Playwright** :
-    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les binaires de navigateurs.
 
 ## 📖 À propos
 
@@ -87,8 +88,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
+- Node.js 20+ (Requis pour `sharp` et compatibilité `npm`)
+- Bun 1.0+ (Requis comme gestionnaire de paquets et runtime)
 
 ### Installation
 
@@ -112,20 +113,20 @@ Le site sera accessible sur `http://localhost:4321`.
 ### Scripts disponibles
 
 - `bun run dev` : Lancer le serveur de développement.
-- `bun run build` : Générer le build de production.
-- `bun run check` : Vérifier le code (linting + formatage).
-- `bun run lighthouse` : Lancer l'audit de performance.
+- `bun run build` : Générer le build de production (dist/).
+- `bun run check` : Vérifier le code (linting + formatage + types).
+- `bun run lighthouse` : Lancer l'audit de performance (`lhci autorun`).
 - `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
 
 ### API Access
 
-Le site est statique mais expose des données via des endpoints générés au build :
+Le site est statique mais expose des données via des endpoints XML générés au build :
 
 ```bash
-# Récupérer le flux RSS (XML)
+# Récupérer le flux RSS
 curl https://portfolio.kuasar.xyz/rss.xml
 
-# Récupérer le Sitemap (XML)
+# Récupérer le Sitemap
 curl https://portfolio.kuasar.xyz/sitemap-index.xml
 ```
 

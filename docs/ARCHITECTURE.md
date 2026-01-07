@@ -20,7 +20,7 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 1.  **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files.
 2.  **SSG**: HTML pages are generated static at build time.
-3.  **Hydration**: Interactive components (React, Svelte, or vanilla JS scripts) are hydrated only when needed (`client:load`, `client:visible`).
+3.  **Hydration**: Interactive components (client-side scripts or framework components) are hydrated only when needed (`client:load`, `client:visible`).
 
 ### 3. Key Technologies
 
@@ -50,13 +50,17 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 1.  Add a new MDX file in `src/content/project/my-project.mdx`.
 2.  Follow the schema defined in `src/content/config.ts`:
     ```yaml
-    title: "Project Title"
-    publishDate: 2024-01-01
-    description: "Short description"
-    img: "./image.jpg"
-    img_alt: "Description of image"
-    tags: ["Video", "Event"]
     ---
+    title: "Project Title"
+    pubDate: 2024-01-01
+    intro: "Short description of the project"
+    tag: "Video"
+    image: "./cover-image.jpg"
+    author: "samuel-dulex"
+    type: "video" # "video", "photo", or "general"
+    videoUrl: "https://vimeo.com/123456789" # Optional, for video projects
+    ---
+
     Content goes here...
     ```
 
@@ -72,7 +76,7 @@ Workflows are defined in `.github/workflows/`:
 
 1.  **CI (`ci.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
+    - Sets up Node 20 (for `sharp` compatibility) & Bun.
     - Installs dependencies.
     - Runs `bun run check` (Lint + Types + Format).
     - Runs `bun run test:e2e` (Playwright).
@@ -91,6 +95,6 @@ Workflows are defined in `.github/workflows/`:
 
 While this is a frontend-heavy SSG project, principles still apply:
 
-- **Domain**: Content Collections (`src/content/`) define the business entities (Projects, Posts).
-- **Application**: `src/utils/` and Logic components (`features/`) handle data processing.
-- **Infrastructure**: Astro config, Cloudflare adapter, `src/pages/rss.xml.js`.
+- **Domain**: Content Collections (`src/content/`) define the business entities (Projects, Authors).
+- **Application**: `src/utils/` and Logic components (`features/`) handle data processing and business rules.
+- **Infrastructure**: Astro config, Cloudflare adapter, `src/pages/rss.xml.js`, and external API integrations (Web3Forms).
