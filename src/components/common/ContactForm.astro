@@ -4,10 +4,11 @@ import { Icon } from "astro-icon/components";
 const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
+{/* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */}
 <form
   action="https://api.web3forms.com/submit"
   method="POST"
-  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
+  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
   id="contact-form"
 >
   <!-- Form Success Message -->

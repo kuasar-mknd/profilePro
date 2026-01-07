@@ -54,7 +54,10 @@ const remainingCount = allPosts.length - postLimit;
     </p>
   </ScrollReveal>
 
-  <div class="bento-grid">
+  {/* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */}
+  <div
+    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+  >
     {
       posts.length === 0 && (
         <div class="col-span-full py-12 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm">
