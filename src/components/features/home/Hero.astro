@@ -20,7 +20,8 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const slides = shuffle([...projectImages]);
+// ⚡ Bolt: Slice to 15 items max to cap DOM size while ensuring enough items for infinite scroll
+const slides = shuffle([...projectImages]).slice(0, 15);
 // Ensure we have enough slides for the loop (duplicate if needed)
 const allSlides = [...slides, ...slides];
 
