@@ -8,6 +8,8 @@ interface Props {
   }[];
 }
 
+import { safeJson } from "../../utils/security";
+
 const { items } = Astro.props;
 
 // Schema.org Structured Data
@@ -64,8 +66,4 @@ const schema = {
   </ol>
 </nav>
 
-<script
-  type="application/ld+json"
-  is:inline
-  set:html={JSON.stringify(schema).replace(/</g, "\\u003c")}
-/>
+<script type="application/ld+json" is:inline set:html={safeJson(schema)} />
