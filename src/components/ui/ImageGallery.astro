@@ -9,6 +9,7 @@
 import { Picture } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
+import EmptyState from "./EmptyState.astro";
 
 interface Props {
   folder?: string;
@@ -111,11 +112,14 @@ const columnClasses = {
       ))}
     </div>
   ) : (
-    <p class="text-pacamara-primary/50 dark:text-white/50 text-center py-8">
-      {folder
-        ? `Aucune image trouvée dans le dossier "${folder}"`
-        : "Aucune image à afficher."}
-    </p>
+    <EmptyState
+      icon="mdi:image-off"
+      message={
+        folder
+          ? `Aucune image trouvée dans le dossier "${folder}"`
+          : "Aucune image à afficher."
+      }
+    />
   )
 }
 
