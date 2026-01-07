@@ -11,15 +11,19 @@
     class="relative w-8 h-6 flex flex-col justify-between items-center group-hover:scale-105 transition-transform duration-300"
   >
     <span
+      aria-hidden="true"
       class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:rotate-45 group-aria-expanded:translate-x-1"
     ></span>
     <span
+      aria-hidden="true"
       class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 group-aria-expanded:opacity-0"
     ></span>
     <span
+      aria-hidden="true"
       class="w-full h-0.5 bg-pacamara-dark dark:bg-pacamara-accent rounded-full transition-all duration-300 origin-left group-aria-expanded:-rotate-45 group-aria-expanded:translate-x-1"
     ></span>
   </div>
+  <span class="sr-only" aria-live="polite" id="menu-live-region"></span>
 </button>
 
 <script>
@@ -38,32 +42,55 @@
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
+    // 🎨 Palette: Encapsulated close logic for reusability
+    const closeMenu = () => {
+      document.documentElement.classList.remove("overflow-hidden");
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-label", "Ouvrir le menu");
+      button.setAttribute("title", "Ouvrir le menu");
+      nav.classList.add("translate-x-full");
+      nav.classList.remove("translate-x-0");
+    };
+
+    const openMenu = () => {
+      document.documentElement.classList.add("overflow-hidden");
+      button.setAttribute("aria-expanded", "true");
+      button.setAttribute("aria-label", "Fermer le menu");
+      button.setAttribute("title", "Fermer le menu");
+      nav.classList.remove("translate-x-full");
+      nav.classList.add("translate-x-0");
+    };
+
     button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
-      const newIsExpanded = !isExpanded;
-      button.setAttribute("aria-expanded", String(newIsExpanded));
-      button.setAttribute(
-        "aria-label",
-        newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
-      );
-      button.setAttribute(
-        "title",
-        newIsExpanded ? "Fermer le menu" : "Ouvrir le menu",
-      );
-      document.documentElement.classList.toggle("overflow-hidden");
-      nav.classList.toggle("translate-x-full");
-      nav.classList.toggle("translate-x-0");
+      
+      // 🎨 Palette: Announce menu state change to screen readers
+      const liveRegion = document.getElementById("menu-live-region");
+      
+      if (isExpanded) {
+        closeMenu();
+        if (liveRegion) liveRegion.textContent = "Menu fermé";
+      } else {
+        openMenu();
+        if (liveRegion) liveRegion.textContent = "Menu ouvert";
+      }
     });
 
     nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        document.documentElement.classList.remove("overflow-hidden");
-        button.setAttribute("aria-expanded", "false");
-        button.setAttribute("aria-label", "Ouvrir le menu");
-        button.setAttribute("title", "Ouvrir le menu");
-        nav.classList.add("translate-x-full");
-        nav.classList.remove("translate-x-0");
-      });
+      link.addEventListener("click", closeMenu);
+    });
+
+    // 🎨 Palette: Close menu on Escape key for accessibility
+    // Users expect Escape to close overlays/modals
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        button.getAttribute("aria-expanded") === "true"
+      ) {
+        closeMenu();
+        // Return focus to the toggle button
+        (button as HTMLElement).focus();
+      }
     });
 
     // ⚡ Reuse observer if already created

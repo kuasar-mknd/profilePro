@@ -7,7 +7,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 <form
   action="https://api.web3forms.com/submit"
   method="POST"
-  class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
+  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
   id="contact-form"
 >
   <!-- Form Success Message -->
@@ -17,7 +17,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     role="status"
     aria-live="polite"
   >
-    <div class="space-y-4">
+    <div class="space-y-4 animate-fade-in-up">
       <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
       <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
         Message envoyé !
@@ -156,12 +156,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         </div>
       </div>
       <!-- 🎨 Palette: Character counter -->
-      <div
-        id="message-counter"
-        class="text-right text-xs mt-1 text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
-        aria-hidden="true"
-      >
-        0 / 5000
+      <div class="flex justify-end mt-1 gap-2">
+        <div
+          id="message-counter"
+          class="text-xs text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+        >
+          0 / 5000
+        </div>
+        <!-- Accessible announcer for thresholds -->
+        <div id="message-counter-sr" class="sr-only" aria-live="polite"></div>
       </div>
     </div>
 
@@ -259,6 +262,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     opacity: 1;
   }
 
+  .input-glow {
+    will-change: opacity;
+  }
+
   /* Button states */
   .submit-btn.loading .btn-text,
   .submit-btn.loading svg:not(.animate-spin) {
@@ -307,6 +314,22 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   [aria-invalid="true"] {
     border-color: #ef4444; /* red-500 */
     box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+
+  /* 🎨 Palette: Success Message Entrance */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out forwards;
   }
 </style>
 
@@ -357,6 +380,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounter = form.querySelector(
       "#message-counter",
     ) as HTMLElement;
+    const messageCounterSr = form.querySelector(
+      "#message-counter-sr",
+    ) as HTMLElement;
 
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
@@ -365,20 +391,24 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
+        const remaining = max - currentLength;
         messageCounter.textContent = `${currentLength} / ${max}`;
 
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          if (messageCounterSr)
+            messageCounterSr.textContent =
+              "Limite de caractères atteinte. 0 caractères restants.";
         } else if (currentLength >= max * 0.9) {
           messageCounter.classList.add(
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
           );
           messageCounter.classList.remove(
@@ -387,6 +417,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
+          // Announce when nearing limit (every 10 chars or so naturally, but let's be explicit)
+          if (messageCounterSr && remaining % 20 === 0) {
+            messageCounterSr.textContent = `Attention, plus que ${remaining} caractères.`;
+          }
         } else {
           messageCounter.classList.add(
             "text-pacamara-primary/60",
@@ -395,9 +429,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           messageCounter.classList.remove(
             "text-red-500",
             "dark:text-red-400",
-            "text-orange-500",
+            "text-orange-600",
             "dark:text-orange-400",
           );
+          // Clear announcer when safe to avoid noise
+          if (messageCounterSr) messageCounterSr.textContent = "";
         }
       };
 
@@ -418,7 +454,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         messageCounter.classList.remove(
           "text-red-500",
           "dark:text-red-400",
-          "text-orange-500",
+          "text-orange-600",
           "dark:text-orange-400",
         );
         messageCounter.classList.add(

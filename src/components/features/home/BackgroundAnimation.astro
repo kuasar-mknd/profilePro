@@ -82,8 +82,14 @@
     // Initial calculation
     updateMetrics();
 
-    // Update on resize
-    window.addEventListener("resize", updateMetrics, { passive: true });
+    // ⚡ Bolt: Debounce resize to prevent layout thrashing
+    let resizeTimeout: number | undefined;
+    const onResize = () => {
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(updateMetrics, 200);
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
 
     // ⚡ Optimized mousemove handler
     const onMouseMove = (e: MouseEvent) => {
@@ -114,7 +120,8 @@
       blobY += dy * ease;
 
       // ⚡ Use cached style reference
-      blobStyle.transform = `translate(${blobX}px, ${blobY}px) translate(-50%, -50%)`;
+      // ⚡ Bolt: Use translate3d to force GPU layer promotion (hardware acceleration)
+      blobStyle.transform = `translate3d(${blobX}px, ${blobY}px, 0) translate(-50%, -50%)`;
 
       // Stop loop if close enough to target
       if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
@@ -152,12 +159,22 @@
     observer.observe(container);
 
     // Register cleanup function
-    cleanup = () => {
+    const onCleanup = () => {
       observer.disconnect();
-      window.removeEventListener("resize", updateMetrics);
+      window.removeEventListener("resize", onResize);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
       document.removeEventListener("mousemove", onMouseMove);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      // Remove self from swap event to prevent duplicates
+      document.removeEventListener("astro:before-swap", onCleanup);
+      cleanup = null;
     };
+
+    cleanup = onCleanup;
+
+    // Ensure cleanup runs on navigation (Astro View Transitions)
+    document.addEventListener("astro:before-swap", onCleanup);
   }
 
   // Initialize only via event listener to avoid double execution on initial load
