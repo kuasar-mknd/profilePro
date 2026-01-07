@@ -193,10 +193,10 @@ const columnClasses = {
 <script>
   /**
    * ⚡ Bolt: Event delegation optimization
-   * Lightbox.astro already handles keyboard and click events globally for [data-gallery-image]
-   * We only need to handle Skeleton loader removal here.
+   * Removed redundant keyboard listeners per gallery.
+   * Interaction is now handled globally by Lightbox.astro via delegation.
    */
-  function initGalleryLoaders() {
+  function initGallery() {
     const galleries = document.querySelectorAll(
       "[data-gallery-container]:not(.gallery-initialized)",
     );
@@ -230,5 +230,5 @@ const columnClasses = {
   }
 
   // Initialize only via event listener to avoid double execution on initial load
-  document.addEventListener("astro:page-load", initGalleryLoaders);
+  document.addEventListener("astro:page-load", initGallery);
 </script>
