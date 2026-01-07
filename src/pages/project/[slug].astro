@@ -318,7 +318,10 @@ const jsonLd = {
               try {
                 await navigator.clipboard.writeText(window.location.href);
 
-                // 🎨 Palette: Visual and Audible Feedback
+                // 🎨 Palette: Visual, Audible, and Haptic Feedback
+                // Vibrate for 50ms on mobile devices
+                if (navigator.vibrate) navigator.vibrate([50]);
+
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
 
