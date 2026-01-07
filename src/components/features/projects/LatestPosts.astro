@@ -55,7 +55,10 @@ const remainingCount = allPosts.length - postLimit;
     </p>
   </ScrollReveal>
 
-  <div class="bento-grid">
+  {/* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */}
+  <div
+    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+  >
     {
       posts.length === 0 && (
         <EmptyState message="Aucun projet ne correspond à ces critères pour le moment." />
