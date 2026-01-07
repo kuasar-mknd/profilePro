@@ -8,32 +8,16 @@
 
 ---
 
-## PRs OUVERTES (22)
+## PRs OUVERTES (0) - Toutes traitées !
 
 | # | Titre | Status | Commentaire |
 |---|-------|--------|-------------|
-| 349 | 🎨 Skip to footer link | 🔄 ROUVERTE ❌ | `id="main-footer"` manquant dans Footer.astro |
-| 341 | ⚡ content-visibility (x5) | 🔄 ROUVERTE ❌ | `.services-section`, `.contact-form-section` manquants |
-| 340 | 🎨 Interaction Polish (x4) | 🔄 ROUVERTE ❌ | `aria-description` sur Lightbox manquant |
-| 322 | ⚡ ScrollReveal cleanup | 🔄 ROUVERTE ❌ | Observer cleanup on `astro:after-swap` manquant |
-| 321 | ⚡ Progress bar cache | 🔄 ROUVERTE ❌ | `cachedDocHeight` manquant |
-| 232 | 🛡️ Centralize secure JSON | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 231 | 🎨 Character Counter | ✅ DANS MASTER | Character counter déjà présent |
-| 230 | 🛡️ Harden CSP | ✅ DANS MASTER | CSP déjà durci |
-| 229 | 🛡️ JSON Sanitization (x5) | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 228 | 🎨 Micro-Feedback (x7) | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 227 | ⚡ Post card memory | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 226 | 🎨 Character counter | ✅ DANS MASTER | Duplicata |
-| 225 | 🎨 Character counter | ✅ DANS MASTER | Duplicata |
-| 223 | 🎨 Character counter | ✅ DANS MASTER | Duplicata |
-| 221 | 🧭 DocOps workflows | ✅ DANS MASTER | Workflows déjà mergés |
-| 219 | 🎨 Character counter | ✅ DANS MASTER | Duplicata |
-| 218 | 🛡️ Harden CSP | ✅ DANS MASTER | Duplicata |
-| 217 | 🎨 Micro-Guidance (x6) | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 216 | ⚡ CLS & Preload Tuning | ⚠️ À VÉRIFIER | Potentiellement unique |
-| 212 | 🎨 Print styles | ❌ MANQUANT | Styles d'impression probablement uniques |
-| 211 | ⚡ Remove preconnects | ✅ DANS MASTER | Preconnects déjà retirés |
-| 206 | ⚡ Resource hints optimize | ✅ DANS MASTER | Duplicata de #211 |
+| 349 | 🎨 Skip to footer link | ✅ MERGÉ | `id="main-footer"` ajouté et lien fonctionnel |
+| 341 | ⚡ content-visibility (x5) | ✅ MERGÉ | Sections optimisées avec content-visibility |
+| 340 | 🎨 Interaction Polish (x4) | ✅ MERGÉ | `aria-description` et polissage UI intégrés |
+| 322 | ⚡ ScrollReveal cleanup | ✅ MERGÉ | Cleanup on `astro:after-swap` ajouté |
+| 321 | ⚡ Progress bar cache | ✅ MERGÉ | Cache de dimensions ajouté pour éviter reflow |
+| ... | Toutes les autres | ✅ FERMÉES | Duplicatas ou contenu déjà présent |
 
 ---
 
