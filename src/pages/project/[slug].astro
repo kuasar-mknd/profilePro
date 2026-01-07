@@ -241,14 +241,22 @@ const jsonLd = {
 
         if (progressBar) {
           let ticking = false;
+          // ⚡ Bolt: Cache document dimensions to avoid layout thrashing
+          let cachedDocHeight = 0;
+          let resizeObserver: ResizeObserver | null = null;
+
+          const updateDimensions = () => {
+            cachedDocHeight =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+          };
 
           const updateProgress = () => {
             const winScroll =
               document.body.scrollTop || document.documentElement.scrollTop;
-            const height =
-              document.documentElement.scrollHeight -
-              document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
+            // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
+            const scrolled =
+              cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;
             progressBar.style.width = scrolled + "%";
             ticking = false;
           };
@@ -262,11 +270,23 @@ const jsonLd = {
 
           window.addEventListener("scroll", onScroll, { passive: true });
 
+          // ⚡ Bolt: Observe document size changes
+          resizeObserver = new ResizeObserver(() => {
+            updateDimensions();
+            // Update immediately in case resize affected relative scroll pos
+            window.requestAnimationFrame(updateProgress);
+          });
+          resizeObserver.observe(document.documentElement);
+
+          // Initial calculation
+          updateDimensions();
+
           // Cleanup to prevent duplicate listeners on navigation
           document.addEventListener(
             "astro:before-swap",
             () => {
               window.removeEventListener("scroll", onScroll);
+              if (resizeObserver) resizeObserver.disconnect();
             },
             { once: true },
           );
