@@ -326,11 +326,6 @@ if (postData?.data?.image) {
           }
         };
 
-        // Update on scroll (optimized)
-        window.addEventListener("scroll", onScroll, {
-          passive: true,
-        });
-
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
           updateDimensions();
@@ -366,10 +361,15 @@ if (postData?.data?.image) {
                 btn.classList.remove("opacity-0", "invisible", "translate-y-4");
                 btn.classList.add("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "0");
+                // ⚡ Bolt: Only listen to scroll when button is visible to save resources
+                window.addEventListener("scroll", onScroll, { passive: true });
+                onScroll(); // Update visual immediately
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "-1");
+                // ⚡ Bolt: Stop listening when hidden
+                window.removeEventListener("scroll", onScroll);
               }
             },
             {
@@ -398,7 +398,10 @@ if (postData?.data?.image) {
         cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
           if (resizeObserver) resizeObserver.disconnect();
-          if (backToTopObserver) backToTopObserver.disconnect();
+          if (backToTopObserver) {
+            backToTopObserver.disconnect();
+            backToTopObserver = null; // ⚡ Bolt: Ensure fresh observer with correct closure scope
+          }
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
