@@ -34,10 +34,16 @@ export function sanitizeInput(str: string): string {
     '"': "&quot;",
     "'": "&#x27;",
     "/": "&#x2F;",
-    "`": "&#x60;", // Prevent template injection
-    "=": "&#x3D;", // Prevent unquoted attribute injection
+    "`": "&#x60;",
+    "=": "&#x3D;",
+    "(": "&#40;",
+    ")": "&#41;",
+    "{": "&#123;",
+    "}": "&#125;",
+    "[": "&#91;",
+    "]": "&#93;",
   };
-  const reg = /[&<>"'\/`=]/gi;
+  const reg = /[&<>"'\/`=(){}[\]]/gi;
 
   return str.replace(reg, (match) => map[match] || match);
 }
