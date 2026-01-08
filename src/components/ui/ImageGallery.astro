@@ -41,7 +41,7 @@ if (explicitImages && explicitImages.length > 0) {
   // Load from folder
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: true }
+    { eager: true },
   );
 
   galleryImages = Object.entries(allImages)
@@ -205,13 +205,13 @@ const columnClasses = {
    */
   function initGallery() {
     const galleries = document.querySelectorAll(
-      "[data-gallery-container]:not(.gallery-initialized)"
+      "[data-gallery-container]:not(.gallery-initialized)",
     );
 
     galleries.forEach((gallery) => {
       // ⚡ Bolt: Initialize Skeleton loaders
       const images = gallery.querySelectorAll(
-        "img[data-gallery-image]"
+        "img[data-gallery-image]",
       ) as NodeListOf<HTMLImageElement>;
 
       images.forEach((img) => {
