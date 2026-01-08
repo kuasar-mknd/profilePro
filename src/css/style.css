@@ -3,15 +3,11 @@
 @plugin "@tailwindcss/typography";
 
 /* Font Display Optimization - Prevent FOIT */
-@font-face {
-  font-family: "Space Grotesk";
-  font-display: swap;
-}
 
-@font-face {
-  font-family: Outfit;
-  font-display: swap;
-}
+/* ⚡ Bolt: Removed partial @font-face definitions.
+   Base.astro handles the full definitions with correct src paths and font-display settings.
+   This avoids redundant CSS rules and potential browser confusion.
+*/
 
 @variant dark (&:where(.dark, .dark *));
 
