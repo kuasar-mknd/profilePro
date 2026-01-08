@@ -118,6 +118,10 @@ const readingTime = Math.ceil(wordCount / 200);
         // Fallback: copy to clipboard
         try {
           await navigator.clipboard.writeText(window.location.href);
+
+          // 🎨 Palette: Haptic Feedback
+          if (navigator.vibrate) navigator.vibrate([50]);
+
           const shareText = document.getElementById("share-text");
           if (shareText) {
             const originalText = shareText.textContent;
