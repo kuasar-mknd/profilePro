@@ -3,10 +3,12 @@ import config from "../../config.mjs";
 import SocialIcon from "../ui/SocialIcon.astro";
 ---
 
-{/* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */}
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <footer
   id="main-footer"
-  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit [content-visibility:auto] [contain-intrinsic-size:auto_400px]"
+  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit"
 >
   <div
     class="container mx-auto max-w-7xl px-7 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8 items-start"
@@ -90,7 +92,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <div
         id="wcb"
         class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
-        aria-label="Website Carbon Badge"
       >
         <!-- Badge injected by script -->
       </div>
@@ -120,8 +121,9 @@ import SocialIcon from "../ui/SocialIcon.astro";
      */
     function initCarbonBadge() {
       const isProduction =
-        window.location.hostname !== "localhost" &&
-        window.location.hostname !== "127.0.0.1";
+        !["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+          window.location.hostname,
+        ) && !window.location.hostname.startsWith("192.168.");
 
       const wcb = document.getElementById("wcb");
       if (!wcb) return;
@@ -216,7 +218,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
           })
           .catch((e) => {
             // 🛡️ Sentinel: Dev-only logging
-            if (import.meta.env.DEV) {
+            if (
+              ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+                window.location.hostname,
+              )
+            ) {
               console.error(
                 "Carbon Badge update failed:",
                 e instanceof Error ? e.message : "Unknown error",
@@ -257,6 +263,12 @@ import SocialIcon from "../ui/SocialIcon.astro";
     }
 
     // Initialize on initial load and every view transition
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCarbonBadge);
+    } else {
+      // Small timeout to ensure DOM is fully ready and painted
+      setTimeout(initCarbonBadge, 0);
+    }
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
