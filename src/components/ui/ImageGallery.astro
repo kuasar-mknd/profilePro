@@ -41,7 +41,7 @@ if (explicitImages && explicitImages.length > 0) {
   // Load from folder
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: true },
+    { eager: true }
   );
 
   galleryImages = Object.entries(allImages)
@@ -99,7 +99,7 @@ const columnClasses = {
             decoding="async"
             fetchpriority={index < priorityCount ? "high" : "low"}
           />
-          {/* 🎨 Palette: Zoom Affordance Overlay */}
+          {/* 🎨 Palette: Zoom Affordance Overlay - Visible on Hover AND Focus */}
           <div
             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20"
             aria-hidden="true"
@@ -205,13 +205,13 @@ const columnClasses = {
    */
   function initGallery() {
     const galleries = document.querySelectorAll(
-      "[data-gallery-container]:not(.gallery-initialized)",
+      "[data-gallery-container]:not(.gallery-initialized)"
     );
 
     galleries.forEach((gallery) => {
       // ⚡ Bolt: Initialize Skeleton loaders
       const images = gallery.querySelectorAll(
-        "img[data-gallery-image]",
+        "img[data-gallery-image]"
       ) as NodeListOf<HTMLImageElement>;
 
       images.forEach((img) => {
