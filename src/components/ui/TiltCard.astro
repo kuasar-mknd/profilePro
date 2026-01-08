@@ -96,6 +96,9 @@ const {
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
 
+        // ⚡ Bolt: Remove compositing layer to save memory
+        el.style.willChange = "auto";
+
         bounds = null;
 
         // ⚡ Bolt: Cleanup high-frequency listeners when not needed
@@ -106,6 +109,9 @@ const {
       function onMouseEnter() {
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
+
+        // ⚡ Bolt: Promote to compositor only during interaction
+        el.style.willChange = "transform";
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);
