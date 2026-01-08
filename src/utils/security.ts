@@ -36,8 +36,15 @@ export function sanitizeInput(str: string): string {
     "/": "&#x2F;",
     "`": "&#x60;", // Prevent template injection
     "=": "&#x3D;", // Prevent unquoted attribute injection
+    "(": "&#40;", // Prevent function calls / logic injection
+    ")": "&#41;",
+    "{": "&#123;", // Prevent template/logic injection
+    "}": "&#125;",
+    "[": "&#91;", // Prevent array/logic injection
+    "]": "&#93;",
   };
-  const reg = /[&<>"'\/`=]/gi;
+  // Regex matches all keys in the map
+  const reg = /[&<>"'\/`=(){}[\]]/gi;
 
   return str.replace(reg, (match) => map[match] || match);
 }
