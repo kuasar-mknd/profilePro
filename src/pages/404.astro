@@ -35,16 +35,22 @@ import { Icon } from "astro-icon/components";
       <a
         href="/"
         aria-label="Retour à l'accueil"
-        class="inline-flex items-center gap-2 bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="group inline-flex items-center gap-2 bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
       >
-        <Icon name="mdi:home" class="w-5 h-5" />
+        <Icon
+          name="mdi:home"
+          class="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-1"
+        />
         <span>Retour à l'accueil</span>
       </a>
       <button
         id="go-back-btn"
-        class="inline-flex items-center gap-2 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="group inline-flex items-center gap-2 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
       >
-        <Icon name="mdi:arrow-left" class="w-5 h-5" />
+        <Icon
+          name="mdi:arrow-left"
+          class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1"
+        />
         <span>Page précédente</span>
       </button>
     </div>

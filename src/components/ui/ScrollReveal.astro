@@ -111,4 +111,11 @@ const staggerClass =
 
   // Re-run on page transitions (Astro View Transitions)
   document.addEventListener("astro:page-load", initScrollReveal);
+
+  // ⚡ Bolt: Cleanup stale observers on swap to prevent memory leaks
+  document.addEventListener("astro:after-swap", () => {
+    if (cachedScrollRevealObserver) {
+      cachedScrollRevealObserver.disconnect();
+    }
+  });
 </script>
