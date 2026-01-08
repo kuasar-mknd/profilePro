@@ -23,7 +23,7 @@ const logo2x = await getImage({
 
 <header
   id="main-header"
-  class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-b border-white/20 dark:border-white/5"
+  class="fixed w-full top-0 z-50 transition-colors duration-300 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-b border-white/20 dark:border-white/5"
 >
   <div class="container mx-auto px-7 h-20 flex items-center justify-between">
     <a
@@ -37,6 +37,7 @@ const logo2x = await getImage({
         <!-- ⚡ Bolt: Optimized Header Logo
              Replaced <Picture> with <img> + srcset to reduce DOM size and improve parsing speed for this tiny 40px asset.
              Uses AVIF which matches the Hero logo format.
+             ⚡ Bolt: Changed to decoding="async" and removed high priority to prioritize the LCP Hero image.
         -->
         <img
           src={logo1x.src}
@@ -46,8 +47,7 @@ const logo2x = await getImage({
           height="40"
           class="w-10 h-10 rounded-full object-cover"
           loading="eager"
-          decoding="sync"
-          fetchpriority="high"
+          decoding="async"
         />
       </div>
       <span
@@ -87,6 +87,11 @@ const logo2x = await getImage({
 
   html.overflow-hidden #navigation_wrapper {
     transform: translateX(0);
+  }
+
+  /* ⚡ Bolt: Promote layer for large animation */
+  #navigation_wrapper {
+    will-change: transform;
   }
 </style>
 

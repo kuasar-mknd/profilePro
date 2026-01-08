@@ -35,7 +35,7 @@ const {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const cards = document.querySelectorAll(
-      ".tilt-card:not(.tilt-initialized)",
+      ".tilt-card:not(.tilt-initialized)"
     );
 
     cards.forEach((card) => {
@@ -106,10 +106,13 @@ const {
       }
 
       function onMouseEnter() {
+        // ⚡ Bolt: Promote to composite layer only on interaction
+        cardStyle.willChange = "transform";
+
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
 
-        // ⚡ Bolt: Promote layer only when interacting
+        // ⚡ Bolt: Hint browser to promote layer only during interaction
         cardStyle.setProperty("will-change", "transform");
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
