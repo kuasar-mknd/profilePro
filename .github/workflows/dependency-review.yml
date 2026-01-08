@@ -1,4 +1,5 @@
-name: 'Dependency Review'
+name: "Dependency Review"
+
 on: [pull_request]
 
 permissions:
@@ -8,10 +9,12 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
-        uses: actions/checkout@v6
-      - name: 'Dependency Review'
-        # Verified by DocOps: Enforces security check on dependencies
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+      - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          fail-on-severity: high
+          # Fail on any new vulnerability (low, moderate, high, critical)
+          fail-on-severity: low
+          # Block licenses that are not compliant (optional, can be adjusted)
+          # deny-licenses: GPL-3.0, AGPL-3.0

@@ -10,10 +10,13 @@
  * Escapes the '<' character to prevent Script Injection via JSON in HTML context.
  *
  * @param value - The value to serialize
- * @returns The JSON string with '<' escaped as '\u003c'
+ * @returns The JSON string with '<', U+2028, and U+2029 escaped to prevent XSS.
  */
 export function safeJson(value: any): string {
-  return JSON.stringify(value).replace(/</g, "\\u003c");
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 
 /**
@@ -36,8 +39,15 @@ export function sanitizeInput(str: string): string {
     "/": "&#x2F;",
     "`": "&#x60;", // Prevent template injection
     "=": "&#x3D;", // Prevent unquoted attribute injection
+    "(": "&#40;", // Prevent function calls / logic injection
+    ")": "&#41;",
+    "{": "&#123;", // Prevent template/logic injection
+    "}": "&#125;",
+    "[": "&#91;", // Prevent array/logic injection
+    "]": "&#93;",
   };
-  const reg = /[&<>"'\/`=]/gi;
+  // Regex matches all keys in the map
+  const reg = /[&<>"'\/`=(){}[\]]/gi;
 
   return str.replace(reg, (match) => map[match] || match);
 }
