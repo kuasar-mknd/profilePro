@@ -3,7 +3,11 @@ import config from "../../config.mjs";
 import SocialIcon from "../ui/SocialIcon.astro";
 ---
 
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <footer
+  id="main-footer"
   class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit"
 >
   <div
@@ -88,7 +92,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <div
         id="wcb"
         class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
-        aria-label="Website Carbon Badge"
       >
         <!-- Badge injected by script -->
       </div>
@@ -118,8 +121,9 @@ import SocialIcon from "../ui/SocialIcon.astro";
      */
     function initCarbonBadge() {
       const isProduction =
-        window.location.hostname !== "localhost" &&
-        window.location.hostname !== "127.0.0.1";
+        !["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+          window.location.hostname,
+        ) && !window.location.hostname.startsWith("192.168.");
 
       const wcb = document.getElementById("wcb");
       if (!wcb) return;
@@ -160,16 +164,16 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const link = document.createElement("a");
         link.id = "wcb_a";
         link.target = "_blank";
+        // ⚡ Bolt: Security & Accessibility (Manual impl. as global observer was removed)
         link.rel = "noopener noreferrer";
         link.href = "https://websitecarbon.com";
         link.className =
           "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent rounded-lg";
         link.textContent = "Website Carbon";
-        link.setAttribute(
-          "aria-label",
-          "Website Carbon (ouvre un nouvel onglet)",
-        );
-        link.setAttribute("title", "Website Carbon (ouvre un nouvel onglet)");
+
+        const warning = " (ouvre un nouvel onglet)";
+        link.setAttribute("aria-label", "Website Carbon" + warning);
+        link.setAttribute("title", "Website Carbon" + warning);
 
         wrapper.appendChild(scoreSpan);
         wrapper.appendChild(link);
@@ -214,7 +218,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
           })
           .catch((e) => {
             // 🛡️ Sentinel: Dev-only logging
-            if (import.meta.env.DEV) {
+            if (
+              ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+                window.location.hostname,
+              )
+            ) {
               console.error(
                 "Carbon Badge update failed:",
                 e instanceof Error ? e.message : "Unknown error",
@@ -255,6 +263,12 @@ import SocialIcon from "../ui/SocialIcon.astro";
     }
 
     // Initialize on initial load and every view transition
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCarbonBadge);
+    } else {
+      // Small timeout to ensure DOM is fully ready and painted
+      setTimeout(initCarbonBadge, 0);
+    }
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>

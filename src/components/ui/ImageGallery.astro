@@ -9,6 +9,7 @@
 import { Picture } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
+import EmptyState from "./EmptyState.astro";
 
 interface Props {
   folder?: string;
@@ -98,9 +99,12 @@ const columnClasses = {
             decoding="async"
             fetchpriority={index < priorityCount ? "high" : "low"}
           />
-          {/* 🎨 Palette: Zoom Affordance Overlay */}
-          <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20">
-            <div class="bg-white/90 dark:bg-pacamara-dark/90 text-pacamara-primary dark:text-white p-3 rounded-full shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300">
+          {/* 🎨 Palette: Zoom Affordance Overlay - Visible on Hover AND Focus */}
+          <div
+            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none z-20"
+            aria-hidden="true"
+          >
+            <div class="bg-white/90 dark:bg-pacamara-dark/90 text-pacamara-primary dark:text-white p-3 rounded-full shadow-lg transform scale-75 group-hover:scale-100 group-focus-within:scale-100 group-hover:rotate-90 transition-all duration-300">
               <Icon name="mdi:magnify-plus-outline" class="w-6 h-6" />
             </div>
           </div>
@@ -108,11 +112,14 @@ const columnClasses = {
       ))}
     </div>
   ) : (
-    <p class="text-pacamara-primary/50 dark:text-white/50 text-center py-8">
-      {folder
-        ? `Aucune image trouvée dans le dossier "${folder}"`
-        : "Aucune image à afficher."}
-    </p>
+    <EmptyState
+      icon="mdi:image-off"
+      message={
+        folder
+          ? `Aucune image trouvée dans le dossier "${folder}"`
+          : "Aucune image à afficher."
+      }
+    />
   )
 }
 
@@ -193,10 +200,10 @@ const columnClasses = {
 <script>
   /**
    * ⚡ Bolt: Event delegation optimization
-   * Lightbox.astro already handles keyboard and click events globally for [data-gallery-image]
-   * We only need to handle Skeleton loader removal here.
+   * Removed redundant keyboard listeners per gallery.
+   * Interaction is now handled globally by Lightbox.astro via delegation.
    */
-  function initGalleryLoaders() {
+  function initGallery() {
     const galleries = document.querySelectorAll(
       "[data-gallery-container]:not(.gallery-initialized)",
     );
@@ -230,5 +237,5 @@ const columnClasses = {
   }
 
   // Initialize only via event listener to avoid double execution on initial load
-  document.addEventListener("astro:page-load", initGalleryLoaders);
+  document.addEventListener("astro:page-load", initGallery);
 </script>

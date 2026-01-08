@@ -4,6 +4,7 @@ import Post from "./Post.astro";
 import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
+import EmptyState from "../../ui/EmptyState.astro";
 
 const {
   postLimit = config.latestPosts,
@@ -54,18 +55,15 @@ const remainingCount = allPosts.length - postLimit;
     </p>
   </ScrollReveal>
 
-  <div class="bento-grid">
+  {
+    /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+  }
+  <div
+    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+  >
     {
       posts.length === 0 && (
-        <div class="col-span-full py-12 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm">
-          <Icon
-            name="mdi:alert-circle-outline"
-            class="w-12 h-12 mx-auto text-pacamara-secondary/50 dark:text-white/50 mb-4"
-          />
-          <p class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit">
-            Aucun projet ne correspond à ces critères pour le moment.
-          </p>
-        </div>
+        <EmptyState message="Aucun projet ne correspond à ces critères pour le moment." />
       )
     }
 
@@ -98,7 +96,7 @@ const remainingCount = allPosts.length - postLimit;
 
         <div class="relative z-10">
           <div
-            class="w-16 h-16 mx-auto mb-4 rounded-full bg-pacamara-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-pacamara-accent/20 transition-all duration-300"
+            class="w-16 h-16 mx-auto mb-4 rounded-full bg-pacamara-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 group-hover:bg-pacamara-accent/20 transition-all duration-300"
           >
             <Icon
               name="mdi:folder-multiple-image"
