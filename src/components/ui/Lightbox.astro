@@ -29,7 +29,8 @@
   <button
     type="button"
     class="lightbox-close group"
-    aria-label="Fermer"
+    aria-label="Fermer la galerie"
+    aria-description="Ferme la fenêtre modale"
     title="Fermer (Esc)"
     aria-keyshortcuts="Escape"
   >
@@ -57,6 +58,7 @@
     type="button"
     class="lightbox-nav lightbox-prev group"
     aria-label="Image précédente"
+    aria-description="Affiche l'image précédente"
     title="Image précédente (←)"
     aria-keyshortcuts="ArrowLeft"
   >
@@ -91,6 +93,7 @@
     type="button"
     class="lightbox-nav lightbox-next group"
     aria-label="Image suivante"
+    aria-description="Affiche l'image suivante"
     title="Image suivante (→)"
     aria-keyshortcuts="ArrowRight"
   >
@@ -205,6 +208,7 @@
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
+    will-change: transform, opacity;
   }
 
   .lightbox[aria-hidden="false"] .lightbox-image {
