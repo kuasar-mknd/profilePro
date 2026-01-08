@@ -21,3 +21,7 @@
 ## 2025-02-18 - Label Highlighting on Focus
 **Learning:** Highlighting the label in the accent color when an input is focused (`group-focus-within:text-pacamara-accent`) significantly improves the visual association between the active field and its label, especially in long forms.
 **Action:** Apply the `group` class to form containers and `group-focus-within:text-accent` to labels in all future form components.
+
+## 2025-02-25 - Visual Keyboard Hints
+**Learning:** Adding visual keyboard shortcut hints (badges) that appear on hover improves feature discoverability for power users without cluttering the UI for others. Marking them `aria-hidden="true"` prevents redundant announcements since the button already has `aria-keyshortcuts`.
+**Action:** Use `group-hover:opacity-100` on absolute positioned badges inside interactive elements for non-intrusive shortcut education.
