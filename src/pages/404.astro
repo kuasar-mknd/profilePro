@@ -77,6 +77,13 @@ import { Icon } from "astro-icon/components";
     // But to be safe against double-binding on the same element instance:
     if (!btn || btn.dataset.initialized === "true") return;
 
+    // 🎨 Palette: Hide back button if there's no history to return to
+    // This prevents frustrating dead clicks when users land directly on a 404 page
+    if (window.history.length <= 1) {
+      btn.style.display = "none";
+      return;
+    }
+
     btn.dataset.initialized = "true";
     btn.addEventListener("click", () => {
       history.back();
