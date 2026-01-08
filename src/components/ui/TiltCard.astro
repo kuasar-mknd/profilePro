@@ -95,11 +95,8 @@ const {
         // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
-        // ⚡ Bolt: Remove hint to free GPU memory
+        // ⚡ Bolt: Remove will-change to save GPU memory when not interacting
         cardStyle.removeProperty("will-change");
-
-        // ⚡ Bolt: Remove composite layer promotion to save memory
-        cardStyle.willChange = "auto";
 
         bounds = null;
 
