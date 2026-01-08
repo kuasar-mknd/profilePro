@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  message?: string;
+  icon?: string;
+  class?: string;
+}
+
+const {
+  message = "Aucun élément trouvé.",
+  icon = "mdi:alert-circle-outline",
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    "col-span-full py-12 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm flex flex-col items-center justify-center",
+    className,
+  ]}
+  role="status"
+>
+  <Icon
+    name={icon}
+    class="w-12 h-12 text-pacamara-secondary/50 dark:text-white/50 mb-4"
+    aria-hidden="true"
+  />
+  <p class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit">
+    {message}
+  </p>
+  <slot />
+</div>
