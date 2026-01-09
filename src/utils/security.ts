@@ -45,9 +45,10 @@ export function sanitizeInput(str: string): string {
     "}": "&#125;",
     "[": "&#91;", // Prevent array/logic injection
     "]": "&#93;",
+    "%": "&#37;", // Prevent URL-encoding attacks
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]]/gi;
+  const reg = /[&<>"'\/`=(){}[\]%]/gi;
 
   return str.replace(reg, (match) => map[match] || match);
 }
