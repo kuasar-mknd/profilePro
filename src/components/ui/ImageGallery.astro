@@ -191,10 +191,15 @@ const columnClasses = {
        without breaking masonry layout flow. This significantly reduces main-thread
        work during scrolling on lower-end devices.
     */
-    .gallery-item {
-      content-visibility: auto;
-      contain-intrinsic-size: 300px; /* Approximate height of a gallery item */
-    }
+  }
+
+  /* ⚡ Bolt: Universal Content Visibility
+     Applied to all breakpoints to improve rendering performance of large galleries.
+     The auto-sizing prevents scroll jumping.
+  */
+  .gallery-item {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px; /* Approximate height of a gallery item */
   }
 </style>
 
