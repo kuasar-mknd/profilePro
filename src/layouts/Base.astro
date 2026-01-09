@@ -323,9 +323,9 @@ if (postData?.data?.image) {
         };
 
         // Update on scroll (optimized)
-        window.addEventListener("scroll", onScroll, {
-          passive: true,
-        });
+        // ⚡ Bolt: Initial listener not needed if button starts hidden.
+        // It will be added by the IntersectionObserver when visible.
+        // window.addEventListener("scroll", onScroll, { passive: true });
 
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
@@ -362,10 +362,16 @@ if (postData?.data?.image) {
                 btn.classList.remove("opacity-0", "invisible", "translate-y-4");
                 btn.classList.add("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "0");
+                // ⚡ Bolt: Only listen to scroll when button is visible
+                window.addEventListener("scroll", onScroll, { passive: true });
+                // Trigger one update to ensure correct state
+                window.requestAnimationFrame(updateVisuals);
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "-1");
+                // ⚡ Bolt: Detach listener when button is hidden to save main thread
+                window.removeEventListener("scroll", onScroll);
               }
             },
             {
