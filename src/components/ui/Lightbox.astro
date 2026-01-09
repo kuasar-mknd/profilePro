@@ -18,12 +18,19 @@
   aria-modal="true"
   aria-label="Galerie photos en plein écran"
 >
-  <div class="lightbox-backdrop"></div>
+  <div
+    class="lightbox-backdrop"
+    role="button"
+    aria-label="Fermer la galerie"
+    tabindex="0"
+  >
+  </div>
 
   <button
     type="button"
-    class="lightbox-close"
-    aria-label="Fermer"
+    class="lightbox-close group"
+    aria-label="Fermer la galerie"
+    aria-description="Ferme la fenêtre modale"
     title="Fermer (Esc)"
     aria-keyshortcuts="Escape"
   >
@@ -41,12 +48,17 @@
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
+    <span
+      class="hidden md:block absolute top-full right-0 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">Esc</span
+    >
   </button>
 
   <button
     type="button"
-    class="lightbox-nav lightbox-prev"
+    class="lightbox-nav lightbox-prev group"
     aria-label="Image précédente"
+    aria-description="Affiche l'image précédente"
     title="Image précédente (←)"
     aria-keyshortcuts="ArrowLeft"
   >
@@ -63,6 +75,10 @@
     >
       <polyline points="15 18 9 12 15 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">←</span
+    >
   </button>
 
   <div class="lightbox-content">
@@ -75,8 +91,9 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-next"
+    class="lightbox-nav lightbox-next group"
     aria-label="Image suivante"
+    aria-description="Affiche l'image suivante"
     title="Image suivante (→)"
     aria-keyshortcuts="ArrowRight"
   >
@@ -93,6 +110,10 @@
     >
       <polyline points="9 18 15 12 9 6"></polyline>
     </svg>
+    <span
+      class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
+      aria-hidden="true">→</span
+    >
   </button>
 
   <div class="lightbox-counter" aria-live="polite" aria-atomic="true">
@@ -101,6 +122,14 @@
     <span aria-hidden="true"> / </span>
     <span class="sr-only"> sur </span>
     <span class="lightbox-total">1</span>
+  </div>
+  <!-- 🎨 Palette: Announcement region for image alt text -->
+  <div
+    id="lightbox-announcer"
+    class="sr-only"
+    aria-live="polite"
+    aria-atomic="true"
+  >
   </div>
 </div>
 
@@ -179,6 +208,7 @@
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
+    will-change: transform, opacity;
   }
 
   .lightbox[aria-hidden="false"] .lightbox-image {
@@ -295,7 +325,9 @@
     private image: HTMLImageElement;
     private currentSpan: HTMLElement;
     private totalSpan: HTMLElement;
+    private announcer: HTMLElement;
     private galleryElements: HTMLImageElement[] = [];
+    private inertElements: HTMLElement[] = [];
     private currentIndex: number = 0;
     // ⚡ Bolt: Cache to prevent GC of preloaded images
     private preloadCache: HTMLImageElement[] = [];
@@ -314,13 +346,13 @@
       this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.boundClickHandler = this.handleClick.bind(this);
       this.boundDelegatedKeyHandler = this.handleDelegatedKeyboard.bind(this);
-
       this.lightbox = document.getElementById("lightbox")!;
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
       ) as HTMLImageElement;
       this.currentSpan = this.lightbox.querySelector(".lightbox-current")!;
       this.totalSpan = this.lightbox.querySelector(".lightbox-total")!;
+      this.announcer = this.lightbox.querySelector("#lightbox-announcer")!;
 
       // Identify focusable elements
       const focusableSelector =
@@ -336,15 +368,27 @@
     }
 
     private init() {
+      // ⚡ Bolt: Cache inert targets once
+      this.inertElements = Array.from(
+        document.querySelectorAll(
+          "#main-header, #main-content, footer, #back-to-top, .skip-link",
+        ),
+      ) as HTMLElement[];
+
       // Close button
       this.lightbox
         .querySelector(".lightbox-close")
         ?.addEventListener("click", () => this.close());
 
       // Backdrop click
-      this.lightbox
-        .querySelector(".lightbox-backdrop")
-        ?.addEventListener("click", () => this.close());
+      const backdrop = this.lightbox.querySelector(".lightbox-backdrop");
+      backdrop?.addEventListener("click", () => this.close());
+      backdrop?.addEventListener("keydown", (e: Event) => {
+        const keyEvent = e as KeyboardEvent;
+        if (keyEvent.key === "Enter" || keyEvent.key === " ") {
+          this.close();
+        }
+      });
 
       // Navigation
       this.lightbox
@@ -470,16 +514,7 @@
      * This ensures screen readers and keyboard navigation stay within the lightbox.
      */
     private toggleInert(enable: boolean) {
-      const selectors = [
-        "#main-header",
-        "#main-content",
-        "footer",
-        "#back-to-top",
-        ".skip-link",
-      ];
-      const elements = document.querySelectorAll(selectors.join(", "));
-
-      elements.forEach((el) => {
+      this.inertElements.forEach((el) => {
         if (enable) {
           el.setAttribute("inert", "");
           el.setAttribute("aria-hidden", "true");
@@ -512,6 +547,11 @@
       this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.galleryElements.length);
+
+      // 🎨 Palette: Announce image description
+      if (this.announcer) {
+        this.announcer.textContent = alt || "Image sans description";
+      }
 
       // Loading state
       this.lightbox.classList.add("loading");
@@ -548,10 +588,11 @@
     private preloadImage(src: string) {
       // ⚡ Bolt: Optimization - Check both validity and duplication
       if (!src || this.preloadedUrls.has(src)) return;
-
       this.preloadedUrls.add(src);
       const img = new Image();
       img.decoding = "async";
+      // ⚡ Bolt: Lower priority for speculative preloads to protect LCP
+      img.fetchPriority = "low";
       img.src = src;
 
       // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
@@ -624,6 +665,10 @@
       document.removeEventListener("keydown", this.boundKeyHandler);
       document.removeEventListener("click", this.boundClickHandler);
       document.removeEventListener("keydown", this.boundDelegatedKeyHandler);
+      // ⚡ Bolt: Clear cache references to allow GC
+      this.preloadCache = [];
+      this.preloadedUrls.clear();
+      this.galleryElements = [];
     }
   }
 

@@ -1,4 +1,9 @@
-## 2024-07-25 - Harden Client-Side Sanitization
-**Vulnerability:** The custom client-side sanitization function in `src/components/common/ContactForm.astro` did not escape backticks (`` ` ``) or equals signs (`=`).
-**Learning:** This is a defense-in-depth issue. While the application's strict Content Security Policy (CSP) is the primary defense against XSS, this sanitization function is the last line of defense before data is sent to a third-party service. Unescaped characters could be exploited in other contexts where the data is viewed, such as an email client or an admin dashboard, if those systems have their own vulnerabilities. Relying solely on one layer of defense (like CSP) is fragile.
-**Prevention:** Custom sanitization functions must be comprehensive. When not using a vetted library, the default should be to escape a broad range of characters with special meaning in HTML, CSS, and JavaScript contexts (`<`, `>`, `&`, `"`, `'`, `/`, `\``, `=`). This ensures the data is inert, providing stronger protection regardless of how it's rendered downstream.
+## 2024-05-23 - Centralized Security Logic
+**Vulnerability:** JSON-LD injection vulnerability where unescaped `<` characters could allow script injection.
+**Learning:** Hardcoding security logic (like `.replace(/</g, '\\u003c')`) in multiple places increases the risk of inconsistencies and makes updates difficult. If one instance is missed or implemented incorrectly, the vulnerability remains.
+**Prevention:** Centralize security logic in a dedicated utility (e.g., `src/utils/security.ts`) and use it consistently. This ensures a single source of truth for security controls and simplifies auditing.
+
+## 2025-02-18 - Input Sanitization Enhancement
+**Vulnerability:** Limited input sanitization allowed potential injection vectors using parentheses and brackets (e.g., function calls, template syntax).
+**Learning:** Expanding sanitization to include '()', '[]', '{}' provides defense-in-depth against template injection and specific parser exploits without affecting visual rendering in HTML.
+**Prevention:** Use the enhanced 'sanitizeInput' utility for all user-facing inputs.

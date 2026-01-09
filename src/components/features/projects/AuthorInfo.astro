@@ -1,10 +1,13 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 const { authorData } = Astro.props;
 ---
 
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <section
-  class="mx-auto max-w-5xl my-16 p-8 md:p-12 rounded-3xl bg-white dark:bg-pacamara-dark/50 border border-pacamara-secondary/10 dark:border-white/5 shadow-lg flex flex-col md:flex-row gap-8 items-center md:items-start"
+  class="mx-auto max-w-5xl my-16 p-8 md:p-12 rounded-3xl bg-white dark:bg-pacamara-dark/50 border border-pacamara-secondary/10 dark:border-white/5 shadow-lg flex flex-col md:flex-row gap-8 items-center md:items-start [content-visibility:auto] [contain-intrinsic-size:auto_300px]"
 >
   <div class="shrink-0">
     {

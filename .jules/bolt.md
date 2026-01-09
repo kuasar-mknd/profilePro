@@ -1,3 +1,4 @@
-## 2024-05-23 - Astro View Transitions & Event Listeners
-**Learning:** In Astro with View Transitions (`ClientRouter`), `document` persists across navigations. Adding event listeners to `document` inside component scripts (which re-run on every navigation) creates memory leaks and duplicate handlers if not explicitly cleaned up.
-**Action:** Always store cleanup functions for global listeners in module-scoped variables and call them before re-initialization. Closure-based listeners (defined inside `init`) must be captured for removal.
+Bolt: Optimized Footer, AuthorInfo, and ImageGallery rendering performance.
+## 2025-02-18 - JIT Layer Promotion
+**Learning:** Applying `will-change: transform` globally (e.g., via utility classes on many elements) is a memory anti-pattern. It forces the browser to keep compositor layers active even when elements are off-screen.
+**Action:** Use a "Just-in-Time" approach: apply `will-change` via JS in an `IntersectionObserver` just before the animation starts, and remove it on `transitionend`.

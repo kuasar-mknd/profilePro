@@ -14,10 +14,10 @@ const {
 } = Astro.props;
 
 const directionClass = {
-  up: "will-change-transform",
-  left: "from-left will-change-transform",
-  right: "from-right will-change-transform",
-  scale: "scale-in will-change-transform",
+  up: "",
+  left: "from-left",
+  right: "from-right",
+  scale: "scale-in",
 }[direction];
 
 const staggerClass =
@@ -50,13 +50,19 @@ const staggerClass =
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const target = entry.target as HTMLElement;
-            target.classList.add("visible");
+            // ⚡ Bolt: Hint browser for layer promotion just before animation
+            // This ensures smooth animation without keeping memory-heavy layers active when off-screen
+            target.style.willChange = "opacity, transform";
+
+            requestAnimationFrame(() => {
+              target.classList.add("visible");
+            });
 
             // ⚡ Bolt: Cleanup high-cost will-change property after animation
             target.addEventListener(
               "transitionend",
               () => {
-                target.classList.remove("will-change-transform");
+                target.style.willChange = "auto";
               },
               { once: true },
             );
@@ -111,4 +117,11 @@ const staggerClass =
 
   // Re-run on page transitions (Astro View Transitions)
   document.addEventListener("astro:page-load", initScrollReveal);
+
+  // ⚡ Bolt: Cleanup stale observers on swap to prevent memory leaks
+  document.addEventListener("astro:after-swap", () => {
+    if (cachedScrollRevealObserver) {
+      cachedScrollRevealObserver.disconnect();
+    }
+  });
 </script>

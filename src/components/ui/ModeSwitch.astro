@@ -4,18 +4,34 @@ import { Icon } from "astro-icon/components";
 
 <button
   type="button"
-  class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:bg-pacamara-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
+  class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
   aria-label="Activer le mode sombre"
   title="Activer le mode sombre"
 >
-  <Icon
-    name="mdi:weather-sunny"
-    class="h-5 w-5 rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0"
-  />
-  <Icon
-    name="mdi:weather-night"
-    class="absolute h-5 w-5 rotate-90 scale-0 transition-all duration-300 dark:rotate-0 dark:scale-100"
-  />
+  <div
+    class="flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+  >
+    <div class="relative h-5 w-5 shrink-0">
+      <Icon
+        name="mdi:weather-sunny"
+        class="absolute inset-0 h-5 w-5 rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0"
+      />
+      <Icon
+        name="mdi:weather-night"
+        class="absolute inset-0 h-5 w-5 rotate-90 scale-0 transition-all duration-300 dark:rotate-0 dark:scale-100"
+      />
+    </div>
+    <span
+      aria-hidden="true"
+      class="text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:hidden"
+      >Soleil</span
+    >
+    <span
+      aria-hidden="true"
+      class="hidden text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:inline-block"
+      >Lune</span
+    >
+  </div>
   <span class="sr-only">Activer le mode sombre</span>
   <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
@@ -27,6 +43,23 @@ import { Icon } from "astro-icon/components";
    * - Dynamic aria-label and title for better accessibility
    * - Handles View Transitions properly
    */
+
+  // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
+  // This prevents memory leaks and duplicate listeners
+  const handleThemeToggle = (e: Event) => {
+    e.preventDefault();
+    const element = document.documentElement;
+    element.classList.toggle("dark");
+
+    const isDarkNow = element.classList.contains("dark");
+    localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+
+    // Dispatch custom event so all instances can update their UI
+    window.dispatchEvent(
+      new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
+    );
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
@@ -51,19 +84,24 @@ import { Icon } from "astro-icon/components";
     const isDark = document.documentElement.classList.contains("dark");
     updateLabels(isDark);
 
+    // ⚡ Bolt: Listen for global theme changes to sync all buttons
+    window.removeEventListener("theme-change", handleThemeChange);
+    window.addEventListener("theme-change", handleThemeChange);
+
+    function handleThemeChange(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      updateLabels(detail.isDark, true);
+    }
+
     buttons.forEach((btn) => {
-      // ⚡ Prevent duplicate listeners
-      if ((btn as HTMLElement).dataset.initialized === "true") return;
+      // ⚡ Bolt: Robust cleanup and re-binding
+      // Even if dataset says initialized, the element might be new (swapped)
+      // but if it's the SAME element, we want to be safe.
+      // Actually, checking dataset is fine for standard usage, but removeEventListener is safer.
+
+      btn.removeEventListener("click", handleThemeToggle);
+      btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";
-
-      btn.addEventListener("click", () => {
-        const element = document.documentElement;
-        element.classList.toggle("dark");
-
-        const isDarkNow = element.classList.contains("dark");
-        localStorage.setItem("theme", isDarkNow ? "dark" : "light");
-        updateLabels(isDarkNow, true);
-      });
     });
   }
 

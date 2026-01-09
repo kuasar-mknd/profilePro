@@ -1,29 +1,24 @@
-# Variables d'Environnement
+# Environment Variables
 
-Ce projet utilise des variables d'environnement pour la configuration et les intégrations externes.
+> **Note:** This project uses Astro's type-safe environment variables. See `src/env.d.ts` and `astro.config.mjs`.
 
-## Configuration Locale
+## 🌍 Required Variables
 
-Copiez le fichier `.env.example` vers `.env` pour le développement local :
+The following variables must be set in your `.env` file (locally) or in your CI/Deployment environment.
+
+| Variable                      | Description                                 | Required | Example                        |
+| ----------------------------- | ------------------------------------------- | -------- | ------------------------------ |
+| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for Web3Forms (Contact Form)     | Yes      | `abc-123`                      |
+| `PUBLIC_CF_ANALYTICS_TOKEN`   | Token for Cloudflare Web Analytics          | No       | `abc-123`                      |
+
+## 🛡 Secrets
+
+**NEVER** commit your `.env` file. Use `.env.example` as a template.
+
+### `.env.example` content:
 
 ```bash
-cp .env.example .env
+# Public Keys (Safe to expose in client bundle, but managed via env for flexibility)
+PUBLIC_WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
+PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
 ```
-
-## Variables Disponibles
-
-| Variable | Description | Requis | Contexte |
-|----------|-------------|--------|----------|
-| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Clé d'API publique pour le service de formulaire de contact Web3Forms. | Oui* | Runtime (Client) |
-| `PUBLIC_CF_ANALYTICS_TOKEN` | Token pour les analytics Cloudflare (Web Analytics). | Non | Runtime (Client) |
-
-*> Note : Actuellement, cette clé peut être définie directement dans le code source de `ContactForm.astro` ou via l'environnement.
-
-## Secrets CI/CD (GitHub Secrets)
-
-Ces variables sont configurées dans les secrets du dépôt GitHub pour le déploiement sur Cloudflare Pages.
-
-| Secret | Description |
-|--------|-------------|
-| `CLOUDFLARE_API_TOKEN` | Token d'authentification pour l'API Cloudflare. |
-| `CLOUDFLARE_ACCOUNT_ID` | ID du compte Cloudflare. |

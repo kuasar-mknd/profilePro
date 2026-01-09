@@ -6,7 +6,7 @@
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
-[![CI Quality](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
+[![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
 
 <!-- Tech Stack -->
 
@@ -23,10 +23,10 @@
 
 <!-- Lighthouse Scores -->
 
-![Lighthouse Performance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/performance.json)
-![Lighthouse Accessibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/accessibility.json)
-![Lighthouse Best Practices](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/best-practices.json)
-![Lighthouse SEO](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/refs/heads/badges/seo.json)
+![Lighthouse Performance](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/performance.json)
+![Lighthouse Accessibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/accessibility.json)
+![Lighthouse Best Practices](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/best-practices.json)
+![Lighthouse SEO](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/kuasar-mknd/profilePro/badges/seo.json)
 
 [🌐 Site Web](https://kuasar.xyz) • [📸 Instagram](https://www.instagram.com/kuasar.mknd) • [🎥 YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 
@@ -38,12 +38,21 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
     - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    - Lancez `bun install` pour reconstruire les binaires natifs.
+    - Si l'erreur persiste :
+      ```bash
+      rm -rf node_modules bun.lockb
+      bun install
+      ```
 2.  **Erreur `bun run` introuvable** :
     - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
-    - Les variables `PUBLIC_` sont nécessaires au build.
+    - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
+4.  **Tests Playwright** :
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
+    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `bun run dev` dans un autre terminal avant les tests.
+5.  **Build failed (assets)** :
+    - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
 ## 📖 À propos
 
@@ -78,8 +87,8 @@ Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de d
 Une documentation détaillée est disponible dans le dossier `docs/` :
 
 - [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
-- [🔌 API](docs/API.md) : Services externes (Web3Forms) et API internes.
 - [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
+- [📡 API](docs/API.md) : Endpoints statiques (RSS, Sitemap).
 - [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 
 ## 🚀 Quick Start
@@ -99,7 +108,14 @@ cd profilePro
 # Installer les dépendances
 bun install
 
+# Configurer l'environnement
+cp .env.example .env
+
+# Installer les navigateurs pour les tests E2E
+bun x playwright install --with-deps
+
 # Lancer le serveur de développement
+# Note: Cela lance d'abord l'optimisation des images ('bun run images')
 bun run dev
 ```
 
@@ -107,19 +123,22 @@ Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-- `bun run dev` : Lancer le serveur de développement.
-- `bun run build` : Générer le build de production.
-- `bun run check` : Vérifier le code (linting + formatage).
-- `bun run lighthouse` : Lancer l'audit de performance.
-- `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
+- `bun run dev` : Optimise les images et lance le serveur de développement.
+- `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
+- `bun run check` : Vérifie le code (linting + formatage + types).
+- `bun run lighthouse` : Lance l'audit de performance.
+- `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
 
-### API Access (Flux RSS)
+### API Access
 
-Le site propose un flux RSS pour suivre les nouveaux projets :
+Le site est statique mais expose des données via des endpoints générés au build :
 
 ```bash
 # Récupérer le flux RSS (XML)
 curl https://portfolio.kuasar.xyz/rss.xml
+
+# Récupérer le Sitemap (XML)
+curl https://portfolio.kuasar.xyz/sitemap-index.xml
 ```
 
 ## 📂 Structure du projet
@@ -149,8 +168,11 @@ Le déploiement est automatisé sur **Cloudflare Pages** via GitHub Actions.
 Le workflow assure :
 
 1. Vérification de la qualité (`check`).
-2. Scan de sécurité (`CodeQL`, `Dependency Review`).
-3. Build et déploiement via Wrangler.
+2. Tests End-to-End (`test:e2e`).
+3. Scan de sécurité (`CodeQL`, `Dependency Review`).
+4. Build et déploiement via Wrangler.
+
+Pour plus de détails sur le pipeline, voir [ARCHITECTURE.md](docs/ARCHITECTURE.md#cicd-pipeline).
 
 ## 🤝 Contributing
 

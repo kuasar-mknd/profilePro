@@ -1,5 +1,6 @@
 ---
 import config from "../../config.mjs";
+import { safeJson } from "../../utils/security";
 
 const { postData, jsonLd } = Astro.props;
 
@@ -36,10 +37,7 @@ const type = postData?.data?.type ? postData.data.type : "website";
 <!-- JSON-LD Structured Data -->
 {
   jsonLd && (
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
-    />
+    <script type="application/ld+json" is:inline set:html={safeJson(jsonLd)} />
   )
 }
 

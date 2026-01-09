@@ -11,7 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: "always", // Inline le CSS pour éliminer les requêtes bloquantes
+    inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
   },
   image: {
     domains: ["kuasar.xyz"],

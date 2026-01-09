@@ -117,7 +117,10 @@ const jsonLd = {
         <Tag tag={entry.data.tag} />
         <PublishDate date={entry.data.pubDate} />
 
-        <span class="text-pacamara-primary/60 dark:text-white/60">•</span>
+        <span
+          class="text-pacamara-primary/60 dark:text-white/60"
+          aria-hidden="true">•</span
+        >
         <span
           class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
           >{readingTime} min de lecture</span
@@ -238,14 +241,22 @@ const jsonLd = {
 
         if (progressBar) {
           let ticking = false;
+          // ⚡ Bolt: Cache document dimensions to avoid layout thrashing
+          let cachedDocHeight = 0;
+          let resizeObserver: ResizeObserver | null = null;
+
+          const updateDimensions = () => {
+            cachedDocHeight =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+          };
 
           const updateProgress = () => {
             const winScroll =
               document.body.scrollTop || document.documentElement.scrollTop;
-            const height =
-              document.documentElement.scrollHeight -
-              document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
+            // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
+            const scrolled =
+              cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;
             progressBar.style.width = scrolled + "%";
             ticking = false;
           };
@@ -259,11 +270,23 @@ const jsonLd = {
 
           window.addEventListener("scroll", onScroll, { passive: true });
 
+          // ⚡ Bolt: Observe document size changes
+          resizeObserver = new ResizeObserver(() => {
+            updateDimensions();
+            // Update immediately in case resize affected relative scroll pos
+            window.requestAnimationFrame(updateProgress);
+          });
+          resizeObserver.observe(document.documentElement);
+
+          // Initial calculation
+          updateDimensions();
+
           // Cleanup to prevent duplicate listeners on navigation
           document.addEventListener(
             "astro:before-swap",
             () => {
               window.removeEventListener("scroll", onScroll);
+              if (resizeObserver) resizeObserver.disconnect();
             },
             { once: true },
           );
@@ -295,7 +318,10 @@ const jsonLd = {
               try {
                 await navigator.clipboard.writeText(window.location.href);
 
-                // 🎨 Palette: Visual and Audible Feedback
+                // 🎨 Palette: Visual, Audible, and Haptic Feedback
+                // Vibrate for 50ms on mobile devices
+                if (navigator.vibrate) navigator.vibrate([50]);
+
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
 
@@ -334,9 +360,15 @@ const jsonLd = {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
-            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2"
+            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+            aria-label={`Projet précédent : ${nextPost.data.title}`}
           >
-            <div class="flex-none">
+            <Icon
+              name="mdi:arrow-left"
+              class="w-8 h-8 text-pacamara-accent/60 group-hover:text-pacamara-accent group-hover:-translate-x-1 transition-all duration-300"
+              aria-hidden="true"
+            />
+            <div class="flex-1 text-left">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet précédent
               </span>
@@ -354,9 +386,10 @@ const jsonLd = {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
-            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right"
+            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+            aria-label={`Projet suivant : ${prevPost.data.title}`}
           >
-            <div class="flex-none">
+            <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet suivant
               </span>
@@ -364,6 +397,11 @@ const jsonLd = {
                 {prevPost.data.title}
               </span>
             </div>
+            <Icon
+              name="mdi:arrow-right"
+              class="w-8 h-8 text-pacamara-accent/60 group-hover:text-pacamara-accent group-hover:translate-x-1 transition-all duration-300"
+              aria-hidden="true"
+            />
           </a>
         ) : (
           <div class="w-full md:w-1/2" />

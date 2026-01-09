@@ -38,7 +38,11 @@ const services = [
 ];
 ---
 
-<section class="py-24 relative overflow-hidden">
+<section
+  class="services-section py-24 relative overflow-hidden"
+  style="content-visibility: auto; contain-intrinsic-size: auto 600px;"
+>
+  <!-- ⚡ Bolt: content-visibility: auto skips rendering off-screen content -->
   <!-- Animated background gradient -->
   <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
     <div
@@ -73,7 +77,7 @@ const services = [
           <li class="h-full">
             <ScrollReveal delay={0.1 * index} class="h-full">
               <TiltCard
-                class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300`}
+                class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300 cursor-default`}
               >
                 <div
                   class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}

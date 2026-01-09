@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 import logo from "../assets/logo.avif";
 import CTASection from "../components/common/CTASection.astro";
 import { Icon } from "astro-icon/components";
@@ -115,7 +115,7 @@ const skills = [
             >
               <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
               ></span>
-              📍 Basé en Suisse
+              <span role="img" aria-label="Localisation">📍</span> Basé en Suisse
             </div>
           </div>
 
@@ -136,7 +136,7 @@ const skills = [
             <div
               class="inline-block px-4 py-2 rounded-full bg-pacamara-secondary/10 text-pacamara-secondary dark:text-pacamara-accent font-bold text-sm mb-6"
             >
-              👋 Enchanté, moi c'est Samuel
+              <span role="img" aria-label="Salut">👋</span> Enchanté, moi c'est Samuel
             </div>
           </ScrollReveal>
 
@@ -209,7 +209,12 @@ const skills = [
   </section>
 
   <!-- Services Section -->
-  <section class="py-24 relative overflow-hidden">
+  {
+    /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+  }
+  <section
+    class="py-24 relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+  >
     <!-- Subtle background gradient -->
     <div
       class="absolute inset-0 bg-linear-to-b from-transparent via-pacamara-secondary/5 to-transparent -z-10 pointer-events-none"

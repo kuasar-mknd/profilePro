@@ -95,6 +95,11 @@ const {
         // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
+        // ⚡ Bolt: Remove will-change to save GPU memory when not interacting
+        cardStyle.removeProperty("will-change");
+
+        // ⚡ Bolt: Remove compositing layer to save memory
+        el.style.willChange = "auto";
 
         bounds = null;
 
@@ -104,8 +109,14 @@ const {
       }
 
       function onMouseEnter() {
+        // ⚡ Bolt: Promote to composite layer only on interaction
+        cardStyle.willChange = "transform";
+
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
+
+        // ⚡ Bolt: Hint browser to promote layer only during interaction
+        cardStyle.setProperty("will-change", "transform");
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);

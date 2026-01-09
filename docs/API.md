@@ -1,37 +1,45 @@
-# Documentation API
+# API Documentation
 
-Ce site est principalement statique, mais il interagit avec quelques services externes.
+> **Note:** As a static site (SSG), this project does not expose a dynamic REST API. However, it generates static feed endpoints at build time.
 
-## Services Externes
+## 📡 Public Endpoints
 
-### 1. Web3Forms (Formulaire de Contact)
+These endpoints are generated during the build process and are available publicly.
 
-Utilisé pour gérer les soumissions du formulaire de contact sans backend serveur.
+### 1. RSS Feed
 
-- **Endpoint**: `POST https://api.web3forms.com/submit`
-- **Authentification**: Via `access_key` (champ caché dans le formulaire).
-- **Payload (JSON)**:
-  ```json
-  {
-    "access_key": "YOUR_ACCESS_KEY",
-    "name": "Nom de l'utilisateur",
-    "email": "email@example.com",
-    "message": "Contenu du message",
-    "subject": "Nouveau message...",
-    "botcheck": "" // Champ honeypot (doit être vide)
-  }
-  ```
+Provides the latest projects/posts in XML format.
 
-### 2. Website Carbon (Badge Écologique)
+- **URL:** `/rss.xml`
+- **Method:** `GET`
+- **Format:** RSS 2.0 (XML)
+- **Usage:** Used by RSS readers and content aggregators.
+- **Content:** Title, Description, Link, PubDate for each project.
 
-Utilisé pour afficher l'impact écologique de la page.
+**Example Response:**
 
-- **Type**: Implémentation locale inline (voir `src/components/common/Footer.astro`).
-- **Note de sécurité**: L'ancien script externe `website-carbon-badges.js` a été supprimé pour réduire la surface d'attaque (injection HTML) et améliorer la performance.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Samuel Dulex | Connecter, Communiquer, Captiver</title>
+    <description>Créateur de contenu visuel...</description>
+    <link>https://portfolio.kuasar.xyz/</link>
+    <item>
+      <title>Project Title</title>
+      <link>https://portfolio.kuasar.xyz/project/project-slug/</link>
+      <description>Project description...</description>
+      <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
+```
 
-## API Interne (Build-time)
+### 2. Sitemap Index
 
-Le site ne expose pas d'API REST publique. Cependant, il génère les fichiers suivants au build :
+Standard sitemap index for search engines.
 
-- **Sitemap**: `/sitemap-index.xml`
-- **RSS Feed**: `/rss.xml` (Contient les derniers projets)
+- **URL:** `/sitemap-index.xml`
+- **Method:** `GET`
+- **Format:** XML
+- **Usage:** SEO / Search Engine Crawlers.

@@ -12,6 +12,7 @@ import "../css/style.css";
 
 import { ClientRouter } from "astro:transitions";
 import { getImage } from "astro:assets";
+import { safeJson } from "../utils/security";
 import logo from "../assets/logo.avif";
 
 // Precompute LCP image URL for preloading
@@ -42,9 +43,13 @@ if (postData?.data?.image) {
       crossorigin
     />
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
+    <!-- ⚡ Bolt: Downgraded non-critical third-parties to dns-prefetch to save connection slots -->
     <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
-    <link rel="preconnect" href="https://player.vimeo.com" />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
+    <link rel="dns-prefetch" href="https://i.ytimg.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://vimeo.com" />
+    <link rel="dns-prefetch" href="https://player.vimeo.com" />
     <style>
       @media (prefers-reduced-motion: reduce) {
         :global(html) {
@@ -59,6 +64,7 @@ if (postData?.data?.image) {
       as="font"
       type="font/woff2"
       crossorigin
+      fetchpriority="high"
     />
     <link
       rel="preload"
@@ -66,10 +72,20 @@ if (postData?.data?.image) {
       as="font"
       type="font/woff2"
       crossorigin
+      fetchpriority="high"
     />
     <link
       rel="preload"
       href="/fonts/outfit-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="high"
+    />
+    <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
+    <link
+      rel="preload"
+      href="/fonts/outfit-bold.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -103,7 +119,8 @@ if (postData?.data?.image) {
     <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
     <script
       type="speculationrules"
-      set:html={JSON.stringify({
+      is:inline
+      set:html={safeJson({
         prerender: [
           {
             source: "document",
@@ -113,7 +130,7 @@ if (postData?.data?.image) {
             eagerness: "moderate",
           },
         ],
-      }).replace(/</g, "\\u003c")}
+      })}
     />
     <style is:global>
       /* Manual Font Face Definitions */
@@ -147,13 +164,6 @@ if (postData?.data?.image) {
       }
     </style>
     <!-- Critical preconnects - must be early in head for effectiveness -->
-    <link rel="dns-prefetch" href="https://api.websitecarbon.com" />
-    <link rel="preconnect" href="https://api.websitecarbon.com" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://static.cloudflareinsights.com"
-      crossorigin
-    />
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
       // Early theme detection to prevent FOUC
@@ -183,12 +193,23 @@ if (postData?.data?.image) {
     >
     </div>
 
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary"
+    <!-- 🎨 Palette: Accessible Skip Links -->
+    <div
+      class="fixed top-4 left-4 z-[100] flex flex-col gap-2 pointer-events-none"
     >
-      Aller au contenu principal
-    </a>
+      <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+      >
+        Aller au contenu principal
+      </a>
+      <a
+        href="#main-footer"
+        class="sr-only focus:not-sr-only px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+      >
+        Aller au pied de page
+      </a>
+    </div>
     <Header />
 
     <main
@@ -324,11 +345,6 @@ if (postData?.data?.image) {
           }
         };
 
-        // Update on scroll (optimized)
-        window.addEventListener("scroll", onScroll, {
-          passive: true,
-        });
-
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
           updateDimensions();
@@ -364,10 +380,15 @@ if (postData?.data?.image) {
                 btn.classList.remove("opacity-0", "invisible", "translate-y-4");
                 btn.classList.add("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "0");
+                // ⚡ Bolt: Only listen to scroll when button is visible to save resources
+                window.addEventListener("scroll", onScroll, { passive: true });
+                onScroll(); // Update visual immediately
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "-1");
+                // ⚡ Bolt: Stop listening when hidden
+                window.removeEventListener("scroll", onScroll);
               }
             },
             {
@@ -396,7 +417,10 @@ if (postData?.data?.image) {
         cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
           if (resizeObserver) resizeObserver.disconnect();
-          if (backToTopObserver) backToTopObserver.disconnect();
+          if (backToTopObserver) {
+            backToTopObserver.disconnect();
+            backToTopObserver = null; // ⚡ Bolt: Ensure fresh observer with correct closure scope
+          }
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
@@ -415,60 +439,73 @@ if (postData?.data?.image) {
         }
       }
 
-      // Observer for class changes on html to trigger theme color update
-      const themeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            updateThemeColor();
-          }
+      // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
+      // Moved to module scope to prevent memory leaks from stacking observers
+      let themeObserver: MutationObserver | null = null;
+
+      function initThemeObserver() {
+        if (themeObserver) return; // Already initialized
+
+        themeObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              updateThemeColor();
+            }
+          });
         });
-      });
 
-      themeObserver.observe(document.documentElement, { attributes: true });
+        themeObserver.observe(document.documentElement, { attributes: true });
+      }
 
-      // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
-      // Ensures all external links opening in a new tab have rel="noopener noreferrer"
-      // and a warning in title/aria-label.
-      // Uses MutationObserver to catch dynamically injected links (Defense in Depth).
-      function secureLinks() {
-        const warning = " (ouvre un nouvel onglet)";
+      initThemeObserver();
+      // Note: We don't need to re-init on swap because document.documentElement persists
+      // and the observer stays attached.
 
-        const secureLink = (link) => {
-          if (link.getAttribute("target") !== "_blank") return;
+      const warning = " (ouvre un nouvel onglet)";
 
-          // Security: Add rel="noopener noreferrer"
-          const rel = link.getAttribute("rel") || "";
-          if (!rel.includes("noopener")) {
-            link.setAttribute("rel", (rel + " noopener noreferrer").trim());
-          }
+      function secureLink(link: Element) {
+        if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
+          return;
 
-          // Accessibility: Append warning to title
-          const title = link.getAttribute("title") || "";
-          if (!title.includes(warning.trim())) {
-            link.setAttribute(
-              "title",
-              title ? title + warning : warning.trim(),
-            );
-          }
+        // Security: Add rel="noopener noreferrer"
+        const rel = link.getAttribute("rel") || "";
+        if (!rel.includes("noopener")) {
+          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        }
 
-          // Accessibility: Append warning to aria-label (only if present)
-          const ariaLabel = link.getAttribute("aria-label");
-          if (ariaLabel && !ariaLabel.includes(warning.trim())) {
+        // Accessibility: Append warning to title
+        const title = link.getAttribute("title") || "";
+        if (!title.includes(warning.trim())) {
+          link.setAttribute("title", title ? title + warning : warning.trim());
+        }
+
+        // Accessibility: Append warning to aria-label (only if present)
+        const ariaLabel = link.getAttribute("aria-label");
+        if (ariaLabel) {
+          if (!ariaLabel.includes(warning.trim())) {
             link.setAttribute("aria-label", ariaLabel + warning);
           }
-        };
+        } else {
+          // 🎨 Palette: If no aria-label, inject SR-only span to preserve accessible name calculation (text + alt)
+          if (!link.querySelector(".external-link-warning")) {
+            const span = document.createElement("span");
+            span.className = "sr-only external-link-warning";
+            span.textContent = warning;
+            link.appendChild(span);
+          }
+        }
+      }
 
+      function secureLinks() {
         // 1. Initial scan
         document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
 
-        // 2. Observer for dynamic content
+        // 2. 🛡️ Sentinel: MutationObserver for dynamic content (Defense in Depth)
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
               if (node.nodeType === 1) {
-                // Cast to Element to access tagName/querySelectorAll
                 const element = node as Element;
-                // Element node
                 if (element.tagName === "A") {
                   secureLink(element);
                 } else if (element.querySelectorAll) {
@@ -486,7 +523,7 @@ if (postData?.data?.image) {
           subtree: true,
         });
 
-        // Cleanup on navigation (though View Transitions might keep body, better safe)
+        // Cleanup on navigation
         document.addEventListener(
           "astro:before-swap",
           () => observer.disconnect(),
@@ -518,10 +555,11 @@ if (postData?.data?.image) {
     <!-- Cloudflare Web Analytics -->
     <script
       defer
+      is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({
+      data-cf-beacon={safeJson({
         token: PUBLIC_CF_ANALYTICS_TOKEN,
-      }).replace(/</g, "\\u003c")}></script>
+      })}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

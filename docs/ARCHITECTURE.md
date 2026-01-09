@@ -1,78 +1,98 @@
-# Architecture du Projet
+# Architecture Documentation
 
-Ce document décrit l'architecture technique du portfolio, construit avec Astro 5.
+> **Note:** This project is a statically generated site (SSG) built with **Astro 5**.
 
-## Vue d'ensemble
+## 🏗 High-Level Architecture
 
-Le projet suit une architecture de site statique (SSG) généré par Astro, avec des composants interactifs hydratés côté client (Islands Architecture) uniquement lorsque nécessaire.
+The project follows the "Islands Architecture" (Astro) combined with a component-based structure. It emphasizes **performance**, **accessibility**, and **SEO**.
 
-### Stack Technique
+### 1. Layers
 
-- **Core**: Astro 5 (Static Site Generation)
-- **Styling**: Tailwind CSS 4 (CSS-first config)
-- **Scripting**: TypeScript (Strict mode)
-- **Type Checking**: `astro check` (via CI)
-- **Contenu**: MDX (Markdown + Components)
-- **Package Manager**: Bun (Utilisé pour le développement et le build)
-- **Testing**: Playwright (E2E)
+- **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes using file-based routing.
+- **Component Layer (UI)**: Located in `src/components/`.
+  - `common/`: Global components (Header, Footer, SEO).
+  - `ui/`: Reusable primitives (Buttons, Cards, Lightbox).
+  - `features/`: Domain-specific logic (Projects, VideoPlayer).
+- **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
+- **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
 
-## Structure des Dossiers
+### 2. Data Flow
 
-```text
-src/
-├── components/       # Composants réutilisables
-│   ├── common/       # Composants globaux (Header, Footer, SEO)
-│   ├── features/     # Composants métier complexes (Hero, ProjectCard)
-│   ├── ui/           # Composants atomiques (Button, Badge, SocialIcon)
-│   └── icons/        # Icônes SVG/Astro
-├── content/          # Collections de données (MDX)
-│   ├── project/      # Fichiers de projets (Portfolio)
-│   └── config.ts     # Définition des schémas de contenu (Zod)
-├── layouts/          # Templates de pages (Base, Article, Project)
-├── pages/            # Routage basé sur le système de fichiers
-│   ├── index.astro   # Page d'accueil
-│   ├── about.astro   # Page À propos
-│   ├── project/      # Routes dynamiques de projets ([slug].astro)
-│   └── rss.xml.js    # Génération du flux RSS
-├── css/              # Styles globaux et configuration Tailwind
-├── config.mjs        # Configuration globale du site (métadonnées)
-└── env.d.ts          # Définitions de types TypeScript
-```
+1.  **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files.
+2.  **SSG**: HTML pages are generated statically at build time.
+3.  **Hydration**: Interactive components (using `<script>` tags or framework components) are hydrated only when needed (`client:load`, `client:visible`).
 
-## Concepts Clés
+### 3. Key Technologies
 
-### 1. Islands Architecture
+- **Astro 5**: Core framework.
+- **Tailwind CSS 4**: Styling engine (via Vite plugin).
+- **Bun**: Runtime & Package Manager.
+- **Playwright**: E2E Testing.
+- **Plyr**: Video player abstraction.
 
-Le site est statique par défaut. L'interactivité est ajoutée via des "îlots" interactifs.
-Exemple : Le formulaire de contact (`ContactForm.astro`) est hydraté avec `client:visible` ou des scripts inline optimisés.
+---
 
-### 2. Content Collections
+## 🛠 Extension Guide
 
-Les projets sont gérés via les Content Collections d'Astro (`src/content/project`). Chaque projet est un fichier `.mdx` avec un frontmatter typé (validé par Zod dans `src/content/config.ts`).
+### Adding a New Page
 
-### 3. View Transitions
+1.  Create a file in `src/pages/my-page.astro`.
+2.  Use the `BaseLayout`:
+    ```astro
+    ---
+    import Base from "../layouts/Base.astro";
+    ---
 
-La navigation SPA (Single Page Application) est simulée grâce à l'API View Transitions d'Astro, offrant des transitions fluides sans rechargement complet de la page.
+    <Base title="My Page">
+      <h1>Content</h1>
+    </Base>
+    ```
 
-### 4. Performance
+### Adding a New Project
 
-- **Images**: Optimisées au build via Sharp (`<Picture />` et `getImage`).
-- **Scripts**: Chargement différé et exécution conditionnelle.
-- **CSS**: Inliné pour réduire les requêtes bloquantes (Critical CSS).
+1.  Add a new MDX file in `src/content/project/my-project.mdx`.
+2.  Follow the schema defined in `src/content/config.ts`:
+    ```yaml
+    title: "Project Title"
+    publishDate: 2024-01-01
+    description: "Short description"
+    img: "./image.jpg"
+    img_alt: "Description of image"
+    tags: ["Video", "Event"]
+    ---
+    Content goes here...
+    ```
 
-### 5. Testing
+### Adding a New UI Component
 
-Les tests End-to-End (E2E) sont gérés par Playwright.
+1.  Create `src/components/ui/MyComponent.astro`.
+2.  If it needs interactivity, script logic goes into a `<script>` tag or a framework component (e.g., React).
 
-- Commande: `bun run test:e2e`
-- Configuration: `playwright.config.ts` (si présent) ou configuration par défaut.
+---
 
-## Extension du Projet
+## 🔄 CI/CD Pipeline
 
-### Ajouter une nouvelle page
+Workflows are defined in `.github/workflows/`:
 
-Créer un fichier `.astro` dans `src/pages/`. Il sera automatiquement accessible via son nom de fichier.
+1.  **CI (`ci.yml`)**:
+    - Triggers on Push & PR.
+    - Sets up Node 20 & Bun.
+    - Installs dependencies.
+    - Runs `bun run check` (Lint + Types + Format).
+    - Runs `bun run test:e2e` (Playwright).
+    - Builds the site `bun run build`.
 
-### Ajouter un composant UI
+2.  **Security**:
+    - **CodeQL**: Scans JS/TS for vulnerabilities.
+    - **Dependency Review**: Checks for vulnerable packages in PRs.
 
-Créer le composant dans `src/components/ui/` et l'importer là où nécessaire. Privilégier les composants `.astro` purs quand c'est possible.
+3.  **Deploy**:
+    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
+
+---
+
+## 🧩 Architectural Concepts
+
+- **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
+- **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
+- **Content Collections**: Type-safe content management for Markdown/MDX.
