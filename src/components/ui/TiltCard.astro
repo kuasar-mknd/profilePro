@@ -35,7 +35,7 @@ const {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const cards = document.querySelectorAll(
-      ".tilt-card:not(.tilt-initialized)",
+      ".tilt-card:not(.tilt-initialized)"
     );
 
     cards.forEach((card) => {
@@ -95,6 +95,8 @@ const {
         // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
+        // ⚡ Bolt: Remove will-change to save GPU memory when not interacting
+        cardStyle.removeProperty("will-change");
 
         // ⚡ Bolt: Remove compositing layer to save memory
         el.style.willChange = "auto";
@@ -107,11 +109,14 @@ const {
       }
 
       function onMouseEnter() {
+        // ⚡ Bolt: Promote to composite layer only on interaction
+        cardStyle.willChange = "transform";
+
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
         bounds = el.getBoundingClientRect();
 
-        // ⚡ Bolt: Promote to compositor only during interaction
-        el.style.willChange = "transform";
+        // ⚡ Bolt: Hint browser to promote layer only during interaction
+        cardStyle.setProperty("will-change", "transform");
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);

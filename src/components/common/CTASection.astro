@@ -3,10 +3,12 @@ import ContactForm from "./ContactForm.astro";
 import ScrollReveal from "../ui/ScrollReveal.astro";
 ---
 
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <section
-  class="relative pt-32 pb-24 overflow-hidden"
+  class="relative pt-32 pb-24 overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_500px]"
   id="cta-section"
-  style="content-visibility: auto; contain-intrinsic-size: 1px 400px;"
 >
   <!-- Animated Gradient Background -->
   <div class="absolute inset-0 -z-10">

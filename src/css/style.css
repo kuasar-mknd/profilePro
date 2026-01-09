@@ -3,15 +3,11 @@
 @plugin "@tailwindcss/typography";
 
 /* Font Display Optimization - Prevent FOIT */
-@font-face {
-  font-family: "Space Grotesk";
-  font-display: swap;
-}
 
-@font-face {
-  font-family: Outfit;
-  font-display: swap;
-}
+/* ⚡ Bolt: Removed partial @font-face definitions.
+   Base.astro handles the full definitions with correct src paths and font-display settings.
+   This avoids redundant CSS rules and potential browser confusion.
+*/
 
 @variant dark (&:where(.dark, .dark *));
 
@@ -214,7 +210,11 @@
   }
 
   /* ⚡ Bolt: Optimization for below-the-fold content */
-  .bento-grid {
+
+  /* Applied to large components like LatestPosts (bento-grid), ServicesPreview, and ContactForm */
+  .bento-grid,
+  .services-section,
+  .contact-form-section {
     content-visibility: auto;
     contain-intrinsic-size: auto 600px;
   }
@@ -345,7 +345,8 @@
     transition: transform 0.3s ease-out;
   }
 
-  .link-animated:hover::after {
+  .link-animated:hover::after,
+  .link-animated.link-active::after {
     transform: scaleX(1);
     transform-origin: bottom left;
   }
@@ -730,8 +731,12 @@
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.image-zoom:hover img {
+/* ⚡ Bolt: Fixed broken hover effect for Post.astro cards (which use pointer-events-none)
+   and scoped will-change to avoid memory bloat for static images */
+.image-zoom:hover img,
+.group:hover .image-zoom img {
   transform: scale(1.08);
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
