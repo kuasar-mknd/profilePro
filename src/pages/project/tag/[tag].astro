@@ -5,6 +5,7 @@ import Post from "../../../components/features/projects/Post.astro";
 import ProjectFilter from "../../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../../components/ui/ScrollReveal.astro";
 import Breadcrumbs from "../../../components/ui/Breadcrumbs.astro";
+import EmptyState from "../../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -52,14 +53,18 @@ const { projects, allTags } = Astro.props;
 
     <div class="flex flex-wrap justify-center gap-8 mb-16">
       {
-        projects.map((post, index) => (
-          <ScrollReveal
-            delay={index * 0.1}
-            class="w-full md:w-[calc(50%-1rem)]"
-          >
-            <Post postData={post} num={index} />
-          </ScrollReveal>
-        ))
+        projects.length === 0 ? (
+          <EmptyState message={`Aucun projet trouvé avec le tag "${tag}".`} />
+        ) : (
+          projects.map((post, index) => (
+            <ScrollReveal
+              delay={index * 0.1}
+              class="w-full md:w-[calc(50%-1rem)]"
+            >
+              <Post postData={post} num={index} priority={index < 2} />
+            </ScrollReveal>
+          ))
+        )
       }
     </div>
   </section>

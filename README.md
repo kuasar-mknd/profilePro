@@ -38,14 +38,21 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
     - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
-    - Lancez `bun install` pour reconstruire les binaires natifs.
+    - Si l'erreur persiste :
+      ```bash
+      rm -rf node_modules bun.lockb
+      bun install
+      ```
 2.  **Erreur `bun run` introuvable** :
     - Installez Bun via `curl -fsSL https://bun.sh/install | bash`.
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
-    - Les variables `PUBLIC_` sont nécessaires au build.
+    - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
     - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
+    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `bun run dev` dans un autre terminal avant les tests.
+5.  **Build failed (assets)** :
+    - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
 ## 📖 À propos
 
@@ -81,6 +88,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 - [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
 - [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
+- [📡 API](docs/API.md) : Endpoints statiques (RSS, Sitemap).
 - [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 
 ## 🚀 Quick Start
@@ -100,10 +108,14 @@ cd profilePro
 # Installer les dépendances
 bun install
 
+# Configurer l'environnement
+cp .env.example .env
+
 # Installer les navigateurs pour les tests E2E
 bun x playwright install --with-deps
 
 # Lancer le serveur de développement
+# Note: Cela lance d'abord l'optimisation des images ('bun run images')
 bun run dev
 ```
 
@@ -111,11 +123,11 @@ Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-- `bun run dev` : Lancer le serveur de développement.
-- `bun run build` : Générer le build de production.
-- `bun run check` : Vérifier le code (linting + formatage).
-- `bun run lighthouse` : Lancer l'audit de performance.
-- `bun run test:e2e` : Lancer les tests end-to-end avec Playwright.
+- `bun run dev` : Optimise les images et lance le serveur de développement.
+- `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
+- `bun run check` : Vérifie le code (linting + formatage + types).
+- `bun run lighthouse` : Lance l'audit de performance.
+- `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
 
 ### API Access
 
