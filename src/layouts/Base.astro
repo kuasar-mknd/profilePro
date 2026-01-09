@@ -461,9 +461,6 @@ if (postData?.data?.image) {
       // Note: We don't need to re-init on swap because document.documentElement persists
       // and the observer stays attached.
 
-      // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
-      // Ensures all external links opening in a new tab have rel="noopener noreferrer"
-      // and a warning in title/aria-label.
       const warning = " (ouvre un nouvel onglet)";
 
       function secureLink(link: Element) {
@@ -490,7 +487,6 @@ if (postData?.data?.image) {
           }
         } else {
           // 🎨 Palette: If no aria-label, inject SR-only span to preserve accessible name calculation (text + alt)
-          // This ensures "Image Alt (opens in new tab)" or "Link Text (opens in new tab)" works automatically
           if (!link.querySelector(".external-link-warning")) {
             const span = document.createElement("span");
             span.className = "sr-only external-link-warning";
@@ -501,17 +497,39 @@ if (postData?.data?.image) {
       }
 
       function secureLinks() {
-        // Secure existing links
+        // 1. Initial scan
         document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
-      }
 
-      // ⚡ Bolt: Performance Optimization
-      // Removed global MutationObserver on document.body which was causing overhead
-      // on every DOM change (animations, lightbox, etc.).
-      // Links are now secured:
-      // 1. On initial load
-      // 2. On view transitions (astro:after-swap)
-      // 3. Manually in components creating dynamic links (e.g. Footer)
+        // 2. 🛡️ Sentinel: MutationObserver for dynamic content (Defense in Depth)
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const element = node as Element;
+                if (element.tagName === "A") {
+                  secureLink(element);
+                } else if (element.querySelectorAll) {
+                  element
+                    .querySelectorAll('a[target="_blank"]')
+                    .forEach(secureLink);
+                }
+              }
+            });
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+
+        // Cleanup on navigation
+        document.addEventListener(
+          "astro:before-swap",
+          () => observer.disconnect(),
+          { once: true },
+        );
+      }
 
       // Run on load and after view transitions
       secureLinks();
