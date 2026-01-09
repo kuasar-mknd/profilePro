@@ -13,3 +13,7 @@
 ## 2024-05-24 - [Breadcrumb Visual Hierarchy]
 **Learning:** Text-based separators (like `/`) in breadcrumbs create visual noise and lack directionality. Replacing them with scalable chevron icons (SVG) improves the "flow" of navigation and modernizes the interface, while `aria-hidden="true"` ensures they remain decorative.
 **Action:** Prefer SVG chevron icons over text characters for directional separators in navigation components.
+
+## 2025-05-23 - [404 Page Dead Ends]
+**Learning:** Users arriving directly on a 404 page (e.g. via shared broken link) encounter a "dead click" with "Go Back" buttons because `history.back()` fails or exits the site when `history.length <= 1`.
+**Action:** Always check `window.history.length` before rendering or showing a "Go Back" button. If history is empty, hide the button or replace it with a "Go Home" action.
