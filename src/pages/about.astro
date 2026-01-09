@@ -209,7 +209,12 @@ const skills = [
   </section>
 
   <!-- Services Section -->
-  <section class="py-24 relative overflow-hidden">
+  {
+    /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+  }
+  <section
+    class="py-24 relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+  >
     <!-- Subtle background gradient -->
     <div
       class="absolute inset-0 bg-linear-to-b from-transparent via-pacamara-secondary/5 to-transparent -z-10 pointer-events-none"
