@@ -9,6 +9,10 @@ interface Props {
 
 const { icon, url, label } = Astro.props;
 
+// 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
+// Allow http, https, mailto, and relative paths (/)
+const safeUrl = /^(https?:\/\/|mailto:|\/)/i.test(url) ? url : "#";
+
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
 const suffix = " (ouvre un nouvel onglet)";
@@ -17,7 +21,7 @@ const a11yLabel = baseLabel.includes(suffix) ? baseLabel : baseLabel + suffix;
 ---
 
 <a
-  href={url}
+  href={safeUrl}
   target="_blank"
   rel="noopener noreferrer"
   class="group relative flex h-10 w-10 items-center justify-center rounded-full bg-pacamara-primary/5 transition-all duration-300 hover:scale-110 hover:bg-pacamara-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:hover:bg-pacamara-accent"

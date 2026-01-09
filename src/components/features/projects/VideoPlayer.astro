@@ -60,7 +60,11 @@ if (provider === "youtube" && videoId) {
 
 // Fallback to custom poster if provider thumbnail unavailable
 if (!posterUrl && poster) {
-  posterUrl = poster;
+  // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
+  // Allow http, https, and relative paths (starting with /)
+  if (/^(https?:\/\/|\/)/i.test(poster)) {
+    posterUrl = poster;
+  }
 }
 
 // ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support

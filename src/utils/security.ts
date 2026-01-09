@@ -12,6 +12,7 @@
  * @param value - The value to serialize
  * @returns The JSON string with '<', U+2028, and U+2029 escaped to prevent XSS.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function safeJson(value: any): string {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
@@ -30,6 +31,11 @@ export function safeJson(value: any): string {
  * @returns The sanitized string
  */
 export function sanitizeInput(str: string): string {
+  // 🛡️ Sentinel: Strip control characters (CR, LF, Vertical Tab, etc.) to prevent Header Injection
+  // and other control-character based attacks.
+  // Exceptions: Horizontal Tab (\t) is usually safe in text content.
+  const cleanStr = str.replace(/[\x00-\x08\x0B-\x1F\x7F]/g, "");
+
   const map: Record<string, string> = {
     "&": "&amp;",
     "<": "&lt;",
@@ -46,9 +52,10 @@ export function sanitizeInput(str: string): string {
     "[": "&#91;", // Prevent array/logic injection
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
+    "\\": "&#92;", // Prevent escaping attacks
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%]/gi;
+  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
 
-  return str.replace(reg, (match) => map[match] || match);
+  return cleanStr.replace(reg, (match) => map[match] || match);
 }
