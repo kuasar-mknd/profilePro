@@ -35,7 +35,7 @@ const {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const cards = document.querySelectorAll(
-      ".tilt-card:not(.tilt-initialized)"
+      ".tilt-card:not(.tilt-initialized)",
     );
 
     cards.forEach((card) => {
