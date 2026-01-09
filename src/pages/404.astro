@@ -77,6 +77,12 @@ import { Icon } from "astro-icon/components";
     // But to be safe against double-binding on the same element instance:
     if (!btn || btn.dataset.initialized === "true") return;
 
+    // 🎨 Palette: Hide button if no history exists to prevent dead clicks
+    if (window.history.length <= 1) {
+      btn.classList.add("hidden");
+      return;
+    }
+
     btn.dataset.initialized = "true";
     btn.addEventListener("click", () => {
       history.back();
