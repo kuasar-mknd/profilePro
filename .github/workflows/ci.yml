@@ -24,7 +24,7 @@ jobs:
       # even if we use Bun, depending on how dependencies are built.
       # The README mentions Node 20 is required for sharp.
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
 
