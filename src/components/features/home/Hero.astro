@@ -24,7 +24,7 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 
 // ⚡ Bolt: Optimize carousel images
 // Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
-// We use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
+// Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
 // the performance benefits of a single <img> tag.
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
 const optimizedSlides = await Promise.all(
@@ -43,7 +43,7 @@ const optimizedSlides = await Promise.all(
       srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
       sizes: "(max-width: 768px) 224px, 288px",
     };
-  }),
+  })
 );
 
 // ⚡ Bolt: Duplicate slides for seamless infinite scroll
@@ -372,7 +372,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         const matrix = new DOMMatrix(computedStyle.transform);
         currentTranslate = matrix.m41;
       },
-      { passive: true },
+      { passive: true }
     );
 
     // ⚡ Bolt: Use requestAnimationFrame for smooth 60fps tracking
@@ -390,7 +390,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
           });
         }
       },
-      { passive: true },
+      { passive: true }
     );
 
     // ⚡ Bolt: Added passive: true to touchend for scroll optimization
@@ -405,7 +405,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         track.style.transform = "";
         track.style.animationPlayState = "running";
       },
-      { passive: true },
+      { passive: true }
     );
   }
 
@@ -437,7 +437,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
           }
         });
       },
-      { rootMargin: "200px" },
+      { rootMargin: "200px" }
     ); // Pre-load animation slightly before it enters viewport
 
     observer.observe(carousel);
