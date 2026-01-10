@@ -33,10 +33,7 @@ const allPosts = await getCollection("project");
 const remainingCount = allPosts.length - postLimit;
 ---
 
-<section
-  class="container mx-auto max-w-7xl px-7 py-16"
-  style="content-visibility: auto; contain-intrinsic-size: 1px 800px;"
->
+<section class="container mx-auto max-w-7xl px-7 py-16 cv-auto-800">
   <ScrollReveal class="text-center mb-12">
     <h2
       class="text-3xl md:text-4xl font-pacamara-space font-bold mb-4 text-pacamara-dark dark:text-white"
@@ -62,8 +59,7 @@ const remainingCount = allPosts.length - postLimit;
     /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
   }
   <div
-    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
-    style="contain: layout;"
+    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px] contain-layout"
   >
     {
       posts.length === 0 && (
