@@ -3,8 +3,12 @@ import config from "../../config.mjs";
 import SocialIcon from "../ui/SocialIcon.astro";
 ---
 
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <footer
-  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit"
+  id="main-footer"
+  class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit [content-visibility:auto] [contain-intrinsic-size:auto_400px]"
 >
   <div
     class="container mx-auto max-w-7xl px-7 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8 items-start"
@@ -88,7 +92,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <div
         id="wcb"
         class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
-        aria-label="Website Carbon Badge"
       >
         <!-- Badge injected by script -->
       </div>
@@ -118,8 +121,9 @@ import SocialIcon from "../ui/SocialIcon.astro";
      */
     function initCarbonBadge() {
       const isProduction =
-        window.location.hostname !== "localhost" &&
-        window.location.hostname !== "127.0.0.1";
+        !["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+          window.location.hostname,
+        ) && !window.location.hostname.startsWith("192.168.");
 
       const wcb = document.getElementById("wcb");
       if (!wcb) return;
@@ -144,45 +148,55 @@ import SocialIcon from "../ui/SocialIcon.astro";
 
         const wrapper = document.createElement("div");
         wrapper.id = "wcb_p";
-        wrapper.className = "flex items-center text-[15px] leading-[1.15]";
+        wrapper.className = "flex flex-col items-center gap-2";
+
+        const badgeContainer = document.createElement("div");
+        badgeContainer.className =
+          "flex items-stretch rounded-lg overflow-hidden border border-pacamara-secondary/30 dark:border-white/20 shadow-sm";
 
         const scoreSpan = document.createElement("span");
         scoreSpan.id = "wcb_g";
         scoreSpan.className =
-          "bg-white border-r-0 border border-[#00ffbc] py-[0.3em] px-[0.5em] rounded-l-[0.3em] min-w-[8.2em] text-[#0e11a8] text-center";
+          "bg-white dark:bg-pacamara-dark px-3 py-2 text-sm font-medium text-pacamara-primary dark:text-white flex items-center";
 
         // Safe text content construction
-        scoreSpan.textContent = "";
+        const co2Text = document.createTextNode(data.c + "g of CO");
         const sub = document.createElement("sub");
         sub.textContent = "2";
-        scoreSpan.append(data.c + "g of CO", sub, "/view");
+        const viewText = document.createTextNode("/view");
+
+        scoreSpan.appendChild(co2Text);
+        scoreSpan.appendChild(sub);
+        scoreSpan.appendChild(viewText);
 
         const link = document.createElement("a");
         link.id = "wcb_a";
         link.target = "_blank";
+        // ⚡ Bolt: Security & Accessibility
         link.rel = "noopener noreferrer";
         link.href = "https://websitecarbon.com";
         link.className =
-          "bg-[#0e11a8] text-white font-bold border border-[#0e11a8] py-[0.3em] px-[0.5em] rounded-r-[0.3em] hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent rounded-lg";
+          "bg-pacamara-secondary text-white px-3 py-2 text-sm font-bold hover:bg-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white";
         link.textContent = "Website Carbon";
-        link.setAttribute(
-          "aria-label",
-          "Website Carbon (ouvre un nouvel onglet)",
-        );
-        link.setAttribute("title", "Website Carbon (ouvre un nouvel onglet)");
 
-        wrapper.appendChild(scoreSpan);
-        wrapper.appendChild(link);
+        const warning = " (ouvre un nouvel onglet)";
+        link.setAttribute("aria-label", "Website Carbon" + warning);
+        link.setAttribute("title", "Website Carbon" + warning);
+
+        badgeContainer.appendChild(scoreSpan);
+        badgeContainer.appendChild(link);
 
         const percentSpan = document.createElement("span");
         percentSpan.id = "wcb_2";
         percentSpan.className =
-          "block text-center text-sm mt-1 text-[#0e11a8] dark:text-white/80";
+          "text-xs text-pacamara-primary/60 dark:text-white/60 font-outfit";
         percentSpan.textContent =
           "Cleaner than " + data.p + "% of pages tested";
 
+        wrapper.appendChild(badgeContainer);
+        wrapper.appendChild(percentSpan);
+
         wcb.appendChild(wrapper);
-        wcb.appendChild(percentSpan);
       };
 
       // Fetch logic
@@ -214,7 +228,11 @@ import SocialIcon from "../ui/SocialIcon.astro";
           })
           .catch((e) => {
             // 🛡️ Sentinel: Dev-only logging
-            if (import.meta.env.DEV) {
+            if (
+              ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+                window.location.hostname,
+              )
+            ) {
               console.error(
                 "Carbon Badge update failed:",
                 e instanceof Error ? e.message : "Unknown error",
@@ -255,6 +273,12 @@ import SocialIcon from "../ui/SocialIcon.astro";
     }
 
     // Initialize on initial load and every view transition
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initCarbonBadge);
+    } else {
+      // Small timeout to ensure DOM is fully ready and painted
+      setTimeout(initCarbonBadge, 0);
+    }
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>

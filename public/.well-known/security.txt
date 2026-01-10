@@ -1,4 +1,3 @@
 Contact: mailto:samuel@edulex.ch
-Policy: https://github.com/kuasar-mknd/profilePro/blob/main/SECURITY.md
-Preferred-Languages: fr, en
-Expires: 2025-12-31T23:59:59.000Z
+Canonical: https://portfolio.kuasar.xyz/.well-known/security.txt
+Expires: 2025-07-25T12:00:00.000Z

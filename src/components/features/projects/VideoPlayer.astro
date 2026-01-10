@@ -38,7 +38,11 @@ const { id: videoId, hash, provider } = getVideoDetails(videoUrl);
 
 let posterUrl: string | null = null;
 
-if (provider === "youtube" && videoId) {
+// ⚡ Bolt: Prioritize custom poster (likely optimized local asset)
+// This avoids external requests to YouTube/Vimeo APIs during build and improves privacy/performance
+if (poster) {
+  posterUrl = poster;
+} else if (provider === "youtube" && videoId) {
   posterUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 } else if (provider === "vimeo" && videoId) {
   try {
@@ -56,11 +60,6 @@ if (provider === "youtube" && videoId) {
       );
     }
   }
-}
-
-// Fallback to custom poster if provider thumbnail unavailable
-if (!posterUrl && poster) {
-  posterUrl = poster;
 }
 
 // ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
@@ -88,6 +87,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
             loading="lazy"
             decoding="async"
             fetchpriority="low"
+            width="1280"
+            height="720"
           />
           <button
             class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
@@ -209,8 +210,52 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   document.removeEventListener("click", handleVideoClick);
   document.addEventListener("click", handleVideoClick);
 
+  // ⚡ Bolt: Prefetch Plyr resources on hover/focus to improve perceived performance
+  // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
+  function initVideoPrefetch() {
+    // Check if already prefetched this session (global flag)
+    if ((window as any)._plyrPrefetched) return;
+
+    const wrappers = document.querySelectorAll(".video-player-wrapper");
+    if (wrappers.length === 0) return;
+
+    const prefetch = () => {
+      // Double check inside the handler in case it fired multiple times quickly
+      if ((window as any)._plyrPrefetched) return;
+      (window as any)._plyrPrefetched = true;
+
+      // Start fetching chunks in background
+      // The browser dedupes these requests automatically
+      // When the user clicks, the 'await import' in handleVideoClick will resolve instantly from cache
+      try {
+        // @ts-ignore
+        import("plyr/dist/plyr.css");
+        // @ts-ignore
+        import("plyr");
+      } catch (e) {
+        // Silent failure is acceptable for prefetch
+      }
+
+      // Cleanup listeners globally since we only need to fetch once
+      wrappers.forEach((w) => {
+        w.removeEventListener("mouseenter", prefetch);
+        w.removeEventListener("touchstart", prefetch);
+        w.removeEventListener("focusin", prefetch);
+      });
+    };
+
+    // Attach passive listeners to all video wrappers
+    wrappers.forEach((wrapper) => {
+      wrapper.addEventListener("mouseenter", prefetch, { passive: true });
+      wrapper.addEventListener("touchstart", prefetch, { passive: true });
+      wrapper.addEventListener("focusin", prefetch, { passive: true });
+    });
+  }
+
   // ⚡ Bolt: Initialize Skeletons (must be per-element as it depends on individual load)
   document.addEventListener("astro:page-load", () => {
+    initVideoPrefetch();
+
     const wrappers = document.querySelectorAll(".video-player-wrapper");
     wrappers.forEach((wrapper) => {
       const posterImg = wrapper.querySelector("img");

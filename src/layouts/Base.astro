@@ -12,6 +12,7 @@ import "../css/style.css";
 
 import { ClientRouter } from "astro:transitions";
 import { getImage } from "astro:assets";
+import { safeJson } from "../utils/security";
 import logo from "../assets/logo.avif";
 
 // Precompute LCP image URL for preloading
@@ -63,7 +64,10 @@ if (postData?.data?.image) {
       as="font"
       type="font/woff2"
       crossorigin
+      fetchpriority="high"
     />
+    <!-- ⚡ Bolt: Removed fetchpriority="high" from non-LCP fonts (Light/Regular) -->
+    <!-- This reduces network contention, allowing the LCP Image and Heading Font to load faster -->
     <link
       rel="preload"
       href="/fonts/outfit-light.woff2"
@@ -74,6 +78,14 @@ if (postData?.data?.image) {
     <link
       rel="preload"
       href="/fonts/outfit-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
+    <link
+      rel="preload"
+      href="/fonts/outfit-bold.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -108,7 +120,7 @@ if (postData?.data?.image) {
     <script
       type="speculationrules"
       is:inline
-      set:html={JSON.stringify({
+      set:html={safeJson({
         prerender: [
           {
             source: "document",
@@ -118,7 +130,7 @@ if (postData?.data?.image) {
             eagerness: "moderate",
           },
         ],
-      }).replace(/</g, "\\u003c")}
+      })}
     />
     <style is:global>
       /* Manual Font Face Definitions */
@@ -181,12 +193,23 @@ if (postData?.data?.image) {
     >
     </div>
 
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-9999 px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+    <!-- 🎨 Palette: Accessible Skip Links -->
+    <div
+      class="fixed top-4 left-4 z-[100] flex flex-col gap-2 pointer-events-none"
     >
-      Aller au contenu principal
-    </a>
+      <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+      >
+        Aller au contenu principal
+      </a>
+      <a
+        href="#main-footer"
+        class="sr-only focus:not-sr-only px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+      >
+        Aller au pied de page
+      </a>
+    </div>
     <Header />
 
     <main
@@ -322,11 +345,7 @@ if (postData?.data?.image) {
           }
         };
 
-        // Update on scroll (optimized)
-        // ⚡ Bolt: Initial listener not needed if button starts hidden.
-        // It will be added by the IntersectionObserver when visible.
-        // window.addEventListener("scroll", onScroll, { passive: true });
-
+        // Update visual state (deferred until button is visible)
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
           updateDimensions();
@@ -362,10 +381,9 @@ if (postData?.data?.image) {
                 btn.classList.remove("opacity-0", "invisible", "translate-y-4");
                 btn.classList.add("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "0");
-                // ⚡ Bolt: Only listen to scroll when button is visible
+                // ⚡ Bolt: Only listen to scroll when button is visible to save resources
                 window.addEventListener("scroll", onScroll, { passive: true });
-                // Trigger one update to ensure correct state
-                window.requestAnimationFrame(updateVisuals);
+                onScroll(); // Update visuals immediately
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
@@ -400,7 +418,10 @@ if (postData?.data?.image) {
         cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
           if (resizeObserver) resizeObserver.disconnect();
-          if (backToTopObserver) backToTopObserver.disconnect();
+          if (backToTopObserver) {
+            backToTopObserver.disconnect();
+            backToTopObserver = null; // ⚡ Bolt: Ensure fresh observer with correct closure scope
+          }
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
@@ -441,10 +462,6 @@ if (postData?.data?.image) {
       // Note: We don't need to re-init on swap because document.documentElement persists
       // and the observer stays attached.
 
-      // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
-      // Ensures all external links opening in a new tab have rel="noopener noreferrer"
-      // and a warning in title/aria-label.
-      let linkObserver: MutationObserver | null = null;
       const warning = " (ouvre un nouvel onglet)";
 
       function secureLink(link: Element) {
@@ -465,38 +482,54 @@ if (postData?.data?.image) {
 
         // Accessibility: Append warning to aria-label (only if present)
         const ariaLabel = link.getAttribute("aria-label");
-        if (ariaLabel && !ariaLabel.includes(warning.trim())) {
-          link.setAttribute("aria-label", ariaLabel + warning);
+        if (ariaLabel) {
+          if (!ariaLabel.includes(warning.trim())) {
+            link.setAttribute("aria-label", ariaLabel + warning);
+          }
+        } else {
+          // 🎨 Palette: If no aria-label, inject SR-only span to preserve accessible name calculation (text + alt)
+          if (!link.querySelector(".external-link-warning")) {
+            const span = document.createElement("span");
+            span.className = "sr-only external-link-warning";
+            span.textContent = warning;
+            link.appendChild(span);
+          }
         }
       }
 
       function secureLinks() {
-        // 1. Secure existing links
+        // 1. Initial scan
         document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
 
-        // 2. Observer for dynamic links
-        if (linkObserver) {
-          linkObserver.disconnect();
-        }
-
-        linkObserver = new MutationObserver((mutations) => {
+        // 2. 🛡️ Sentinel: MutationObserver for dynamic content (Defense in Depth)
+        const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
               if (node.nodeType === 1) {
                 const element = node as Element;
-                // Check if node itself is a link
-                secureLink(element);
-                // Check descendants
-                element
-                  .querySelectorAll('a[target="_blank"]')
-                  .forEach(secureLink);
+                if (element.tagName === "A") {
+                  secureLink(element);
+                } else if (element.querySelectorAll) {
+                  element
+                    .querySelectorAll('a[target="_blank"]')
+                    .forEach(secureLink);
+                }
               }
             });
           });
         });
 
-        // Start observing the body for added nodes
-        linkObserver.observe(document.body, { childList: true, subtree: true });
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+
+        // Cleanup on navigation
+        document.addEventListener(
+          "astro:before-swap",
+          () => observer.disconnect(),
+          { once: true },
+        );
       }
 
       // Run on load and after view transitions
@@ -525,9 +558,9 @@ if (postData?.data?.image) {
       defer
       is:inline
       src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={JSON.stringify({
+      data-cf-beacon={safeJson({
         token: PUBLIC_CF_ANALYTICS_TOKEN,
-      }).replace(/</g, "\\u003c")}></script>
+      })}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

@@ -4,20 +4,25 @@ import { Icon } from "astro-icon/components";
 const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
+{
+  /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+}
 <form
   action="https://api.web3forms.com/submit"
   method="POST"
-  class="w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden"
+  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
   id="contact-form"
+  style="contain: layout;"
 >
   <!-- Form Success Message -->
   <div
     id="form-success-message"
-    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center"
+    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center focus:outline-none"
     role="status"
     aria-live="polite"
+    tabindex="-1"
   >
-    <div class="space-y-4">
+    <div class="space-y-4 animate-fade-in-up">
       <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
       <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
         Message envoyé !
@@ -88,7 +93,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="100"
           minlength="2"
           inputmode="text"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Votre nom"
         />
         <div
@@ -119,7 +124,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="254"
           inputmode="email"
           spellcheck="false"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="votre@email.com"
         />
         <div
@@ -148,19 +153,30 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           required
           maxlength="5000"
           minlength="10"
-          class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
         >
         </div>
       </div>
+      <!-- 🎨 Palette: Character counter -->
+      <div class="flex justify-end mt-1 gap-2">
+        <div
+          id="message-counter"
+          class="text-xs text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+        >
+          0 / 5000
+        </div>
+        <!-- Accessible announcer for thresholds -->
+        <div id="message-counter-sr" class="sr-only" aria-live="polite"></div>
+      </div>
     </div>
 
     <!-- Submit Button -->
     <button
       type="submit"
-      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 focus-visible:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
       aria-live="polite"
     >
       <span class="btn-text relative z-10">Envoyer le message</span>
@@ -251,6 +267,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     opacity: 1;
   }
 
+  .input-glow {
+    will-change: opacity;
+  }
+
   /* Button states */
   .submit-btn.loading .btn-text,
   .submit-btn.loading svg:not(.animate-spin) {
@@ -300,9 +320,27 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     border-color: #ef4444; /* red-500 */
     box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   }
+
+  /* 🎨 Palette: Success Message Entrance */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
 </style>
 
 <script>
+  import { sanitizeInput } from "../../utils/security";
+
   /**
    * ⚡ Bolt: ContactForm Performance Optimization
    * Uses early return pattern and initialization guard to prevent duplicate bindings.
@@ -344,6 +382,70 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageInput = form.querySelector(
       'textarea[name="message"]',
     ) as HTMLTextAreaElement;
+    const messageCounter = form.querySelector(
+      "#message-counter",
+    ) as HTMLElement;
+    const messageCounterSr = form.querySelector(
+      "#message-counter-sr",
+    ) as HTMLElement;
+
+    // 🎨 Palette: Character counter logic
+    if (messageInput && messageCounter) {
+      const maxLength = messageInput.getAttribute("maxlength") || "5000";
+      const max = parseInt(maxLength, 10);
+
+      const updateCounter = () => {
+        const currentLength = messageInput.value.length;
+        const remaining = max - currentLength;
+        messageCounter.textContent = `${currentLength} / ${max}`;
+
+        // Visual feedback at 90% and 100%
+        if (currentLength >= max) {
+          messageCounter.classList.add("text-red-500", "dark:text-red-400");
+          messageCounter.classList.remove(
+            "text-orange-600",
+            "dark:text-orange-400",
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+          if (messageCounterSr)
+            messageCounterSr.textContent =
+              "Limite de caractères atteinte. 0 caractères restants.";
+        } else if (currentLength >= max * 0.9) {
+          messageCounter.classList.add(
+            "text-orange-600",
+            "dark:text-orange-400",
+          );
+          messageCounter.classList.remove(
+            "text-red-500",
+            "dark:text-red-400",
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+          // Announce when nearing limit (every 10 chars or so naturally, but let's be explicit)
+          if (messageCounterSr && remaining % 20 === 0) {
+            messageCounterSr.textContent = `Attention, plus que ${remaining} caractères.`;
+          }
+        } else {
+          messageCounter.classList.add(
+            "text-pacamara-primary/60",
+            "dark:text-white/60",
+          );
+          messageCounter.classList.remove(
+            "text-red-500",
+            "dark:text-red-400",
+            "text-orange-600",
+            "dark:text-orange-400",
+          );
+          // Clear announcer when safe to avoid noise
+          if (messageCounterSr) messageCounterSr.textContent = "";
+        }
+      };
+
+      messageInput.addEventListener("input", updateCounter);
+      // Initialize
+      updateCounter();
+    }
 
     // Reset form from success message
     resetBtn?.addEventListener("click", () => {
@@ -351,6 +453,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      // Reset counter
+      if (messageCounter && messageInput) {
+        messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
+        messageCounter.classList.remove(
+          "text-red-500",
+          "dark:text-red-400",
+          "text-orange-600",
+          "dark:text-orange-400",
+        );
+        messageCounter.classList.add(
+          "text-pacamara-primary/60",
+          "dark:text-white/60",
+        );
+      }
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
@@ -364,7 +480,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       if (submitButton) {
         submitButton.disabled = false;
       }
-      (form.querySelector("input") as HTMLInputElement)?.focus();
+      submitButton?.focus();
     });
 
     // Ripple effect
@@ -393,24 +509,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           errorMessage.focus();
         }
       }
-    }
-
-    // 🛡️ Sentinel: Basic HTML sanitization to prevent potential XSS via email clients
-    // Reverted to efficient regex-based sanitization as per review feedback
-    function sanitizeInput(str: string): string {
-      const map: Record<string, string> = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#x27;",
-        "/": "&#x2F;",
-        "`": "&#x60;", // Prevent template injection
-        "=": "&#x3D;", // Prevent unquoted attribute injection
-      };
-      const reg = /[&<>"'\/`=]/gi;
-
-      return str.replace(reg, (match) => map[match]);
     }
 
     form.addEventListener("submit", async (e) => {
@@ -484,24 +582,29 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
 
       try {
-        // 🛡️ Sentinel: Sanitize form data before sending
+        // 🛡️ Sentinel: Sanitize form data before sending and enforce strict allowlist
         const formData = new FormData(form);
         const data: Record<string, string> = {};
-        // 🛡️ Sentinel: Fields to exclude from sanitization to prevent corruption of system values
-        // access_key: UUID/Token (strict match required, cannot be escaped)
-        // form-load-timestamp: Numeric string
-        const fieldsToSanitize = new Set(["name", "email", "message"]);
+
+        // Explicitly define which fields are allowed to be sent to the API.
+        const allowedFields = new Set([
+          "name",
+          "email",
+          "message",
+          "access_key",
+          "subject",
+          "botcheck",
+          "form-load-timestamp",
+        ]);
 
         formData.forEach((value, key) => {
-          if (typeof value === "string") {
-            // Sanitize only user-provided fields to prevent corrupting system values.
-            if (fieldsToSanitize.has(key)) {
+          if (allowedFields.has(key) && typeof value === "string") {
+            // Sanitize user-facing fields, but not system/token fields
+            if (["name", "email", "message"].includes(key)) {
               data[key] = sanitizeInput(value);
             } else {
               data[key] = value;
             }
-          } else {
-            data[key] = value.toString();
           }
         });
 
@@ -519,10 +622,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         if (result.success) {
           errorMessage?.classList.add("hidden");
           form.removeAttribute("aria-describedby");
-          const successMessage = form.querySelector("#form-success-message");
+          const successMessage = form.querySelector(
+            "#form-success-message",
+          ) as HTMLElement;
           if (successMessage) {
             successMessage.classList.remove("hidden");
             successMessage.classList.add("flex");
+            // 🎨 Palette: Shift focus to success message for screen readers
+            setTimeout(() => successMessage.focus(), 100);
           }
           localStorage.setItem(
             "contact_form_last_submission",

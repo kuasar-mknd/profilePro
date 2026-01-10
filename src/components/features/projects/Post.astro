@@ -18,6 +18,7 @@ const readingTime = Math.ceil(wordCount / 200);
     isLarge ? "min-h-[400px] md:min-h-[500px]" : "min-h-[280px]",
     isWide ? "min-h-[280px]" : "",
   ]}
+  style="contain: layout;"
 >
   <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
@@ -29,7 +30,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
   <!-- 2. Background Image (absolute) -->
   <div
-    class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none"
+    class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none group-hover:will-change-transform"
   >
     {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
     <Picture
@@ -46,7 +47,7 @@ const readingTime = Math.ceil(wordCount / 200);
       height={isLarge ? 600 : 300}
       class="w-full h-full object-cover"
       loading={priority ? "eager" : "lazy"}
-      decoding="async"
+      decoding={priority ? "sync" : "async"}
       fetchpriority={priority ? "high" : "low"}
       transition:name={`project-image-${postData.slug}`}
     />
@@ -54,7 +55,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
   <!-- 3. Gradient Overlay - smooth transition on hover -->
   <div
-    class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500 ease-out rounded-2xl pointer-events-none"
+    class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 group-focus-within:from-black/90 group-focus-within:via-black/50 transition-all duration-500 ease-out rounded-2xl pointer-events-none"
   >
   </div>
 
@@ -70,7 +71,8 @@ const readingTime = Math.ceil(wordCount / 200);
       <!-- Tags - slides up on hover -->
       <!-- 🎨 Palette: Tag is now clickable and sits above the card link -->
       <div
-        class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
+        class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
+        aria-label="Tags du projet"
       >
         <Tag
           tag={postData.data.tag}
@@ -82,7 +84,7 @@ const readingTime = Math.ceil(wordCount / 200);
       <!-- Title - slides up on hover -->
       <h3
         class:list={[
-          "font-pacamara-space font-bold text-white mb-1 transition-all duration-300 ease-out group-hover:text-pacamara-accent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2 transform translate-y-1 group-hover:translate-y-0",
+          "font-pacamara-space font-bold text-white mb-1 transition-all duration-300 ease-out group-hover:text-pacamara-accent group-focus-within:text-pacamara-accent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0",
           isLarge
             ? "text-xl md:text-2xl min-h-14"
             : "text-base md:text-lg min-h-11",
@@ -95,7 +97,9 @@ const readingTime = Math.ceil(wordCount / 200);
       <div
         class:list={[
           "transition-all duration-300 ease-out",
-          isLarge ? "" : "overflow-hidden max-h-0 group-hover:max-h-20",
+          isLarge
+            ? ""
+            : "overflow-hidden max-h-0 group-hover:max-h-20 group-focus-within:max-h-20",
         ]}
       >
         <p
@@ -103,7 +107,7 @@ const readingTime = Math.ceil(wordCount / 200);
             "font-outfit text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out",
             isLarge
               ? "text-sm line-clamp-3"
-              : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0",
+              : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0",
           ]}
         >
           {postData.data.intro}
@@ -112,7 +116,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
       <!-- Date & Reading Time - slight scale on hover -->
       <div
-        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 origin-left flex items-center gap-2"
+        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 group-focus-within:scale-105 origin-left flex items-center gap-2"
       >
         <PublishDate date={postData.data.pubDate} />
         {
@@ -122,8 +126,9 @@ const readingTime = Math.ceil(wordCount / 200);
                 •
               </span>
               <span class="opacity-90 font-medium">
-                {readingTime} min
-                <span class="sr-only">de lecture</span>
+                <span class="sr-only">Temps de lecture estimé : </span>
+                {readingTime} <span aria-hidden="true">min</span>
+                <span class="sr-only">minutes</span>
               </span>
             </>
           )
@@ -134,7 +139,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
   <!-- Hover border effect -->
   <div
-    class="absolute inset-0 border-2 border-transparent group-hover:border-pacamara-accent/50 rounded-2xl transition-colors duration-500 pointer-events-none"
+    class="absolute inset-0 border-2 border-transparent group-hover:border-pacamara-accent/50 group-focus-within:border-pacamara-accent/50 rounded-2xl transition-colors duration-500 pointer-events-none"
   >
   </div>
 </article>

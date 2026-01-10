@@ -1,5 +1,5 @@
 ---
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -61,6 +61,19 @@ const jsonLd = {
       }
     : {}),
 };
+
+// ⚡ Bolt: Generate optimized WebP poster for video player
+// This prevents serving the original massive image or fetching external provider thumbnails
+let optimizedPoster: string | null = null;
+if (entry.data.type === "video" && entry.data.image) {
+  const img = await getImage({
+    src: entry.data.image,
+    width: 1280, // HD is sufficient for video poster
+    format: "webp",
+    quality: 80,
+  });
+  optimizedPoster = img.src;
+}
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
@@ -155,7 +168,8 @@ const jsonLd = {
         >
           <VideoPlayer
             videoUrl={entry.data.videoUrl}
-            poster={entry.data.image?.src}
+            poster={optimizedPoster || entry.data.image?.src}
+            videoTitle={entry.data.title}
           />
         </div>
       )
@@ -241,14 +255,22 @@ const jsonLd = {
 
         if (progressBar) {
           let ticking = false;
+          // ⚡ Bolt: Cache document dimensions to avoid layout thrashing
+          let cachedDocHeight = 0;
+          let resizeObserver: ResizeObserver | null = null;
+
+          const updateDimensions = () => {
+            cachedDocHeight =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+          };
 
           const updateProgress = () => {
             const winScroll =
               document.body.scrollTop || document.documentElement.scrollTop;
-            const height =
-              document.documentElement.scrollHeight -
-              document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
+            // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
+            const scrolled =
+              cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;
             progressBar.style.width = scrolled + "%";
             ticking = false;
           };
@@ -262,11 +284,23 @@ const jsonLd = {
 
           window.addEventListener("scroll", onScroll, { passive: true });
 
+          // ⚡ Bolt: Observe document size changes
+          resizeObserver = new ResizeObserver(() => {
+            updateDimensions();
+            // Update immediately in case resize affected relative scroll pos
+            window.requestAnimationFrame(updateProgress);
+          });
+          resizeObserver.observe(document.documentElement);
+
+          // Initial calculation
+          updateDimensions();
+
           // Cleanup to prevent duplicate listeners on navigation
           document.addEventListener(
             "astro:before-swap",
             () => {
               window.removeEventListener("scroll", onScroll);
+              if (resizeObserver) resizeObserver.disconnect();
             },
             { once: true },
           );
@@ -298,7 +332,10 @@ const jsonLd = {
               try {
                 await navigator.clipboard.writeText(window.location.href);
 
-                // 🎨 Palette: Visual and Audible Feedback
+                // 🎨 Palette: Visual, Audible, and Haptic Feedback
+                // Vibrate for 50ms on mobile devices
+                if (navigator.vibrate) navigator.vibrate([50]);
+
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
 
