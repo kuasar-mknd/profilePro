@@ -48,6 +48,7 @@
       button.setAttribute("aria-expanded", "false");
       button.setAttribute("aria-label", "Ouvrir le menu");
       button.setAttribute("title", "Ouvrir le menu");
+      button.removeAttribute("aria-keyshortcuts");
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
     };
@@ -57,6 +58,7 @@
       button.setAttribute("aria-expanded", "true");
       button.setAttribute("aria-label", "Fermer le menu");
       button.setAttribute("title", "Fermer le menu");
+      button.setAttribute("aria-keyshortcuts", "Escape");
       nav.classList.remove("translate-x-full");
       nav.classList.add("translate-x-0");
     };
