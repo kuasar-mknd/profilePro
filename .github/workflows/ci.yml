@@ -20,11 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Setup Node 20 first because sharp (image optimization) often needs it
-      # even if we use Bun, depending on how dependencies are built.
-      # The README mentions Node 20 is required for sharp.
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -66,7 +63,6 @@ jobs:
         env:
           PUBLIC_WEB3FORMS_ACCESS_KEY: "mock_key"
           PUBLIC_CF_ANALYTICS_TOKEN: "mock_token"
-          PUBLIC_SITE_URL: "http://localhost:4321"
 
       - name: Upload Playwright Report
         if: failure()
