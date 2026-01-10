@@ -12,13 +12,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   method="POST"
   class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
   id="contact-form"
+  style="contain: layout;"
 >
   <!-- Form Success Message -->
   <div
     id="form-success-message"
-    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center"
+    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center focus:outline-none"
     role="status"
     aria-live="polite"
+    tabindex="-1"
   >
     <div class="space-y-4 animate-fade-in-up">
       <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
@@ -91,7 +93,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="100"
           minlength="2"
           inputmode="text"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Votre nom"
         />
         <div
@@ -122,7 +124,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="254"
           inputmode="email"
           spellcheck="false"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="votre@email.com"
         />
         <div
@@ -151,7 +153,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           required
           maxlength="5000"
           minlength="10"
-          class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-pacamara-dark/50 border border-pacamara-secondary/20 dark:border-white/10 focus:border-pacamara-secondary focus:ring-2 focus:ring-pacamara-secondary/20 outline-none transition-all duration-300 placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
@@ -580,29 +582,29 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
 
       try {
-        // 🛡️ Sentinel: Sanitize form data before sending
+        // 🛡️ Sentinel: Hardened fields allowlist and sanitization logic
         const formData = new FormData(form);
         const data: Record<string, string> = {};
-
-        // 🛡️ Sentinel: Fields to sanitize (Allowlist)
-        // Explicitly sanitize only known text fields to avoid breaking system fields like 'redirect' or others
-        const fieldsToSanitize = new Set(["name", "message", "subject"]);
+        const allowedFields = new Set([
+          "name",
+          "email",
+          "message",
+          "access_key",
+          "subject",
+          "botcheck",
+          "form-load-timestamp",
+        ]);
 
         formData.forEach((value, key) => {
-          if (typeof value === "string") {
-            if (fieldsToSanitize.has(key)) {
-              // Sanitize user inputs
+          if (allowedFields.has(key) && typeof value === "string") {
+            // Sanitize only specific user-facing text fields
+            if (["name", "message", "subject"].includes(key)) {
               data[key] = sanitizeInput(value);
-            } else if (key === "email") {
-              // 🛡️ Sentinel: Do not sanitize email via HTML entities to avoid breaking sub-addressing or valid chars.
-              // We rely on the strict regex validation above.
-              data[key] = value;
             } else {
-              // Leave other fields (hidden/system) as is
+              // email, access_key, botcheck, timestamp are sent as-is
+              // Email is already validated by strict regex above.
               data[key] = value;
             }
-          } else {
-            data[key] = value.toString();
           }
         });
 
@@ -620,10 +622,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         if (result.success) {
           errorMessage?.classList.add("hidden");
           form.removeAttribute("aria-describedby");
-          const successMessage = form.querySelector("#form-success-message");
+          const successMessage = form.querySelector(
+            "#form-success-message",
+          ) as HTMLElement;
           if (successMessage) {
             successMessage.classList.remove("hidden");
             successMessage.classList.add("flex");
+            // 🎨 Palette: Shift focus to success message for screen readers
+            setTimeout(() => successMessage.focus(), 100);
           }
           localStorage.setItem(
             "contact_form_last_submission",

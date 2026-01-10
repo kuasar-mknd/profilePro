@@ -38,6 +38,7 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 1.  Create a file in `src/pages/my-page.astro`.
 2.  Use the `BaseLayout`:
+
     ```astro
     ---
     import Base from "../layouts/Base.astro";

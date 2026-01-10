@@ -125,17 +125,17 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     </p>
 
     <!-- ⚡ Bolt: Simple services summary -->
-    <div
+    <ul
       class="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-10 text-[10px] md:text-xs font-pacamara-space font-bold uppercase tracking-widest text-pacamara-primary/80 dark:text-white/80 hero-services"
     >
-      <span>Production Vidéo</span>
-      <span class="text-pacamara-accent/30">•</span>
-      <span>Développement Web</span>
-      <span class="text-pacamara-accent/30">•</span>
-      <span>Photographie</span>
-      <span class="text-pacamara-accent/30">•</span>
-      <span>Stratégie Digitale</span>
-    </div>
+      <li>Production Vidéo</li>
+      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
+      <li>Développement Web</li>
+      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
+      <li>Photographie</li>
+      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
+      <li>Stratégie Digitale</li>
+    </ul>
 
     <div
       class="flex flex-col md:flex-row gap-4 justify-center items-center hero-buttons"
@@ -166,6 +166,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   <div
     class="w-full mt-16 overflow-hidden hero-carousel touch-carousel"
     id="hero-carousel"
+    style="contain: layout paint;"
   >
     <div
       class="infinite-scroll py-8 pb-12"

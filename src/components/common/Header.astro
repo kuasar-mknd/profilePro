@@ -35,6 +35,7 @@ const logo2x = await getImage({
     >
       <div
         class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors"
+        style="contain: layout;"
       >
         <!-- ⚡ Bolt: Optimized Header Logo
              Replaced <Picture> with <img> + srcset to reduce DOM size and improve parsing speed for this tiny 40px asset.
@@ -70,12 +71,13 @@ const logo2x = await getImage({
   </div>
 
   <!-- Mobile Menu -->
-  <div
+  <nav
     id="navigation_wrapper"
+    aria-label="Menu mobile"
     class="fixed inset-0 bg-white dark:bg-pacamara-dark z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col justify-center items-center h-screen"
   >
     <Navigation />
-  </div>
+  </nav>
 </header>
 
 <style is:global>

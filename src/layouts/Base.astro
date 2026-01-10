@@ -66,13 +66,14 @@ if (postData?.data?.image) {
       crossorigin
       fetchpriority="high"
     />
+    <!-- ⚡ Bolt: Removed fetchpriority="high" from non-LCP fonts (Light/Regular) -->
+    <!-- This reduces network contention, allowing the LCP Image and Heading Font to load faster -->
     <link
       rel="preload"
       href="/fonts/outfit-light.woff2"
       as="font"
       type="font/woff2"
       crossorigin
-      fetchpriority="high"
     />
     <link
       rel="preload"
@@ -80,7 +81,6 @@ if (postData?.data?.image) {
       as="font"
       type="font/woff2"
       crossorigin
-      fetchpriority="high"
     />
     <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
     <link
@@ -345,6 +345,7 @@ if (postData?.data?.image) {
           }
         };
 
+        // Update visual state (deferred until button is visible)
         // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
         resizeObserver = new ResizeObserver(() => {
           updateDimensions();
@@ -382,12 +383,12 @@ if (postData?.data?.image) {
                 btn.setAttribute("tabindex", "0");
                 // ⚡ Bolt: Only listen to scroll when button is visible to save resources
                 window.addEventListener("scroll", onScroll, { passive: true });
-                onScroll(); // Update visual immediately
+                onScroll(); // Update visuals immediately
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "-1");
-                // ⚡ Bolt: Stop listening when hidden
+                // ⚡ Bolt: Detach listener when button is hidden to save main thread
                 window.removeEventListener("scroll", onScroll);
               }
             },
