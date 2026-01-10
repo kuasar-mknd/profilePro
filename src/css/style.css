@@ -762,3 +762,60 @@
     transform: scale(1.02);
   }
 }
+
+@layer utilities {
+  /* 🛡️ Sentinel: CSP-compliant replacements for inline styles */
+
+  /* Containment */
+  .contain-layout {
+    contain: layout;
+  }
+
+  .contain-layout-style {
+    contain: layout style;
+  }
+
+  .contain-layout-paint {
+    contain: layout paint;
+  }
+
+  /* Content Visibility */
+  .cv-auto-400 {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 400px;
+  }
+
+  .cv-auto-600 {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+
+  .cv-auto-800 {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 800px;
+  }
+
+  /* Animation Delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-150 { animation-delay: 150ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-250 { animation-delay: 250ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-350 { animation-delay: 350ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-450 { animation-delay: 450ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-800 { animation-delay: 800ms; }
+  .delay-1000 { animation-delay: 1000ms; }
+  .delay-3000 { animation-delay: 3000ms; }
+
+  /* Animation Durations */
+  .duration-4s { animation-duration: 4s; }
+  .duration-120s { animation-duration: 120s; }
+
+  /* Masks */
+  .mask-gradient-fade {
+    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%);
+  }
+}

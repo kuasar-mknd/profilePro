@@ -10,9 +10,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 <form
   action="https://api.web3forms.com/submit"
   method="POST"
-  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
+  class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px] contain-layout"
   id="contact-form"
-  style="contain: layout;"
 >
   <!-- Form Success Message -->
   <div
@@ -57,7 +56,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     type="checkbox"
     name="botcheck"
     class="hidden"
-    style="display: none;"
     tabindex="-1"
     autocomplete="off"
     aria-hidden="true"

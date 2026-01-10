@@ -103,16 +103,15 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       <br class="md:hidden" />
       <span class="sr-only">Captiver.</span>
       <span class="text-shimmer inline-block" aria-hidden="true">
-        <span class="letter-animate" style="animation-delay: 0.1s">C</span><span
-          class="letter-animate"
-          style="animation-delay: 0.15s">a</span
-        ><span class="letter-animate" style="animation-delay: 0.2s">p</span
-        ><span class="letter-animate" style="animation-delay: 0.25s">t</span
-        ><span class="letter-animate" style="animation-delay: 0.3s">i</span
-        ><span class="letter-animate" style="animation-delay: 0.35s">v</span
-        ><span class="letter-animate" style="animation-delay: 0.4s">e</span
-        ><span class="letter-animate" style="animation-delay: 0.45s">r</span
-        ><span class="letter-animate" style="animation-delay: 0.5s">.</span>
+        <span class="letter-animate delay-100">C</span><span
+          class="letter-animate delay-150">a</span
+        ><span class="letter-animate delay-200">p</span><span
+          class="letter-animate delay-250">t</span
+        ><span class="letter-animate delay-300">i</span><span
+          class="letter-animate delay-350">v</span
+        ><span class="letter-animate delay-400">e</span><span
+          class="letter-animate delay-450">r</span
+        ><span class="letter-animate delay-500">.</span>
       </span>
     </h1>
 
@@ -164,15 +163,10 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   <!-- Infinite Scroll Carousel -->
   <div
-    class="w-full mt-16 overflow-hidden hero-carousel touch-carousel"
+    class="w-full mt-16 overflow-hidden hero-carousel touch-carousel contain-layout-paint"
     id="hero-carousel"
-    style="contain: layout paint;"
   >
-    <div
-      class="infinite-scroll py-8 pb-12"
-      id="carousel-track"
-      style="animation-duration: 120s;"
-    >
+    <div class="infinite-scroll py-8 pb-12 duration-120s" id="carousel-track">
       {/* Duplicate slides for seamless infinite scroll */}
       {
         allSlides.map((slide, index) => (
