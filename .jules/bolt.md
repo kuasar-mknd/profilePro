@@ -1,6 +1,16 @@
-## 2024-05-23 - Conditional Scroll Listeners
+# Bolt's Journal ⚡
 
-**Learning:** Attaching scroll listeners globally (even passive ones) adds main-thread overhead on every scroll event, even if the element they affect is hidden.
-**Action:** Use `IntersectionObserver` to dynamically attach/detach scroll listeners based on the visibility of the target UI element. This ensures the listener only runs when strictly necessary (e.g., when the 'Back to Top' button is actually visible).
+## Performance Patterns
 
-⚡ Bolt: Critical Architectural Bottlenecks
+### Rendering Stability
+- **Cluster:** `contain` and `content-visibility` usage.
+- **Insight:** Static lists (Navigation, Breadcrumbs) and self-contained UI elements (EmptyState, Skeleton, Lightbox loader) are prime candidates for CSS containment (`contain: layout` or `contain: strict`). This isolates their layout/paint lifecycle, reducing browser reflow costs during global page changes.
+- **Action:** Applied `contain: layout` to heavy static lists and `contain: strict` to purely decorative/placeholder elements like Skeletons and Sentinels.
+
+### Layout Isolation
+- **Cluster:** `contain: layout` on major regions.
+- **Insight:** Isolating `#main-content` with `contain: layout` prevents internal reflows from propagating to the global document structure (Header/Footer), which is beneficial for Single Page Application (SPA) transitions and heavy dynamic content updates.
+
+### Micro-Optimizations
+- **Cluster:** High-frequency components (Tag, SocialIcon).
+- **Insight:** Even small components like tags and icons, when used in lists (loops), benefit from `contain: layout style`. This prevents style recalculations from leaking or affecting the parent container unnecessarily.
