@@ -72,6 +72,7 @@ const readingTime = Math.ceil(wordCount / 200);
       <!-- 🎨 Palette: Tag is now clickable and sits above the card link -->
       <div
         class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
+        aria-label="Tags du projet"
       >
         <Tag
           tag={postData.data.tag}
@@ -124,12 +125,10 @@ const readingTime = Math.ceil(wordCount / 200);
               <span class="opacity-60" aria-hidden="true">
                 •
               </span>
-              <span
-                class="opacity-90 font-medium"
-                title="Temps de lecture estimé"
-              >
-                {readingTime} min
-                <span class="sr-only">de lecture</span>
+              <span class="opacity-90 font-medium">
+                <span class="sr-only">Temps de lecture estimé : </span>
+                {readingTime} <span aria-hidden="true">min</span>
+                <span class="sr-only">minutes</span>
               </span>
             </>
           )
