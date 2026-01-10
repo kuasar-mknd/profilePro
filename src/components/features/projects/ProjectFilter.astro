@@ -2,7 +2,10 @@
 const { tags, activeTag } = Astro.props;
 ---
 
-<div class="flex flex-wrap justify-center gap-4 my-8">
+<nav
+  aria-label="Filtres de projets"
+  class="flex flex-wrap justify-center gap-4 my-8"
+>
   <a
     href="/project"
     class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
@@ -39,4 +42,4 @@ const { tags, activeTag } = Astro.props;
       </a>
     ))
   }
-</div>
+</nav>

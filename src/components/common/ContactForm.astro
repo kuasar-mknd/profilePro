@@ -17,9 +17,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <!-- Form Success Message -->
   <div
     id="form-success-message"
-    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center"
+    class="hidden absolute inset-0 z-20 items-center justify-center bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 text-center focus:outline-none"
     role="status"
     aria-live="polite"
+    tabindex="-1"
   >
     <div class="space-y-4 animate-fade-in-up">
       <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
@@ -621,10 +622,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         if (result.success) {
           errorMessage?.classList.add("hidden");
           form.removeAttribute("aria-describedby");
-          const successMessage = form.querySelector("#form-success-message");
+          const successMessage = form.querySelector(
+            "#form-success-message",
+          ) as HTMLElement;
           if (successMessage) {
             successMessage.classList.remove("hidden");
             successMessage.classList.add("flex");
+            // 🎨 Palette: Shift focus to success message for screen readers
+            setTimeout(() => successMessage.focus(), 100);
           }
           localStorage.setItem(
             "contact_form_last_submission",
