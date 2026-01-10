@@ -1,5 +1,5 @@
 ---
-import { Picture } from "astro:assets";
+import { Picture, getImage } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -61,6 +61,19 @@ const jsonLd = {
       }
     : {}),
 };
+
+// ⚡ Bolt: Generate optimized WebP poster for video player
+// This prevents serving the original massive image or fetching external provider thumbnails
+let optimizedPoster: string | null = null;
+if (entry.data.type === "video" && entry.data.image) {
+  const img = await getImage({
+    src: entry.data.image,
+    width: 1280, // HD is sufficient for video poster
+    format: "webp",
+    quality: 80,
+  });
+  optimizedPoster = img.src;
+}
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
@@ -155,7 +168,8 @@ const jsonLd = {
         >
           <VideoPlayer
             videoUrl={entry.data.videoUrl}
-            poster={entry.data.image?.src}
+            poster={optimizedPoster || entry.data.image?.src}
+            videoTitle={entry.data.title}
           />
         </div>
       )
