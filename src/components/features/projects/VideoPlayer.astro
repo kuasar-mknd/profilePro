@@ -38,7 +38,11 @@ const { id: videoId, hash, provider } = getVideoDetails(videoUrl);
 
 let posterUrl: string | null = null;
 
-if (provider === "youtube" && videoId) {
+// ⚡ Bolt: Prioritize custom poster (likely optimized local asset)
+// This avoids external requests to YouTube/Vimeo APIs during build and improves privacy/performance
+if (poster) {
+  posterUrl = poster;
+} else if (provider === "youtube" && videoId) {
   posterUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 } else if (provider === "vimeo" && videoId) {
   try {
@@ -56,11 +60,6 @@ if (provider === "youtube" && videoId) {
       );
     }
   }
-}
-
-// Fallback to custom poster if provider thumbnail unavailable
-if (!posterUrl && poster) {
-  posterUrl = poster;
 }
 
 // ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
@@ -88,6 +87,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
             loading="lazy"
             decoding="async"
             fetchpriority="low"
+            width="1280"
+            height="720"
           />
           <button
             class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
