@@ -66,13 +66,14 @@ if (postData?.data?.image) {
       crossorigin
       fetchpriority="high"
     />
+    <!-- ⚡ Bolt: Removed fetchpriority="high" from non-LCP fonts (Light/Regular) -->
+    <!-- This reduces network contention, allowing the LCP Image and Heading Font to load faster -->
     <link
       rel="preload"
       href="/fonts/outfit-light.woff2"
       as="font"
       type="font/woff2"
       crossorigin
-      fetchpriority="high"
     />
     <link
       rel="preload"
@@ -80,7 +81,6 @@ if (postData?.data?.image) {
       as="font"
       type="font/woff2"
       crossorigin
-      fetchpriority="high"
     />
     <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
     <link
