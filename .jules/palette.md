@@ -21,3 +21,7 @@
 ## 2024-05-25 - [Harmonizing Focus and Hover Animations]
 **Learning:** For interactive elements like buttons and cards, solely relying on focus rings creates a disjointed experience compared to the rich animations (scaling, lifting) seen on hover.
 **Action:** Always mirror hover transforms (e.g., `hover:scale-110`) with corresponding focus-visible transforms (e.g., `focus-visible:scale-110`) to ensure keyboard users receive the same level of tactile feedback and delight.
+
+## 2024-05-26 - [Container-Based Visual Delight]
+**Learning:** Interactive cards often use absolute positioned overlays or pseudo-elements triggered by hover (e.g., `group-hover:opacity-100`) to create "glow" or "shine" effects. Keyboard users miss out on this delight if focus states only affect the focus ring.
+**Action:** Use `:focus-within` on the container class (e.g., `.card-glow:focus-within::before`) to ensure that keyboard focus inside the card triggers the same atmospheric effects as mouse hover, creating an equal emotional experience.
