@@ -16,11 +16,13 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 - **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
 - **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
 
-### 2. Data Flow
+### 2. Data Flow & State Management
 
-1.  **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files.
-2.  **SSG**: HTML pages are generated statically at build time.
-3.  **Hydration**: Interactive components (using `<script>` tags or framework components) are hydrated only when needed (`client:load`, `client:visible`).
+- **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files to generate static HTML.
+- **Runtime State**:
+  - **URL-Driven**: Most state (active page, project details) is derived from the URL.
+  - **View Transitions**: The `<ClientRouter />` maintains a persistent SPA-like experience. Global state (like scroll position or theme) is preserved across navigations.
+  - **Islands**: Interactive components (VideoPlayer, ContactForm) manage their own local state using standard DOM events or framework-specific hooks (React).
 
 ### 3. Key Technologies
 
@@ -29,6 +31,22 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 - **Bun**: Runtime & Package Manager.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
+
+---
+
+## ⚡ Asset Optimization Pipeline
+
+This project implements a custom, high-performance asset pipeline to ensure top-tier Core Web Vitals.
+
+### Image Optimization (`scripts/optimize-images.js`)
+- **Engine**: Uses `sharp` directly (bypassing Astro's default image service for the initial asset generation if needed, though Astro's own `<Image />` is also used).
+- **Format**: Converts source images to **AVIF** (Quality 68).
+- **Caching**: Implements a "Smart Cache" by comparing `mtime` of source vs. output files. Optimization is skipped if the source hasn't changed, significantly speeding up local dev and CI builds.
+- **Sizing**: Resizes images to a `maxWidth` (e.g., 1600px) to prevent serving unnecessarily large files.
+
+### Critical Rendering Path
+- **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
+- **Font Optimization**: Fonts (Inter, Outfit, Space Grotesk) are self-hosted via `@fontsource` to avoid Google Fonts layout shifts.
 
 ---
 
