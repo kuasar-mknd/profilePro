@@ -15,7 +15,7 @@ const currentPath = normalizePath(pathname);
         class={`transition-all duration-300 link-animated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg px-2 -mx-2 ${
           currentPath === "/"
             ? "opacity-100 text-pacamara-accent dark:text-pacamara-accent font-medium link-active"
-            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent"
+            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/" ? "page" : undefined}
         title="Retour à l'accueil">Accueil</a
@@ -27,7 +27,7 @@ const currentPath = normalizePath(pathname);
         class={`transition-all duration-300 link-animated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg px-2 -mx-2 ${
           currentPath.startsWith("/project")
             ? "opacity-100 text-pacamara-accent dark:text-pacamara-accent font-medium link-active"
-            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent"
+            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath.startsWith("/project") ? "page" : undefined}
         title="Voir mes projets">Projets</a
@@ -39,7 +39,7 @@ const currentPath = normalizePath(pathname);
         class={`transition-all duration-300 link-animated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg px-2 -mx-2 ${
           currentPath === "/about"
             ? "opacity-100 text-pacamara-accent dark:text-pacamara-accent font-medium link-active"
-            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent"
+            : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/about" ? "page" : undefined}
         title="En savoir plus sur moi">À propos</a

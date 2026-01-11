@@ -346,6 +346,7 @@
   }
 
   .link-animated:hover::after,
+  .link-animated:focus-visible::after,
   .link-animated.link-active::after {
     transform: scaleX(1);
     transform-origin: bottom left;
