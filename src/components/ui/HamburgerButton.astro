@@ -42,6 +42,13 @@
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
+    // ⚡ Bolt: Initially hide the nav to save GPU resources
+    // The class 'invisible' prevents painting while 'translate-x-full' moves it off-screen
+    // We add 'invisible' here if the menu is closed
+    if (button.getAttribute("aria-expanded") !== "true") {
+      nav.classList.add("invisible");
+    }
+
     // 🎨 Palette: Encapsulated close logic for reusability
     const closeMenu = () => {
       document.documentElement.classList.remove("overflow-hidden");
@@ -51,9 +58,22 @@
       button.removeAttribute("aria-keyshortcuts");
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
+
+      // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
+      setTimeout(() => {
+        if (button.getAttribute("aria-expanded") === "false") {
+          nav.classList.add("invisible");
+        }
+      }, 300);
     };
 
     const openMenu = () => {
+      // ⚡ Bolt: Make visible immediately so transition can be seen
+      nav.classList.remove("invisible");
+
+      // Force reflow to ensure transition triggers
+      void (nav as HTMLElement).offsetWidth;
+
       document.documentElement.classList.add("overflow-hidden");
       button.setAttribute("aria-expanded", "true");
       button.setAttribute("aria-label", "Fermer le menu");
@@ -109,11 +129,23 @@
             btn.setAttribute("aria-expanded", String(isMenuOpen));
 
             if (isMenuOpen) {
+              // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
+              navEl.classList.remove("invisible");
               navEl.classList.remove("translate-x-full");
               navEl.classList.add("translate-x-0");
             } else {
               navEl.classList.add("translate-x-full");
               navEl.classList.remove("translate-x-0");
+              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
+              // But if closed externally, ensure hidden eventually.
+              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
+              // Since this observer watches the *result*, if it's already closed, hide it.
+              if (
+                navEl.classList.contains("translate-x-full") &&
+                !navEl.classList.contains("transitioning")
+              ) {
+                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
+              }
             }
           }
         });
