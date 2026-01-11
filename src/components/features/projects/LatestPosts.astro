@@ -60,7 +60,7 @@ const remainingCount = allPosts.length - postLimit;
     /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
   }
   <div
-    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px] contain-layout"
+    class="bento-grid [content-visibility:auto] [contain-intrinsic-size:auto_800px] contain-layout-paint"
   >
     {
       posts.length === 0 && (
