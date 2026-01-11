@@ -445,7 +445,12 @@ if (entry.data.type === "video" && entry.data.image) {
       >
         D'autres projets à découvrir
       </h2>
-      <LatestPosts postLimit="2" skipPost={entry.data.title} />
+      {/* ⚡ Bolt: Lazy load footer images to prioritize LCP */}
+      <LatestPosts
+        postLimit="2"
+        skipPost={entry.data.title}
+        lazyLoadImages={true}
+      />
     </div>
   </div>
 </Base>
