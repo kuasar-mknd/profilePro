@@ -1,6 +1,6 @@
 # Environment Variables
 
-> **Note:** This project uses Astro's type-safe environment variables. See `src/env.d.ts` and `astro.config.mjs`.
+> **Note:** This project uses Astro's type-safe environment variables defined in `src/env.d.ts`.
 
 ## 🌍 Required Variables
 
