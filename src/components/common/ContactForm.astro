@@ -498,6 +498,50 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       setTimeout(() => ripple.remove(), 600);
     });
 
+    // 🎨 Palette: Live validation on input to remove error state
+    const emailPattern =
+      /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+    function hideErrorIfFormIsValid() {
+      if (
+        nameInput?.value.trim().length >= 2 &&
+        emailPattern.test(emailInput?.value || "") &&
+        messageInput?.value.trim().length >= 10
+      ) {
+        errorMessage?.classList.add("hidden");
+      }
+    }
+
+    nameInput?.addEventListener("input", () => {
+      if (
+        nameInput.hasAttribute("aria-invalid") &&
+        nameInput.value.trim().length >= 2
+      ) {
+        nameInput.removeAttribute("aria-invalid");
+        hideErrorIfFormIsValid();
+      }
+    });
+
+    emailInput?.addEventListener("input", () => {
+      if (
+        emailInput.hasAttribute("aria-invalid") &&
+        emailPattern.test(emailInput.value)
+      ) {
+        emailInput.removeAttribute("aria-invalid");
+        hideErrorIfFormIsValid();
+      }
+    });
+
+    messageInput?.addEventListener("input", () => {
+      if (
+        messageInput.hasAttribute("aria-invalid") &&
+        messageInput.value.trim().length >= 10
+      ) {
+        messageInput.removeAttribute("aria-invalid");
+        hideErrorIfFormIsValid();
+      }
+    });
+
     // Helper to display errors
     function showError(message: string, fieldToFocus?: HTMLElement) {
       if (errorMessage && errorText) {
