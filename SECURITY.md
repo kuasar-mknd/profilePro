@@ -1,23 +1,11 @@
 # Security Policy
 
-## Supported Versions
-
-We currently support the latest version of this project.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
-
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this project, please send an e-mail to Samuel Dulex via [samuel@edulex.ch](mailto:samuel@edulex.ch). All security vulnerabilities will be promptly addressed.
+The project team and community take all security vulnerabilities seriously. Thank you for improving the security of our project. We appreciate your efforts and responsible disclosure and will make every effort to acknowledge your contributions.
 
-### Process
+To report a security vulnerability, please email the primary contact at `samuel@edulex.ch` with a detailed description of the issue, the steps to reproduce it, and any potential impact.
 
-1.  **Report**: Send an email with details of the vulnerability.
-2.  **Assessment**: We will acknowledge receipt and assess the issue within 48 hours.
-3.  **Resolution**: If confirmed, we will work on a fix and release a patch.
-4.  **Disclosure**: Once fixed, we will publicly disclose the vulnerability if appropriate.
+You can expect a response within 48 hours to acknowledge receipt of your report. We will work with you to understand and validate the issue. Please do not disclose the vulnerability publicly until a resolution has been reached.
 
-Please do NOT publicly disclose the issue until it has been addressed.
+We are committed to addressing security issues in a timely and responsible manner.
