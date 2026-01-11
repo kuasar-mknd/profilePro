@@ -11,6 +11,7 @@ const {
   skipPost = "",
   title = "Projets",
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
+  lazyLoadImages = false,
 } = Astro.props;
 
 const posts = (
@@ -76,7 +77,7 @@ const remainingCount = allPosts.length - postLimit;
               postData={post}
               num={index}
               bentoSize={bentoClass}
-              priority={index < 2}
+              priority={!lazyLoadImages && index < 2}
             />
           </ScrollReveal>
         );
