@@ -32,3 +32,8 @@
 
 **Learning:** Interactive cards often use absolute positioned overlays or pseudo-elements triggered by hover (e.g., `group-hover:opacity-100`) to create "glow" or "shine" effects. Keyboard users miss out on this delight if focus states only affect the focus ring.
 **Action:** Use `:focus-within` on the container class (e.g., `.card-glow:focus-within::before`) to ensure that keyboard focus inside the card triggers the same atmospheric effects as mouse hover, creating an equal emotional experience.
+
+## 2025-05-27 - [Harmonizing Focus and Hover States]
+
+**Learning:** Complex navigation components often have rich hover states (e.g., icon translation, color shifts, opacity changes) that are not reflected in the focus state, leaving keyboard users with a less engaging and potentially confusing experience (e.g., dimmed text).
+**Action:** Ensure that all `hover:` styles on interactive elements are mirrored with `focus-visible:` or `group-focus-visible:` styles. This includes transforms (translate/scale), color changes, and opacity adjustments, to provide a consistent and polished experience for all input methods.
