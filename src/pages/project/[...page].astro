@@ -57,7 +57,12 @@ const { page, allTags } = Astro.props;
       </p>
       <ProjectFilter tags={allTags} />
     </ScrollReveal>
-    <div class="flex flex-wrap justify-center gap-8 mb-16">
+    {
+      /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+    }
+    <div
+      class="flex flex-wrap justify-center gap-8 mb-16 [content-visibility:auto] [contain-intrinsic-size:auto_2000px] contain-layout"
+    >
       {
         page.data.length === 0 ? (
           <EmptyState message="Aucun projet trouvé pour le moment." />

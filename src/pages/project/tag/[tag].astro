@@ -51,7 +51,12 @@ const { projects, allTags } = Astro.props;
       <ProjectFilter tags={allTags} activeTag={tag} />
     </ScrollReveal>
 
-    <div class="flex flex-wrap justify-center gap-8 mb-16">
+    {
+      /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
+    }
+    <div
+      class="flex flex-wrap justify-center gap-8 mb-16 [content-visibility:auto] [contain-intrinsic-size:auto_2000px] contain-layout"
+    >
       {
         projects.length === 0 ? (
           <EmptyState message={`Aucun projet trouvé avec le tag "${tag}".`} />
