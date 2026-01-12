@@ -167,7 +167,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="5000"
           minlength="10"
           autocomplete="off"
-          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-colors duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30 resize-none overflow-hidden min-h-[140px]"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
@@ -410,6 +410,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     const messageCounterSr = form.querySelector(
       "#message-counter-sr",
     ) as HTMLElement;
+
+    // 🎨 Palette: Auto-resize textarea
+    if (messageInput) {
+      const autoResize = () => {
+        messageInput.style.height = "auto";
+        messageInput.style.height = messageInput.scrollHeight + "px";
+      };
+
+      messageInput.addEventListener("input", autoResize);
+
+      // Handle initial content (e.g. browser autofill restoration)
+      // Small timeout to ensure styles are applied
+      setTimeout(autoResize, 100);
+    }
 
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
