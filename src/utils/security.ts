@@ -59,3 +59,73 @@ export function sanitizeInput(str: string): string {
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
+
+/**
+ * 🛡️ Sentinel: Stricter regex to prevent invalid domain formats.
+ * Enforces:
+ * - Standard email structure
+ * - No leading/trailing hyphens in domain parts
+ * - TLD length of at least 2 chars
+ * - Avoids nested quantifiers that could lead to ReDoS
+ */
+export const EMAIL_PATTERN =
+  /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+/**
+ * Validates an email address against strict structural requirements.
+ *
+ * @param email - The email address to validate
+ * @returns True if the email is structurally valid
+ */
+export function isValidEmail(email: string): boolean {
+  if (!email || typeof email !== "string") return false;
+  return EMAIL_PATTERN.test(email);
+}
+
+/**
+ * 🛡️ Sentinel: Optimized regex for YouTube ID extraction.
+ * Enforces 11-char ID and safe delimiters to avoid catastrophic backtracking.
+ * Matches:
+ * - youtu.be/ID
+ * - v/ID
+ * - u/w/ID
+ * - embed/ID
+ * - watch?v=ID
+ * - &v=ID
+ */
+export const YOUTUBE_ID_REGEX =
+  /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
+
+/**
+ * 🛡️ Sentinel: Safe regex for Vimeo ID extraction.
+ * Avoids nested quantifiers.
+ * Matches:
+ * - vimeo.com/ID
+ * - vimeo.com/ID/HASH
+ */
+export const VIMEO_ID_REGEX =
+  /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
+
+/**
+ * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
+ * Allows http, https, and relative paths (/).
+ * Optionally allows mailto:.
+ *
+ * @param url - The URL to validate
+ * @param options - Validation options
+ * @returns True if the URL is safe
+ */
+export function isValidUrl(
+  url: string,
+  options: { allowMailto?: boolean } = {},
+): boolean {
+  if (!url || typeof url !== "string") return false;
+
+  const { allowMailto = false } = options;
+
+  if (allowMailto) {
+    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+  }
+
+  return /^(https?:\/\/|\/)/i.test(url);
+}

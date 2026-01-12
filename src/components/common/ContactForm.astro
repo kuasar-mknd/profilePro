@@ -340,7 +340,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </style>
 
 <script>
-  import { sanitizeInput } from "../../utils/security";
+  import { sanitizeInput, isValidEmail } from "../../utils/security";
 
   /**
    * ⚡ Bolt: ContactForm Performance Optimization
@@ -499,13 +499,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     // 🎨 Palette: Live validation on input to remove error state
-    const emailPattern =
-      /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-
     function hideErrorIfFormIsValid() {
       if (
         nameInput?.value.trim().length >= 2 &&
-        emailPattern.test(emailInput?.value || "") &&
+        isValidEmail(emailInput?.value || "") &&
         messageInput?.value.trim().length >= 10
       ) {
         errorMessage?.classList.add("hidden");
@@ -525,7 +522,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     emailInput?.addEventListener("input", () => {
       if (
         emailInput.hasAttribute("aria-invalid") &&
-        emailPattern.test(emailInput.value)
+        isValidEmail(emailInput.value)
       ) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
@@ -559,10 +556,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // 🛡️ Sentinel: Stricter regex to prevent invalid domain formats (e.g., leading/trailing hyphens)
-      const emailPattern =
-        /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-
       // Clear previous validation state before re-validating
       form
         .querySelectorAll("[aria-invalid]")
@@ -580,7 +573,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         return;
       }
 
-      if (emailInput && !emailPattern.test(emailInput.value)) {
+      if (emailInput && !isValidEmail(emailInput.value)) {
         emailInput.setAttribute("aria-invalid", "true");
         emailInput.setAttribute("aria-describedby", "form-error-message");
         showError("Veuillez entrer une adresse email valide.", emailInput);

@@ -1,6 +1,11 @@
 ---
 const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
+import {
+  isValidUrl,
+  YOUTUBE_ID_REGEX,
+  VIMEO_ID_REGEX,
+} from "../../../utils/security";
 
 // Extract video ID and provider
 const getVideoDetails = (url: string) => {
@@ -8,10 +13,7 @@ const getVideoDetails = (url: string) => {
 
   // YouTube
   // 🛡️ Sentinel: Optimized regex to prevent ReDoS (removed leading ^.* and trailing .*)
-  // Enforces 11-char ID and safe delimiters to avoid catastrophic backtracking
-  const youtubeRegExp =
-    /(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([\w-]{11})(?:[#&?]|$)/;
-  const youtubeMatch = url.match(youtubeRegExp);
+  const youtubeMatch = url.match(YOUTUBE_ID_REGEX);
   // 🛡️ Sentinel: Strict input validation for YouTube IDs (allowlist: alphanumeric + _ -)
   if (
     youtubeMatch &&
@@ -23,9 +25,7 @@ const getVideoDetails = (url: string) => {
 
   // Vimeo
   // 🛡️ Sentinel: Safe regex avoiding nested quantifiers
-  const vimeoRegExp =
-    /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
-  const vimeoMatch = url.match(vimeoRegExp);
+  const vimeoMatch = url.match(VIMEO_ID_REGEX);
   if (vimeoMatch && vimeoMatch[1]) {
     // 🛡️ Sentinel: Vimeo IDs are numeric, hash is alphanumeric (already enforced by regex but good to be explicit in comments)
     return { id: vimeoMatch[1], hash: vimeoMatch[2], provider: "vimeo" };
@@ -43,7 +43,7 @@ let posterUrl: string | null = null;
 if (poster) {
   // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
   // Allow http, https, and relative paths (starting with /)
-  if (/^(https?:\/\/|\/)/i.test(poster)) {
+  if (isValidUrl(poster)) {
     posterUrl = poster;
   }
 }
