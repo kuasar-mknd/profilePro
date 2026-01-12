@@ -121,12 +121,7 @@
     >
   </button>
 
-  <div
-    class="lightbox-counter"
-    aria-live="polite"
-    aria-atomic="true"
-    style="contain: layout;"
-  >
+  <div class="lightbox-counter" aria-atomic="true" style="contain: layout;">
     <span class="sr-only">Image </span>
     <span class="lightbox-current">1</span>
     <span aria-hidden="true"> / </span>
@@ -550,7 +545,9 @@
     private updateImage() {
       // ⚡ Bolt: Read properties on demand
       const currentElement = this.galleryElements[this.currentIndex];
-      const src = currentElement.currentSrc || currentElement.src;
+
+      // ⚡ Bolt: Use optimized lightbox source if available, fallback to currentSrc
+      const src = this.getImageSrc(this.currentIndex);
       const alt = currentElement.alt || "";
 
       this.image.src = src;
@@ -560,7 +557,7 @@
 
       // 🎨 Palette: Announce image description
       if (this.announcer) {
-        this.announcer.textContent = alt || "Image sans description";
+        this.announcer.textContent = `Image ${this.currentIndex + 1} sur ${this.galleryElements.length}. ${alt || "Image sans description"}`;
       }
 
       // Loading state
@@ -590,9 +587,10 @@
       this.preloadImage(this.getImageSrc(prevIndex));
     }
 
+    // ⚡ Bolt: Helper to get the best available source
     private getImageSrc(index: number): string {
       const el = this.galleryElements[index];
-      return el.currentSrc || el.src;
+      return el.dataset.lightboxSrc || el.currentSrc || el.src;
     }
 
     private preloadImage(src: string) {

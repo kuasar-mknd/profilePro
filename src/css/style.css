@@ -660,8 +660,9 @@
   transition: opacity 0.3s ease;
   filter: blur(8px);
 
-  /* ⚡ Bolt: Pre-composite for smoother hover transition */
-  will-change: opacity;
+  /* ⚡ Bolt: Removed permanent will-change to save memory on lists */
+
+  /* Browser heuristics are sufficient for opacity transitions here */
 }
 
 .card-glow:hover::before,
@@ -797,26 +798,62 @@
   }
 
   /* Animation Delays */
-  .delay-100 { animation-delay: 100ms; }
-  .delay-150 { animation-delay: 150ms; }
-  .delay-200 { animation-delay: 200ms; }
-  .delay-250 { animation-delay: 250ms; }
-  .delay-300 { animation-delay: 300ms; }
-  .delay-350 { animation-delay: 350ms; }
-  .delay-400 { animation-delay: 400ms; }
-  .delay-450 { animation-delay: 450ms; }
-  .delay-500 { animation-delay: 500ms; }
-  .delay-600 { animation-delay: 600ms; }
-  .delay-800 { animation-delay: 800ms; }
-  .delay-1000 { animation-delay: 1000ms; }
-  .delay-3000 { animation-delay: 3000ms; }
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  .delay-150 {
+    animation-delay: 150ms;
+  }
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  .delay-250 {
+    animation-delay: 250ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-350 {
+    animation-delay: 350ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  .delay-450 {
+    animation-delay: 450ms;
+  }
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+  .delay-600 {
+    animation-delay: 600ms;
+  }
+  .delay-800 {
+    animation-delay: 800ms;
+  }
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+  .delay-3000 {
+    animation-delay: 3000ms;
+  }
 
   /* Animation Durations */
-  .duration-4s { animation-duration: 4s; }
-  .duration-120s { animation-duration: 120s; }
+  .duration-4s {
+    animation-duration: 4s;
+  }
+  .duration-120s {
+    animation-duration: 120s;
+  }
 
   /* Masks */
   .mask-gradient-fade {
-    mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 30%,
+      black 50%,
+      transparent 100%
+    );
   }
 }
