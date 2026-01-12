@@ -28,7 +28,7 @@
 
   <button
     type="button"
-    class="lightbox-close group"
+    class="lightbox-close group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
     aria-label="Fermer la galerie"
     aria-description="Ferme la fenêtre modale"
     title="Fermer (Esc)"
@@ -56,7 +56,7 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-prev group"
+    class="lightbox-nav lightbox-prev group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
     aria-label="Image précédente"
     aria-description="Affiche l'image précédente"
     title="Image précédente (←)"
@@ -96,7 +96,7 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-next group"
+    class="lightbox-nav lightbox-next group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
     aria-label="Image suivante"
     aria-description="Affiche l'image suivante"
     title="Image suivante (→)"
@@ -185,13 +185,6 @@
     transform: scale(1.1);
   }
 
-  .lightbox-close:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px var(--color-pacamara-accent),
-      0 0 0 4px rgba(0, 0, 0, 0.5);
-  }
-
   .lightbox-content {
     position: relative;
     z-index: 5;
@@ -238,13 +231,6 @@
   .lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
-  }
-
-  .lightbox-nav:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 2px var(--color-pacamara-accent),
-      0 0 0 4px rgba(0, 0, 0, 0.5);
   }
 
   .lightbox-prev {
