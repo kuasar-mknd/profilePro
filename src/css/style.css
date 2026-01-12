@@ -144,7 +144,6 @@
 
 /* Print Styles */
 @media print {
-  header,
   footer,
   .hero-buttons,
   .hero-carousel,
@@ -157,6 +156,18 @@
   body {
     background: white;
     color: black;
+  }
+
+  /* 🎨 Palette: Add a footer signature for printed documents */
+  body::after {
+    content: "© Samuel Dulex - portfolio.kuasar.xyz";
+    display: block;
+    text-align: center;
+    font-size: 10pt;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+    color: #666;
   }
 
   main {
