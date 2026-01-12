@@ -91,13 +91,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="100"
           minlength="2"
           inputmode="text"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Votre nom"
         />
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
           aria-hidden="true"
         >
+        </div>
+        <!-- 🎨 Palette: Validation Icon -->
+        <div
+          class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:check-circle" class="w-6 h-6" />
         </div>
       </div>
     </div>
@@ -123,12 +130,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="254"
           inputmode="email"
           spellcheck="false"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="votre@email.com"
         />
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
+        </div>
+        <!-- 🎨 Palette: Validation Icon -->
+        <div
+          class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:check-circle" class="w-6 h-6" />
         </div>
       </div>
     </div>
@@ -153,12 +167,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="5000"
           minlength="10"
           autocomplete="off"
-          class="form-input w-full px-5 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
           aria-hidden="true"
         >
+        </div>
+        <!-- 🎨 Palette: Validation Icon (Top Right for Textarea) -->
+        <div
+          class="validation-icon absolute right-4 top-4 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:check-circle" class="w-6 h-6" />
         </div>
       </div>
       <!-- 🎨 Palette: Character counter -->
@@ -264,7 +285,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   }
 
   /* Only transition opacity (compositor thread) */
-  .form-input:focus + .input-glow {
+  .form-input:focus ~ .input-glow {
     opacity: 1;
   }
 
@@ -468,6 +489,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "dark:text-white/60",
         );
       }
+      // 🎨 Palette: Reset validation icons
+      form.querySelectorAll(".validation-icon").forEach((el) => {
+        (el as HTMLElement).dataset.visible = "false";
+      });
+
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
@@ -498,7 +524,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       setTimeout(() => ripple.remove(), 600);
     });
 
-    // 🎨 Palette: Live validation on input to remove error state
+    // 🎨 Palette: Live validation
     const emailPattern =
       /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
 
@@ -512,31 +538,45 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     }
 
+    // 🎨 Palette: Helper to update validation icon state
+    function updateValidationIcon(
+      input: HTMLInputElement | HTMLTextAreaElement,
+      isValid: boolean,
+    ) {
+      // Find the sibling icon wrapper
+      const iconWrapper = input.parentNode?.querySelector(
+        ".validation-icon",
+      ) as HTMLElement;
+      if (iconWrapper) {
+        iconWrapper.dataset.visible = isValid ? "true" : "false";
+      }
+    }
+
     nameInput?.addEventListener("input", () => {
-      if (
-        nameInput.hasAttribute("aria-invalid") &&
-        nameInput.value.trim().length >= 2
-      ) {
+      const isValid = nameInput.value.trim().length >= 2;
+      updateValidationIcon(nameInput, isValid);
+
+      if (nameInput.hasAttribute("aria-invalid") && isValid) {
         nameInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
     });
 
     emailInput?.addEventListener("input", () => {
-      if (
-        emailInput.hasAttribute("aria-invalid") &&
-        emailPattern.test(emailInput.value)
-      ) {
+      const isValid = emailPattern.test(emailInput.value);
+      updateValidationIcon(emailInput, isValid);
+
+      if (emailInput.hasAttribute("aria-invalid") && isValid) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
     });
 
     messageInput?.addEventListener("input", () => {
-      if (
-        messageInput.hasAttribute("aria-invalid") &&
-        messageInput.value.trim().length >= 10
-      ) {
+      const isValid = messageInput.value.trim().length >= 10;
+      updateValidationIcon(messageInput, isValid);
+
+      if (messageInput.hasAttribute("aria-invalid") && isValid) {
         messageInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
