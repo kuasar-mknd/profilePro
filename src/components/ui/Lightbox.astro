@@ -550,7 +550,9 @@
     private updateImage() {
       // ⚡ Bolt: Read properties on demand
       const currentElement = this.galleryElements[this.currentIndex];
-      const src = currentElement.currentSrc || currentElement.src;
+
+      // ⚡ Bolt: Use optimized lightbox source if available, fallback to currentSrc
+      const src = this.getImageSrc(this.currentIndex);
       const alt = currentElement.alt || "";
 
       this.image.src = src;
@@ -590,9 +592,10 @@
       this.preloadImage(this.getImageSrc(prevIndex));
     }
 
+    // ⚡ Bolt: Helper to get the best available source
     private getImageSrc(index: number): string {
       const el = this.galleryElements[index];
-      return el.currentSrc || el.src;
+      return el.dataset.lightboxSrc || el.currentSrc || el.src;
     }
 
     private preloadImage(src: string) {
