@@ -8,13 +8,15 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 ### 1. Layers
 
+Although this is a static site, the structure maps to Clean Architecture principles:
+
 - **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes using file-based routing.
 - **Component Layer (UI)**: Located in `src/components/`.
   - `common/`: Global components (Header, Footer, SEO).
   - `ui/`: Reusable primitives (Buttons, Cards, Lightbox).
   - `features/`: Domain-specific logic (Projects, VideoPlayer).
-- **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
-- **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
+- **Domain/Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
+- **Core/Infrastructure Layer (Config)**: `src/config.mjs`, `src/utils/`, `astro.config.mjs`.
 
 ### 2. Data Flow & State Management
 
