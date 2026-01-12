@@ -660,8 +660,9 @@
   transition: opacity 0.3s ease;
   filter: blur(8px);
 
-  /* ⚡ Bolt: Pre-composite for smoother hover transition */
-  will-change: opacity;
+  /* ⚡ Bolt: Removed permanent will-change to save memory on lists */
+
+  /* Browser heuristics are sufficient for opacity transitions here */
 }
 
 .card-glow:hover::before,
