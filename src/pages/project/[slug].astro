@@ -154,7 +154,7 @@ if (entry.data.type === "video" && entry.data.image) {
     <!-- Video Player -->
     {
       entry.data.type === "video" && entry.data.videoUrl && (
-        <div class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 mt-12 animate-slide-up opacity-0 ring-1 ring-white/10 delay-600">
+        <div class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 mt-12 animate-slide-up opacity-0 ring-1 ring-white/10 delay-600 [content-visibility:auto] [contain-intrinsic-size:auto_500px]">
           <VideoPlayer
             videoUrl={entry.data.videoUrl}
             poster={optimizedPoster || entry.data.image?.src}
@@ -169,7 +169,7 @@ if (entry.data.type === "video" && entry.data.image) {
       entry.data.type === "photo" &&
         entry.data.gallery &&
         entry.data.gallery.length > 0 && (
-          <div class="w-full mb-16 animate-slide-up opacity-0 delay-600">
+          <div class="w-full mb-16 animate-slide-up opacity-0 delay-600 [content-visibility:auto] [contain-intrinsic-size:auto_500px]">
             <ImageGallery images={entry.data.gallery} />
           </div>
         )
@@ -185,7 +185,8 @@ if (entry.data.type === "video" && entry.data.image) {
             prose-img:rounded-2xl prose-img:shadow-lg
             dark:prose-strong:text-white
             animate-fade-in opacity-0
-            border border-white/20 dark:border-white/5 delay-800"
+            border border-white/20 dark:border-white/5 delay-800
+            [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
     >
       <Breadcrumbs
         items={[
