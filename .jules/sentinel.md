@@ -9,3 +9,9 @@
 **Vulnerability:** Limited input sanitization allowed potential injection vectors using parentheses and brackets (e.g., function calls, template syntax).
 **Learning:** Expanding sanitization to include '()', '[]', '{}' provides defense-in-depth against template injection and specific parser exploits without affecting visual rendering in HTML.
 **Prevention:** Use the enhanced 'sanitizeInput' utility for all user-facing inputs.
+
+## 2025-02-18 - Modernizing Mixed Content Handling
+
+**Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
+**Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
+**Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
