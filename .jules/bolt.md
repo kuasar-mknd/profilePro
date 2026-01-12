@@ -18,3 +18,7 @@
 ## 2025-02-18 - Off-Screen Compositing Optimization
 **Learning:** Full-screen overlays (like mobile menus) sitting off-screen with `translate` still consume GPU memory if they have `will-change: transform`.
 **Action:** Use `visibility: hidden` (via `invisible` class) when the overlay is closed to remove it from the paint/composite tree entirely. Manage transitions by adding `invisible` only after the close transition completes (using `setTimeout`), and removing it immediately before the open transition starts (forcing a reflow with `void el.offsetWidth` if necessary).
+
+## 2025-02-19 - Gradient Transition Performance
+**Learning:** Transitioning CSS gradients directly (via `background-image` or `background-position`) forces the browser to repaint the element on every frame, which is CPU intensive.
+**Action:** Use the "Opacity Composition" pattern: Stack two elements, one with the base state and one with the target state (absolute position). Transition the `opacity` of the top layer instead. This operation is handled by the GPU compositor and avoids repaints.
