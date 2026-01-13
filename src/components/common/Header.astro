@@ -93,9 +93,7 @@ const logo2x = await getImage({
   }
 
   /* ⚡ Bolt: Promote layer for large animation */
-  #navigation_wrapper {
-    will-change: transform;
-  }
+  /* Moved will-change to JS to avoid permanent GPU memory usage */
 </style>
 
 <script>

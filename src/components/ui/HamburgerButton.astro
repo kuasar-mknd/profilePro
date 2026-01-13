@@ -63,6 +63,8 @@
       setTimeout(() => {
         if (button.getAttribute("aria-expanded") === "false") {
           nav.classList.add("invisible");
+          // ⚡ Bolt: Remove GPU layer promotion to free memory
+          (nav as HTMLElement).style.willChange = "auto";
         }
       }, 300);
     };
@@ -70,6 +72,9 @@
     const openMenu = () => {
       // ⚡ Bolt: Make visible immediately so transition can be seen
       nav.classList.remove("invisible");
+
+      // ⚡ Bolt: Promote layer for smooth animation
+      (nav as HTMLElement).style.willChange = "transform";
 
       // Force reflow to ensure transition triggers
       void (nav as HTMLElement).offsetWidth;

@@ -352,7 +352,8 @@ if (entry.data.type === "video" && entry.data.image) {
          * Wraps code blocks and adds a copy button for better developer experience
          */
         function addCopyButtons() {
-          document.querySelectorAll(".prose pre").forEach((pre) => {
+          document.querySelectorAll(".prose pre").forEach((node) => {
+            const pre = node as HTMLElement;
             if (pre.parentElement?.classList.contains("code-wrapper")) return;
 
             const wrapper = document.createElement("div");
