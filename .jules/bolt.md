@@ -22,3 +22,7 @@
 ## 2025-02-18 - Will-Change Memory Anti-Pattern
 **Learning:** Permanently applying `will-change: opacity` to repeated list elements (e.g., `.card-glow` on every project card) forces the browser to keep a separate compositor layer for each item, significantly increasing GPU memory usage.
 **Action:** Remove `will-change` from list items unless a specific, janky animation requires it. Browser heuristics for standard hover opacity transitions are sufficient and more memory-efficient.
+
+## 2026-01-13 - Dynamic Will-Change Management
+**Learning:** Even with `visibility: hidden`, elements with permanent `will-change: transform` might retain layer hints in some browser engines or complicate layer tree management.
+**Action:** Dynamically toggle `will-change` via JavaScript: add it immediately before the opening animation, and remove it (`will-change: auto`) after the closing animation finishes.
