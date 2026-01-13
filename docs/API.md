@@ -5,6 +5,7 @@
 ## 📡 Public Endpoints
 
 These endpoints are generated during the build process and are available publicly.
+Base URL: `https://portfolio.kuasar.xyz`
 
 ### 1. RSS Feed
 

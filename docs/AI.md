@@ -12,6 +12,7 @@ Currently, this project does not integrate live AI models. The roadmap includes 
 - **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
 - **Env Vars**: TBD (e.g., `AI_API_KEY`, `AI_MODEL_NAME`).
 - **Location**: Configuration would reside in `src/config.mjs` or a dedicated service adapter.
+- **Model**: To be defined (likely Llama 3 or similar lightweight model for summarization).
 
 ## 📋 Data Schemas
 
