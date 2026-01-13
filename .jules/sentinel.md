@@ -15,3 +15,9 @@
 **Vulnerability:** Replacing `block-all-mixed-content` with `upgrade-insecure-requests` improves security for modern browsers but removes mixed-content protection for older browsers that don't support the newer directive.
 **Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include *both* `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
 **Prevention:** When enhancing the CSP for mixed content, add `upgrade-insecure-requests` alongside the existing `block-all-mixed-content` directive instead of replacing it.
+
+## 2025-10-26 - Hidden Field Sanitization
+
+**Vulnerability:** Unsanitized hidden fields (e.g., `botcheck`, `timestamp`) in form submissions.
+**Learning:** Hidden fields are trustless; they can be manipulated by attackers just like visible inputs. Failing to sanitize them creates a potential XSS vector if the backend reflects these values (e.g., in email notifications).
+**Prevention:** Apply input sanitization to ALL string fields in a payload by default, opting-out only for specific fields that have stricter, dedicated validation (like email regex).
