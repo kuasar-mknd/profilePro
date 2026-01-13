@@ -61,7 +61,8 @@ const { page, allTags } = Astro.props;
       /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
     }
     <div
-      class="flex flex-wrap justify-center gap-8 mb-16" style="content-visibility: auto; contain-intrinsic-size: auto 1500px;"
+      class="flex flex-wrap justify-center gap-8 mb-16"
+      style="content-visibility: auto; contain-intrinsic-size: auto 1500px;"
     >
       {
         page.data.length === 0 ? (
