@@ -22,3 +22,7 @@
 ## 2025-02-18 - Will-Change Memory Anti-Pattern
 **Learning:** Permanently applying `will-change: opacity` to repeated list elements (e.g., `.card-glow` on every project card) forces the browser to keep a separate compositor layer for each item, significantly increasing GPU memory usage.
 **Action:** Remove `will-change` from list items unless a specific, janky animation requires it. Browser heuristics for standard hover opacity transitions are sufficient and more memory-efficient.
+
+## 2026-01-13 - Deferring Non-Critical DOM Scans
+**Learning:** Synchronous DOM scans (like `querySelectorAll`) and global observers attached during `astro:after-swap` can significantly block the main thread during the critical post-navigation frame, increasing TBT.
+**Action:** Wrapped non-critical initialization logic (like `secureLinks`) in a `requestIdleCallback` helper to yield control to the browser for painting and user input.
