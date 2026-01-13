@@ -95,7 +95,7 @@ Workflows are defined in `.github/workflows/`:
 
 1.  **CI (`ci.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
+    - Sets up Node 20 (for Sharp image optimization) & Bun.
     - Installs dependencies.
     - Runs `bun run check` (Lint + Types + Format).
     - Runs `bun run test:e2e` (Playwright).
