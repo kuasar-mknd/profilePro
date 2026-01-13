@@ -7,15 +7,17 @@
 
 /**
  * Safely serializes a value to JSON for injection into HTML (e.g., script tags, data attributes).
- * Escapes the '<' character to prevent Script Injection via JSON in HTML context.
+ * Escapes characters to prevent Script Injection via JSON in HTML context.
  *
  * @param value - The value to serialize
- * @returns The JSON string with '<', U+2028, and U+2029 escaped to prevent XSS.
+ * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function safeJson(value: any): string {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
     .replace(/\u2028/g, "\\u2028")
     .replace(/\u2029/g, "\\u2029");
 }
@@ -25,7 +27,8 @@ export function safeJson(value: any): string {
  * Replaces dangerous characters with their HTML entity equivalents.
  *
  * Note: For server-side rendering or robust XSS prevention, use a dedicated library like 'sanitize-html'.
- * This function is intended for lightweight client-side usage (e.g., form inputs).
+ * This function is intended for lightweight client-side usage (e.g., form inputs) where the output
+ * is text content, NOT for sanitizing HTML attributes like 'href' or 'src'.
  *
  * @param str - The input string to sanitize
  * @returns The sanitized string

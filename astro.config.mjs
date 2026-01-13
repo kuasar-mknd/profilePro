@@ -86,12 +86,13 @@ export default defineConfig({
           navigateFallback: "/404",
         },
       }),
-      visualizer({
-        filename: "./dist/stats.html",
-        open: false,
-        gzipSize: true,
-      }),
-    ],
+      process.env.ANALYZE === "true" &&
+        visualizer({
+          filename: "./dist/stats.html",
+          open: false,
+          gzipSize: true,
+        }),
+    ].filter(Boolean),
     build: {
       cssCodeSplit: false, // Réduit les requêtes CSS en les bundlant ensemble
     },
