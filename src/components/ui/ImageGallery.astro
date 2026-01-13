@@ -262,7 +262,7 @@ const columnClasses = {
       // Note: 'load' does not bubble, but it DOES capture.
       gallery.addEventListener(
         "load",
-        (e) => {
+        (e: Event) => {
           const target = e.target as HTMLElement;
           if (target.matches("img[data-gallery-image]")) {
             removeSkeleton(target as HTMLImageElement);

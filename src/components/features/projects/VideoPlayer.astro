@@ -219,6 +219,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
   function initVideoPrefetch() {
     // Check if already prefetched this session (global flag)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((window as any)._plyrPrefetched) return;
 
     const wrappers = document.querySelectorAll(".video-player-wrapper");
@@ -226,7 +227,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 
     const prefetch = () => {
       // Double check inside the handler in case it fired multiple times quickly
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((window as any)._plyrPrefetched) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any)._plyrPrefetched = true;
 
       // Start fetching chunks in background
@@ -237,7 +240,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
         import("plyr/dist/plyr.css");
         // @ts-ignore
         import("plyr");
-      } catch (e) {
+      } catch {
         // Silent failure is acceptable for prefetch
       }
 
