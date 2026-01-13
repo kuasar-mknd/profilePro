@@ -232,6 +232,8 @@ if (entry.data.type === "video" && entry.data.image) {
         </button>
         <!-- Screen reader announcer for better accessibility support -->
         <div id="share-announcer" class="sr-only" aria-live="polite"></div>
+        <!-- 🎨 Palette: Global announcer for code copy feedback -->
+        <div id="code-copy-announcer" class="sr-only" aria-live="polite"></div>
       </div>
 
       <!-- Script for interactions -->
@@ -327,7 +329,7 @@ if (entry.data.type === "video" && entry.data.image) {
 
                   // Accessibility update
                   if (announcer) {
-                    announcer.textContent = "Lien copié dans le presse-papier";
+                    announcer.textContent = "Lien copié dans le presse-papiers";
                   }
 
                   setTimeout(() => {
@@ -352,6 +354,7 @@ if (entry.data.type === "video" && entry.data.image) {
          * Wraps code blocks and adds a copy button for better developer experience
          */
         function addCopyButtons() {
+          const announcer = document.getElementById("code-copy-announcer");
           document.querySelectorAll(".prose pre").forEach((node) => {
             const pre = node as HTMLElement;
             if (pre.parentElement?.classList.contains("code-wrapper")) return;
@@ -375,9 +378,18 @@ if (entry.data.type === "video" && entry.data.image) {
                 );
                 btn.innerHTML =
                   '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+                // 🎨 Palette: Announce success to screen readers
+                if (announcer) {
+                  announcer.textContent = "Code copié dans le presse-papiers";
+                }
+
                 setTimeout(() => {
                   btn.innerHTML =
                     '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                  if (announcer) {
+                    announcer.textContent = "";
+                  }
                 }, 2000);
               } catch (err) {
                 console.error("Failed to copy code", err);
