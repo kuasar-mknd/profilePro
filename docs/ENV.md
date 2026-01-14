@@ -22,3 +22,5 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 PUBLIC_WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
 PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
 ```
+
+Environment variables are type-checked via `src/env.d.ts` in the build process.

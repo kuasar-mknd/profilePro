@@ -5,6 +5,7 @@
 ## 📡 Public Endpoints
 
 These endpoints are generated during the build process and are available publicly.
+They are automatically generated at build time using `@astrojs/rss` and `@astrojs/sitemap`.
 
 ### 1. RSS Feed
 

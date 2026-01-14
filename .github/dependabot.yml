@@ -1,3 +1,4 @@
+# Configuration for Dependabot (Automated Dependency Updates)
 version: 2
 updates:
   - package-ecosystem: "npm"

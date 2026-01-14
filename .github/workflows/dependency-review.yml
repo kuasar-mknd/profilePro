@@ -1,3 +1,4 @@
+# Dependency Review for Pull Requests
 name: "Dependency Review"
 
 on: [pull_request]

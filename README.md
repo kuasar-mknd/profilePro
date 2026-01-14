@@ -165,12 +165,18 @@ Voir [ARCHITECTURE.md](docs/ARCHITECTURE.md) pour plus de détails.
 ## 🌐 Déploiement
 
 Le déploiement est automatisé sur **Cloudflare Pages** via GitHub Actions.
-Le workflow assure :
 
-1. Vérification de la qualité (`check`).
+**Pipeline CI (Pull Requests & Pushes) :**
+
+1. Vérification de la qualité (`check` : lint, format, types).
 2. Tests End-to-End (`test:e2e`).
 3. Scan de sécurité (`CodeQL`, `Dependency Review`).
-4. Build et déploiement via Wrangler.
+
+**Pipeline Deploy (Push to Master only) :**
+
+1. Validation finale.
+2. Build optimisé.
+3. Déploiement via Wrangler.
 
 Pour plus de détails sur le pipeline, voir [ARCHITECTURE.md](docs/ARCHITECTURE.md#cicd-pipeline).
 

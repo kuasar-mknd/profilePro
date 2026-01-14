@@ -1,6 +1,6 @@
 # AI Integration Documentation
 
-> **Status:** No active AI integration.
+> **Status:** No active AI integration. (Evaluation phase)
 > **Plan:** Future integration for project summarization.
 
 ## 🤖 Models & Configuration

@@ -39,12 +39,14 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 This project implements a custom, high-performance asset pipeline to ensure top-tier Core Web Vitals.
 
 ### Image Optimization (`scripts/optimize-images.js`)
+
 - **Engine**: Uses `sharp` directly (bypassing Astro's default image service for the initial asset generation if needed, though Astro's own `<Image />` is also used).
 - **Format**: Converts source images to **AVIF** (Quality 68).
 - **Caching**: Implements a "Smart Cache" by comparing `mtime` of source vs. output files. Optimization is skipped if the source hasn't changed, significantly speeding up local dev and CI builds.
 - **Sizing**: Resizes images to a `maxWidth` (e.g., 1600px) to prevent serving unnecessarily large files.
 
 ### Critical Rendering Path
+
 - **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
 - **Font Optimization**: Fonts (Inter, Outfit, Space Grotesk) are self-hosted via `@fontsource` to avoid Google Fonts layout shifts.
 
@@ -105,8 +107,10 @@ Workflows are defined in `.github/workflows/`:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
     - **Dependency Review**: Checks for vulnerable packages in PRs.
 
-3.  **Deploy**:
-    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
+3.  **Deploy (`deploy.yml`)**:
+    - Triggers on Push to `master`.
+    - Deploys the built assets to Cloudflare Pages via Wrangler.
+    - Includes a final quality check before deployment.
 
 ---
 
