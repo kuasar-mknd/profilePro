@@ -820,4 +820,10 @@
   .mask-gradient-fade {
     mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 50%, transparent 100%);
   }
+
+  /* ⚡ Bolt: Animation Optimization */
+  .paused {
+    animation-play-state: paused !important;
+    will-change: auto !important;
+  }
 }

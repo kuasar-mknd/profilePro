@@ -26,3 +26,7 @@
 ## 2026-01-13 - Dynamic Will-Change Management
 **Learning:** Even with `visibility: hidden`, elements with permanent `will-change: transform` might retain layer hints in some browser engines or complicate layer tree management.
 **Action:** Dynamically toggle `will-change` via JavaScript: add it immediately before the opening animation, and remove it (`will-change: auto`) after the closing animation finishes.
+
+## 2026-02-23 - Infinite Animation GPU Efficiency
+**Learning:** Infinite CSS animations (like floating background blobs) continue to consume CPU (style recalc/layout) and GPU memory (compositor layers) even when off-screen, especially if `will-change: transform` is used permanently.
+**Action:** Implement a global `IntersectionObserver` in the layout to automatically toggle a `.paused` class on these elements when they leave the viewport. The `.paused` class forces `animation-play-state: paused` and `will-change: auto`, recovering resources without manual management in every component.
