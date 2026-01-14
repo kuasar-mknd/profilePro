@@ -472,8 +472,20 @@ if (postData?.data?.image) {
 
         // Security: Add rel="noopener noreferrer"
         const rel = link.getAttribute("rel") || "";
-        if (!rel.includes("noopener")) {
-          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        const parts = rel.split(" ").filter(Boolean);
+        let changed = false;
+
+        if (!parts.includes("noopener")) {
+          parts.push("noopener");
+          changed = true;
+        }
+        if (!parts.includes("noreferrer")) {
+          parts.push("noreferrer");
+          changed = true;
+        }
+
+        if (changed) {
+          link.setAttribute("rel", parts.join(" "));
         }
 
         // Accessibility: Append warning to title

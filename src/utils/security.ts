@@ -59,3 +59,24 @@ export function sanitizeInput(str: string): string {
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
+
+/**
+ * Validates a URL to ensure it uses a safe protocol.
+ * Prevents javascript: URI injection and other dangerous schemes.
+ *
+ * Allowed protocols/formats:
+ * - http://
+ * - https://
+ * - mailto:
+ * - tel:
+ * - / (Absolute path relative to domain)
+ * - # (Anchor)
+ *
+ * @param url - The URL to validate
+ * @returns The URL if valid, or '#' if invalid.
+ */
+export function sanitizeUrl(url: string): string {
+  // 🛡️ Sentinel: Strict allowlist for URL protocols
+  const safePattern = /^(https?:\/\/|mailto:|tel:|\/|#)/i;
+  return safePattern.test(url) ? url : "#";
+}
