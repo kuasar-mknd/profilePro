@@ -34,7 +34,10 @@ const jsonLd = {
   <main>
     <Hero />
     <ServicesPreview />
-    <LatestPosts postLimit={7} />
+    {
+      /* ⚡ Bolt: Enable lazy loading for all homepage posts as they are below the fold (Hero is 90vh) */
+    }
+    <LatestPosts postLimit={7} lazyLoadImages={true} />
     <CTASection />
   </main>
 </Base>

@@ -26,3 +26,7 @@
 ## 2026-01-13 - Dynamic Will-Change Management
 **Learning:** Even with `visibility: hidden`, elements with permanent `will-change: transform` might retain layer hints in some browser engines or complicate layer tree management.
 **Action:** Dynamically toggle `will-change` via JavaScript: add it immediately before the opening animation, and remove it (`will-change: auto`) after the closing animation finishes.
+
+## 2025-05-23 - Off-Screen Eager Loading Anti-Pattern
+**Learning:** Eager loading images in components below the fold (like `LatestPosts` on the homepage) steals critical bandwidth from LCP candidates (Hero image, Fonts) and delays Total Blocking Time (TBT).
+**Action:** Always verify component placement before applying `loading="eager"`. Pass explicit `lazyLoadImages={true}` props to shared components when used below the fold, even if they are "important" content.
