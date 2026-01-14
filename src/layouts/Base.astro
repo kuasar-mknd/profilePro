@@ -185,6 +185,8 @@ if (postData?.data?.image) {
   <body
     class="bg-pacamara-white dark:bg-pacamara-dark transition-colors duration-300 min-h-screen flex flex-col relative"
   >
+    {/*  🎨 Palette: Global Aria Live Region for theme change announcements */}
+    <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
     <!-- Scroll Sentinel for Back to Top visibility -->
     <div
       id="scroll-sentinel"

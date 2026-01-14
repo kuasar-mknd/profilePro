@@ -33,7 +33,6 @@ import { Icon } from "astro-icon/components";
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
-  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
 <script>
@@ -42,6 +41,7 @@ import { Icon } from "astro-icon/components";
    * - Uses class selector to support multiple instances (desktop/mobile)
    * - Dynamic aria-label and title for better accessibility
    * - Handles View Transitions properly
+   * - Announces changes via a global aria-live region (#theme-live-region)
    */
 
   // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
@@ -62,6 +62,7 @@ import { Icon } from "astro-icon/components";
 
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
+    // 🎨 Palette: Find the single, global live region from the main layout.
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
