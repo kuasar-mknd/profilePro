@@ -16,6 +16,8 @@
 **Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include _both_ `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
 **Prevention:** When enhancing the CSP for mixed content, add `upgrade-insecure-requests` alongside the existing `block-all-mixed-content` directive instead of replacing it.
 
+<<<<<<< HEAD
+
 ## 2025-02-18 - Centralized Validation Logic
 
 **Vulnerability:** Decentralized validation logic (e.g., duplicate email regexes in `ContactForm.astro`, inconsistent URL checks in `SocialIcon` vs `VideoPlayer`) increases the risk of "fix one, miss the other" errors and makes it harder to audit security controls globally.
@@ -33,3 +35,9 @@
 **Vulnerability:** Unsanitized hidden fields (e.g., `botcheck`, `timestamp`) in form submissions.
 **Learning:** Hidden fields are trustless; they can be manipulated by attackers just like visible inputs. Failing to sanitize them creates a potential XSS vector if the backend reflects these values (e.g., in email notifications).
 **Prevention:** Apply input sanitization to ALL string fields in a payload by default, opting-out only for specific fields that have stricter, dedicated validation (like email regex).
+
+## 2026-01-15 - Robust rel Attribute Handling
+
+**Vulnerability:** The client-side `secureLink` function naively appended `noopener noreferrer` if `noopener` was missing. This could lead to missing `noreferrer` if `noopener` was already present (e.g., manually added), or duplicate attributes.
+**Learning:** Checking for the presence of a single security token (like `noopener`) is insufficient when multiple tokens (`noreferrer`) are required for full protection. Attribute manipulation should always parse, tokenize, and reconstruct the attribute value to ensure correctness and avoid duplication.
+**Prevention:** Use token-based attribute manipulation (splitting by space) instead of string concatenation or simple inclusion checks for `rel`, `class`, and other space-separated attributes.
