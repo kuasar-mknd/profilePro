@@ -69,7 +69,7 @@ export function sanitizeInput(str: string): string {
 }
 
 /**
-<<<<<<< HEAD
+
  * 🛡️ Sentinel: Stricter regex to prevent invalid domain formats.
  * Enforces:
  * - Standard email structure
