@@ -59,3 +59,34 @@ export function sanitizeInput(str: string): string {
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
+
+/**
+ * Validates a URL to ensure it uses a safe protocol.
+ * Allowed protocols: http, https, mailto, tel.
+ * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
+ *
+ * @param url - The URL to validate
+ * @returns The original URL if safe, or 'about:blank' if unsafe.
+ */
+export function sanitizeUrl(url: string): string {
+  if (!url) return "about:blank";
+
+  const trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
+    return "about:blank";
+  }
+
+  // Allow relative paths (absolute path /, anchor #, query ?)
+  if (/^[\/#?]/.test(trimmedUrl)) {
+    return trimmedUrl;
+  }
+
+  // Whitelist schemes
+  if (/^(?:https?|mailto|tel):/i.test(trimmedUrl)) {
+    return trimmedUrl;
+  }
+
+  return "about:blank";
+}

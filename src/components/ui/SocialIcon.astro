@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { sanitizeUrl } from "../../utils/security";
 
 interface Props {
   icon: string;
@@ -10,8 +11,8 @@ interface Props {
 const { icon, url, label } = Astro.props;
 
 // 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
-// Allow http, https, mailto, and relative paths (/)
-const safeUrl = /^(https?:\/\/|mailto:|\/)/i.test(url) ? url : "#";
+// Allow http, https, mailto, tel, relative paths (/) and anchors (#)
+const safeUrl = sanitizeUrl(url);
 
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
