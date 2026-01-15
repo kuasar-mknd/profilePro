@@ -22,6 +22,12 @@
 **Learning:** Moving regex patterns (Email, YouTube ID, Vimeo ID) and validation functions (`isValidEmail`, `isValidUrl`) to a shared utility (`src/utils/security.ts`) ensures consistency across both client-side and server-side contexts. This also allows for easier upgrades to regex patterns if ReDoS or other vulnerabilities are discovered.
 **Prevention:** Always define validation rules in `src/utils/security.ts` and import them, rather than re-writing regexes inline.
 
+## 2025-02-18 - Standardized JSON Injection Sanitization
+
+**Vulnerability:** Inconsistent manual sanitization of JSON-LD data in Astro components (`JSON.stringify(data).replace(/</g, "\\u003c")`) increases the risk of XSS if the replacement is omitted or implemented incorrectly in future components.
+**Learning:** While individual components implemented the fix correctly, the lack of centralization meant new components could easily miss this critical security step. "Don't Repeat Yourself" (DRY) is a security feature.
+**Prevention:** Centralized the logic in `src/utils/security.ts` as `safeJson`. Enforced its usage across `LocalBusinessSchema`, `SeoHead`, and `Breadcrumbs`. Future code reviews should look for manual JSON injection and require `safeJson`.
+
 ## 2025-10-26 - Hidden Field Sanitization
 
 **Vulnerability:** Unsanitized hidden fields (e.g., `botcheck`, `timestamp`) in form submissions.
