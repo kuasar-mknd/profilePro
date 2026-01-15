@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+
 ## 2024-05-23 - Centralized Security Logic
 
 **Vulnerability:** JSON-LD injection vulnerability where unescaped `<` characters could allow script injection.
@@ -41,3 +43,9 @@
 **Vulnerability:** The client-side `secureLink` function naively appended `noopener noreferrer` if `noopener` was missing. This could lead to missing `noreferrer` if `noopener` was already present (e.g., manually added), or duplicate attributes.
 **Learning:** Checking for the presence of a single security token (like `noopener`) is insufficient when multiple tokens (`noreferrer`) are required for full protection. Attribute manipulation should always parse, tokenize, and reconstruct the attribute value to ensure correctness and avoid duplication.
 **Prevention:** Use token-based attribute manipulation (splitting by space) instead of string concatenation or simple inclusion checks for `rel`, `class`, and other space-separated attributes.
+
+## 2025-02-18 - JSON Injection in JS Context
+
+**Vulnerability:** JavaScript string literals do not support U+2028 (Line Separator) and U+2029 (Paragraph Separator), but JSON does.
+**Learning:** Using JSON.stringify to inject data into a script tag can cause syntax errors if these characters are present.
+**Prevention:** Explicitly replace \u2028 and \u2029 with their escaped unicode sequences when serializing JSON for JS contexts.
