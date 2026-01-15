@@ -37,9 +37,24 @@ interface Props {
 }
 
 const { page, allTags } = Astro.props;
+
+import { getImage } from "astro:assets";
+
+// ⚡ Bolt: Preload LCP image for the first project card
+let lcpImage = null;
+if (page.data.length > 0) {
+  const firstPost = page.data[0];
+  if (firstPost.data.image) {
+    lcpImage = await getImage({
+      src: firstPost.data.image,
+      width: 800, // Matches the size used in Post.astro for 'bento-item-large' or standard
+      format: "avif",
+    });
+  }
+}
 ---
 
-<Base>
+<Base lcpImage={lcpImage?.src}>
   <section class="container mx-auto max-w-7xl px-7 pt-10 pb-20">
     <ScrollReveal class="text-center mb-10">
       <Breadcrumbs
