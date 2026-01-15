@@ -74,7 +74,7 @@ const services = [
     >
       {
         services.map((service, index) => (
-          <li class="h-full">
+          <li class="h-full service-item">
             <ScrollReveal delay={0.1 * index} class="h-full">
               <TiltCard
                 class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300 cursor-default`}
@@ -120,3 +120,15 @@ const services = [
     </ScrollReveal>
   </div>
 </section>
+
+<style>
+  /* ⚡ Bolt: Mobile Rendering Optimization
+     Skip rendering off-screen service items on mobile to improve scrolling performance.
+  */
+  @media (max-width: 768px) {
+    .service-item {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 300px; /* Approximate height of card */
+    }
+  }
+</style>
