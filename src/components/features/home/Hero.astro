@@ -21,7 +21,6 @@ function shuffle(array: any[]) {
 }
 
 const slides = shuffle([...projectImages]).slice(0, 15);
-
 // ⚡ Bolt: Optimize carousel images
 // Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
