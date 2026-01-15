@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { safeJson } from "../../utils/security";
 
 interface Props {
   items: {
@@ -7,8 +8,6 @@ interface Props {
     href?: string;
   }[];
 }
-
-import { safeJson } from "../../utils/security";
 
 const { items } = Astro.props;
 
