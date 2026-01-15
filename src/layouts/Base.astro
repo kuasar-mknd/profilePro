@@ -470,11 +470,12 @@ if (postData?.data?.image) {
         if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
           return;
 
-        // Security: Add rel="noopener noreferrer"
+        // 🛡️ Sentinel: Robustly ensure both noopener and noreferrer are present
         const rel = link.getAttribute("rel") || "";
-        if (!rel.includes("noopener")) {
-          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
-        }
+        const relValues = new Set(rel.split(" ").filter(Boolean));
+        relValues.add("noopener");
+        relValues.add("noreferrer");
+        link.setAttribute("rel", Array.from(relValues).join(" "));
 
         // Accessibility: Append warning to title
         const title = link.getAttribute("title") || "";
