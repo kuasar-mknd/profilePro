@@ -23,8 +23,13 @@ export function safeJson(value: any): string {
 }
 
 /**
- * Basic client-side input sanitization to prevent simple XSS and injection attacks.
+ * Enhanced client-side input sanitization to prevent XSS and injection attacks.
  * Replaces dangerous characters with their HTML entity equivalents.
+ *
+ * 🛡️ Sentinel Improvement:
+ * - Expanded character map to include braces, brackets, and parentheses.
+ * - This helps prevent logic injection or syntax manipulation if the data
+ *   is improperly handled in a JavaScript context.
  *
  * Note: For server-side rendering or robust XSS prevention, use a dedicated library like 'sanitize-html'.
  * This function is intended for lightweight client-side usage (e.g., form inputs) where the output
