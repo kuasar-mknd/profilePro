@@ -13,5 +13,11 @@
 ## 2024-07-26 - CSP Backward Compatibility
 
 **Vulnerability:** Replacing `block-all-mixed-content` with `upgrade-insecure-requests` improves security for modern browsers but removes mixed-content protection for older browsers that don't support the newer directive.
-**Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include *both* `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
+**Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include _both_ `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
 **Prevention:** When enhancing the CSP for mixed content, add `upgrade-insecure-requests` alongside the existing `block-all-mixed-content` directive instead of replacing it.
+
+## 2025-02-18 - Centralized Validation Logic
+
+**Vulnerability:** Decentralized validation logic (e.g., duplicate email regexes in `ContactForm.astro`, inconsistent URL checks in `SocialIcon` vs `VideoPlayer`) increases the risk of "fix one, miss the other" errors and makes it harder to audit security controls globally.
+**Learning:** Moving regex patterns (Email, YouTube ID, Vimeo ID) and validation functions (`isValidEmail`, `isValidUrl`) to a shared utility (`src/utils/security.ts`) ensures consistency across both client-side and server-side contexts. This also allows for easier upgrades to regex patterns if ReDoS or other vulnerabilities are discovered.
+**Prevention:** Always define validation rules in `src/utils/security.ts` and import them, rather than re-writing regexes inline.
