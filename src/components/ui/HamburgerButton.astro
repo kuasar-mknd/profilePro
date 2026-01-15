@@ -42,13 +42,6 @@
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
-    // ⚡ Bolt: Initially hide the nav to save GPU resources
-    // The class 'invisible' prevents painting while 'translate-x-full' moves it off-screen
-    // We add 'invisible' here if the menu is closed
-    if (button.getAttribute("aria-expanded") !== "true") {
-      nav.classList.add("invisible");
-    }
-
     // 🎨 Palette: Encapsulated close logic for reusability
     const closeMenu = () => {
       document.documentElement.classList.remove("overflow-hidden");
