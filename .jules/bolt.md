@@ -66,3 +66,8 @@
 1. Use `astro:page-load` exclusively (it covers both initial load and swap) and avoid manual function calls that duplicate the logic.
 2. Implement robust cleanup using a singleton pattern or `astro:before-swap` to remove previous listeners before adding new ones.
 3. For heavy optimizations (like `MutationObserver` on `body`), carefully evaluate if the "catch-all" approach is worth the performance cost versus targeted handling in specific components.
+
+## 2026-01-24 - HTML-First Visibility State
+
+**Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
+**Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
