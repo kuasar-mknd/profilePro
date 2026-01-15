@@ -675,12 +675,13 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
         formData.forEach((value, key) => {
           if (allowedFields.has(key) && typeof value === "string") {
-            // 🛡️ Sentinel: Sanitize all fields to prevent hidden field tampering
             if (key === "email") {
-              // Email is strictly validated by regex above, preserving special chars like % and +
+              // 🛡️ Sentinel: Email is strictly validated by regex above which disallows dangerous chars like < >
+              // We skip sanitizeInput here because it escapes '%' which is valid in emails.
               data[key] = value;
             } else {
-              // Sanitize everything else (name, message, subject, access_key, botcheck, timestamp)
+              // 🛡️ Sentinel: Sanitize ALL other fields (name, message, subject) AND hidden fields (botcheck, access_key, timestamp)
+              // This prevents XSS attacks via hidden field manipulation if the backend echoes these values.
               data[key] = sanitizeInput(value);
             }
           }

@@ -21,3 +21,9 @@
 **Vulnerability:** Decentralized validation logic (e.g., duplicate email regexes in `ContactForm.astro`, inconsistent URL checks in `SocialIcon` vs `VideoPlayer`) increases the risk of "fix one, miss the other" errors and makes it harder to audit security controls globally.
 **Learning:** Moving regex patterns (Email, YouTube ID, Vimeo ID) and validation functions (`isValidEmail`, `isValidUrl`) to a shared utility (`src/utils/security.ts`) ensures consistency across both client-side and server-side contexts. This also allows for easier upgrades to regex patterns if ReDoS or other vulnerabilities are discovered.
 **Prevention:** Always define validation rules in `src/utils/security.ts` and import them, rather than re-writing regexes inline.
+
+## 2025-10-26 - Hidden Field Sanitization
+
+**Vulnerability:** Unsanitized hidden fields (e.g., `botcheck`, `timestamp`) in form submissions.
+**Learning:** Hidden fields are trustless; they can be manipulated by attackers just like visible inputs. Failing to sanitize them creates a potential XSS vector if the backend reflects these values (e.g., in email notifications).
+**Prevention:** Apply input sanitization to ALL string fields in a payload by default, opting-out only for specific fields that have stricter, dedicated validation (like email regex).
