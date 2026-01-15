@@ -84,6 +84,12 @@ import { Icon } from "astro-icon/components";
     const isDark = document.documentElement.classList.contains("dark");
     updateLabels(isDark);
 
+    if (liveRegion) {
+      liveRegion.textContent = isDark
+        ? "Thème actuel : sombre"
+        : "Thème actuel : clair";
+    }
+
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
