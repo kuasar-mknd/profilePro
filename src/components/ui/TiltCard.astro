@@ -99,6 +99,9 @@ const {
         // ⚡ Bolt: Remove will-change to save GPU memory when not interacting
         cardStyle.removeProperty("will-change");
 
+        // ⚡ Bolt: Remove layer promotion to save GPU memory
+        cardStyle.willChange = "auto";
+
         bounds = null;
 
         // ⚡ Bolt: Cleanup high-frequency listeners when not needed
