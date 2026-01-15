@@ -28,8 +28,25 @@ const {
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
 // ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
-let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
-if (postData?.data?.image) {
+// Accepts explicit lcpImage prop (string or ImageMetadata) or falls back to postData image
+const { lcpImage: explicitLcpImage } = Astro.props;
+
+let lcpImage = null;
+
+if (explicitLcpImage) {
+  // Use explicit prop if provided (assumes it's already an optimized URL string or ImageMetadata)
+  // If it's a string, use it directly. If it's metadata, optimize it.
+  if (typeof explicitLcpImage === "string") {
+    lcpImage = { src: explicitLcpImage };
+  } else {
+    lcpImage = await getImage({
+      src: explicitLcpImage,
+      width: 1600,
+      format: "avif",
+    });
+  }
+} else if (postData?.data?.image) {
+  // Fallback to project/post image
   lcpImage = await getImage({
     src: postData.data.image,
     width: 1600,
