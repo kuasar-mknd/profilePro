@@ -94,19 +94,21 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 Workflows are defined in `.github/workflows/`:
 
 1.  **CI (`ci.yml`)**:
-    - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
-    - Installs dependencies.
-    - Runs `bun run check` (Lint + Types + Format).
-    - Runs `bun run test:e2e` (Playwright).
-    - Builds the site `bun run build`.
+    - Triggers on Push & PR to `master`.
+    - Sets up Node 20 (required for image optimization tools) & Bun.
+    - Installs dependencies with caching.
+    - Runs quality checks: `bun run check` (Lint + Types + Format).
+    - Runs E2E tests: `bun run test:e2e` (Playwright).
+    - Verifies production build: `bun run build`.
 
 2.  **Security**:
-    - **CodeQL**: Scans JS/TS for vulnerabilities.
-    - **Dependency Review**: Checks for vulnerable packages in PRs.
+    - **CodeQL (`codeql.yml`)**: Scans JS/TS code for vulnerabilities on schedule and PRs.
+    - **Dependency Review (`dependency-review.yml`)**: Checks for vulnerable packages in PRs.
+    - **Dependabot**: Automates dependency updates (weekly).
 
-3.  **Deploy**:
-    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
+3.  **Deploy (`deploy.yml`)**:
+    - Triggers on push to `master`.
+    - Builds the project and deploys to Cloudflare Pages using Wrangler.
 
 ---
 

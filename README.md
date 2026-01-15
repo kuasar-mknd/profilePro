@@ -37,7 +37,7 @@
 Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé). L'utilisation de versions supérieures (ex: Node 22) peut causer des incompatibilités.
     - Si l'erreur persiste :
       ```bash
       rm -rf node_modules bun.lockb
