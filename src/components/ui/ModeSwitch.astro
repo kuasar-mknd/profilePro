@@ -33,7 +33,7 @@ import { Icon } from "astro-icon/components";
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
-  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
+  <span class="sr-only theme-live-region" aria-live="polite"></span>
 </button>
 
 <script>
@@ -62,7 +62,7 @@ import { Icon } from "astro-icon/components";
 
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
-    const liveRegion = document.getElementById("theme-live-region");
+    const liveRegions = document.querySelectorAll(".theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
@@ -73,10 +73,11 @@ import { Icon } from "astro-icon/components";
         if (span) span.textContent = label;
       });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
+      if (announce) {
+        const text = isDark ? "Mode sombre activé" : "Mode clair activé";
+        liveRegions.forEach((region) => {
+          region.textContent = text;
+        });
       }
     };
 
