@@ -24,19 +24,17 @@ describe("Security Utilities", () => {
     });
 
     it("should block javascript: scheme", () => {
-      expect(sanitizeUrl("javascript:alert(1)")).toBe("about:blank");
-      expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("about:blank");
+      expect(sanitizeUrl("javascript:alert(1)")).toBe("");
+      expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
     });
 
     it("should block data: scheme", () => {
-      expect(sanitizeUrl("data:text/html,<script>alert(1)</script>")).toBe(
-        "about:blank",
-      );
+      expect(sanitizeUrl("data:text/html,<script>alert(1)</script>")).toBe("");
     });
 
     it("should block unknown schemes", () => {
-      expect(sanitizeUrl("ftp://example.com")).toBe("about:blank");
-      expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("about:blank");
+      expect(sanitizeUrl("ftp://example.com")).toBe("");
+      expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("");
     });
 
     it("should handle mixed case schemes", () => {
