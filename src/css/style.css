@@ -138,7 +138,7 @@
 
 /* Improved Focus Styles for Accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-pacamara-secondary);
+  outline: 2px solid var(--color-pacamara-accent);
   outline-offset: 2px;
 }
 
@@ -309,6 +309,11 @@
     transform: scale(0.98);
   }
 
+  /* 🎨 Palette: Prose Improvements */
+  .prose blockquote {
+    @apply border-l-pacamara-accent bg-white/5 p-4 rounded-r-lg italic;
+  }
+
   /* External Link Indicator for Prose */
   .prose a[target="_blank"]::after,
   .external-link::after {
@@ -436,7 +441,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-pacamara-secondary/50 rounded-full hover:bg-pacamara-secondary;
+  @apply bg-pacamara-secondary/50 rounded-full hover:bg-pacamara-accent;
 }
 
 /* ENHANCED UX ANIMATIONS */
