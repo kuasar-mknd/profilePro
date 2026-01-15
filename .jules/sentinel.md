@@ -1,51 +1,35 @@
-<<<<<<< HEAD
-
-## 2024-05-23 - Centralized Security Logic
-
-**Vulnerability:** JSON-LD injection vulnerability where unescaped `<` characters could allow script injection.
-**Learning:** Hardcoding security logic (like `.replace(/</g, '\\u003c')`) in multiple places increases the risk of inconsistencies and makes updates difficult. If one instance is missed or implemented incorrectly, the vulnerability remains.
-**Prevention:** Centralize security logic in a dedicated utility (e.g., `src/utils/security.ts`) and use it consistently. This ensures a single source of truth for security controls and simplifies auditing.
-
-## 2025-02-18 - Input Sanitization Enhancement
-
-**Vulnerability:** Limited input sanitization allowed potential injection vectors using parentheses and brackets (e.g., function calls, template syntax).
-**Learning:** Expanding sanitization to include '()', '[]', '{}' provides defense-in-depth against template injection and specific parser exploits without affecting visual rendering in HTML.
-**Prevention:** Use the enhanced 'sanitizeInput' utility for all user-facing inputs.
-
-## 2024-07-26 - CSP Backward Compatibility
-
-**Vulnerability:** Replacing `block-all-mixed-content` with `upgrade-insecure-requests` improves security for modern browsers but removes mixed-content protection for older browsers that don't support the newer directive.
-**Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include _both_ `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
-**Prevention:** When enhancing the CSP for mixed content, add `upgrade-insecure-requests` alongside the existing `block-all-mixed-content` directive instead of replacing it.
-
-<<<<<<< HEAD
-
-## 2025-02-18 - Centralized Validation Logic
-
-**Vulnerability:** Decentralized validation logic (e.g., duplicate email regexes in `ContactForm.astro`, inconsistent URL checks in `SocialIcon` vs `VideoPlayer`) increases the risk of "fix one, miss the other" errors and makes it harder to audit security controls globally.
-**Learning:** Moving regex patterns (Email, YouTube ID, Vimeo ID) and validation functions (`isValidEmail`, `isValidUrl`) to a shared utility (`src/utils/security.ts`) ensures consistency across both client-side and server-side contexts. This also allows for easier upgrades to regex patterns if ReDoS or other vulnerabilities are discovered.
-**Prevention:** Always define validation rules in `src/utils/security.ts` and import them, rather than re-writing regexes inline.
-
-## 2025-02-18 - Standardized JSON Injection Sanitization
-
-**Vulnerability:** Inconsistent manual sanitization of JSON-LD data in Astro components (`JSON.stringify(data).replace(/</g, "\\u003c")`) increases the risk of XSS if the replacement is omitted or implemented incorrectly in future components.
-**Learning:** While individual components implemented the fix correctly, the lack of centralization meant new components could easily miss this critical security step. "Don't Repeat Yourself" (DRY) is a security feature.
-**Prevention:** Centralized the logic in `src/utils/security.ts` as `safeJson`. Enforced its usage across `LocalBusinessSchema`, `SeoHead`, and `Breadcrumbs`. Future code reviews should look for manual JSON injection and require `safeJson`.
-
-## 2025-10-26 - Hidden Field Sanitization
-
-**Vulnerability:** Unsanitized hidden fields (e.g., `botcheck`, `timestamp`) in form submissions.
-**Learning:** Hidden fields are trustless; they can be manipulated by attackers just like visible inputs. Failing to sanitize them creates a potential XSS vector if the backend reflects these values (e.g., in email notifications).
-**Prevention:** Apply input sanitization to ALL string fields in a payload by default, opting-out only for specific fields that have stricter, dedicated validation (like email regex).
-
-## 2026-01-15 - Robust rel Attribute Handling
-
-**Vulnerability:** The client-side `secureLink` function naively appended `noopener noreferrer` if `noopener` was missing. This could lead to missing `noreferrer` if `noopener` was already present (e.g., manually added), or duplicate attributes.
-**Learning:** Checking for the presence of a single security token (like `noopener`) is insufficient when multiple tokens (`noreferrer`) are required for full protection. Attribute manipulation should always parse, tokenize, and reconstruct the attribute value to ensure correctness and avoid duplication.
-**Prevention:** Use token-based attribute manipulation (splitting by space) instead of string concatenation or simple inclusion checks for `rel`, `class`, and other space-separated attributes.
-
 ## 2025-02-18 - JSON Injection in JS Context
 
 **Vulnerability:** JavaScript string literals do not support U+2028 (Line Separator) and U+2029 (Paragraph Separator), but JSON does.
 **Learning:** Using JSON.stringify to inject data into a script tag can cause syntax errors if these characters are present.
 **Prevention:** Explicitly replace \u2028 and \u2029 with their escaped unicode sequences when serializing JSON for JS contexts.
+
+## 2024-05-20 - Use `safeJson` for JSON injection
+
+**Vulnerability:** XSS via JSON injection in `<script>` tags.
+**Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
+**Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2024-05-21 - Hardened CSP and Permissions Policy
+
+**Vulnerability:** Weak default headers allowing potential unauthorized resource loading and feature usage.
+**Learning:** Static sites on Cloudflare Pages can leverage `_headers` for robust security. Explicitly denying permissions like `camera` and `microphone` and restricting `fullscreen` reduces attack surface. `upgrade-insecure-requests` is a simple win.
+**Prevention:** Regularly audit and harden `public/_headers`.
+
+## 2024-05-22 - Missing Expires field in security.txt
+
+**Vulnerability:** RFC 9116 non-compliance.
+**Learning:** The `Expires` field is mandatory in `security.txt` to prevent stale security contacts.
+**Prevention:** Ensure `security.txt` always includes a future `Expires` date.
+
+## 2024-05-23 - Client-side Input Sanitization
+
+**Vulnerability:** Potential for localized XSS or injection if user input is reflected back into the DOM without sanitization.
+**Learning:** Even on static sites, forms (like contact forms) should sanitize input before processing or displaying it (e.g., in success messages or potential future features).
+**Prevention:** Implemented `sanitizeInput` in `src/utils/security.ts` to strip dangerous characters.
+
+## 2024-05-24 - External Link Security
+
+**Vulnerability:** `target="_blank"` links without `rel="noopener noreferrer"` expose the user to reverse tabnabbing attacks.
+**Learning:** Markdown content often generates external links. Automated handling via rehype plugins or script-based injection is more reliable than manual checks.
+**Prevention:** Configured `rehype-external-links` in `astro.config.mjs` and added a client-side script in `Base.astro` to enforce security on dynamic links.
