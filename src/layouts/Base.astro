@@ -546,6 +546,48 @@ if (postData?.data?.image) {
       document.addEventListener("astro:after-swap", secureLinks);
     </script>
     <script>
+      /**
+       * ⚡ Bolt: Global Background Animation Optimizer
+       * Pauses infinite CSS animations (.floating, .floating-slow) when elements
+       * are off-screen to save GPU memory and CPU cycles.
+       */
+      let animationObserver: IntersectionObserver | null = null;
+
+      function initAnimationOptimizer() {
+        // Disconnect previous observer
+        if (animationObserver) {
+          animationObserver.disconnect();
+          animationObserver = null;
+        }
+
+        // Select all floating elements
+        const animatedElements = document.querySelectorAll(
+          ".floating, .floating-slow, .floating-delayed",
+        );
+
+        if (animatedElements.length === 0) return;
+
+        animationObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) {
+                entry.target.classList.add("paused");
+              } else {
+                entry.target.classList.remove("paused");
+              }
+            });
+          },
+          { rootMargin: "200px" }, // Pre-load slightly before viewport
+        );
+
+        animatedElements.forEach((el) => animationObserver?.observe(el));
+      }
+
+      // Initialize on load and after swaps
+      initAnimationOptimizer();
+      document.addEventListener("astro:after-swap", initAnimationOptimizer);
+    </script>
+    <script>
       import { registerSW } from "virtual:pwa-register";
 
       if ("serviceWorker" in navigator) {

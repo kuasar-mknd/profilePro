@@ -36,6 +36,8 @@
 **Learning:** Even with `visibility: hidden`, elements with permanent `will-change: transform` might retain layer hints in some browser engines or complicate layer tree management.
 **Action:** Dynamically toggle `will-change` via JavaScript: add it immediately before the opening animation, and remove it (`will-change: auto`) after the closing animation finishes.
 
+<<<<<<< HEAD
+
 ## 2025-02-20 - Redundant Event Listeners in Component Interactions
 
 **Learning:** When multiple components interact (e.g., Gallery and Lightbox), ensure event handling responsibilities are clearly defined to avoid duplication. I found that `ImageGallery` was adding a `keydown` listener to simulate clicks, while `Lightbox` was _also_ listening for `keydown` globally. This caused double execution of the open logic and unnecessary event listener overhead.
@@ -55,3 +57,8 @@
 
 **Learning:** When implementing infinite scroll by duplicating items, always apply a hard cap (e.g., slice(0, 15)) to the source array. Relying on the natural collection size allows DOM node count to grow unbounded as content is added, degrading performance over time.
 **Action:** Explicitly slice source arrays for purely visual carousels/marquees.
+
+## 2026-02-23 - Infinite Animation GPU Efficiency
+
+**Learning:** Infinite CSS animations (like floating background blobs) continue to consume CPU (style recalc/layout) and GPU memory (compositor layers) even when off-screen, especially if `will-change: transform` is used permanently.
+**Action:** Implement a global `IntersectionObserver` in the layout to automatically toggle a `.paused` class on these elements when they leave the viewport. The `.paused` class forces `animation-play-state: paused` and `will-change: auto`, recovering resources without manual management in every component.
