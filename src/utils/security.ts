@@ -137,3 +137,57 @@ export function isValidUrl(
 
   return /^(https?:\/\/|\/)/i.test(url);
 }
+
+/**
+ * Sanitizes a URL to ensure it uses a safe protocol.
+ * Allowed protocols: http, https, mailto, tel.
+ * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
+ *
+ * @param url - The URL to sanitize
+ * @returns The sanitized URL or an empty string if invalid
+ */
+export function sanitizeUrl(url: string): string {
+  if (!url) return "";
+
+  // Trim whitespace
+  let trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
+    return "about:blank";
+  }
+
+  // Allow relative URLs (starting with / or #)
+  if (
+    trimmedUrl.startsWith("/") ||
+    trimmedUrl.startsWith("#") ||
+    trimmedUrl.startsWith("?")
+  ) {
+    return trimmedUrl;
+  }
+
+  try {
+    // Try parsing as absolute URL
+    const parsed = new URL(trimmedUrl);
+    const protocol = parsed.protocol.toLowerCase();
+
+    // Whitelist of safe protocols
+    if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
+      return trimmedUrl;
+    }
+
+    return ""; // Block other protocols (javascript:, data:, etc.)
+  } catch {
+    // If it fails to parse as absolute URL, it might be a relative path without a leading slash
+    // or a malformed URL.
+    // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
+    // If it contains a colon but is not a recognized protocol, it's likely unsafe.
+    if (!trimmedUrl.includes(":")) {
+      // This could be a relative path like "images/foo.png" or "path/to/page"
+      // We allow these as they are generally safe unless they contain control characters (already checked).
+      return trimmedUrl;
+    }
+
+    return ""; // Block anything else that looks like a protocol but isn't whitelisted
+  }
+}
