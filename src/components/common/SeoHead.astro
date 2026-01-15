@@ -2,7 +2,7 @@
 import config from "../../config.mjs";
 import { safeJson } from "../../utils/security";
 
-const { postData, jsonLd } = Astro.props;
+const { postData, jsonLd, noindex = false } = Astro.props;
 
 const title =
   (postData?.data?.title ? postData.data.title : config.title) +
@@ -23,7 +23,7 @@ const type = postData?.data?.type ? postData.data.type : "website";
 <meta name="title" content={title} />
 {description && <meta name="description" content={description} />}
 <link rel="canonical" href={permalink} />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Geo-targeting for local SEO -->

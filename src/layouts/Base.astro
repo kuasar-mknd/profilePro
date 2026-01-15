@@ -18,7 +18,13 @@ import logo from "../assets/logo.avif";
 // Precompute LCP image URL for preloading
 const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
-const { postData, jsonLd, noPadding = false, lang = "fr" } = Astro.props;
+const {
+  postData,
+  jsonLd,
+  noPadding = false,
+  lang = "fr",
+  noindex = false,
+} = Astro.props;
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
 // ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
@@ -175,7 +181,7 @@ if (postData?.data?.image) {
         document.documentElement.classList.add("dark");
       }
     </script>
-    <SeoHead postData={postData} jsonLd={jsonLd} />
+    <SeoHead postData={postData} jsonLd={jsonLd} noindex={noindex} />
     <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
