@@ -290,7 +290,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   }
 
   .input-glow {
-    will-change: opacity;
+    /* ⚡ Bolt: Removed permanent will-change to save GPU memory.
+       Browser heuristics are sufficient for simple opacity transitions on focus. */
+    /* will-change: opacity; */
   }
 
   /* Button states */
