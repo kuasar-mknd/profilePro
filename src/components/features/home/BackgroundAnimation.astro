@@ -18,7 +18,7 @@
   <!-- Mouse Follower Blob (Subtle) -->
   <div
     id="mouse-blob"
-    class="absolute w-[250px] h-[250px] bg-white/10 dark:bg-white/5 rounded-full blur-[60px] mix-blend-overlay transition-transform duration-100 ease-out opacity-0 will-change-transform translate-z-0"
+    class="absolute w-[250px] h-[250px] bg-white/10 dark:bg-white/5 rounded-full blur-[60px] mix-blend-overlay transition-transform duration-100 ease-out opacity-0"
     style="transform: translate(-50%, -50%);"
   >
   </div>
@@ -33,6 +33,7 @@
    * - RAF throttling for mousemove
    * - Pre-calculated coordinates to avoid layout thrashing (getBoundingClientRect)
    * - Visibility Observer to pause mouse tracking when off-screen
+   * - Dynamic will-change management to save GPU memory when idle
    */
 
   let cleanup: (() => void) | null = null;
@@ -99,11 +100,19 @@
       mouseY = e.pageY - containerTop;
 
       if (!isVisible) {
+        // ⚡ Bolt: Check if resuming from visible state to avoid snap
+        const isResuming = blobStyle.opacity === "1";
+
         isVisible = true;
         blobStyle.opacity = "1";
-        // Initialize position to prevent jump
-        blobX = mouseX;
-        blobY = mouseY;
+        // ⚡ Bolt: Optimize Memory - Only promote layer when actually animating
+        blobStyle.willChange = "transform";
+
+        // Initialize position to prevent jump only if appearing from hidden
+        if (!isResuming) {
+          blobX = mouseX;
+          blobY = mouseY;
+        }
         animate();
       }
     };
@@ -126,6 +135,8 @@
       // Stop loop if close enough to target
       if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
         isVisible = false;
+        // ⚡ Bolt: Optimize Memory - Release GPU layer when idle
+        blobStyle.willChange = "auto";
         animationFrameId = null;
         return;
       }
