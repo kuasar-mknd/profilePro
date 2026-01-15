@@ -206,7 +206,6 @@
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
-    will-change: transform, opacity;
   }
 
   .lightbox[aria-hidden="false"] .lightbox-image {
@@ -471,6 +470,8 @@
       if (trigger) this.triggerElement = trigger;
       this.currentIndex = index;
       this.updateImage();
+      // ⚡ Bolt: Promote layer for smooth opening animation
+      this.image.style.willChange = "transform, opacity";
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
 
@@ -489,6 +490,14 @@
     public close() {
       this.lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+
+      // ⚡ Bolt: Cleanup layer promotion after transition completes (300ms)
+      setTimeout(() => {
+        // Only remove if still closed (prevents race condition if reopened quickly)
+        if (this.lightbox.getAttribute("aria-hidden") === "true") {
+          this.image.style.willChange = "auto";
+        }
+      }, 300);
 
       // 🎨 Palette: Restore access to main content
       this.toggleInert(false);
