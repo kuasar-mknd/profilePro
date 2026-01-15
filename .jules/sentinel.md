@@ -15,3 +15,9 @@
 **Vulnerability:** Replacing `block-all-mixed-content` with `upgrade-insecure-requests` improves security for modern browsers but removes mixed-content protection for older browsers that don't support the newer directive.
 **Learning:** For defense-in-depth and maximum browser compatibility, the best practice is to include *both* `block-all-mixed-content` and `upgrade-insecure-requests` in the Content Security Policy. Modern browsers will prioritize `upgrade-insecure-requests`, while older browsers will fall back to the `block-all-mixed-content` directive.
 **Prevention:** When enhancing the CSP for mixed content, add `upgrade-insecure-requests` alongside the existing `block-all-mixed-content` directive instead of replacing it.
+
+## 2026-01-15 - Robust rel Attribute Handling
+
+**Vulnerability:** The client-side `secureLink` function naively appended `noopener noreferrer` if `noopener` was missing. This could lead to missing `noreferrer` if `noopener` was already present (e.g., manually added), or duplicate attributes.
+**Learning:** Checking for the presence of a single security token (like `noopener`) is insufficient when multiple tokens (`noreferrer`) are required for full protection. Attribute manipulation should always parse, tokenize, and reconstruct the attribute value to ensure correctness and avoid duplication.
+**Prevention:** Use token-based attribute manipulation (splitting by space) instead of string concatenation or simple inclusion checks for `rel`, `class`, and other space-separated attributes.

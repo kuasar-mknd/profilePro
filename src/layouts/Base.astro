@@ -470,10 +470,23 @@ if (postData?.data?.image) {
         if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
           return;
 
-        // Security: Add rel="noopener noreferrer"
+        // Security: Ensure rel="noopener noreferrer"
+        // 🛡️ Sentinel: Robustly handle rel attributes to prevent Tabnabbing and leak of Referrer
         const rel = link.getAttribute("rel") || "";
-        if (!rel.includes("noopener")) {
-          link.setAttribute("rel", (rel + " noopener noreferrer").trim());
+        const parts = rel.toLowerCase().split(/\s+/).filter(Boolean);
+        let changed = false;
+
+        if (!parts.includes("noopener")) {
+          parts.push("noopener");
+          changed = true;
+        }
+        if (!parts.includes("noreferrer")) {
+          parts.push("noreferrer");
+          changed = true;
+        }
+
+        if (changed) {
+          link.setAttribute("rel", parts.join(" "));
         }
 
         // Accessibility: Append warning to title
