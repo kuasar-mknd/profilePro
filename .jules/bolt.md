@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-
 # Bolt's Journal ⚡
 
 ## Performance Patterns
@@ -36,8 +33,6 @@
 **Learning:** Even with `visibility: hidden`, elements with permanent `will-change: transform` might retain layer hints in some browser engines or complicate layer tree management.
 **Action:** Dynamically toggle `will-change` via JavaScript: add it immediately before the opening animation, and remove it (`will-change: auto`) after the closing animation finishes.
 
-<<<<<<< HEAD
-
 ## 2025-02-20 - Redundant Event Listeners in Component Interactions
 
 **Learning:** When multiple components interact (e.g., Gallery and Lightbox), ensure event handling responsibilities are clearly defined to avoid duplication. I found that `ImageGallery` was adding a `keydown` listener to simulate clicks, while `Lightbox` was _also_ listening for `keydown` globally. This caused double execution of the open logic and unnecessary event listener overhead.
@@ -62,3 +57,12 @@
 
 **Learning:** Infinite CSS animations (like floating background blobs) continue to consume CPU (style recalc/layout) and GPU memory (compositor layers) even when off-screen, especially if `will-change: transform` is used permanently.
 **Action:** Implement a global `IntersectionObserver` in the layout to automatically toggle a `.paused` class on these elements when they leave the viewport. The `.paused` class forces `animation-play-state: paused` and `will-change: auto`, recovering resources without manual management in every component.
+
+## 2024-05-23 - Inline Scripts and View Transitions Memory Leaks
+
+**Learning:** In Astro with ClientRouter (View Transitions), scripts inside `<body>` without `is:inline` (which are processed as modules) or with `is:inline` (raw) are re-executed on every navigation if they are part of the swapped content. This leads to stacking event listeners (e.g., `document.addEventListener`) if cleanup logic is not implemented.
+**Action:** When initializing global listeners in such scripts, either:
+
+1. Use `astro:page-load` exclusively (it covers both initial load and swap) and avoid manual function calls that duplicate the logic.
+2. Implement robust cleanup using a singleton pattern or `astro:before-swap` to remove previous listeners before adding new ones.
+3. For heavy optimizations (like `MutationObserver` on `body`), carefully evaluate if the "catch-all" approach is worth the performance cost versus targeted handling in specific components.
