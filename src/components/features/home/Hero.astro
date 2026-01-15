@@ -313,6 +313,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   @media (pointer: coarse) {
     .touch-carousel {
       cursor: grab;
+      touch-action: pan-y pinch-zoom; /* ⚡ Bolt: Optimize touch handling */
     }
 
     .touch-carousel:active {
