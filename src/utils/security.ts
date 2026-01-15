@@ -59,3 +59,43 @@ export function sanitizeInput(str: string): string {
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
+
+/**
+ * Sanitizes a URL to ensure it uses a safe protocol.
+ * Only allows http, https, mailto, tel, and relative URLs.
+ *
+ * @param url - The URL to sanitize
+ * @returns The sanitized URL or an empty string if invalid
+ */
+export function sanitizeUrl(url: string): string {
+  if (!url) return "";
+
+  // Trim whitespace
+  const trimmed = url.trim();
+
+  // Allow relative URLs (starting with / or #)
+  if (trimmed.startsWith("/") || trimmed.startsWith("#")) {
+    return trimmed;
+  }
+
+  try {
+    // Try parsing as absolute URL
+    const parsed = new URL(trimmed);
+    const protocol = parsed.protocol.toLowerCase();
+
+    // Whitelist of safe protocols
+    if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
+      return trimmed;
+    }
+
+    return ""; // Block other protocols (javascript:, data:, etc.)
+  } catch {
+    // If it fails to parse as absolute URL, it might be relative (e.g. "images/foo.png")
+    // Check for dangerous characters that might indicate a malformed protocol
+    if (!trimmed.includes(":")) {
+      return trimmed;
+    }
+
+    return "";
+  }
+}

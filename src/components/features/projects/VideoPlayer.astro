@@ -1,6 +1,7 @@
 ---
 const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
+import { sanitizeUrl } from "../../../utils/security";
 
 // Extract video ID and provider
 const getVideoDetails = (url: string) => {
@@ -42,9 +43,9 @@ let posterUrl: string | null = null;
 // This avoids external requests to YouTube/Vimeo APIs during build and improves privacy/performance
 if (poster) {
   // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
-  // Allow http, https, and relative paths (starting with /)
-  if (/^(https?:\/\/|\/)/i.test(poster)) {
-    posterUrl = poster;
+  const sanitized = sanitizeUrl(poster);
+  if (sanitized) {
+    posterUrl = sanitized;
   }
 }
 
@@ -237,7 +238,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
         import("plyr/dist/plyr.css");
         // @ts-ignore
         import("plyr");
-      } catch (e) {
+      } catch {
         // Silent failure is acceptable for prefetch
       }
 
