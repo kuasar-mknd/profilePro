@@ -1,45 +1,20 @@
 # API Documentation
 
-> **Note:** As a static site (SSG), this project does not expose a dynamic REST API. However, it generates static feed endpoints at build time.
+> **Note:** As a static site (SSG), this project does not have a traditional dynamic backend API. However, it exposes the following static endpoints.
 
-## 📡 Public Endpoints
+## 📡 Static Endpoints
 
-These endpoints are generated during the build process and are available publicly.
+### RSS Feed
+- **URL**: `/rss.xml`
+- **Method**: `GET`
+- **Description**: Standard RSS 2.0 feed for blog posts.
+- **Format**: XML
 
-### 1. RSS Feed
+### Sitemap
+- **URL**: `/sitemap-index.xml` (and `/sitemap-0.xml`)
+- **Method**: `GET`
+- **Description**: XML Sitemap for search engine indexing.
+- **Format**: XML
 
-Provides the latest projects/posts in XML format.
-
-- **URL:** `/rss.xml`
-- **Method:** `GET`
-- **Format:** RSS 2.0 (XML)
-- **Usage:** Used by RSS readers and content aggregators.
-- **Content:** Title, Description, Link, PubDate for each project.
-
-**Example Response:**
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>Samuel Dulex | Connecter, Communiquer, Captiver</title>
-    <description>Créateur de contenu visuel...</description>
-    <link>https://portfolio.kuasar.xyz/</link>
-    <item>
-      <title>Project Title</title>
-      <link>https://portfolio.kuasar.xyz/project/project-slug/</link>
-      <description>Project description...</description>
-      <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
-    </item>
-  </channel>
-</rss>
-```
-
-### 2. Sitemap Index
-
-Standard sitemap index for search engines.
-
-- **URL:** `/sitemap-index.xml`
-- **Method:** `GET`
-- **Format:** XML
-- **Usage:** SEO / Search Engine Crawlers.
+## 🔐 Authentication
+No authentication is required for these public endpoints.

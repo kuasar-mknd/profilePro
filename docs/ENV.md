@@ -15,6 +15,18 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 
 **NEVER** commit your `.env` file. Use `.env.example` as a template.
 
+### Access in Code
+
+Variables are accessed via `import.meta.env` (Astro standard) rather than `process.env`.
+
+```typescript
+// Correct
+const key = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+
+// Incorrect
+const key = process.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+```
+
 ### `.env.example` content:
 
 ```bash
