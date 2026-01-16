@@ -402,6 +402,46 @@ if (entry.data.type === "video" && entry.data.image) {
         addCopyButtons();
         // Re-run on navigation
         document.addEventListener("astro:after-swap", addCopyButtons);
+
+        /**
+         * 🎨 Palette: Add anchor links to headings
+         * Improves shareability of content sections
+         */
+        function addAnchorLinks() {
+          const headings = document.querySelectorAll(
+            ".prose h2, .prose h3, .prose h4",
+          );
+
+          headings.forEach((heading) => {
+            // Guard: check if anchor already exists
+            if (heading.querySelector(".anchor-link")) return;
+
+            const id =
+              heading.id ||
+              heading.textContent
+                ?.toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/(^-|-$)/g, "");
+
+            if (!id) return;
+
+            heading.id = id;
+            heading.classList.add("group", "relative");
+
+            const anchor = document.createElement("a");
+            anchor.className =
+              "anchor-link absolute -left-8 top-1/2 -translate-y-1/2 p-1.5 text-pacamara-accent opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-200 hidden md:flex items-center justify-center rounded-md hover:bg-pacamara-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent";
+            anchor.href = `#${id}`;
+            anchor.ariaLabel = "Lien vers cette section";
+            anchor.innerHTML =
+              '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
+
+            heading.prepend(anchor);
+          });
+        }
+
+        addAnchorLinks();
+        document.addEventListener("astro:after-swap", addAnchorLinks);
       </script>
     </div>
   </article>
