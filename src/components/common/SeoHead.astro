@@ -24,7 +24,6 @@ const type = postData?.data?.type ? postData.data.type : "website";
 {description && <meta name="description" content={description} />}
 <link rel="canonical" href={permalink} />
 <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
-<meta name="generator" content={Astro.generator} />
 
 <!-- Geo-targeting for local SEO -->
 <meta name="geo.region" content="CH-VD" />
