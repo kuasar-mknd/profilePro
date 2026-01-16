@@ -34,7 +34,8 @@ import { Icon } from "astro-icon/components";
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
-  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
+  <span class="theme-live-region sr-only" aria-live="polite" aria-atomic="true"
+  ></span>
 </button>
 
 <script>
@@ -42,20 +43,15 @@ import { Icon } from "astro-icon/components";
    * 🎨 Palette: Theme Switcher UX Improvement
    * - Uses class selector to support multiple instances (desktop/mobile)
    * - Dynamic aria-label and title for better accessibility
+   * - Announces initial state for screen readers
    * - Handles View Transitions properly
    */
 
-  // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
-  // This prevents memory leaks and duplicate listeners
   const handleThemeToggle = (e: Event) => {
     e.preventDefault();
-    const element = document.documentElement;
-    element.classList.toggle("dark");
-
-    const isDarkNow = element.classList.contains("dark");
+    document.documentElement.classList.toggle("dark");
+    const isDarkNow = document.documentElement.classList.contains("dark");
     localStorage.setItem("theme", isDarkNow ? "dark" : "light");
-
-    // Dispatch custom event so all instances can update their UI
     window.dispatchEvent(
       new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
     );
@@ -63,36 +59,42 @@ import { Icon } from "astro-icon/components";
 
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
-    const liveRegion = document.getElementById("theme-live-region");
+    const liveRegions = document.querySelectorAll(".theme-live-region");
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+    const updateUI = (isDark: boolean, isInitialLoad = false) => {
+      const newLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        btn.setAttribute("aria-label", newLabel);
+        btn.setAttribute("title", newLabel);
       });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
+      // Announce state to screen readers
+      if (isInitialLoad) {
+        liveRegions.forEach((region) => {
+          region.textContent = isDark
+            ? "Thème actuel: Sombre"
+            : "Thème actuel: Clair";
+        });
+      } else {
+        liveRegions.forEach((region) => {
+          region.textContent = isDark
+            ? "Mode sombre activé"
+            : "Mode clair activé";
+        });
       }
     };
 
-    // Initialize state
-    const isDark = document.documentElement.classList.contains("dark");
-    updateLabels(isDark);
+    const handleThemeChange = (e: CustomEvent) => {
+      updateUI(e.detail.isDark);
+    };
 
-    // ⚡ Bolt: Listen for global theme changes to sync all buttons
-    window.removeEventListener("theme-change", handleThemeChange);
-    window.addEventListener("theme-change", handleThemeChange);
+    // Set initial state
+    updateUI(document.documentElement.classList.contains("dark"), true);
 
-    function handleThemeChange(e: Event) {
-      const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
+    // Add event listeners
+    window.addEventListener("theme-change", handleThemeChange as EventListener);
 
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
