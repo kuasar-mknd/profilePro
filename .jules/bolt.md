@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-03-01 - LCP vs. Carousel Priority
+
+**Learning:** In a Hero section, if a decorative carousel (even if visually appealing) marks its images with `fetchpriority="high"`, it competes directly with the actual LCP element (e.g., the Logo or Main Heading) for bandwidth. This can degrade the LCP metric significantly.
+**Action:** Ensure only the *single* most critical LCP element has `fetchpriority="high"`. Secondary decorative elements, even if above the fold or starting an animation immediately, should use `fetchpriority="low"` or auto, and limit `loading="eager"` usage.
