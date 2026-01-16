@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-02-19 - Duplicate IDs in Reused Components
+**Learning:** Hardcoding `id` attributes in components (e.g., for `aria-live` regions) causes WCAG 4.1.1 violations when the component is reused (e.g., in both desktop and mobile headers).
+**Action:** Use classes for JS selection and ensure IDs used for ARIA relationships are either unique per instance (via props/generation) or global singletons managed outside the reusable component.
