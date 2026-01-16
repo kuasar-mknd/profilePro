@@ -579,7 +579,7 @@
       return el.dataset.lightboxSrc || el.currentSrc || el.src;
     }
 
-    private preloadImage(src: string) {
+    private async preloadImage(src: string) {
       // ⚡ Bolt: Optimization - Check both validity and duplication
       if (!src || this.preloadedUrls.has(src)) return;
       this.preloadedUrls.add(src);
@@ -598,6 +598,13 @@
         // re-triggering the request even if the image object is dropped from our GC hold.
         // The browser cache should handle the actual asset if needed again.
         this.preloadCache.shift();
+      }
+
+      // ⚡ Bolt: Force decode off-main-thread to prevent jank when swapping
+      try {
+        await img.decode();
+      } catch (e) {
+        // Ignore decode errors (e.g. invalid image), browser will handle display error
       }
     }
 
