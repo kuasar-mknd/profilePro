@@ -34,6 +34,28 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 ---
 
+## 🛡️ Security Architecture
+
+The application implements a "Defense in Depth" strategy for a static site.
+
+### 1. Input Sanitization
+Located in `src/utils/security.ts`:
+- **`sanitizeInput()`**: Strips control characters and encodes HTML entities to prevent XSS.
+- **`sanitizeUrl()`**: Enforces a strict whitelist of protocols (`http`, `https`, `mailto`, `tel`) and blocks `javascript:` URIs.
+- **`safeJson()`**: Safely serializes JSON for injection into HTML contexts, escaping characters like `<` and `>` to prevent script injection.
+
+### 2. Form Security (`ContactForm.astro`)
+- **Honeypot**: A hidden field (`_honey`) traps bots.
+- **Time-based Challenge**: Rejects submissions that occur too quickly (bot behavior).
+- **Client-Side Validation**: Strict email and input pattern matching before submission.
+
+### 3. Build & Deploy Security
+- **CodeQL**: Automated SAST scanning on every push.
+- **Dependency Review**: Prevents introduction of vulnerable packages via PRs.
+- **CSP (Content Security Policy)**: Generated at build time to restrict script sources (see `scripts/generate-csp.mjs` if applicable, or headers config).
+
+---
+
 ## ⚡ Asset Optimization Pipeline
 
 This project implements a custom, high-performance asset pipeline to ensure top-tier Core Web Vitals.
