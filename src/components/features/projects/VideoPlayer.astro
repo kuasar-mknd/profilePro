@@ -137,7 +137,10 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
         />
       </>
     ) : (
-      <div class="flex items-center justify-center h-full text-white/50">
+      <div
+        class="flex items-center justify-center h-full text-white/50"
+        role="status"
+      >
         Vidéo non disponible
       </div>
     )
