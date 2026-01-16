@@ -533,9 +533,9 @@ if (postData?.data?.image) {
           animationObserver = null;
         }
 
-        // Select all floating elements
+        // Select all floating elements and infinite scroll tracks
         const animatedElements = document.querySelectorAll(
-          ".floating, .floating-slow, .floating-delayed",
+          ".floating, .floating-slow, .floating-delayed, .infinite-scroll",
         );
 
         if (animatedElements.length === 0) return;
