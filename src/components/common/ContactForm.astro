@@ -635,7 +635,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
       const submitTimestamp = Date.now();
-      if (submitTimestamp - loadTimestamp < 2000) {
+
+      // 🛡️ Sentinel: Fail securely - block if timestamp is invalid (NaN) or too recent
+      if (isNaN(loadTimestamp) || submitTimestamp - loadTimestamp < 2000) {
         // 2 seconds threshold
         showError(
           "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
