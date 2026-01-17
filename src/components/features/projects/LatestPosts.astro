@@ -88,7 +88,8 @@ const remainingCount = allPosts.length - postLimit;
     <ScrollReveal delay={0.1 * posts.length}>
       <a
         href="/project"
-        class="group relative h-full min-h-[280px] rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 text-center bg-linear-to-br from-pacamara-secondary/10 via-pacamara-accent/10 to-pacamara-secondary/10 dark:from-pacamara-secondary/20 dark:via-pacamara-accent/20 dark:to-pacamara-secondary/20 border-2 border-dashed border-pacamara-secondary/30 dark:border-white/20 hover:border-pacamara-accent hover:bg-pacamara-accent/5 transition-all duration-500 card-glow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        aria-label={`Voir tous les projets. ${remainingCount > 0 ? "Plus de " + remainingCount + " autres réalisations à découvrir." : "Explorer mon portfolio."}`}
+        class="group relative h-full min-h-[280px] rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 text-center bg-linear-to-br from-pacamara-secondary/10 via-pacamara-accent/10 to-pacamara-secondary/10 dark:from-pacamara-secondary/20 dark:via-pacamara-accent/20 dark:to-pacamara-secondary/20 border-2 border-dashed border-pacamara-secondary/30 dark:border-white/20 hover:border-pacamara-accent hover:bg-pacamara-accent/5 transition-all duration-500 card-glow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
       >
         <div
           class="absolute inset-0 bg-linear-to-br from-pacamara-accent/0 to-pacamara-secondary/0 group-hover:from-pacamara-accent/10 group-hover:to-pacamara-secondary/10 transition-all duration-500"
@@ -98,6 +99,7 @@ const remainingCount = allPosts.length - postLimit;
         <div class="relative z-10">
           <div
             class="w-16 h-16 mx-auto mb-4 rounded-full bg-pacamara-accent/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 group-hover:bg-pacamara-accent/20 transition-all duration-300"
+            aria-hidden="true"
           >
             <Icon
               name="mdi:folder-multiple-image"
@@ -126,6 +128,7 @@ const remainingCount = allPosts.length - postLimit;
             <Icon
               name="mdi:arrow-right"
               class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+              aria-hidden="true"
             />
           </div>
         </div>
