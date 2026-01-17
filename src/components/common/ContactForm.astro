@@ -635,7 +635,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
       const submitTimestamp = Date.now();
-      if (submitTimestamp - loadTimestamp < 2000) {
+      // 🛡️ Sentinel: Check for NaN to prevent logic bypass
+      if (isNaN(loadTimestamp) || submitTimestamp - loadTimestamp < 2000) {
         // 2 seconds threshold
         showError(
           "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
@@ -646,14 +647,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const lastSubmission = localStorage.getItem(
         "contact_form_last_submission",
       );
-      if (
-        lastSubmission &&
-        Date.now() - parseInt(lastSubmission, 10) < 120000
-      ) {
-        showError(
-          "Veuillez attendre quelques minutes avant de renvoyer un message.",
-        );
-        return;
+      if (lastSubmission) {
+        const lastTime = parseInt(lastSubmission, 10);
+        if (isNaN(lastTime) || Date.now() - lastTime < 120000) {
+          showError(
+            "Veuillez attendre quelques minutes avant de renvoyer un message.",
+          );
+          return;
+        }
       }
 
       if (submitButton) {
