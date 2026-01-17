@@ -426,8 +426,12 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             track.style.animationPlayState = "running";
+            // ⚡ Bolt: Hint browser for layer promotion only when visible
+            track.style.willChange = "transform";
           } else {
             track.style.animationPlayState = "paused";
+            // ⚡ Bolt: Release GPU memory when off-screen
+            track.style.willChange = "auto";
           }
         });
       },
@@ -439,6 +443,33 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initCarouselObserver();
   document.addEventListener("astro:page-load", initCarouselObserver);
+
+  /**
+   * ⚡ Bolt: Cleanup Letter Animation Resources
+   * Removes 'will-change' hint after the hero title animation completes
+   * to free up GPU memory.
+   */
+  function initLetterAnimationCleanup() {
+    const letters = document.querySelectorAll(".letter-animate");
+    if (letters.length === 0) return;
+
+    // Cleanup function to remove will-change from ALL letters
+    const cleanup = () => {
+      letters.forEach((el) => {
+        (el as HTMLElement).style.willChange = "auto";
+      });
+    };
+
+    // Listen for animation end on the last letter (longest delay + duration)
+    // Safe fallback timeout (0.55s delay + 0.6s duration + buffer)
+    setTimeout(cleanup, 2000);
+
+    // Also attach to last letter for precise timing
+    const lastLetter = letters[letters.length - 1];
+    lastLetter.addEventListener("animationend", cleanup, { once: true });
+  }
+
+  document.addEventListener("astro:page-load", initLetterAnimationCleanup);
 
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
