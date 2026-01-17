@@ -1,45 +1,37 @@
 # API Documentation
 
-> **Note:** As a static site (SSG), this project does not expose a dynamic REST API. However, it generates static feed endpoints at build time.
+The site is statically generated, but it exposes content via standard feed formats.
 
-## 📡 Public Endpoints
+## Endpoints
 
-These endpoints are generated during the build process and are available publicly.
+### RSS Feed
+- **URL**: `/rss.xml`
+- **Format**: XML (RSS 2.0)
+- **Description**: Contains the latest projects and posts.
+- **Generation**: Built at compile time via `src/pages/rss.xml.js`.
 
-### 1. RSS Feed
+### Sitemap
+- **URL**: `/sitemap-index.xml`
+- **Format**: XML (Sitemap Protocol)
+- **Description**: Index of all crawlable pages.
+- **Generation**: Built at compile time via `@astrojs/sitemap`.
 
-Provides the latest projects/posts in XML format.
+### Robots.txt
+- **URL**: `/robots.txt`
+- **Format**: Text
+- **Description**: Crawling rules.
+- **Generation**: Built at compile time via `src/pages/robots.txt.ts`.
 
-- **URL:** `/rss.xml`
-- **Method:** `GET`
-- **Format:** RSS 2.0 (XML)
-- **Usage:** Used by RSS readers and content aggregators.
-- **Content:** Title, Description, Link, PubDate for each project.
+## Client-Side Integrations
 
-**Example Response:**
+### Web3Forms (Contact)
+- **Endpoint**: `https://api.web3forms.com/submit`
+- **Method**: POST
+- **Payload**: JSON
+- **Auth**: Requires `PUBLIC_WEB3FORMS_ACCESS_KEY`.
+- **Note**: This is an external service used by the `ContactForm` component.
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>Samuel Dulex | Connecter, Communiquer, Captiver</title>
-    <description>Créateur de contenu visuel...</description>
-    <link>https://portfolio.kuasar.xyz/</link>
-    <item>
-      <title>Project Title</title>
-      <link>https://portfolio.kuasar.xyz/project/project-slug/</link>
-      <description>Project description...</description>
-      <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
-    </item>
-  </channel>
-</rss>
-```
-
-### 2. Sitemap Index
-
-Standard sitemap index for search engines.
-
-- **URL:** `/sitemap-index.xml`
-- **Method:** `GET`
-- **Format:** XML
-- **Usage:** SEO / Search Engine Crawlers.
+### Cloudflare Web Analytics
+- **Endpoint**: `https://static.cloudflareinsights.com/beacon.min.js`
+- **Method**: POST (Beacon)
+- **Auth**: Requires `PUBLIC_CF_ANALYTICS_TOKEN`.

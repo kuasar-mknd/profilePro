@@ -1,38 +1,24 @@
-# AI Integration Documentation
+# AI Usage Policy
 
-> **Status:** No active AI integration.
-> **Plan:** Future integration for project summarization.
+## Overview
 
-## 🤖 Models & Configuration
+This project prioritizes human creativity and coding. AI tools are used strictly as assistants for optimization, analysis, and repetitive tasks.
 
-Currently, this project does not integrate live AI models. The roadmap includes plans for a local AI model to summarize project descriptions.
+## Models & Configuration
 
-### Future Configuration
+- **Current Status**: No external AI models (OpenAI, Anthropic, etc.) are integrated into the runtime of the application. The site is statically generated.
+- **Development**: AI coding assistants (like GitHub Copilot or similar agents) may be used by developers to generate boilerplate code, write tests, or optimize algorithms.
 
-- **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
-- **Env Vars**: TBD (e.g., `AI_API_KEY`, `AI_MODEL_NAME`).
-- **Location**: Configuration would reside in `src/config.mjs` or a dedicated service adapter.
+## Content Generation
 
-## 📋 Data Schemas
+- **Text**: All project descriptions and blog posts are written by humans to ensure authenticity.
+- **Images**:
+  - Project images are real photographs/captures.
+  - OG Images (Open Graph) are generated programmatically using `satori`, which uses HTML/CSS to draw images, not generative AI.
 
-If AI integration is added, the expected JSON schema for a project summary might look like:
+## Future Integration
 
-```json
-{
-  "summary": "Short text summary of the project...",
-  "keywords": ["tag1", "tag2"],
-  "sentiment": "positive"
-}
-```
-
-## 🫰 Cost & Limits
-
-- **Strategy**: Static Generation (SSG).
-- **Explanation**: AI operations will be performed at **build time** to generate summaries/metadata. This avoids runtime costs and latency for users.
-- **Caching**: Results should be cached (e.g., in `.astro/cache` or a separate JSON file) to prevent re-generation on every build unless content changes.
-- **Rate Limits**: If using a paid API, build scripts should implement rate limiting to stay within tier quotas.
-
-## 🛡 Policy
-
-- All AI-generated content must be reviewed by a human before publishing.
-- No user data is sent to AI endpoints.
+If AI features are added in the future (e.g., for semantic search or chat), they must adhere to the following principles:
+1. **Transparency**: Explicitly label AI-generated content.
+2. **Privacy**: No user data sent to third-party models without consent.
+3. **Cost Control**: Implement strict rate limiting and caching.
