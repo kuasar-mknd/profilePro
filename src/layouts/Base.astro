@@ -485,9 +485,15 @@ if (postData?.data?.image) {
         link.setAttribute("rel", Array.from(relValues).join(" "));
 
         // Accessibility: Append warning to title
-        const title = link.getAttribute("title") || "";
-        if (!title.includes(warning.trim())) {
-          link.setAttribute("title", title ? title + warning : warning.trim());
+        // 🎨 Palette: Allow opt-out for custom tooltips
+        if (!link.hasAttribute("data-no-warning-title")) {
+          const title = link.getAttribute("title") || "";
+          if (!title.includes(warning.trim())) {
+            link.setAttribute(
+              "title",
+              title ? title + warning : warning.trim(),
+            );
+          }
         }
 
         // Accessibility: Append warning to aria-label (only if present)
