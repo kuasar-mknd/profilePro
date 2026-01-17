@@ -9,6 +9,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
 <footer
   id="main-footer"
   class="relative bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-t border-pacamara-secondary/20 font-outfit [content-visibility:auto] [contain-intrinsic-size:auto_400px]"
+  role="contentinfo"
+  aria-label="Pied de page"
 >
   <div
     class="container mx-auto max-w-7xl px-7 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8 items-start"
@@ -33,49 +35,51 @@ import SocialIcon from "../ui/SocialIcon.astro";
         Créateur de contenu visuel et digital.
       </p>
       <div class="flex items-center gap-2 text-sm text-pacamara-accent">
-        <span class="text-lg">📍</span>
+        <span class="text-lg" aria-hidden="true">📍</span>
         <span class="font-medium">Lausanne, Suisse romande</span>
       </div>
     </div>
 
     <!-- Column 2: Socials & Copyright (Centered) -->
     <div class="flex flex-col items-center justify-center space-y-6">
-      <ul class="flex flex-wrap justify-center gap-4">
-        {
-          config?.social?.github && (
-            <li>
-              <SocialIcon
-                url={config.social.github}
-                icon="mdi:github"
-                label="GitHub"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.instagram && (
-            <li>
-              <SocialIcon
-                url={config.social.instagram}
-                icon="mdi:instagram"
-                label="Instagram"
-              />
-            </li>
-          )
-        }
+      <nav aria-label="Réseaux sociaux">
+        <ul class="flex flex-wrap justify-center gap-4">
+          {
+            config?.social?.github && (
+              <li>
+                <SocialIcon
+                  url={config.social.github}
+                  icon="mdi:github"
+                  label="GitHub"
+                />
+              </li>
+            )
+          }
+          {
+            config?.social?.instagram && (
+              <li>
+                <SocialIcon
+                  url={config.social.instagram}
+                  icon="mdi:instagram"
+                  label="Instagram"
+                />
+              </li>
+            )
+          }
 
-        {
-          config?.social?.youtube && (
-            <li>
-              <SocialIcon
-                url={config.social.youtube}
-                icon="mdi:youtube"
-                label="YouTube"
-              />
-            </li>
-          )
-        }
-      </ul>
+          {
+            config?.social?.youtube && (
+              <li>
+                <SocialIcon
+                  url={config.social.youtube}
+                  icon="mdi:youtube"
+                  label="YouTube"
+                />
+              </li>
+            )
+          }
+        </ul>
+      </nav>
       <div
         class="text-sm text-pacamara-primary/80 dark:text-white/80 text-center"
       >
@@ -93,6 +97,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       <div
         id="wcb"
         class="carbonbadge wcb-d min-h-[60px] flex items-center justify-center lg:justify-end"
+        aria-label="Impact écologique du site"
       >
         <!-- Badge injected by script -->
       </div>
