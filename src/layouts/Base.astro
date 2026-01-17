@@ -72,30 +72,10 @@ if (postData?.data?.image) {
       crossorigin
       fetchpriority="high"
     />
-    <!-- ⚡ Bolt: Removed fetchpriority="high" from non-LCP fonts (Light/Regular) -->
-    <!-- This reduces network contention, allowing the LCP Image and Heading Font to load faster -->
-    <link
-      rel="preload"
-      href="/fonts/outfit-light.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/outfit-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
-    <link
-      rel="preload"
-      href="/fonts/outfit-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <!-- ⚡ Bolt: Removed Outfit preloads (Light/Regular/Bold) -->
+    <!-- Analysis showed these fonts are not used in LCP elements or are hidden by animation delays (>600ms) -->
+    <!-- This frees up bandwidth for the Critical LCP Image and Heading Font -->
+
     <!-- LCP Image Preload (Hero Logo) - Only on Homepage -->
     {
       Astro.url.pathname === "/" && (
