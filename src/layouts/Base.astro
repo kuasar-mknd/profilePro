@@ -284,6 +284,18 @@ if (postData?.data?.image) {
       </svg>
     </button>
 
+    <!-- 🎨 Palette: Scroll Progress Bar -->
+    <div
+      id="scroll-progress-bar"
+      class="fixed top-0 left-0 right-0 h-1.5 bg-pacamara-accent z-[1000] origin-left scale-x-0 transition-transform duration-100 ease-out pointer-events-none shadow-sm"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      aria-label="Progression de la lecture"
+    >
+    </div>
+
     <script>
       /**
        * ⚡ Bolt: Back to Top Performance Optimization
@@ -307,9 +319,12 @@ if (postData?.data?.image) {
         const progressCircle = document.getElementById(
           "scroll-progress-circle",
         );
+        // 🎨 Palette: Top Progress Bar
+        const progressBar = document.getElementById("scroll-progress-bar");
 
         // ⚡ Early return if elements don't exist
-        if (!backToTopBtn || !sentinel || !progressCircle) return;
+        if (!backToTopBtn || !sentinel || !progressCircle || !progressBar)
+          return;
 
         // ⚡ RAF ID for animation tracking
         let rafId: number | null = null;
@@ -335,14 +350,24 @@ if (postData?.data?.image) {
 
         // 🎨 Palette: Scroll Progress Logic with RAF throttling
         const updateVisuals = () => {
-          if (!progressCircle) return;
+          if (!progressCircle || !progressBar) return;
           const scrollTop = window.scrollY;
 
           // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
           const scrollPercent =
             cachedDocHeight > 0 ? Math.min(scrollTop / cachedDocHeight, 1) : 0;
           const draw = scrollPercent * 100;
+
+          // Update Circular Progress
           progressCircle.style.strokeDashoffset = (100 - draw).toString();
+
+          // Update Top Progress Bar (ScaleX is performant)
+          progressBar.style.transform = `scaleX(${scrollPercent})`;
+          progressBar.setAttribute(
+            "aria-valuenow",
+            Math.round(draw).toString(),
+          );
+
           ticking = false;
         };
 
@@ -390,14 +415,16 @@ if (postData?.data?.image) {
                 btn.classList.add("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "0");
                 // ⚡ Bolt: Only listen to scroll when button is visible to save resources
-                window.addEventListener("scroll", onScroll, { passive: true });
-                onScroll(); // Update visuals immediately
+                // NOTE: We now listen continuously for the Top Progress Bar
+                // window.addEventListener("scroll", onScroll, { passive: true });
+                // onScroll(); // Update visuals immediately
               } else {
                 btn.classList.add("opacity-0", "invisible", "translate-y-4");
                 btn.classList.remove("visible", "translate-y-0");
                 btn.setAttribute("tabindex", "-1");
                 // ⚡ Bolt: Detach listener when button is hidden to save main thread
-                window.removeEventListener("scroll", onScroll);
+                // NOTE: We keep listening for the Top Progress Bar
+                // window.removeEventListener("scroll", onScroll);
               }
             },
             {
@@ -408,6 +435,9 @@ if (postData?.data?.image) {
         }
 
         backToTopObserver.observe(sentinel);
+
+        // 🎨 Palette: Always listen to scroll for the Top Progress Bar, not just when BackToTop is visible
+        window.addEventListener("scroll", onScroll, { passive: true });
 
         // Scroll to top action
         const onClick = () => {
