@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-03-01 - List Containment & Semantics
+
+**Learning:** Static lists (like Footer socials, Skills, Services) are often re-rendered or reflowed during layout changes. Applying `contain: layout` isolates them from the rest of the page layout. Additionally, when using `list-none`, some screen readers (VoiceOver/Safari) remove list semantics.
+**Action:** Applied `.contain-layout` and `role="list"` to 4 static lists/grids to improve rendering stability and ensure accessibility. Used utility class `.contain-layout` instead of inline styles.

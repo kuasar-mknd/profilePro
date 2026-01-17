@@ -172,7 +172,10 @@ const skills = [
 
           <!-- Tech Stack / Skills -->
           <ScrollReveal delay={0.3}>
-            <ul class="flex flex-wrap gap-3 mb-10 list-none p-0">
+            <ul
+              class="flex flex-wrap gap-3 mb-10 list-none p-0 contain-layout"
+              role="list"
+            >
               {
                 skills.map((skill, index) => (
                   <li
@@ -237,7 +240,10 @@ const skills = [
         </p>
       </ScrollReveal>
 
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0">
+      <ul
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0 contain-layout"
+        role="list"
+      >
         {
           services.map((service, index) => (
             <li class="h-full">
