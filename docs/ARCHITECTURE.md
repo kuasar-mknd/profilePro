@@ -1,117 +1,81 @@
 # Architecture Documentation
 
-> **Note:** This project is a statically generated site (SSG) built with **Astro 5**.
+## Overview
 
-## 🏗 High-Level Architecture
+**ProfilePro** is a high-performance portfolio website built with **Astro**. It is a static site generated (SSG) project that focuses on speed, accessibility, and visual storytelling.
 
-The project follows the "Islands Architecture" (Astro) combined with a component-based structure. It emphasizes **performance**, **accessibility**, and **SEO**.
+The project follows the "Island Architecture" pattern where interactive components are hydrated only when needed, keeping the initial JavaScript bundle minimal.
 
-### 1. Layers
+## Tech Stack
 
-- **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes using file-based routing.
-- **Component Layer (UI)**: Located in `src/components/`.
-  - `common/`: Global components (Header, Footer, SEO).
-  - `ui/`: Reusable primitives (Buttons, Cards, Lightbox).
-  - `features/`: Domain-specific logic (Projects, VideoPlayer).
-- **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
-- **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
+- **Framework**: Astro 5 (Static Site Generation)
+- **Styling**: Tailwind CSS 4
+- **Language**: TypeScript 5
+- **Runtime**: Bun (for development and build scripts)
+- **Deployment**: Cloudflare Pages (via GitHub Actions)
+- **Testing**: Playwright (E2E)
 
-### 2. Data Flow & State Management
+## Project Structure
 
-- **Build Time**: Astro fetches data from Content Collections (`src/content/project`) and config files to generate static HTML.
-- **Runtime State**:
-  - **URL-Driven**: Most state (active page, project details) is derived from the URL.
-  - **View Transitions**: The `<ClientRouter />` maintains a persistent SPA-like experience. Global state (like scroll position or theme) is preserved across navigations.
-  - **Islands**: Interactive components (VideoPlayer, ContactForm) manage their own local state using standard DOM events or framework-specific hooks (React).
+```text
+src/
+├── assets/          # Optimized images and media
+├── components/      # UI components
+│   ├── common/      # Reusable components (Header, Footer, SEO)
+│   ├── features/    # Domain-specific components (Projects, Video)
+│   └── ui/          # Basic UI elements (Lightbox, Buttons)
+├── content/         # MDX content collections
+│   └── project/     # Portfolio projects
+├── layouts/         # Page templates (Base.astro)
+├── pages/           # Route definitions
+│   ├── [slug].astro # Dynamic page generation
+│   ├── rss.xml.js   # RSS feed generation
+│   └── robots.txt.ts # Robots.txt generation
+└── utils/           # Helper functions (Security, Formatting)
+```
 
-### 3. Key Technologies
+## Key Concepts
 
-- **Astro 5**: Core framework.
-- **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **Bun**: Runtime & Package Manager.
-- **Playwright**: E2E Testing.
-- **Plyr**: Video player abstraction.
+### Content Collections
+Projects are stored as MDX files in `src/content/project/`. Astro's Content Collections API is used to validate the frontmatter schema (defined in `src/content/config.ts` if present, or inferred).
 
----
+### Optimization Pipeline
+1. **Images**: `scripts/optimize-images.js` processes raw images using `sharp` before the build to generate AVIF/WebP variants.
+2. **CSP**: `scripts/generate-csp.mjs` generates strict Content Security Policy headers after the build, hashing inline scripts.
+3. **Fonts**: Critical fonts are preloaded in `Base.astro`.
 
-## ⚡ Asset Optimization Pipeline
+### Routing
+- `src/pages/index.astro`: Homepage.
+- `src/pages/project/[slug].astro`: Individual project pages generated statically at build time.
+- `src/pages/rss.xml.js`: Generates the RSS feed.
 
-This project implements a custom, high-performance asset pipeline to ensure top-tier Core Web Vitals.
-
-### Image Optimization (`scripts/optimize-images.js`)
-- **Engine**: Uses `sharp` directly (bypassing Astro's default image service for the initial asset generation if needed, though Astro's own `<Image />` is also used).
-- **Format**: Converts source images to **AVIF** (Quality 68).
-- **Caching**: Implements a "Smart Cache" by comparing `mtime` of source vs. output files. Optimization is skipped if the source hasn't changed, significantly speeding up local dev and CI builds.
-- **Sizing**: Resizes images to a `maxWidth` (e.g., 1600px) to prevent serving unnecessarily large files.
-
-### Critical Rendering Path
-- **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
-- **Font Optimization**: Fonts (Inter, Outfit, Space Grotesk) are self-hosted via `@fontsource` to avoid Google Fonts layout shifts.
-
----
-
-## 🛠 Extension Guide
+## Extending the Project
 
 ### Adding a New Page
-
-1.  Create a file in `src/pages/my-page.astro`.
-2.  Use the `BaseLayout`:
-
-    ```astro
-    ---
-    import Base from "../layouts/Base.astro";
-    ---
-
-    <Base title="My Page">
-      <h1>Content</h1>
-    </Base>
-    ```
+Create a new `.astro` file in `src/pages/`. For example, `src/pages/contact.astro` will be accessible at `/contact`.
 
 ### Adding a New Project
-
-1.  Add a new MDX file in `src/content/project/my-project.mdx`.
-2.  Follow the schema defined in `src/content/config.ts`:
-    ```yaml
-    title: "Project Title"
-    publishDate: 2024-01-01
-    description: "Short description"
-    img: "./image.jpg"
-    img_alt: "Description of image"
-    tags: ["Video", "Event"]
-    ---
-    Content goes here...
-    ```
-
-### Adding a New UI Component
-
-1.  Create `src/components/ui/MyComponent.astro`.
-2.  If it needs interactivity, script logic goes into a `<script>` tag or a framework component (e.g., React).
-
+Create a new `.mdx` file in `src/content/project/` with the required frontmatter:
+```yaml
 ---
-
-## 🔄 CI/CD Pipeline
-
-Workflows are defined in `.github/workflows/`:
-
-1.  **CI (`ci.yml`)**:
-    - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
-    - Installs dependencies.
-    - Runs `bun run check` (Lint + Types + Format).
-    - Runs `bun run test:e2e` (Playwright).
-    - Builds the site `bun run build`.
-
-2.  **Security**:
-    - **CodeQL**: Scans JS/TS for vulnerabilities.
-    - **Dependency Review**: Checks for vulnerable packages in PRs.
-
-3.  **Deploy**:
-    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
-
+title: "Project Name"
+pubDate: 2024-01-01
+intro: "Short description"
+image: "../../assets/project-image.jpg"
+tags: ["Video", "Web"]
 ---
+```
 
-## 🧩 Architectural Concepts
+## CI/CD Pipeline
 
-- **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
-- **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
-- **Content Collections**: Type-safe content management for Markdown/MDX.
+The project uses GitHub Actions for continuous integration:
+1. **CI Workflow**: Runs on every push/PR.
+   - Installs dependencies (Bun).
+   - Runs linting (ESLint, Stylelint).
+   - Checks formatting (Prettier).
+   - Runs Typecheck (Astro check).
+   - Builds the site.
+   - Runs E2E tests (Playwright).
+2. **Security**:
+   - CodeQL analysis.
+   - Dependency review.

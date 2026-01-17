@@ -1,24 +1,28 @@
 # Environment Variables
 
-> **Note:** This project uses Astro's type-safe environment variables defined in `src/env.d.ts`.
+This document lists all environment variables used in the application.
 
-## 🌍 Required Variables
+## Setup
 
-The following variables must be set in your `.env` file (locally) or in your CI/Deployment environment.
-
-| Variable                      | Description                             | Required | Example   |
-| ----------------------------- | --------------------------------------- | -------- | --------- |
-| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for Web3Forms (Contact Form) | Yes      | `abc-123` |
-| `PUBLIC_CF_ANALYTICS_TOKEN`   | Token for Cloudflare Web Analytics      | No       | `abc-123` |
-
-## 🛡 Secrets
-
-**NEVER** commit your `.env` file. Use `.env.example` as a template.
-
-### `.env.example` content:
+Copy `.env.example` to `.env` in the root directory:
 
 ```bash
-# Public Keys (Safe to expose in client bundle, but managed via env for flexibility)
-PUBLIC_WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
-PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
+cp .env.example .env
 ```
+
+## Variable Reference
+
+| Variable | Description | Required | Default |
+|----------|-------------|:--------:|---------|
+| `PUBLIC_WEB3FORMS_ACCESS_KEY` | Public key for Web3Forms service (Contact form). | Yes | - |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics. | Yes | - |
+
+> **Note**: Variables prefixed with `PUBLIC_` are exposed to the client-side JavaScript bundle in Astro.
+
+## Validation
+
+The application does not currently use a strict schema validation library (like Zod) for env vars at runtime, but they are accessed via `import.meta.env`. Missing keys may cause runtime errors in the contact form or analytics scripts.
+
+## CI/CD
+
+In the GitHub Actions workflow, these secrets must be set in the repository secrets if the build or tests require them. For `pull_request` workflows from forks, mock values should be used or the steps requiring them skipped/mocked.
