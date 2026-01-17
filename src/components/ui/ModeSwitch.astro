@@ -34,7 +34,7 @@ import { Icon } from "astro-icon/components";
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
-  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
+  <span class="sr-only theme-live-region" aria-live="polite"></span>
 </button>
 
 <script>
@@ -43,6 +43,7 @@ import { Icon } from "astro-icon/components";
    * - Uses class selector to support multiple instances (desktop/mobile)
    * - Dynamic aria-label and title for better accessibility
    * - Handles View Transitions properly
+   * - Announces initial theme state for screen readers
    */
 
   // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
@@ -61,29 +62,42 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  let initialThemeAnnounced = false;
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
-    const liveRegion = document.getElementById("theme-live-region");
+    const liveRegions = document.querySelectorAll(".theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
-        const span = btn.querySelector(".sr-only");
+        // Update the visible label for screen readers, but not the live region
+        const span = btn.querySelector(".sr-only:not(.theme-live-region)");
         if (span) span.textContent = label;
       });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
+      if (announce && liveRegions) {
+        const announcement = isDark
           ? "Mode sombre activé"
           : "Mode clair activé";
+        liveRegions.forEach((region) => {
+          region.textContent = announcement;
+        });
       }
     };
 
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
-    updateLabels(isDark);
+
+    // Announce the initial theme state only on the first initialization
+    if (!initialThemeAnnounced) {
+      updateLabels(isDark, true);
+      initialThemeAnnounced = true;
+    } else {
+      updateLabels(isDark, false);
+    }
 
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
     window.removeEventListener("theme-change", handleThemeChange);
