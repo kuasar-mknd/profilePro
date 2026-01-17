@@ -81,4 +81,24 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("scroll progress bar should update on scroll", async ({ page }) => {
+    await page.goto("/");
+
+    const progressBar = page.locator("#scroll-progress-bar");
+    await expect(progressBar).toBeAttached();
+
+    // Initial state (top of page)
+    await expect(progressBar).toHaveAttribute("aria-valuenow", "0");
+
+    // Scroll down instantly to avoid waiting for smooth scroll animation
+    await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+
+    // Wait for update (throttled by rAF)
+    await page.waitForTimeout(200);
+
+    // Verify it updated (should be 100 or close to it)
+    const value = await progressBar.getAttribute("aria-valuenow");
+    expect(Number(value)).toBeGreaterThan(90);
+  });
 });
