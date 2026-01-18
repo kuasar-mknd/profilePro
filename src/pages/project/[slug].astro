@@ -123,7 +123,7 @@ if (entry.data.type === "video" && entry.data.image) {
       <div
         class="inline-flex items-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
       >
-        <Tag tag={entry.data.tag} />
+        <Tag tag={entry.data.tag} href={`/project/tag/${entry.data.tag}`} />
         <PublishDate date={entry.data.pubDate} />
 
         <span
