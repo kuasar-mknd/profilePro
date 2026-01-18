@@ -176,10 +176,14 @@ const skills = [
               {
                 skills.map((skill, index) => (
                   <li
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-pacamara-primary/5 dark:bg-white/5 border border-pacamara-primary/10 dark:border-white/10 text-sm font-medium text-pacamara-primary dark:text-white/80 hover:bg-pacamara-primary/10 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-md"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-pacamara-primary/5 dark:bg-white/5 border border-pacamara-primary/10 dark:border-white/10 text-sm font-medium text-pacamara-primary dark:text-white/80 hover:bg-pacamara-primary/10 dark:hover:bg-white/10 transition-colors duration-300"
                     style={`animation-delay: ${index * 0.05}s`}
                   >
-                    <Icon name={skill.icon} class="w-5 h-5 icon-animate" />
+                    <Icon
+                      name={skill.icon}
+                      class="w-5 h-5 icon-animate"
+                      aria-hidden="true"
+                    />
                     {skill.name}
                   </li>
                 ))
