@@ -27,8 +27,13 @@ const roundedClasses = {
 ---
 
 <div
-  class:list={["skeleton", roundedClasses[rounded], className]}
-  style={`width: ${width}; height: ${height}; contain: strict;`}
+  class:list={[
+    "skeleton",
+    roundedClasses[rounded],
+    className,
+    "contain-strict",
+  ]}
+  style={`width: ${width}; height: ${height};`}
   aria-hidden="true"
 >
 </div>
