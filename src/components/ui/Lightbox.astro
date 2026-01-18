@@ -311,6 +311,8 @@
 </style>
 
 <script>
+  import { sanitizeUrl } from "../../utils/security";
+
   class Lightbox {
     private lightbox: HTMLElement;
     private image: HTMLImageElement;
@@ -576,7 +578,9 @@
     // ⚡ Bolt: Helper to get the best available source
     private getImageSrc(index: number): string {
       const el = this.galleryElements[index];
-      return el.dataset.lightboxSrc || el.currentSrc || el.src;
+      const rawSrc = el.dataset.lightboxSrc || el.currentSrc || el.src;
+      // 🛡️ Sentinel: Sanitize URL to prevent XSS (e.g., javascript: URI)
+      return sanitizeUrl(rawSrc);
     }
 
     private preloadImage(src: string) {
