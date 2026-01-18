@@ -411,13 +411,35 @@ if (postData?.data?.image) {
 
         // Scroll to top action
         const onClick = () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
           const main = document.getElementById("main-content");
-          if (main) {
+          if (!main) return;
+
+          // 🎨 Palette: Helper to ensure main is focusable and then focus it
+          const focusMain = () => {
             if (!main.hasAttribute("tabindex")) {
               main.setAttribute("tabindex", "-1");
             }
             main.focus({ preventScroll: true });
+          };
+
+          let scrollEndTimer;
+          const scrollListener = () => {
+            clearTimeout(scrollEndTimer);
+            scrollEndTimer = setTimeout(() => {
+              window.removeEventListener("scroll", scrollListener);
+              // This ensures screen readers announce the new context when the
+              // user has visually arrived at the top of the page.
+              focusMain();
+            }, 100); // Wait for 100ms of scroll inactivity
+          };
+
+          window.addEventListener("scroll", scrollListener, { passive: true });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          // Fallback for when already at top (no scroll events fire)
+          if (window.scrollY === 0) {
+            window.removeEventListener("scroll", scrollListener);
+            focusMain();
           }
         };
         backToTopBtn.addEventListener("click", onClick);
