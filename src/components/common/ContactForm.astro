@@ -47,8 +47,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <!-- Access Key -->
   <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
-  <!-- Optional: Subject -->
-  <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
   <!-- Optional: Honeypot -->
   <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
@@ -664,13 +662,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       try {
         // 🛡️ Sentinel: Hardened fields allowlist and sanitization logic
         const formData = new FormData(form);
-        const data: Record<string, string> = {};
+        const data: Record<string, string> = {
+          // 🛡️ Sentinel: Subject is now a non-malleable constant.
+          subject: "Nouveau message du Portfolio",
+        };
         const allowedFields = new Set([
           "name",
           "email",
           "message",
           "access_key",
-          "subject",
           "botcheck",
           "form-load-timestamp",
         ]);
