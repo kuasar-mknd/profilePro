@@ -12,8 +12,7 @@
  * @param value - The value to serialize
  * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function safeJson(value: any): string {
+export function safeJson(value: unknown): string {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
@@ -61,9 +60,11 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    "\u2028": "\\u2028", // Prevent JSON/JS breakage (Line Separator)
+    "\u2029": "\\u2029", // Prevent JSON/JS breakage (Paragraph Separator)
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\\u2028\u2029]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -132,6 +133,11 @@ export function isValidUrl(
 
   const { allowMailto = false } = options;
 
+  // 🛡️ Sentinel: Prevent protocol-relative URLs (//) which can be used for open redirects
+  // or bypassing "starts with /" checks.
+  // We strictly require relative paths to start with a single slash, or be absolute.
+  if (url.startsWith("//")) return false;
+
   if (allowMailto) {
     return /^(https?:\/\/|mailto:|\/)/i.test(url);
   }
@@ -156,6 +162,11 @@ export function sanitizeUrl(url: string): string {
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
+  }
+
+  // 🛡️ Sentinel: Explicitly block protocol-relative URLs
+  if (trimmedUrl.startsWith("//")) {
+    return "";
   }
 
   // Allow relative URLs (starting with / or #)
