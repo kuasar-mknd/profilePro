@@ -311,6 +311,8 @@
 </style>
 
 <script>
+  import { sanitizeUrl } from "../../utils/security";
+
   class Lightbox {
     private lightbox: HTMLElement;
     private image: HTMLImageElement;
@@ -533,7 +535,11 @@
       const currentElement = this.galleryElements[this.currentIndex];
 
       // ⚡ Bolt: Use optimized lightbox source if available, fallback to currentSrc
-      const src = this.getImageSrc(this.currentIndex);
+      const rawSrc = this.getImageSrc(this.currentIndex);
+      // 🛡️ Sentinel: Sanitize URL to prevent XSS (e.g. javascript: protocol)
+      // unlikely in static build but defense-in-depth for DOM-based XSS
+      const src = sanitizeUrl(rawSrc);
+
       const alt = currentElement.alt || "";
 
       this.image.src = src;
@@ -579,7 +585,10 @@
       return el.dataset.lightboxSrc || el.currentSrc || el.src;
     }
 
-    private preloadImage(src: string) {
+    private preloadImage(rawSrc: string) {
+      // 🛡️ Sentinel: Sanitize URL before preloading
+      const src = sanitizeUrl(rawSrc);
+
       // ⚡ Bolt: Optimization - Check both validity and duplication
       if (!src || this.preloadedUrls.has(src)) return;
       this.preloadedUrls.add(src);
