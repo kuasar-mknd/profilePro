@@ -62,6 +62,19 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
     await expect(page.locator("#name")).toHaveAttribute("aria-invalid", "true");
   });
 
+  test("contact form should not have hidden subject/access_key inputs", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+    const contactForm = page.locator("#contact-form");
+    await expect(contactForm.locator('input[name="subject"]')).not.toBeVisible();
+    await expect(contactForm.locator('input[name="subject"]')).toHaveCount(0);
+    await expect(
+      contactForm.locator('input[name="access_key"]'),
+    ).not.toBeVisible();
+    await expect(contactForm.locator('input[name="access_key"]')).toHaveCount(0);
+  });
+
   test("theme toggle should work", async ({ page }) => {
     await page.goto("/");
 
