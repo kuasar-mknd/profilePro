@@ -43,3 +43,12 @@ Standard sitemap index for search engines.
 - **Method:** `GET`
 - **Format:** XML
 - **Usage:** SEO / Search Engine Crawlers.
+
+### 3. Open Graph Images
+
+Dynamically generated social media preview images for each project.
+
+- **URL:** `/og/[slug].png`
+- **Method:** `GET` (Static Build)
+- **Format:** PNG (1200x630)
+- **Usage:** Social media previews (Twitter Cards, Open Graph).

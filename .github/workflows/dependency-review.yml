@@ -1,4 +1,5 @@
 name: "Dependency Review"
+# Scans PRs for vulnerable dependencies
 
 on: [pull_request]
 
