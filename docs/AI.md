@@ -7,6 +7,9 @@
 
 Currently, this project does not integrate live AI models. The roadmap includes plans for a local AI model to summarize project descriptions.
 
+- **Models Used:** None currently.
+- **Configuration:** No active environment variables for AI.
+
 ### Future Configuration
 
 - **Provider**: Local (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
