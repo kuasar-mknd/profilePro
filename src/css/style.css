@@ -781,6 +781,14 @@
     contain: layout paint;
   }
 
+  .contain-strict {
+    contain: strict;
+  }
+
+  .contain-content {
+    contain: content;
+  }
+
   /* Content Visibility */
   .cv-auto-400 {
     content-visibility: auto;
@@ -795,6 +803,11 @@
   .cv-auto-800 {
     content-visibility: auto;
     contain-intrinsic-size: 1px 800px;
+  }
+
+  .cv-auto-1500 {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1500px;
   }
 
   /* Animation Delays */
