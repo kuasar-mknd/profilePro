@@ -118,6 +118,7 @@ export const VIMEO_ID_REGEX =
 /**
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
+ * 🛡️ Sentinel: Blocks protocol-relative URLs (//) to prevent open redirects.
  * Optionally allows mailto:.
  *
  * @param url - The URL to validate
@@ -132,11 +133,18 @@ export function isValidUrl(
 
   const { allowMailto = false } = options;
 
-  if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+  // 🛡️ Sentinel: Prevent protocol-relative URLs (//) by checking that / is NOT followed by /
+  // Regex explanation:
+  // ^https?:\/\/   -> Matches http:// or https://
+  // |              -> OR
+  // ^\/([^\/]|$)   -> Matches starting with / followed by NON-slash or End-of-string
+  const safeProtocolRegex = /^(https?:\/\/|\/([^\/]|$))/i;
+
+  if (allowMailto && /^mailto:/i.test(url)) {
+    return true;
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return safeProtocolRegex.test(url);
 }
 
 /**

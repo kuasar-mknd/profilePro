@@ -45,10 +45,8 @@
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
 
-> > > > > > > origin/sentinel/upgrade-insecure-requests-9896749853877098959
+## 2026-01-19 - Protocol-Relative URL Validation
 
-## 2025-02-18 - Modernizing Mixed Content Handling
-
-**Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
-**Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
-**Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+**Vulnerability:** `isValidUrl` regex allowed protocol-relative URLs (`//example.com`) despite documentation claiming they were blocked to prevent open redirects.
+**Learning:** Regex anchors alone are insufficient if the allowed character set overlaps with the forbidden pattern (e.g., `^/` matches the start of `//`).
+**Prevention:** Use stricter regex `/^(https?:\/\/|\/([^\/]|$))/i` to explicitly ensure a leading slash is NOT followed by another slash.
