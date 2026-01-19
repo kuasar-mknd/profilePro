@@ -111,6 +111,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
                 class="absolute inset-0 rounded-full border-t-2 border-white animate-spin opacity-0 transition-opacity duration-300 motion-reduce:animate-none"
                 id={`spinner-${videoId}`}
                 style="contain: strict;"
+                aria-hidden="true"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"

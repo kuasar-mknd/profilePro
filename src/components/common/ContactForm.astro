@@ -425,7 +425,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
         // Visual feedback at 90% and 100%
         if (currentLength >= max) {
-          messageCounter.classList.add("text-red-500", "dark:text-red-400");
+          messageCounter.classList.add(
+            "text-red-500",
+            "dark:text-red-400",
+            "font-bold",
+          );
           messageCounter.classList.remove(
             "text-orange-600",
             "dark:text-orange-400",
@@ -439,6 +443,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           messageCounter.classList.add(
             "text-orange-600",
             "dark:text-orange-400",
+            "font-bold",
           );
           messageCounter.classList.remove(
             "text-red-500",
@@ -460,6 +465,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "dark:text-red-400",
             "text-orange-600",
             "dark:text-orange-400",
+            "font-bold",
           );
           // Clear announcer when safe to avoid noise
           if (messageCounterSr) messageCounterSr.textContent = "";
