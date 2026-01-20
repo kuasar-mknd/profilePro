@@ -486,4 +486,43 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Cleanup Hero Animations
+   * Removes `will-change` properties from animated elements after they have appeared.
+   * This prevents permanent GPU layer retention and saves memory.
+   */
+  let heroCleanupTimer: number | null = null;
+
+  function cleanupHeroAnimations() {
+    // Clear any pending cleanup to handle rapid navigation
+    if (heroCleanupTimer) {
+      clearTimeout(heroCleanupTimer);
+      heroCleanupTimer = null;
+    }
+
+    // Wait for all entrance animations to complete (max delay 0.55s + duration 0.6s = ~1.15s)
+    // Using 2000ms to be safe and ensure everything is settled
+    heroCleanupTimer = setTimeout(() => {
+      const letters = document.querySelectorAll(".letter-animate");
+      if (letters.length === 0) return;
+
+      letters.forEach((letter) => {
+        // ⚡ Bolt: Remove GPU layer promotion
+        (letter as HTMLElement).style.willChange = "auto";
+      });
+      heroCleanupTimer = null;
+    }, 2000);
+  }
+
+  // Run on every navigation (initial + swap)
+  document.addEventListener("astro:page-load", cleanupHeroAnimations);
+
+  // Clean up timer on navigation to prevent memory leaks
+  document.addEventListener("astro:before-swap", () => {
+    if (heroCleanupTimer) {
+      clearTimeout(heroCleanupTimer);
+      heroCleanupTimer = null;
+    }
+  });
 </script>
