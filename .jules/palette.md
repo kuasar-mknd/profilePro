@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-05-18 - Silencing Decorative Infinite Scroll Carousels
+**Learning:** Infinite scroll carousels that serve as visual background elements often contain duplicate content. If left accessible, screen readers will announce the `alt` text of every item (potentially dozens) as the user traverses the page, creating significant noise without value.
+**Action:** Always mark decorative carousels with `aria-hidden="true"` and/or ensure internal images have `alt=""` to prevent them from polluting the accessibility tree.
