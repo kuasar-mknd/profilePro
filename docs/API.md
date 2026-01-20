@@ -1,45 +1,65 @@
 # API Documentation
 
-> **Note:** As a static site (SSG), this project does not expose a dynamic REST API. However, it generates static feed endpoints at build time.
+> **Note:** This is a Static Site (SSG). There is no dynamic backend API.
+> However, the site generates static XML/JSON endpoints for interoperability.
 
 ## 📡 Public Endpoints
 
-These endpoints are generated during the build process and are available publicly.
+These endpoints are generated at build time and served statically.
 
 ### 1. RSS Feed
-
-Provides the latest projects/posts in XML format.
+Provides a feed of the latest projects and blog posts.
 
 - **URL:** `/rss.xml`
 - **Method:** `GET`
-- **Format:** RSS 2.0 (XML)
-- **Usage:** Used by RSS readers and content aggregators.
-- **Content:** Title, Description, Link, PubDate for each project.
+- **Format:** XML (RSS 2.0)
+- **Usage:**
+  ```bash
+  curl https://portfolio.kuasar.xyz/rss.xml
+  ```
 
-**Example Response:**
+### 2. Sitemap
+Index of all accessible pages for search engines.
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>Samuel Dulex | Connecter, Communiquer, Captiver</title>
-    <description>Créateur de contenu visuel...</description>
-    <link>https://portfolio.kuasar.xyz/</link>
-    <item>
-      <title>Project Title</title>
-      <link>https://portfolio.kuasar.xyz/project/project-slug/</link>
-      <description>Project description...</description>
-      <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
-    </item>
-  </channel>
-</rss>
-```
-
-### 2. Sitemap Index
-
-Standard sitemap index for search engines.
-
-- **URL:** `/sitemap-index.xml`
+- **URL:** `/sitemap-index.xml` (or `/sitemap-0.xml`)
 - **Method:** `GET`
 - **Format:** XML
-- **Usage:** SEO / Search Engine Crawlers.
+- **Usage:**
+  ```bash
+  curl https://portfolio.kuasar.xyz/sitemap-index.xml
+  ```
+
+### 3. Open Graph Images
+Auto-generated social preview images for each project.
+
+- **URL:** `/og/[slug].png`
+- **Method:** `GET`
+- **Format:** PNG
+- **Usage:**
+  ```bash
+  # Example for a project named "event-capture"
+  curl https://portfolio.kuasar.xyz/og/event-capture.png --output preview.png
+  ```
+
+---
+
+## 🔒 Internal Data Flow
+
+### Contact Form
+The contact form submits data directly to **Web3Forms** (external service).
+
+- **Endpoint:** `https://api.web3forms.com/submit`
+- **Method:** `POST`
+- **Payload:**
+  ```json
+  {
+    "access_key": "YOUR_PUBLIC_KEY",
+    "name": "User Name",
+    "email": "user@example.com",
+    "message": "Hello...",
+    "subject": "New Contact Message"
+  }
+  ```
+- **Security:**
+  - Input is validated client-side (HTML5) and sanitized.
+  - The `access_key` is public but scoped to the domain (configured in Web3Forms dashboard).
