@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-01-20 - One-Shot Animation Cleanup
+
+**Learning:** CSS animations with `will-change` (like entrance effects) leave expensive compositor layers active indefinitely if not manually cleaned up, consuming GPU memory for static content.
+**Action:** Use `setTimeout` (matching animation duration + delay) to remove `will-change` properties (set to `auto`) after the entrance animation completes.
