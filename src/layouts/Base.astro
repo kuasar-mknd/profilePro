@@ -474,7 +474,12 @@ if (postData?.data?.image) {
       const warning = " (ouvre un nouvel onglet)";
 
       function secureLink(link: Element) {
-        if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
+        // ⚡ Bolt: Skip if already secured to avoid DOM thrashing
+        if (
+          link.tagName !== "A" ||
+          link.getAttribute("target") !== "_blank" ||
+          link.hasAttribute("data-secured")
+        )
           return;
 
         // 🛡️ Sentinel: Robustly ensure both noopener and noreferrer are present
@@ -505,6 +510,9 @@ if (postData?.data?.image) {
             link.appendChild(span);
           }
         }
+
+        // ⚡ Bolt: Mark as secured to prevent re-processing
+        link.setAttribute("data-secured", "true");
       }
 
       function secureLinks() {
@@ -512,7 +520,9 @@ if (postData?.data?.image) {
         // Links are now secured only on initial load and navigation (astro:page-load),
         // effectively reducing main-thread CPU usage during general interaction.
         // Dynamic components (Footer, etc.) handle their own link security.
-        document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
+        document
+          .querySelectorAll('a[target="_blank"]:not([data-secured])')
+          .forEach(secureLink);
       }
 
       // Run on load and after view transitions
