@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -50,6 +50,35 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    // 🛡️ Sentinel: New test case for protocol-relative URLs
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//google.com")).toBe("");
+      expect(sanitizeUrl("   //example.com")).toBe("");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should validate http/https", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should validate relative paths", () => {
+      expect(isValidUrl("/about")).toBe(true);
+    });
+
+    it("should reject invalid protocols", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+      expect(isValidUrl("ftp://example.com")).toBe(false);
+    });
+
+    // 🛡️ Sentinel: New test case for protocol-relative URLs
+    it("should reject protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//google.com")).toBe(false);
     });
   });
 
