@@ -144,36 +144,106 @@
 
 /* Print Styles */
 @media print {
+  /* Hide navigation, footer, and interactive elements */
   header,
   footer,
+  nav,
   .hero-buttons,
   .hero-carousel,
   #lightbox,
   #back-to-top,
-  .group.mode-switch-btn {
+  .theme-toggle-btn,
+  #share-btn,
+  .animate-blob,
+  .floating,
+  .floating-slow,
+  [aria-hidden="true"],
+  .skip-link,
+  #scroll-progress {
     display: none !important;
   }
 
-  body {
-    background: white;
-    color: black;
+  /* Reset layout constraints */
+  body,
+  main,
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
   }
 
   main {
     padding-top: 0 !important;
   }
 
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-  }
-
+  /* Typography for print */
   p,
   h1,
   h2,
-  h3 {
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  span,
+  a {
     color: black !important;
     text-shadow: none !important;
+    filter: none !important;
+  }
+
+  /* Expand links for reference */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #444;
+  }
+
+  /* But don't expand links in titles or social icons if they sneak in */
+  h1 a::after,
+  h2 a::after,
+  h3 a::after {
+    content: "";
+  }
+
+  /* Layout adjustments */
+  .grid {
+    display: block !important;
+  }
+
+  .col-span-1,
+  .col-span-2 {
+    width: 100% !important;
+    margin-bottom: 2rem;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    filter: none !important;
+    break-inside: avoid;
+  }
+
+  /* Ensure page breaks are handled nicely */
+  article,
+  section,
+  .prose p {
+    break-inside: avoid;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  /* Reset shadows and gradients */
+  * {
+    box-shadow: none !important;
+    background-image: none !important;
   }
 }
 
