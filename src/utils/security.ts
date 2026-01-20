@@ -132,6 +132,9 @@ export function isValidUrl(
 
   const { allowMailto = false } = options;
 
+  // 🛡️ Sentinel: Block protocol-relative URLs (//)
+  if (url.startsWith("//")) return false;
+
   if (allowMailto) {
     return /^(https?:\/\/|mailto:|\/)/i.test(url);
   }
@@ -156,6 +159,12 @@ export function sanitizeUrl(url: string): string {
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
+  }
+
+  // 🛡️ Sentinel: Block protocol-relative URLs (starting with //)
+  // These can be used for open redirects or bypass protocol checks
+  if (trimmedUrl.startsWith("//")) {
+    return "";
   }
 
   // Allow relative URLs (starting with / or #)

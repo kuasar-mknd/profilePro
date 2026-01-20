@@ -52,3 +52,8 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-18 - Protocol-Relative URL Blocking
+**Vulnerability:** `isValidUrl` and `sanitizeUrl` allowed protocol-relative URLs (`//example.com`), which can be exploited for Open Redirects or bypassing protocol restrictions.
+**Learning:** Regex checking for `/` often inadvertently matches `//`. Explicitly checking `startsWith("//")` is safer and clearer.
+**Prevention:** Updated utilities to explicitly block `//` prefixes.
