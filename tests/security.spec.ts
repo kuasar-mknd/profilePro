@@ -10,7 +10,9 @@ test("safeJson escapes dangerous characters", () => {
   };
   const output = safeJson(input);
 
-  expect(output).toContain("\\u003cscript\\u003ealert(1)\\u003c/script\\u003e");
+  expect(output).toContain(
+    "\\u003cscript\\u003ealert(1)\\u003c\\u002fscript\\u003e",
+  );
   expect(output).toContain("Me \\u0026 You");
   expect(output).toContain("10 \\u003e 5");
   expect(output).toContain("Line\\u2028Break");
@@ -41,4 +43,18 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("safeJson escapes forward slashes", () => {
+  const input = { path: "/usr/bin/node", script: "</script>" };
+  const output = safeJson(input);
+  expect(output).toContain("\\u002fusr\\u002fbin\\u002fnode");
+  expect(output).toContain("\\u003c\\u002fscript\\u003e");
+});
+
+test("sanitizeInput rejects non-string input", () => {
+  expect(sanitizeInput(null as any)).toBe("");
+  expect(sanitizeInput(undefined as any)).toBe("");
+  expect(sanitizeInput(123 as any)).toBe("");
+  expect(sanitizeInput({} as any)).toBe("");
 });

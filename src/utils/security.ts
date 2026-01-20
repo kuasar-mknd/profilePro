@@ -18,6 +18,8 @@ export function safeJson(value: any): string {
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026")
+    // 🛡️ Sentinel: Escape forward slash to prevent </script> attacks
+    .replace(/\//g, "\\u002f")
     .replace(/\u2028/g, "\\u2028")
     .replace(/\u2029/g, "\\u2029");
 }
@@ -39,6 +41,9 @@ export function safeJson(value: any): string {
  * @returns The sanitized string
  */
 export function sanitizeInput(str: string): string {
+  // 🛡️ Sentinel: Enforce string type to prevent runtime errors
+  if (typeof str !== "string") return "";
+
   // 🛡️ Sentinel: Strip control characters (CR, LF, Vertical Tab, etc.) to prevent Header Injection
   // and other control-character based attacks.
   // Exceptions: Horizontal Tab (\t) is usually safe in text content.
