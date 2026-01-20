@@ -1,8 +1,19 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should block protocol-relative URLs", () => {
+      expect(isValidUrl("//malicious.com")).toBe(false);
+      expect(isValidUrl("/valid/path")).toBe(true);
+    });
+  });
+
   describe("sanitizeUrl", () => {
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//malicious.com")).toBe("");
+    });
+
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
       expect(sanitizeUrl("http://example.com")).toBe("http://example.com");
