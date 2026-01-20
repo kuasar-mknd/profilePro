@@ -88,7 +88,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 - [🏗 Architecture](docs/ARCHITECTURE.md) : Structure du projet, concepts clés et extension.
 - [🔐 Environnement](docs/ENV.md) : Variables d'environnement et secrets.
-- [📡 API](docs/API.md) : Endpoints statiques (RSS, Sitemap).
+- [📡 API](docs/API.md) : Endpoints statiques (RSS, Sitemap) et flux de données.
 - [🤖 AI](docs/AI.md) : Politique d'utilisation de l'IA.
 
 ## 🚀 Quick Start
