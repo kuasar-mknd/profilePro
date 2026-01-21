@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeEmail } from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -41,4 +41,23 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("sanitizeEmail preserves valid email characters", () => {
+  const email = "test%1@example.com";
+  expect(sanitizeEmail(email)).toBe(email);
+  const email2 = "user+tag@domain.co.uk";
+  expect(sanitizeEmail(email2)).toBe(email2);
+});
+
+test("sanitizeEmail escapes dangerous characters", () => {
+  const input = "<script>@example.com";
+  const output = sanitizeEmail(input);
+  expect(output).toBe("&lt;script&gt;@example.com");
+});
+
+test("sanitizeEmail strips control characters", () => {
+  const input = "admin\r\n@example.com";
+  const output = sanitizeEmail(input);
+  expect(output).toBe("admin\n@example.com");
 });

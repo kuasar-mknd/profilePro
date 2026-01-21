@@ -69,6 +69,42 @@ export function sanitizeInput(str: string): string {
 }
 
 /**
+ * Sanitizes an email address to prevent XSS while preserving valid email characters.
+ * Similar to sanitizeInput but allows '%' which is valid in emails.
+ *
+ * @param email - The email string to sanitize
+ * @returns The sanitized email string
+ */
+export function sanitizeEmail(email: string): string {
+  // 🛡️ Sentinel: Strip control characters
+  const cleanStr = email.replace(/[\x00-\x08\x0B-\x1F\x7F]/g, "");
+
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
+    "`": "&#x60;",
+    "=": "&#x3D;",
+    "(": "&#40;",
+    ")": "&#41;",
+    "{": "&#123;",
+    "}": "&#125;",
+    "[": "&#91;",
+    "]": "&#93;",
+    "\\": "&#92;",
+    // '%': '&#37;' // Allowed in emails
+  };
+
+  // Regex matches all keys in the map
+  const reg = /[&<>"'\/`=(){}[\]\\]/g;
+
+  return cleanStr.replace(reg, (match) => map[match] || match);
+}
+
+/**
 
  * 🛡️ Sentinel: Stricter regex to prevent invalid domain formats.
  * Enforces:
