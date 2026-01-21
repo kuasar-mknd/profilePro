@@ -1,7 +1,35 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should return true for valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should return true for relative paths", () => {
+      expect(isValidUrl("/path/to/resource")).toBe(true);
+      expect(isValidUrl("/")).toBe(true);
+    });
+
+    it("should return false for javascript: scheme", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+
+    it("should return false for protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//malicious.com")).toBe(false);
+    });
+
+    it("should support mailto when allowed", () => {
+      expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+      expect(isValidUrl("mailto:test@example.com")).toBe(false);
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -21,6 +49,12 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("/path/to/resource?query=1")).toBe(
         "/path/to/resource?query=1",
       );
+    });
+
+    it("should block protocol-relative URLs", () => {
+      // Treating protocol-relative URLs as unsafe to enforce explicit protocol
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//malicious.com/script.js")).toBe("");
     });
 
     it("should block javascript: scheme", () => {
