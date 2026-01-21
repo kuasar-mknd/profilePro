@@ -486,4 +486,49 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Cleanup Hero Animations
+   * Removes will-change properties after entrance animations complete
+   * to free up GPU memory.
+   */
+  let cleanupTimeout: number | undefined;
+
+  function cleanupHeroAnimations() {
+    // Clear any pending timeout from previous navigation
+    if (cleanupTimeout) {
+      clearTimeout(cleanupTimeout);
+      cleanupTimeout = undefined;
+    }
+
+    // Avoid running if reduced motion is enabled (animations shouldn't run anyway)
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // Check if we are on a page with hero animations
+    const heroTitle = document.querySelector(".hero-title");
+    if (!heroTitle || heroTitle.hasAttribute("data-cleaned-up")) return;
+
+    // Wait for the longest animation sequence to complete
+    // Max delay (0.55s) + duration (0.6s) + margin = ~1.2s
+    // Carousel entrance: 1s delay + 0.8s duration = 1.8s
+    // Safety margin -> 2.5s
+    cleanupTimeout = window.setTimeout(() => {
+      // Cleanup letter animations
+      const letters = document.querySelectorAll(".letter-animate");
+      letters.forEach((letter) => {
+        (letter as HTMLElement).style.willChange = "auto";
+      });
+
+      // Mark as cleaned up to prevent re-running
+      heroTitle.setAttribute("data-cleaned-up", "true");
+      cleanupTimeout = undefined;
+    }, 2500);
+  }
+
+  // Run on load and navigation
+  cleanupHeroAnimations();
+  document.addEventListener("astro:page-load", cleanupHeroAnimations);
+  document.addEventListener("astro:before-swap", () => {
+    if (cleanupTimeout) clearTimeout(cleanupTimeout);
+  });
 </script>
