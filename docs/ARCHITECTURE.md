@@ -47,6 +47,7 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 ### Critical Rendering Path
 - **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
 - **Font Optimization**: Fonts (Inter, Outfit, Space Grotesk) are self-hosted via `@fontsource` to avoid Google Fonts layout shifts.
+- **CSP Generation**: A custom script (`scripts/generate-csp.mjs`) runs after build to hash inline scripts and styles, ensuring strict Content Security Policy compliance.
 
 ---
 
@@ -107,6 +108,8 @@ Workflows are defined in `.github/workflows/`:
 
 3.  **Deploy**:
     - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
+
+See [API Documentation](API.md) for details on exposed endpoints.
 
 ---
 
