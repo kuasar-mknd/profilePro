@@ -1,4 +1,5 @@
 version: 2
+# DocOps: Verified
 updates:
   - package-ecosystem: "npm"
     directory: "/"
