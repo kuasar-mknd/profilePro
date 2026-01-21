@@ -663,7 +663,8 @@
   will-change: opacity;
 }
 
-.card-glow:hover::before {
+.card-glow:hover::before,
+.card-glow:focus-within::before {
   opacity: 0.15;
 }
 
