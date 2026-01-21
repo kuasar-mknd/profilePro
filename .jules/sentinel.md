@@ -52,3 +52,9 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-18 - Context-Aware Email Sanitization
+
+**Vulnerability:** Generic input sanitization often breaks valid email addresses (e.g., by escaping `%`), leading developers to skip sanitization entirely for email fields, which opens the door to XSS.
+**Learning:** Security utilities must be flexible enough to handle specific data types correctly. Forcing a one-size-fits-all sanitizer often results in security controls being disabled.
+**Prevention:** Implement `sanitizeEmail` which specifically preserves email-safe characters (like `%`) while still neutralizing XSS vectors (`<`, `>`).
