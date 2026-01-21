@@ -1,11 +1,15 @@
 ---
-import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// ⚡ Bolt: Removed dateformat dependency for native Date API
+// Optimized for "dd-mm-yyyy" format
+const d = new Date(date);
+const formatted = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
 ---
 
 <time
   datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
 >
-  {dateFormat(date, "dd-mm-yyyy")}
+  {formatted}
 </time>
