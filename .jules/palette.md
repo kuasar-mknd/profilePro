@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-02-18 - Misleading Affordances in Lists
+**Learning:** Adding hover effects (like scale or shadow) to static list items creates a "false affordance," tricking users into thinking elements are interactive. This increases cognitive load and frustration.
+**Action:** Reserve motion and elevation changes strictly for interactive elements (buttons, links). Use `cursor-default` and subtle color shifts for static content if tracking is needed.
