@@ -31,10 +31,14 @@ const jsonLd = {
 ---
 
 <Base jsonLd={jsonLd}>
-  <main>
-    <Hero />
-    <ServicesPreview />
-    <LatestPosts postLimit={7} />
-    <CTASection />
-  </main>
+  {
+    /* ⚡ Bolt: Performance Optimization - Removed redundant <main> wrapper.
+       Base.astro already provides a <main> element with containment.
+       Flattening the DOM structure fixes invalid HTML (nested <main>) and improves rendering efficiency.
+    */
+  }
+  <Hero />
+  <ServicesPreview />
+  <LatestPosts postLimit={7} />
+  <CTASection />
 </Base>
