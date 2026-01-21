@@ -363,7 +363,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </style>
 
 <script>
-  import { sanitizeInput, isValidEmail } from "../../utils/security";
+  import {
+    sanitizeInput,
+    isValidEmail,
+    sanitizeEmail,
+  } from "../../utils/security";
 
   /**
    * ⚡ Bolt: ContactForm Performance Optimization
@@ -678,9 +682,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         formData.forEach((value, key) => {
           if (allowedFields.has(key) && typeof value === "string") {
             if (key === "email") {
-              // 🛡️ Sentinel: Email is strictly validated by regex above which disallows dangerous chars like < >
-              // We skip sanitizeInput here because it escapes '%' which is valid in emails.
-              data[key] = value;
+              // 🛡️ Sentinel: Email is strictly validated by regex, then sanitized
+              // to remove dangerous HTML characters without breaking valid emails.
+              data[key] = sanitizeEmail(value);
             } else {
               // 🛡️ Sentinel: Sanitize ALL other fields (name, message, subject) AND hidden fields (botcheck, access_key, timestamp)
               // This prevents XSS attacks via hidden field manipulation if the backend echoes these values.

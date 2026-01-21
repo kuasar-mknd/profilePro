@@ -23,6 +23,20 @@ export function safeJson(value: any): string {
 }
 
 /**
+ * Sanitizes an email address by removing characters that could lead to XSS.
+ * This is a more targeted sanitizer than `sanitizeInput` to avoid breaking valid email addresses
+ * that may contain special characters like '%'.
+ *
+ * @param email The email string to sanitize.
+ * @returns The sanitized email string, with dangerous characters removed.
+ */
+export function sanitizeEmail(email: string): string {
+  if (!email) return "";
+  // Removes <, >, ", ' which are the primary vectors for HTML/attribute injection.
+  return email.replace(/[<>"']/g, "");
+}
+
+/**
  * Enhanced client-side input sanitization to prevent XSS and injection attacks.
  * Replaces dangerous characters with their HTML entity equivalents.
  *
