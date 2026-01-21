@@ -65,7 +65,7 @@ import { Icon } from "astro-icon/components";
     />
   </div>
 </Base>
-<script>
+<script is:inline>
   /**
    * 🛡️ Sentinel: CSP Compliance
    * Replaced inline `onclick` with event listener to support `script-src-attr 'none'`.
@@ -76,6 +76,13 @@ import { Icon } from "astro-icon/components";
     // Note: View Transitions might replace the body, so we always re-bind if found.
     // But to be safe against double-binding on the same element instance:
     if (!btn || btn.dataset.initialized === "true") return;
+
+    // 🎨 Palette: Hide back button if there's no history to return to
+    // This prevents frustrating dead clicks when users land directly on a 404 page
+    if (window.history.length < 2) {
+      btn.style.display = "none";
+      return;
+    }
 
     btn.dataset.initialized = "true";
     btn.addEventListener("click", () => {
