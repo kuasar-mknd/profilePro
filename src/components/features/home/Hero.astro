@@ -338,6 +338,43 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 <script>
   /**
+   * ⚡ Bolt: Cleanup Hero Animations
+   * Removes will-change hints from entrance animations after they complete
+   * to free up GPU memory (compositor layers) for ~15 elements.
+   */
+  function cleanupHeroAnimations() {
+    const letters = document.querySelectorAll(".letter-animate");
+
+    // Early return if not on home page or elements missing
+    if (letters.length === 0) return;
+
+    // Function to remove GPU hints
+    const removeHints = () => {
+      letters.forEach((el) => {
+        // ⚡ Bolt: Revert to auto to release compositor layer
+        (el as HTMLElement).style.willChange = "auto";
+      });
+    };
+
+    // The longest animation chain ends around 1.2s (0.55s delay + 0.6s duration)
+    // We'll use the animationend event on the last item for precision,
+    // with a safety timeout fallback.
+    const lastLetter = letters[letters.length - 1];
+
+    if (lastLetter) {
+      // ⚡ Bolt: One-time listener for the last animation event
+      lastLetter.addEventListener("animationend", removeHints, { once: true });
+
+      // Safety fallback (2s covers all reasonably expected delays)
+      // This handles cases where animations might be interrupted or reduced motion is enabled
+      setTimeout(removeHints, 2000);
+    }
+  }
+
+  // Initialize on load and subsequent navigations (View Transitions)
+  document.addEventListener("astro:page-load", cleanupHeroAnimations);
+
+  /**
    * ⚡ Bolt: Carousel Touch Optimization
    * Added initialization guard and passive listeners to all touch events
    */
