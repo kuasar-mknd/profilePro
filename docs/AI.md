@@ -25,12 +25,21 @@ If AI integration is added, the expected JSON schema for a project summary might
 }
 ```
 
-## 🫰 Cost & Limits
+## 🫰 Cost Control & Rate Limiting
 
-- **Strategy**: Static Generation (SSG).
-- **Explanation**: AI operations will be performed at **build time** to generate summaries/metadata. This avoids runtime costs and latency for users.
-- **Caching**: Results should be cached (e.g., in `.astro/cache` or a separate JSON file) to prevent re-generation on every build unless content changes.
-- **Rate Limits**: If using a paid API, build scripts should implement rate limiting to stay within tier quotas.
+### Strategy
+**Static Generation (SSG)** is the primary cost-control mechanism. By performing AI operations only at **build time**, we eliminate per-request costs and latency for end users.
+
+### Caching
+To prevent redundant API calls during builds:
+1.  **Content Hashing**: Compute a hash of the source content (e.g., MDX file).
+2.  **Persistent Storage**: Check a local JSON cache (e.g., `.astro/ai-cache.json`) for existing results associated with that hash.
+3.  **Skip**: Only call the AI API if the content has changed or the cache is missing.
+
+### Rate Limiting
+When using paid cloud APIs (OpenAI, Anthropic):
+- **Concurrency**: Use libraries like `p-limit` to restrict concurrent requests during the build process (e.g., max 5 parallel requests).
+- **Backoff**: Implement exponential backoff for `429 Too Many Requests` errors.
 
 ## 🛡 Policy
 

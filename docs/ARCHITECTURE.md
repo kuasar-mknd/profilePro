@@ -67,6 +67,21 @@ This project implements a custom, high-performance asset pipeline to ensure top-
     </Base>
     ```
 
+### Adding a New API Endpoint
+
+1.  Create a file in `src/pages/api/` (e.g., `src/pages/api/data.json.ts`).
+2.  Export an endpoint handler:
+
+    ```ts
+    import type { APIRoute } from 'astro';
+
+    export const GET: APIRoute = async ({ request }) => {
+      return new Response(JSON.stringify({
+        timestamp: new Date().toISOString()
+      }));
+    }
+    ```
+
 ### Adding a New Project
 
 1.  Add a new MDX file in `src/content/project/my-project.mdx`.
