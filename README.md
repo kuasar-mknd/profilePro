@@ -40,7 +40,7 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
     - Si l'erreur persiste :
       ```bash
-      rm -rf node_modules bun.lockb
+      rm -rf node_modules bun.lock
       bun install
       ```
 2.  **Erreur `bun run` introuvable** :
