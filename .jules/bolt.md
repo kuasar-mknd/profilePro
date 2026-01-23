@@ -71,3 +71,7 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-01-23 - Critical Path Font Contention
+**Learning:** Preloading fonts that are technically "above the fold" but visually hidden (e.g., via `opacity: 0` animation) or unused in the critical LCP element creates unnecessary network contention.
+**Action:** Audit `rel="preload"` tags against the actual visual rendering timeline. Remove preloads for fonts that are not immediately visible during the first paint.
