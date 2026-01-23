@@ -537,6 +537,8 @@
       const alt = currentElement.alt || "";
 
       this.image.src = src;
+      // ⚡ Bolt: Boost priority for the active image
+      this.image.fetchPriority = "high";
       this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.galleryElements.length);
