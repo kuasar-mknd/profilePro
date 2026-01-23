@@ -108,6 +108,8 @@ Workflows are defined in `.github/workflows/`:
 3.  **Deploy**:
     - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
 
+See [SECURITY.md](../SECURITY.md) for the security policy and vulnerability reporting.
+
 ---
 
 ## 🧩 Architectural Concepts

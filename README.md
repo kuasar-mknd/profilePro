@@ -127,6 +127,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
 - `bun run check` : Vérifie le code (linting + formatage + types).
 - `bun run lighthouse` : Lance l'audit de performance.
+- `bun run analyze` : Analyse la taille du bundle de production.
 - `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
 
 ### API Access
@@ -139,6 +140,9 @@ curl https://portfolio.kuasar.xyz/rss.xml
 
 # Récupérer le Sitemap (XML)
 curl https://portfolio.kuasar.xyz/sitemap-index.xml
+
+# Récupérer le robots.txt
+curl https://portfolio.kuasar.xyz/robots.txt
 ```
 
 ## 📂 Structure du projet
