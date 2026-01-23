@@ -182,9 +182,9 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
               width="288"
               height="320"
               class="object-cover w-full h-full"
-              loading={index < 3 ? "eager" : "lazy"}
+              loading="lazy"
               decoding="async"
-              fetchpriority={index < 3 ? "high" : "low"}
+              fetchpriority="low"
             />
             <div class="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
           </div>
