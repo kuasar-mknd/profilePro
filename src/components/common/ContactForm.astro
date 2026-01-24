@@ -2,13 +2,17 @@
 import { Icon } from "astro-icon/components";
 
 const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+const isDev = import.meta.env.DEV;
+const formAction = isDev
+  ? "https://api.web3forms.com/submit"
+  : "/api/submit-form";
 ---
 
 {
   /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
 }
 <form
-  action="https://api.web3forms.com/submit"
+  action={formAction}
   method="POST"
   class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px] contain-layout-paint"
   id="contact-form"
@@ -45,7 +49,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   </div>
 
   <!-- Access Key -->
-  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
+  {
+    isDev && (
+      <input
+        type="hidden"
+        name="access_key"
+        value={PUBLIC_WEB3FORMS_ACCESS_KEY}
+      />
+    )
+  }
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
@@ -669,11 +681,21 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "name",
           "email",
           "message",
-          "access_key",
           "subject",
           "botcheck",
           "form-load-timestamp",
         ]);
+
+        // 🛡️ Sentinel: Determine endpoint based on environment
+        const isDev = import.meta.env.DEV;
+        const apiEndpoint = isDev
+          ? "https://api.web3forms.com/submit"
+          : "/api/submit-form";
+
+        // In DEV, we need to allow access_key to pass through
+        if (isDev) {
+          allowedFields.add("access_key");
+        }
 
         formData.forEach((value, key) => {
           if (allowedFields.has(key) && typeof value === "string") {
@@ -689,7 +711,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           }
         });
 
-        const response = await fetch("https://api.web3forms.com/submit", {
+        const response = await fetch(apiEndpoint, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
