@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-03-02 - Native Date Formatting
+
+**Learning:** Dependencies like `dateformat` are often unnecessary in modern environments where `Intl.DateTimeFormat` or simple string manipulation (for fixed formats) can achieve the same result with 0 bytes overhead.
+**Action:** Audit small utility libraries and prefer native implementations when the use case is simple.
