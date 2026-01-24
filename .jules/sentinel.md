@@ -6,7 +6,6 @@
 
 ## 2024-05-20 - Use `safeJson` for JSON injection
 
-<<<<<<< HEAD
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
@@ -26,7 +25,7 @@
 ## 2024-05-23 - Client-side Input Sanitization
 
 **Vulnerability:** Potential for localized XSS or injection if user input is reflected back into the DOM without sanitization.
-**Learning:** Even on static sites, forms (like contact forms) should sanitize input before processing or displaying it (e.g., in success messages or potential future features).
+**Learning:** Even on static sites, forms (like contact forms) should sanitize input before processing or displaying it.
 **Prevention:** Implemented `sanitizeInput` in `src/utils/security.ts` to strip dangerous characters.
 
 ## 2024-05-24 - External Link Security
@@ -34,7 +33,9 @@
 **Vulnerability:** `target="_blank"` links without `rel="noopener noreferrer"` expose the user to reverse tabnabbing attacks.
 **Learning:** Markdown content often generates external links. Automated handling via rehype plugins or script-based injection is more reliable than manual checks.
 **Prevention:** Configured `rehype-external-links` in `astro.config.mjs` and added a client-side script in `Base.astro` to enforce security on dynamic links.
-=======
+
+## 2025-02-18 - Enhanced Input Sanitization
+
 **Vulnerability:** Limited input sanitization allowed potential injection vectors using parentheses and brackets (e.g., function calls, template syntax).
 **Learning:** Expanding sanitization to include '()', '[]', '{}' provides defense-in-depth against template injection and specific parser exploits without affecting visual rendering in HTML.
 **Prevention:** Use the enhanced 'sanitizeInput' utility for all user-facing inputs.
@@ -45,10 +46,8 @@
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
 
-> > > > > > > origin/sentinel/upgrade-insecure-requests-9896749853877098959
+## 2025-02-19 - Deprecation of X-XSS-Protection
 
-## 2025-02-18 - Modernizing Mixed Content Handling
-
-**Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
-**Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
-**Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+**Vulnerability:** The `X-XSS-Protection` header is deprecated and non-standard. Modern browsers (Chrome, Edge, Firefox) ignore it, and in some legacy cases, it could introduce new vulnerabilities (XS-Leaks).
+**Learning:** Robust Content Security Policy (CSP) is the standard mechanism for XSS prevention. Removing dead headers reduces configuration complexity.
+**Prevention:** Remove `X-XSS-Protection` and rely on a strict `script-src` in CSP.
