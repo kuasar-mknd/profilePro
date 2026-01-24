@@ -4,6 +4,9 @@ import config from "../config.mjs";
 const robots = `
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /404
 Sitemap: ${new URL("sitemap-index.xml", config.url).href}
 `.trim();
 
