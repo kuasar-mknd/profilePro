@@ -26,14 +26,20 @@ const a11yLabel = baseLabel.includes(suffix) ? baseLabel : baseLabel + suffix;
   href={safeUrl}
   target="_blank"
   rel="noopener noreferrer"
-  class="group relative flex h-10 w-10 items-center justify-center rounded-full bg-pacamara-primary/5 transition-all duration-300 hover:scale-110 focus-visible:scale-110 hover:bg-pacamara-accent focus-visible:bg-pacamara-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:hover:bg-pacamara-accent"
+  class="group relative flex h-10 w-auto min-w-[2.5rem] items-center justify-center rounded-full bg-pacamara-primary/5 transition-all duration-300 px-0 hover:px-4 focus-visible:px-4 hover:-translate-y-1 hover:bg-pacamara-accent focus-visible:bg-pacamara-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:hover:bg-pacamara-accent"
   style="contain: layout style;"
   aria-label={a11yLabel}
   title={a11yLabel}
 >
   <Icon
     name={icon}
-    class="h-5 w-5 text-pacamara-primary transition-colors duration-300 group-hover:text-white dark:text-pacamara-white"
+    class="h-5 w-5 shrink-0 text-pacamara-primary transition-colors duration-300 group-hover:text-white dark:text-pacamara-white"
   />
+  <span
+    class="overflow-hidden whitespace-nowrap opacity-0 max-w-0 transition-all duration-300 group-hover:max-w-[200px] group-hover:opacity-100 group-hover:ml-2 group-focus-visible:max-w-[200px] group-focus-visible:opacity-100 group-focus-visible:ml-2 text-white font-medium text-sm"
+    aria-hidden="true"
+  >
+    {baseLabel}
+  </span>
   <span class="sr-only">{a11yLabel}</span>
 </a>
