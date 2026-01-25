@@ -14,12 +14,16 @@ const {
   lazyLoadImages = false,
 } = Astro.props;
 
-const posts = (
-  await getCollection("project", ({ data }) => {
-    return !(data.title == skipPost);
-  })
-)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+// ⚡ Bolt: Fetch all projects once to avoid double file system reads
+const allProjects = await getCollection("project");
+
+// Filter and sort in memory
+const sortedProjects = allProjects.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const posts = sortedProjects
+  .filter((post) => post.data.title !== skipPost)
   .slice(0, postLimit);
 
 // Determine bento grid sizes based on index
@@ -30,8 +34,8 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-const allPosts = await getCollection("project");
-const remainingCount = allPosts.length - postLimit;
+// ⚡ Bolt: reused allProjects.length
+const remainingCount = Math.max(0, allProjects.length - postLimit);
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">

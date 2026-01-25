@@ -486,4 +486,24 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Animation Memory Cleanup
+   * Removes 'will-change' hints after entrance animations complete
+   * to free up GPU memory layers.
+   */
+  function cleanupHeroAnimation() {
+    // Wait for max animation duration (0.55s delay + 0.6s duration = 1.15s)
+    // Using 2s to be safe and ensure no jank during animation
+    setTimeout(() => {
+      const letters = document.querySelectorAll(".letter-animate");
+      letters.forEach((el) => {
+        (el as HTMLElement).style.willChange = "auto";
+      });
+    }, 2000);
+  }
+
+  // Run on initial load and view transitions
+  cleanupHeroAnimation();
+  document.addEventListener("astro:after-swap", cleanupHeroAnimation);
 </script>

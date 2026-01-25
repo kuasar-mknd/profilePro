@@ -1,11 +1,18 @@
 ---
-import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// ⚡ Bolt: Removed dateformat dependency to reduce bundle size.
+// Using native Date methods for "dd-mm-yyyy" format.
+const d = new Date(date);
+const day = String(d.getDate()).padStart(2, "0");
+const month = String(d.getMonth() + 1).padStart(2, "0");
+const year = d.getFullYear();
+const formattedDate = `${day}-${month}-${year}`;
 ---
 
 <time
-  datetime={date.toISOString()}
+  datetime={d.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
 >
-  {dateFormat(date, "dd-mm-yyyy")}
+  {formattedDate}
 </time>
