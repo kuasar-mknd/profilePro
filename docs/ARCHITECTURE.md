@@ -43,6 +43,7 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 - **Format**: Converts source images to **AVIF** (Quality 68).
 - **Caching**: Implements a "Smart Cache" by comparing `mtime` of source vs. output files. Optimization is skipped if the source hasn't changed, significantly speeding up local dev and CI builds.
 - **Sizing**: Resizes images to a `maxWidth` (e.g., 1600px) to prevent serving unnecessarily large files.
+- **Slide Handling**: Files starting with `slide-` are treated as vertical content (9:16 aspect ratio), cropped to 1080x1920 to ensure full-screen consistency.
 
 ### Critical Rendering Path
 - **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
