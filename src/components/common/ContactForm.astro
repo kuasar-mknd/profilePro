@@ -99,12 +99,18 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           aria-hidden="true"
         >
         </div>
-        <!-- 🎨 Palette: Validation Icon -->
+        <!-- 🎨 Palette: Validation Icons -->
         <div
-          class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          class="success-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
           <Icon name="mdi:check-circle" class="w-6 h-6" />
+        </div>
+        <div
+          class="error-icon absolute right-4 top-1/2 -translate-y-1/2 text-red-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:alert-circle" class="w-6 h-6" />
         </div>
       </div>
     </div>
@@ -137,12 +143,18 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
         >
         </div>
-        <!-- 🎨 Palette: Validation Icon -->
+        <!-- 🎨 Palette: Validation Icons -->
         <div
-          class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          class="success-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
           <Icon name="mdi:check-circle" class="w-6 h-6" />
+        </div>
+        <div
+          class="error-icon absolute right-4 top-1/2 -translate-y-1/2 text-red-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:alert-circle" class="w-6 h-6" />
         </div>
       </div>
     </div>
@@ -174,12 +186,18 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           aria-hidden="true"
         >
         </div>
-        <!-- 🎨 Palette: Validation Icon (Top Right for Textarea) -->
+        <!-- 🎨 Palette: Validation Icons (Top Right for Textarea) -->
         <div
-          class="validation-icon absolute right-4 top-4 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          class="success-icon absolute right-4 top-4 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
           <Icon name="mdi:check-circle" class="w-6 h-6" />
+        </div>
+        <div
+          class="error-icon absolute right-4 top-4 text-red-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
+          aria-hidden="true"
+        >
+          <Icon name="mdi:alert-circle" class="w-6 h-6" />
         </div>
       </div>
       <!-- 🎨 Palette: Character counter -->
@@ -492,7 +510,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         );
       }
       // 🎨 Palette: Reset validation icons
-      form.querySelectorAll(".validation-icon").forEach((el) => {
+      form.querySelectorAll(".success-icon, .error-icon").forEach((el) => {
         (el as HTMLElement).dataset.visible = "false";
       });
 
@@ -540,20 +558,25 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     // 🎨 Palette: Helper to update validation icon state
     function updateValidationIcon(
       input: HTMLInputElement | HTMLTextAreaElement,
-      isValid: boolean,
+      state: "valid" | "invalid" | "neutral",
     ) {
-      // Find the sibling icon wrapper
-      const iconWrapper = input.parentNode?.querySelector(
-        ".validation-icon",
-      ) as HTMLElement;
-      if (iconWrapper) {
-        iconWrapper.dataset.visible = isValid ? "true" : "false";
+      const parent = input.parentNode;
+      if (!parent) return;
+
+      const successIcon = parent.querySelector(".success-icon") as HTMLElement;
+      const errorIcon = parent.querySelector(".error-icon") as HTMLElement;
+
+      if (successIcon) {
+        successIcon.dataset.visible = state === "valid" ? "true" : "false";
+      }
+      if (errorIcon) {
+        errorIcon.dataset.visible = state === "invalid" ? "true" : "false";
       }
     }
 
     nameInput?.addEventListener("input", () => {
       const isValid = nameInput.value.trim().length >= 2;
-      updateValidationIcon(nameInput, isValid);
+      updateValidationIcon(nameInput, isValid ? "valid" : "neutral");
 
       if (nameInput.hasAttribute("aria-invalid") && isValid) {
         nameInput.removeAttribute("aria-invalid");
@@ -562,10 +585,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     emailInput?.addEventListener("input", () => {
-      if (
-        emailInput.hasAttribute("aria-invalid") &&
-        isValidEmail(emailInput.value)
-      ) {
+      const isValid = isValidEmail(emailInput.value);
+      updateValidationIcon(emailInput, isValid ? "valid" : "neutral");
+
+      if (emailInput.hasAttribute("aria-invalid") && isValid) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
@@ -573,7 +596,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     messageInput?.addEventListener("input", () => {
       const isValid = messageInput.value.trim().length >= 10;
-      updateValidationIcon(messageInput, isValid);
+      updateValidationIcon(messageInput, isValid ? "valid" : "neutral");
 
       if (messageInput.hasAttribute("aria-invalid") && isValid) {
         messageInput.removeAttribute("aria-invalid");
@@ -604,33 +627,62 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         .forEach((el) => el.removeAttribute("aria-invalid"));
       errorMessage?.classList.add("hidden");
 
-      // 🎨 Palette: Add validation for required fields
-      if (nameInput && nameInput.value.trim().length < 2) {
-        nameInput.setAttribute("aria-invalid", "true");
-        nameInput.setAttribute("aria-describedby", "form-error-message");
+      // 🎨 Palette: Refactored validation logic to prevent mixed signals
+      let isFormValid = true;
+      let firstInvalidField: HTMLElement | null = null;
+
+      // Validate Name
+      if (nameInput) {
+        if (nameInput.value.trim().length < 2) {
+          isFormValid = false;
+          nameInput.setAttribute("aria-invalid", "true");
+          updateValidationIcon(nameInput, "invalid");
+          if (!firstInvalidField) firstInvalidField = nameInput;
+        } else {
+          nameInput.removeAttribute("aria-invalid");
+          updateValidationIcon(nameInput, "neutral"); // No success yet
+        }
+      }
+
+      // Validate Email
+      if (emailInput) {
+        if (!isValidEmail(emailInput.value)) {
+          isFormValid = false;
+          emailInput.setAttribute("aria-invalid", "true");
+          updateValidationIcon(emailInput, "invalid");
+          if (!firstInvalidField) firstInvalidField = emailInput;
+        } else {
+          emailInput.removeAttribute("aria-invalid");
+          updateValidationIcon(emailInput, "neutral");
+        }
+      }
+
+      // Validate Message
+      if (messageInput) {
+        if (messageInput.value.trim().length < 10) {
+          isFormValid = false;
+          messageInput.setAttribute("aria-invalid", "true");
+          updateValidationIcon(messageInput, "invalid");
+          if (!firstInvalidField) firstInvalidField = messageInput;
+        } else {
+          messageInput.removeAttribute("aria-invalid");
+          updateValidationIcon(messageInput, "neutral");
+        }
+      }
+
+      // If form is invalid, show a generic error and focus the first invalid field
+      if (!isFormValid) {
         showError(
-          "Veuillez entrer votre nom (minimum 2 caractères).",
-          nameInput,
+          "Veuillez corriger les erreurs dans le formulaire.",
+          firstInvalidField || undefined,
         );
         return;
       }
 
-      if (emailInput && !isValidEmail(emailInput.value)) {
-        emailInput.setAttribute("aria-invalid", "true");
-        emailInput.setAttribute("aria-describedby", "form-error-message");
-        showError("Veuillez entrer une adresse email valide.", emailInput);
-        return;
-      }
-
-      if (messageInput && messageInput.value.trim().length < 10) {
-        messageInput.setAttribute("aria-invalid", "true");
-        messageInput.setAttribute("aria-describedby", "form-error-message");
-        showError(
-          "Veuillez entrer un message d'au moins 10 caractères.",
-          messageInput,
-        );
-        return;
-      }
+      // If we reach here, the form is valid. Now show success icons.
+      if (nameInput) updateValidationIcon(nameInput, "valid");
+      if (emailInput) updateValidationIcon(emailInput, "valid");
+      if (messageInput) updateValidationIcon(messageInput, "valid");
 
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
