@@ -81,4 +81,37 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("contact form should submit successfully", async ({ page }) => {
+    await page.goto("/about");
+
+    // Fill out the form
+    await page.fill('input[name="name"]', "Test User");
+    await page.fill('input[name="email"]', "test@example.com");
+    await page.fill('textarea[name="message"]', "This is a test message from Playwright.");
+
+    // Mock the API response
+    await page.route("/api/submit-form", async (route) => {
+      const request = route.request();
+      const postData = JSON.parse(request.postData() || "{}");
+
+      // Basic validation of the submitted data
+      expect(postData.name).toBe("Test User");
+      expect(postData.email).toBe("test@example.com");
+      expect(postData.message).toContain("Playwright");
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ success: true, message: "Form submitted successfully." }),
+      });
+    });
+
+    // Submit the form
+    await page.click('button[type="submit"]');
+
+    // Verify success message
+    await expect(page.locator("#form-success-message")).toBeVisible();
+    await expect(page.locator("h3:has-text('Message envoyé !')")).toBeVisible();
+  });
 });

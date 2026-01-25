@@ -3,7 +3,7 @@
 /// <reference types="vite-plugin-pwa/client" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_WEB3FORMS_ACCESS_KEY: string;
+  readonly WEB3FORMS_ACCESS_KEY: string;
   readonly PUBLIC_CF_ANALYTICS_TOKEN?: string;
 }
 
