@@ -61,45 +61,47 @@ import { Icon } from "astro-icon/components";
     );
   };
 
-  function initThemeToggle() {
+  // ⚡ Bolt: Helper to update all buttons (and live region) on the page
+  // Defined at module scope to be usable by handleThemeChange
+  const updateButtonsState = (isDark: boolean, announce = false) => {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
-      });
+    const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+    buttons.forEach((btn) => {
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+      const span = btn.querySelector(".sr-only");
+      if (span) span.textContent = label;
+    });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
-      }
-    };
+    if (announce && liveRegion) {
+      liveRegion.textContent = isDark
+        ? "Mode sombre activé"
+        : "Mode clair activé";
+    }
+  };
 
+  // ⚡ Bolt: Move handleThemeChange to module scope so it's a stable reference
+  // This allows removeEventListener to correctly remove the previous listener
+  const handleThemeChange = (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    updateButtonsState(detail.isDark, true);
+  };
+
+  function initThemeToggle() {
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
-    updateLabels(isDark);
+    updateButtonsState(isDark);
 
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
+    // Now works correctly because handleThemeChange is a stable reference
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
 
-    function handleThemeChange(e: Event) {
-      const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
-
+    const buttons = document.querySelectorAll(".theme-toggle-btn");
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
-      // Even if dataset says initialized, the element might be new (swapped)
-      // but if it's the SAME element, we want to be safe.
-      // Actually, checking dataset is fine for standard usage, but removeEventListener is safer.
-
       btn.removeEventListener("click", handleThemeToggle);
       btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";
