@@ -6,8 +6,9 @@ import { Icon } from "astro-icon/components";
   type="button"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
-  title="Activer le mode sombre"
+  aria-label="Activer le mode sombre (Maj+D)"
+  title="Activer le mode sombre (Maj+D)"
+  aria-keyshortcuts="Shift+D"
 >
   <div
     class="flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
@@ -45,6 +46,12 @@ import { Icon } from "astro-icon/components";
    * - Handles View Transitions properly
    */
 
+  declare global {
+    interface Window {
+      hasAttachedThemeShortcut?: boolean;
+    }
+  }
+
   // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
   // This prevents memory leaks and duplicate listeners
   const handleThemeToggle = (e: Event) => {
@@ -61,12 +68,37 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  // 🎨 Palette: Global keyboard shortcut handler
+  const handleGlobalShortcut = (e: KeyboardEvent) => {
+    // Ignore if user is typing in a form field
+    const target = e.target as HTMLElement;
+    const isInput =
+      ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+      target.isContentEditable;
+
+    if (isInput) return;
+
+    if (e.shiftKey && (e.key === "D" || e.key === "d")) {
+      e.preventDefault();
+      // Trigger toggle on the first button found (they are synced via event dispatch)
+      const btn = document.querySelector(".theme-toggle-btn");
+      if (btn instanceof HTMLElement) {
+        // Use click() to ensure visual ripple or other attached behaviors run
+        btn.click();
+      }
+    }
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const baseLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
+      const label = `${baseLabel} (Maj+D)`;
+
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
@@ -108,6 +140,14 @@ import { Icon } from "astro-icon/components";
 
   // Initialize on load
   initThemeToggle();
+
+  // 🎨 Palette: Attach global shortcut listener
+  // ⚡ Bolt: Prevent duplicate listeners on navigation (View Transitions)
+  // Since this script module re-runs on swap, we check a global flag.
+  if (!window.hasAttachedThemeShortcut) {
+    document.addEventListener("keydown", handleGlobalShortcut);
+    window.hasAttachedThemeShortcut = true;
+  }
 
   // Re-initialize after view transitions
   document.addEventListener("astro:after-swap", initThemeToggle);
