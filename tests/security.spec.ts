@@ -42,3 +42,9 @@ test("sanitizeInput strips control characters", () => {
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
 });
+
+test("sanitizeInput escapes dollar signs", () => {
+  const input = "${console.log('pwned')}";
+  const output = sanitizeInput(input);
+  expect(output).toBe("&#36;&#123;console.log&#40;&#x27;pwned&#x27;&#41;&#125;");
+});

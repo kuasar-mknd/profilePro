@@ -52,3 +52,9 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-18 - Timestamp Trap Bypass via NaN
+
+**Vulnerability:** The timestamp-based spam trap logic `submitTimestamp - loadTimestamp < threshold` failed when `loadTimestamp` was `NaN` (e.g. empty or manipulated input), because `NaN < number` evaluates to `false`, bypassing the check.
+**Learning:** Always explicitly check for `isNaN()` when performing arithmetic security checks on user input.
+**Prevention:** Added `isNaN(loadTimestamp)` to the validation condition in `ContactForm.astro`.
