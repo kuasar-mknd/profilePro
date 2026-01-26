@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeFilename } from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -41,4 +41,18 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("sanitizeFilename removes directory traversal", () => {
+  expect(sanitizeFilename("../../etc/passwd")).toBe("etcpasswd");
+  expect(sanitizeFilename("..\\..\\windows\\win.ini")).toBe("windowswin.ini");
+});
+
+test("sanitizeFilename removes dangerous characters", () => {
+  expect(sanitizeFilename("image.jpg; rm -rf /")).toBe("image.jpgrm-rf");
+  expect(sanitizeFilename("test<script>.js")).toBe("testscript.js");
+});
+
+test("sanitizeFilename allows safe characters", () => {
+  expect(sanitizeFilename("my-image_v1.0.png")).toBe("my-image_v1.0.png");
 });

@@ -42,6 +42,15 @@ if (postData?.data?.image) {
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- 🛡️ Sentinel: CSP for Development (Strict) -->
+    {
+      import.meta.env.DEV && (
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://i.vimeocdn.com https://vumbnail.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com/ https://www.youtube.com/ https://player.vimeo.com/ https://vimeo.com/; connect-src 'self' https://vimeo.com https://api.websitecarbon.com https://cloudflareinsights.com https://api.web3forms.com; object-src 'none'; base-uri 'none';"
+        />
+      )
+    }
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
     <link
       rel="preconnect"
