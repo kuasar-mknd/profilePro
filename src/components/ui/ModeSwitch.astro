@@ -6,8 +6,9 @@ import { Icon } from "astro-icon/components";
   type="button"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
-  title="Activer le mode sombre"
+  aria-label="Activer le mode sombre (Maj+T)"
+  title="Activer le mode sombre (Maj+T)"
+  aria-keyshortcuts="Shift+T"
 >
   <div
     class="flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
@@ -33,7 +34,7 @@ import { Icon } from "astro-icon/components";
       >Lune</span
     >
   </div>
-  <span class="sr-only">Activer le mode sombre</span>
+  <span class="sr-only">Activer le mode sombre (Maj+T)</span>
   <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
@@ -43,6 +44,7 @@ import { Icon } from "astro-icon/components";
    * - Uses class selector to support multiple instances (desktop/mobile)
    * - Dynamic aria-label and title for better accessibility
    * - Handles View Transitions properly
+   * - Adds Shift+T keyboard shortcut
    */
 
   // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
@@ -61,12 +63,36 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  // 🎨 Palette: Global Keyboard Shortcut
+  const handleGlobalKeydown = (e: KeyboardEvent) => {
+    // Toggle on Shift + T
+    if (e.shiftKey && e.key.toLowerCase() === "t") {
+      // Ignore if focus is on an input, textarea, or contenteditable
+      const active = document.activeElement;
+      const tagName = active?.tagName;
+      const isEditable = active?.getAttribute("contenteditable") === "true";
+
+      if (
+        tagName === "INPUT" ||
+        tagName === "TEXTAREA" ||
+        tagName === "SELECT" ||
+        isEditable
+      ) {
+        return;
+      }
+
+      handleThemeToggle(e);
+    }
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const label = isDark
+        ? "Activer le mode clair (Maj+T)"
+        : "Activer le mode sombre (Maj+T)";
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
@@ -88,6 +114,10 @@ import { Icon } from "astro-icon/components";
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
+
+    // 🎨 Palette: Listen for keyboard shortcut
+    document.removeEventListener("keydown", handleGlobalKeydown);
+    document.addEventListener("keydown", handleGlobalKeydown);
 
     function handleThemeChange(e: Event) {
       const detail = (e as CustomEvent).detail;
