@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 🎨 Interaction: Global Keyboard Shortcuts (2025-02-19)
+**Learning:** Power users expect keyboard shortcuts for common actions. When adding global shortcuts (e.g., `Shift+T`), strictly filter out input fields (`input`, `textarea`) to avoid conflicts.
+**Action:** Implement `keydown` on `document`, guard against inputs, and always surface the shortcut in the UI via `aria-keyshortcuts` and tooltips.
