@@ -52,3 +52,9 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-18 - Development CSP and Filename Sanitization
+
+**Vulnerability:** Lack of Content Security Policy (CSP) during development and lack of standard filename sanitization utility.
+**Learning:** While production CSP is handled by `_headers`, development environments are often left unprotected, leading to potential introduction of insecure resources. Also, consistent filename handling prevents path traversal issues in future features.
+**Prevention:** Added a strict CSP meta tag in `Base.astro` (enabled only in DEV mode) and implemented `sanitizeFilename` in `src/utils/security.ts`.

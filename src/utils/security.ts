@@ -192,3 +192,33 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * 🛡️ Sentinel: Sanitizes a filename to prevent directory traversal and remove dangerous characters.
+ * Helps prevent Path Traversal vulnerabilities when handling user-provided filenames.
+ *
+ * Enforces:
+ * - Removal of directory traversal sequences (../)
+ * - Strict allowlist: a-z, A-Z, 0-9, -, _, .
+ *
+ * @param filename - The filename to sanitize
+ * @returns The sanitized filename
+ */
+export function sanitizeFilename(filename: string): string {
+  if (!filename || typeof filename !== "string") return "";
+
+  // Remove directory traversal sequences and control characters
+  // Note: We use a simple replace for common traversal patterns,
+  // but the strict allowlist below is the primary defense.
+  let name = filename.replace(/\.\.[\/\\]/g, "");
+
+  // Apply strict allowlist (Alphanumeric, dot, underscore, hyphen)
+  name = name.replace(/[^a-zA-Z0-9._-]/g, "");
+
+  // Prevent hidden files (starting with dot) if desired, but for now we allow them
+  // as long as they don't traverse.
+  // However, pure dots '..' or '.' should be handled.
+  if (name === "." || name === "..") return "";
+
+  return name;
+}
