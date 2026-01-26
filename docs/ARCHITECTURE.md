@@ -101,12 +101,20 @@ Workflows are defined in `.github/workflows/`:
     - Runs `bun run test:e2e` (Playwright).
     - Builds the site `bun run build`.
 
-2.  **Security**:
-    - **CodeQL**: Scans JS/TS for vulnerabilities.
-    - **Dependency Review**: Checks for vulnerable packages in PRs.
+2.  **Security & Hygiene**:
+    - **CodeQL (`codeql.yml`)**: Scans JS/TS for vulnerabilities.
+    - **Dependency Review (`dependency-review.yml`)**: Checks for vulnerable packages in PRs.
+    - **PR Lint (`lint-pr.yml`)**: Enforces Conventional Commits in PR titles.
 
-3.  **Deploy**:
-    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
+3.  **Deployment (`deploy.yml`)**:
+    - Triggers on push to `master`.
+    - Runs quality checks (redundant safety check).
+    - Builds the site and deploys to **Cloudflare Pages** via Wrangler.
+
+4.  **Monitoring (`pagespeed.yml`)**:
+    - Runs daily or after deployment.
+    - Checks Core Web Vitals (Lighthouse) via PageSpeed Insights API.
+    - Generates badges for the README.
 
 ---
 

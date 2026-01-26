@@ -7,6 +7,7 @@
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
 [![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
 [![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/kuasar-mknd/profilePro/actions/workflows/codeql.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/codeql.yml)
 
 <!-- Tech Stack -->
 
@@ -126,8 +127,24 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run dev` : Optimise les images et lance le serveur de développement.
 - `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
 - `bun run check` : Vérifie le code (linting + formatage + types).
-- `bun run lighthouse` : Lance l'audit de performance.
 - `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
+- `bun run lighthouse` : Lance l'audit de performance via Lighthouse CI.
+- `bun run analyze` : Analyse la taille du bundle de production.
+- `bun run images` : Lance uniquement l'optimisation des images.
+
+## 🧪 Tests
+
+Le projet utilise **Playwright** pour les tests End-to-End (E2E).
+
+1.  **Installer les navigateurs** (première fois uniquement) :
+    ```bash
+    bun x playwright install --with-deps
+    ```
+2.  **Lancer les tests** :
+    ```bash
+    bun run test:e2e
+    ```
+    *Note : Le serveur de développement doit être lancé au préalable (`bun run dev`) si les tests ne le gèrent pas automatiquement.*
 
 ### API Access
 
