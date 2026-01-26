@@ -1,15 +1,24 @@
 ---
 import config from "../../config.mjs";
 import { safeJson } from "../../utils/security";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  postData?: CollectionEntry<"project">;
+  jsonLd?: Record<string, any>;
+  noindex?: boolean;
+}
 
 const { postData, jsonLd, noindex = false } = Astro.props;
 
 const title =
   (postData?.data?.title ? postData.data.title : config.title) +
   config.titleSuffix;
-const description = postData?.data?.description
-  ? postData.data.description
-  : config.description;
+const description = postData?.data?.seoDescription
+  ? postData.data.seoDescription
+  : postData?.data?.intro
+    ? postData.data.intro
+    : config.description;
 const permalink = new URL(Astro.url.pathname, Astro.url);
 const image = postData?.slug
   ? `/og/${postData.slug}.png`
