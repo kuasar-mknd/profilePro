@@ -61,17 +61,42 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  // 🎨 Palette: Global keyboard shortcut handler
+  const handleGlobalShortcut = (e: KeyboardEvent) => {
+    // Ignore if user is typing in an input
+    const target = e.target as HTMLElement;
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.tagName === "SELECT" ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    // Shift + T to toggle theme
+    if (e.shiftKey && (e.key === "t" || e.key === "T")) {
+      e.preventDefault();
+      const btn = document.querySelector(".theme-toggle-btn");
+      if (btn instanceof HTMLElement) {
+        // Trigger click to reuse existing logic and animations
+        btn.click();
+      }
+    }
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const hint = " (Shift+T)";
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
+        btn.setAttribute("aria-label", label + hint);
+        btn.setAttribute("title", label + hint);
         const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        if (span) span.textContent = label + hint;
       });
 
       if (announce && liveRegion) {
@@ -88,6 +113,10 @@ import { Icon } from "astro-icon/components";
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
+
+    // 🎨 Palette: Register global shortcut listener
+    document.removeEventListener("keydown", handleGlobalShortcut);
+    document.addEventListener("keydown", handleGlobalShortcut);
 
     function handleThemeChange(e: Event) {
       const detail = (e as CustomEvent).detail;
