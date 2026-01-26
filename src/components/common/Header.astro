@@ -71,13 +71,15 @@ const logo2x = await getImage({
   </div>
 
   <!-- Mobile Menu -->
-  <nav
+  <div
     id="navigation_wrapper"
+    role="dialog"
+    aria-modal="true"
     aria-label="Menu mobile"
     class="fixed inset-0 bg-white dark:bg-pacamara-dark z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col justify-center items-center h-screen invisible"
   >
     <Navigation />
-  </nav>
+  </div>
 </header>
 
 <style is:global>

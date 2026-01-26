@@ -34,9 +34,13 @@ const allPosts = await getCollection("project");
 const remainingCount = allPosts.length - postLimit;
 ---
 
-<section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">
+<section
+  aria-labelledby="latest-posts-title"
+  class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section"
+>
   <ScrollReveal class="text-center mb-12">
     <h2
+      id="latest-posts-title"
       class="text-3xl md:text-4xl font-pacamara-space font-bold mb-4 text-pacamara-dark dark:text-white"
     >
       {
