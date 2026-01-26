@@ -14,11 +14,12 @@ const {
   lazyLoadImages = false,
 } = Astro.props;
 
-const posts = (
-  await getCollection("project", ({ data }) => {
-    return !(data.title == skipPost);
-  })
-)
+// ⚡ Bolt: Optimize Data Fetching
+// Fetch collection once, then filter/sort in memory to reduce I/O
+const allProjects = await getCollection("project");
+
+const posts = allProjects
+  .filter((p) => !skipPost || p.data.title !== skipPost)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, postLimit);
 
@@ -30,8 +31,8 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-const allPosts = await getCollection("project");
-const remainingCount = allPosts.length - postLimit;
+// ⚡ Bolt: Derived from single fetch
+const remainingCount = allProjects.length - postLimit;
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">

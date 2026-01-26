@@ -32,115 +32,136 @@
    * Added initialization guard to prevent duplicate observers and handlers
    */
   let menuObserver: MutationObserver | null = null;
+  // ⚡ Bolt: Module-scoped references for stable event handlers
+  let menuButton: HTMLElement | null = null;
+  let menuNav: HTMLElement | null = null;
+
+  // 🎨 Palette: Encapsulated close logic for reusability
+  const closeMenu = () => {
+    if (!menuButton || !menuNav) return;
+
+    document.documentElement.classList.remove("overflow-hidden");
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Ouvrir le menu");
+    menuButton.setAttribute("title", "Ouvrir le menu");
+    menuButton.removeAttribute("aria-keyshortcuts");
+    menuNav.classList.add("translate-x-full");
+    menuNav.classList.remove("translate-x-0");
+
+    // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
+    setTimeout(() => {
+      if (menuButton && menuButton.getAttribute("aria-expanded") === "false") {
+        menuNav?.classList.add("invisible");
+        // ⚡ Bolt: Remove GPU layer promotion to free memory
+        if (menuNav) (menuNav as HTMLElement).style.willChange = "auto";
+      }
+    }, 300);
+  };
+
+  const openMenu = () => {
+    if (!menuButton || !menuNav) return;
+
+    // ⚡ Bolt: Make visible immediately so transition can be seen
+    menuNav.classList.remove("invisible");
+
+    // ⚡ Bolt: Promote layer for smooth animation
+    (menuNav as HTMLElement).style.willChange = "transform";
+
+    // Force reflow to ensure transition triggers
+    void (menuNav as HTMLElement).offsetWidth;
+
+    document.documentElement.classList.add("overflow-hidden");
+    menuButton.setAttribute("aria-expanded", "true");
+    menuButton.setAttribute("aria-label", "Fermer le menu");
+    menuButton.setAttribute("title", "Fermer le menu");
+    menuButton.setAttribute("aria-keyshortcuts", "Escape");
+    menuNav.classList.remove("translate-x-full");
+    menuNav.classList.add("translate-x-0");
+  };
+
+  // ⚡ Bolt: Module-scoped keydown handler
+  const handleEscapeKey = (e: KeyboardEvent) => {
+    if (
+      e.key === "Escape" &&
+      menuButton &&
+      menuButton.getAttribute("aria-expanded") === "true"
+    ) {
+      closeMenu();
+      // Return focus to the toggle button
+      menuButton.focus();
+    }
+  };
+
+  // ⚡ Bolt: Module-scoped click handler
+  const handleMenuClick = () => {
+    if (!menuButton) return;
+    const isExpanded = menuButton.getAttribute("aria-expanded") === "true";
+
+    // 🎨 Palette: Announce menu state change to screen readers
+    const liveRegion = document.getElementById("menu-live-region");
+
+    if (isExpanded) {
+      closeMenu();
+      if (liveRegion) liveRegion.textContent = "Menu fermé";
+    } else {
+      openMenu();
+      if (liveRegion) liveRegion.textContent = "Menu ouvert";
+    }
+  };
 
   function menuToggle() {
-    const button = document.querySelector("#menu_toggle");
-    const nav = document.querySelector("#navigation_wrapper");
+    menuButton = document.querySelector("#menu_toggle");
+    menuNav = document.querySelector("#navigation_wrapper");
 
     // ⚡ Early return guards
-    if (!button || !nav) return;
-    if ((button as HTMLElement).dataset.initialized === "true") return;
-    (button as HTMLElement).dataset.initialized = "true";
+    if (!menuButton || !menuNav) return;
 
-    // 🎨 Palette: Encapsulated close logic for reusability
-    const closeMenu = () => {
-      document.documentElement.classList.remove("overflow-hidden");
-      button.setAttribute("aria-expanded", "false");
-      button.setAttribute("aria-label", "Ouvrir le menu");
-      button.setAttribute("title", "Ouvrir le menu");
-      button.removeAttribute("aria-keyshortcuts");
-      nav.classList.add("translate-x-full");
-      nav.classList.remove("translate-x-0");
+    // Check initialization on the button element itself to avoid double-binding
+    if (menuButton.dataset.initialized === "true") return;
+    menuButton.dataset.initialized = "true";
 
-      // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
-      setTimeout(() => {
-        if (button.getAttribute("aria-expanded") === "false") {
-          nav.classList.add("invisible");
-          // ⚡ Bolt: Remove GPU layer promotion to free memory
-          (nav as HTMLElement).style.willChange = "auto";
-        }
-      }, 300);
-    };
+    // ⚡ Bolt: Cleanup and Re-bind Listeners
+    menuButton.removeEventListener("click", handleMenuClick);
+    menuButton.addEventListener("click", handleMenuClick);
 
-    const openMenu = () => {
-      // ⚡ Bolt: Make visible immediately so transition can be seen
-      nav.classList.remove("invisible");
-
-      // ⚡ Bolt: Promote layer for smooth animation
-      (nav as HTMLElement).style.willChange = "transform";
-
-      // Force reflow to ensure transition triggers
-      void (nav as HTMLElement).offsetWidth;
-
-      document.documentElement.classList.add("overflow-hidden");
-      button.setAttribute("aria-expanded", "true");
-      button.setAttribute("aria-label", "Fermer le menu");
-      button.setAttribute("title", "Fermer le menu");
-      button.setAttribute("aria-keyshortcuts", "Escape");
-      nav.classList.remove("translate-x-full");
-      nav.classList.add("translate-x-0");
-    };
-
-    button.addEventListener("click", function () {
-      const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-      // 🎨 Palette: Announce menu state change to screen readers
-      const liveRegion = document.getElementById("menu-live-region");
-
-      if (isExpanded) {
-        closeMenu();
-        if (liveRegion) liveRegion.textContent = "Menu fermé";
-      } else {
-        openMenu();
-        if (liveRegion) liveRegion.textContent = "Menu ouvert";
-      }
-    });
-
-    nav.querySelectorAll("a").forEach((link) => {
+    menuNav.querySelectorAll("a").forEach((link) => {
+      // It's safe to add this multiple times as the function reference is stable,
+      // but 'once: true' or removing it would be cleaner if links change.
+      // However, link refs change on swap, so we just add to new links.
       link.addEventListener("click", closeMenu);
     });
 
     // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        button.getAttribute("aria-expanded") === "true"
-      ) {
-        closeMenu();
-        // Return focus to the toggle button
-        (button as HTMLElement).focus();
-      }
-    });
+    // ⚡ Bolt: Use stable reference and remove before adding
+    document.removeEventListener("keydown", handleEscapeKey);
+    document.addEventListener("keydown", handleEscapeKey);
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
       menuObserver = new MutationObserver((mutations) => {
-        const btn = document.querySelector("#menu_toggle");
-        const navEl = document.querySelector("#navigation_wrapper");
-        if (!btn || !navEl) return;
+        // We need to re-query here inside the callback or use module-scoped vars.
+        // Module scoped vars are updated in menuToggle(), so they should be fresh.
+        if (!menuButton || !menuNav) return;
 
         mutations.forEach((mutation) => {
           if (mutation.attributeName === "class") {
             const isMenuOpen =
               document.documentElement.classList.contains("overflow-hidden");
-            btn.setAttribute("aria-expanded", String(isMenuOpen));
+            menuButton?.setAttribute("aria-expanded", String(isMenuOpen));
 
             if (isMenuOpen) {
               // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
-              navEl.classList.remove("invisible");
-              navEl.classList.remove("translate-x-full");
-              navEl.classList.add("translate-x-0");
+              menuNav?.classList.remove("invisible");
+              menuNav?.classList.remove("translate-x-full");
+              menuNav?.classList.add("translate-x-0");
             } else {
-              navEl.classList.add("translate-x-full");
-              navEl.classList.remove("translate-x-0");
+              menuNav?.classList.add("translate-x-full");
+              menuNav?.classList.remove("translate-x-0");
               // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
               // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
               if (
-                navEl.classList.contains("translate-x-full") &&
-                !navEl.classList.contains("transitioning")
+                menuNav?.classList.contains("translate-x-full") &&
+                !menuNav?.classList.contains("transitioning")
               ) {
                 // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
               }
