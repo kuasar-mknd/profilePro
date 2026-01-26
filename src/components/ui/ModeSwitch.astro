@@ -6,8 +6,9 @@ import { Icon } from "astro-icon/components";
   type="button"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
-  title="Activer le mode sombre"
+  aria-label="Activer le mode sombre (Ctrl + .)"
+  title="Activer le mode sombre (Ctrl + .)"
+  aria-keyshortcuts="Control+."
 >
   <div
     class="flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
@@ -66,12 +67,16 @@ import { Icon } from "astro-icon/components";
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const baseLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
+      const fullLabel = `${baseLabel} (Ctrl + .)`;
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
+        btn.setAttribute("aria-label", fullLabel);
+        btn.setAttribute("title", fullLabel);
         const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        // Keep sr-only concise, aria-keyshortcuts handles the announcement
+        if (span) span.textContent = baseLabel;
       });
 
       if (announce && liveRegion) {
@@ -106,9 +111,39 @@ import { Icon } from "astro-icon/components";
     });
   }
 
+  // 🎨 Palette: Add keyboard shortcut listener, runs only once
+  function initShortcutListener() {
+    if ((window as any).themeShortcutInitialized) {
+      return;
+    }
+    document.addEventListener("keydown", (e) => {
+      // 1. Check for Ctrl+. or Cmd+.
+      if ((e.ctrlKey || e.metaKey) && e.key === ".") {
+        // 2. Prevent any default browser behavior
+        e.preventDefault();
+
+        // 3. Ignore if user is typing in a form
+        const activeEl = document.activeElement;
+        if (
+          activeEl &&
+          (activeEl.tagName === "INPUT" ||
+            activeEl.tagName === "TEXTAREA" ||
+            activeEl.tagName === "SELECT")
+        ) {
+          return;
+        }
+
+        // 4. Trigger the theme toggle
+        handleThemeToggle(new Event("shortcut"));
+      }
+    });
+    (window as any).themeShortcutInitialized = true;
+  }
+
   // Initialize on load
   initThemeToggle();
+  initShortcutListener();
 
-  // Re-initialize after view transitions
+  // Re-initialize UI but not shortcut listener after view transitions
   document.addEventListener("astro:after-swap", initThemeToggle);
 </script>
