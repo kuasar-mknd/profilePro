@@ -1,4 +1,13 @@
 ---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  postData: CollectionEntry<"project">;
+  bentoSize?: string;
+  priority?: boolean;
+  num?: number;
+}
+
 const { postData, bentoSize = "", priority = false } = Astro.props;
 import { Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
@@ -34,24 +43,30 @@ const readingTime = Math.ceil(wordCount / 200);
     class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none group-hover:will-change-transform"
   >
     {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
-    <Picture
-      src={postData.data.image}
-      widths={[400, 800, 1200]}
-      sizes={isLarge
-        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-        : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
-      formats={["avif", "webp"]}
-      fallbackFormat="webp"
-      quality={65}
-      alt={postData.data.title}
-      width={isLarge ? 800 : 400}
-      height={isLarge ? 600 : 300}
-      class="w-full h-full object-cover"
-      loading={priority ? "eager" : "lazy"}
-      decoding={priority ? "sync" : "async"}
-      fetchpriority={priority ? "high" : "low"}
-      transition:name={`project-image-${postData.slug}`}
-    />
+    {
+      postData.data.image && (
+        <Picture
+          src={postData.data.image}
+          widths={[400, 800, 1200]}
+          sizes={
+            isLarge
+              ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+              : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"
+          }
+          formats={["avif", "webp"]}
+          fallbackFormat="webp"
+          quality={65}
+          alt={postData.data.title}
+          width={isLarge ? 800 : 400}
+          height={isLarge ? 600 : 300}
+          class="w-full h-full object-cover"
+          loading={priority ? "eager" : "lazy"}
+          decoding={priority ? "sync" : "async"}
+          fetchpriority={priority ? "high" : "low"}
+          transition:name={`project-image-${postData.slug}`}
+        />
+      )
+    }
   </div>
 
   <!-- 3. Gradient Overlay - smooth transition on hover -->

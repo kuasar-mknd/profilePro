@@ -7,6 +7,12 @@ import {
   VIMEO_ID_REGEX,
 } from "../../../utils/security";
 
+interface Props {
+  videoUrl: string;
+  videoTitle?: string;
+  poster?: string;
+}
+
 // Extract video ID and provider
 const getVideoDetails = (url: string) => {
   if (!url) return { id: null, provider: null };

@@ -6,6 +6,14 @@ import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
 
+interface Props {
+  postLimit?: number;
+  skipPost?: string;
+  title?: string;
+  subtitle?: string;
+  lazyLoadImages?: boolean;
+}
+
 const {
   postLimit = config.latestPosts,
   skipPost = "",

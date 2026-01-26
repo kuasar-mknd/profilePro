@@ -1,4 +1,10 @@
 ---
+interface Props {
+  tag: string;
+  variant?: "default" | "dark";
+  href?: string;
+}
+
 const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
 const Element = href ? "a" : "span";
