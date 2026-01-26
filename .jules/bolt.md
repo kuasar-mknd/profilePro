@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-05-15 - Redundant Data Fetching in Astro Collections
+
+**Learning:** Calling `getCollection('type')` multiple times in a single component (e.g., once for filtering and once for total count) incurs double file I/O and parsing overhead for the entire collection.
+**Action:** Fetch the collection once into a variable, then perform all filtering, slicing, and counting operations in-memory to reduce build/render time.
