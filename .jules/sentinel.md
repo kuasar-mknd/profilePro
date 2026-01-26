@@ -52,3 +52,8 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-19 - Development CSP Strategy
+**Vulnerability:** Lack of CSP in development environment (localhost) allowed potential mixed content or insecure practices to go unnoticed until production.
+**Learning:** Production CSP headers (via `_headers`) do not apply to `bun run dev`. A separate strategy is needed.
+**Prevention:** Injected a conditional `<meta http-equiv="Content-Security-Policy">` in `Base.astro` triggered by `import.meta.env.DEV`. The policy must be permissive (`unsafe-inline`, `unsafe-eval`) for Vite HMR and must EXCLUDE `upgrade-insecure-requests` to avoid breaking HTTP localhost connections.
