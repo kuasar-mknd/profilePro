@@ -114,7 +114,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
     </div>
   </div>
 
-  <script is:inline>
+  <script>
     /**
      * ⚡ Bolt: Custom Website Carbon Badge Implementation
      * Re-implemented locally to avoid global scope pollution issues with external script
@@ -143,7 +143,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       const cacheKey = "wcb_" + wcU;
 
       // Render function
-      const render = (data) => {
+      const render = (data: { c: number; p: number }) => {
         if (!wcb) return;
         wcb.replaceChildren(); // Clear loading state
 
@@ -273,13 +273,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
       }
     }
 
-    // Initialize on initial load and every view transition
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initCarbonBadge);
-    } else {
-      // Small timeout to ensure DOM is fully ready and painted
-      setTimeout(initCarbonBadge, 0);
-    }
+    // ⚡ Bolt: Initialize only on astro:page-load to avoid double execution/fetching
+    // Module script ensures this listener is added only once per session.
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
