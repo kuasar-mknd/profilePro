@@ -42,6 +42,15 @@ if (postData?.data?.image) {
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- 🛡️ Sentinel: Development CSP to allow Vite HMR and debugging while testing security context -->
+    {
+      import.meta.env.DEV && (
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws: https://vimeo.com https://api.websitecarbon.com https://cloudflareinsights.com https://api.web3forms.com; frame-src 'self' https:;"
+        />
+      )
+    }
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
     <link
       rel="preconnect"

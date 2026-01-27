@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import { safeJson, sanitizeInput, isValidUrl } from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -41,4 +41,27 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("isValidUrl handles protocols correctly", () => {
+  expect(isValidUrl("https://example.com")).toBe(true);
+  expect(isValidUrl("http://example.com")).toBe(true);
+  expect(isValidUrl("/relative/path")).toBe(true);
+
+  // Default blocks mailto/tel
+  expect(isValidUrl("mailto:test@example.com")).toBe(false);
+  expect(isValidUrl("tel:+1234567890")).toBe(false);
+
+  // Options enable them
+  expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(true);
+  expect(isValidUrl("tel:+1234567890", { allowTel: true })).toBe(true);
+
+  // Dangerous stuff
+  expect(isValidUrl("javascript:alert(1)")).toBe(false);
+  expect(isValidUrl("data:text/html,bad")).toBe(false);
+  expect(isValidUrl("vbscript:bad")).toBe(false);
+
+  // Control characters (Sentinel check)
+  expect(isValidUrl("https://example.com\n")).toBe(false);
+  expect(isValidUrl("https://example.com\x00")).toBe(false);
 });
