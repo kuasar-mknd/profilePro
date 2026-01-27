@@ -402,6 +402,62 @@ if (entry.data.type === "video" && entry.data.image) {
         addCopyButtons();
         // Re-run on navigation
         document.addEventListener("astro:after-swap", addCopyButtons);
+
+        /**
+         * 🎨 Palette: Keyboard Navigation
+         * Allow navigating between projects using Arrow keys or J/K
+         */
+        function initProjectNavigation() {
+          const navNewer = document.getElementById("nav-newer");
+          const navOlder = document.getElementById("nav-older");
+
+          // Remove existing listener if any (to prevent duplicates)
+          document.removeEventListener("keydown", handleKeyNavigation);
+
+          if (!navNewer && !navOlder) return;
+
+          function handleKeyNavigation(e: KeyboardEvent) {
+            // Ignore if user is typing in an input
+            if (
+              ["INPUT", "TEXTAREA", "SELECT"].includes(
+                (e.target as HTMLElement).tagName,
+              ) ||
+              (e.target as HTMLElement).isContentEditable
+            ) {
+              return;
+            }
+
+            // ArrowLeft or K -> Newer (Previous visual)
+            if (
+              (e.key === "ArrowLeft" || e.key.toLowerCase() === "k") &&
+              navNewer
+            ) {
+              navNewer.click();
+            }
+
+            // ArrowRight or J -> Older (Next visual)
+            if (
+              (e.key === "ArrowRight" || e.key.toLowerCase() === "j") &&
+              navOlder
+            ) {
+              navOlder.click();
+            }
+          }
+
+          document.addEventListener("keydown", handleKeyNavigation);
+
+          // Cleanup on page swap
+          document.addEventListener(
+            "astro:before-swap",
+            () => {
+              document.removeEventListener("keydown", handleKeyNavigation);
+            },
+            { once: true },
+          );
+        }
+
+        initProjectNavigation();
+        document.addEventListener("astro:after-swap", initProjectNavigation);
       </script>
     </div>
   </article>
@@ -411,11 +467,14 @@ if (entry.data.type === "video" && entry.data.image) {
     class="container mx-auto max-w-5xl px-7 mb-12 mt-12"
     aria-label="Navigation entre projets"
   >
-    <div class="flex flex-col md:flex-row justify-between gap-4">
+    <div
+      class="flex flex-col md:flex-row justify-between gap-4 md:items-center"
+    >
       {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
+            id="nav-newer"
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
           >
@@ -438,10 +497,29 @@ if (entry.data.type === "video" && entry.data.image) {
         )
       }
 
+      {/* 🎨 Palette: Keyboard Shortcuts Hint */}
+      <div
+        class="hidden md:flex flex-col items-center gap-1 text-xs text-pacamara-primary/40 dark:text-white/40 font-outfit px-4"
+        aria-hidden="true"
+      >
+        <span>Naviguer</span>
+        <div class="flex gap-2">
+          <kbd
+            class="px-2 py-1 rounded-md bg-white dark:bg-pacamara-secondary/20 border border-pacamara-secondary/10 dark:border-white/10 shadow-xs font-sans"
+            >←</kbd
+          >
+          <kbd
+            class="px-2 py-1 rounded-md bg-white dark:bg-pacamara-secondary/20 border border-pacamara-secondary/10 dark:border-white/10 shadow-xs font-sans"
+            >→</kbd
+          >
+        </div>
+      </div>
+
       {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
+            id="nav-older"
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
           >
