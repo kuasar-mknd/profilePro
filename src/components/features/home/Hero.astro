@@ -4,8 +4,11 @@ import { getCollection } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
+const { allPosts: providedPosts = null } = Astro.props;
+
 // Fetch all project images
-const projects = await getCollection("project");
+// ⚡ Bolt: Use provided posts or fetch once to avoid double data fetching
+const projects = providedPosts || (await getCollection("project"));
 const projectImages = projects.map((p) => ({
   src: p.data.image,
   alt: p.data.title,

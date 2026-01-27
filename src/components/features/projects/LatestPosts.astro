@@ -12,13 +12,14 @@ const {
   title = "Projets",
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
+  allPosts: providedPosts = null,
 } = Astro.props;
 
-const posts = (
-  await getCollection("project", ({ data }) => {
-    return !(data.title == skipPost);
-  })
-)
+// ⚡ Bolt: Use provided posts or fetch once to avoid double data fetching
+const allProjects = providedPosts || (await getCollection("project"));
+
+const posts = allProjects
+  .filter((post) => post.data.title !== skipPost)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, postLimit);
 
@@ -30,8 +31,7 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-const allPosts = await getCollection("project");
-const remainingCount = allPosts.length - postLimit;
+const remainingCount = allProjects.length - postLimit;
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">
