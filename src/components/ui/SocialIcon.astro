@@ -12,8 +12,8 @@ import { isValidUrl } from "../../utils/security";
 const { icon, url, label } = Astro.props;
 
 // 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
-// Allow http, https, mailto, and relative paths (/)
-const safeUrl = isValidUrl(url, { allowMailto: true }) ? url : "#";
+// Allow http, https, mailto, tel, and relative paths (/)
+const safeUrl = isValidUrl(url, { allowMailto: true, allowTel: true }) ? url : "#";
 
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
