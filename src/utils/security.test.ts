@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, sanitizeFilename } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,41 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("sanitizeFilename", () => {
+    it("should allow valid filenames", () => {
+      expect(sanitizeFilename("image.png")).toBe("image.png");
+      expect(sanitizeFilename("my-file_123.txt")).toBe("my-file_123.txt");
+    });
+
+    it("should remove directory traversal attempts", () => {
+      expect(sanitizeFilename("../etc/passwd")).toBe("etcpasswd");
+      expect(sanitizeFilename("foo/../bar")).toBe("foobar");
+    });
+
+    it("should remove dangerous characters", () => {
+      expect(sanitizeFilename("file<name>.txt")).toBe("filename.txt");
+      expect(sanitizeFilename("file|name.txt")).toBe("filename.txt");
+      expect(sanitizeFilename("file*name.txt")).toBe("filename.txt");
+    });
+
+    it("should handle mixed case", () => {
+      expect(sanitizeFilename("Image.PNG")).toBe("Image.PNG");
+    });
+
+    it("should collapse multiple dots correctly", () => {
+      // ".." is removed, so "..." -> "."
+      expect(sanitizeFilename("...")).toBe(".");
+      // "...." -> ""
+      expect(sanitizeFilename("....")).toBe("");
+    });
+
+    it("should prevent bypasses using non-whitelisted characters", () => {
+      // ". ." -> space removed -> ".." -> removed -> ""
+      expect(sanitizeFilename(". .")).toBe("");
+      expect(sanitizeFilename(".. .")).toBe(".");
     });
   });
 });

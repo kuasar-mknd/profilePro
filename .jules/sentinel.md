@@ -52,3 +52,9 @@
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
 **Learning:** `upgrade-insecure-requests` is the modern standard (W3C Recommendation) that instructs the browser to automatically upgrade insecure HTTP requests to HTTPS before fetching. This improves both security (by ensuring encryption) and usability (by fixing broken links automatically where possible).
 **Prevention:** Replace `block-all-mixed-content` with `upgrade-insecure-requests` in CSP.
+
+## 2025-02-18 - Strict Filename Sanitization
+
+**Vulnerability:** Path traversal and file manipulation risks when handling user-provided filenames.
+**Learning:** Blacklisting characters is insufficient; obfuscation (e.g., ". .") can bypass filters if order of operations is incorrect.
+**Prevention:** Use `sanitizeFilename` with a strict allowlist applied *before* specific pattern removal (like `..`) to ensure robustness.
