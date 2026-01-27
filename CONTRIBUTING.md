@@ -46,7 +46,7 @@ This section guides you through submitting an enhancement suggestion for Profile
 ### JavaScript Styleguide
 
 - All JavaScript must adhere to [Prettier](https://prettier.io/) Standard Style.
-- Run `npm run format` to format your code.
+- Run `bun run format` to format your code.
 
 ### Documentation Styleguide
 
@@ -55,14 +55,15 @@ This section guides you through submitting an enhancement suggestion for Profile
 ## Setting Up the Development Environment
 
 1.  Clone the repo: `git clone https://github.com/kuasar-mknd/profilePro.git`
-2.  Install dependencies: `npm install`
-3.  Start the development server: `npm run dev`
+2.  Install dependencies: `bun install`
+3.  Start the development server: `bun run dev`
 
 ## Testing
 
-Run the test suite with:
+Run the quality checks and tests with:
 
 ```bash
-npm run check
-npm run lighthouse
+bun run check
+bun run test:e2e
+bun run lighthouse
 ```
