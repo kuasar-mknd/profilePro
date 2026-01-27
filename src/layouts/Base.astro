@@ -534,8 +534,9 @@ if (postData?.data?.image) {
         }
 
         // Select all floating elements
+        // ⚡ Bolt: Expanded to include infinite animations (pulse, scroll, shimmer, blob)
         const animatedElements = document.querySelectorAll(
-          ".floating, .floating-slow, .floating-delayed",
+          ".floating, .floating-slow, .floating-delayed, .infinite-scroll, .animate-pulse, .text-shimmer, .animate-blob",
         );
 
         if (animatedElements.length === 0) return;
