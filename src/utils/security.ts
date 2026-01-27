@@ -126,17 +126,24 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: { allowMailto?: boolean; allowTel?: boolean } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
-  const { allowMailto = false } = options;
-
-  if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(url)) {
+    return false;
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  const { allowMailto = false, allowTel = false } = options;
+
+  const protocols = ["https?:\\/\\/", "\\/"];
+
+  if (allowMailto) protocols.push("mailto:");
+  if (allowTel) protocols.push("tel:");
+
+  const regex = new RegExp(`^(${protocols.join("|")})`, "i");
+  return regex.test(url);
 }
 
 /**
