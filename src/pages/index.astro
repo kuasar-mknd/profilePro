@@ -5,6 +5,10 @@ import ServicesPreview from "../components/features/home/ServicesPreview.astro";
 import LatestPosts from "../components/features/projects/LatestPosts.astro";
 import CTASection from "../components/common/CTASection.astro";
 import config from "../config.mjs";
+import { getCollection } from "astro:content";
+
+// ⚡ Bolt: Fetch projects once at page level to prevent double-fetching in Hero and LatestPosts
+const allPosts = await getCollection("project");
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -32,9 +36,9 @@ const jsonLd = {
 
 <Base jsonLd={jsonLd}>
   <main>
-    <Hero />
+    <Hero allPosts={allPosts} />
     <ServicesPreview />
-    <LatestPosts postLimit={7} />
+    <LatestPosts postLimit={7} allPosts={allPosts} />
     <CTASection />
   </main>
 </Base>

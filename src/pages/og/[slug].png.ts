@@ -11,13 +11,18 @@ export async function getStaticPaths() {
   }));
 }
 
+// ⚡ Bolt: Cache font buffer in memory to prevent N requests during build
+let fontCache: ArrayBuffer | null = null;
+
 export const GET: APIRoute = async ({ props }) => {
   const { project } = props;
 
   // Load font (Inter Bold) from CDN (WOFF is supported by Satori)
-  const fontData = await fetch(
-    "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
-  ).then((res) => res.arrayBuffer());
+  if (!fontCache) {
+    fontCache = await fetch(
+      "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
+    ).then((res) => res.arrayBuffer());
+  }
 
   const svg = await satori(
     {
@@ -119,7 +124,7 @@ export const GET: APIRoute = async ({ props }) => {
       fonts: [
         {
           name: "Inter",
-          data: fontData,
+          data: fontCache,
           style: "normal",
           weight: 700,
         },
