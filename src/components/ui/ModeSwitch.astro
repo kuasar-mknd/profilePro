@@ -66,12 +66,17 @@ import { Icon } from "astro-icon/components";
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const baseLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
+      const visibleText = isDark ? "Soleil" : "Lune";
+      const a11yLabel = `${visibleText}: ${baseLabel}`;
+
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
+        btn.setAttribute("aria-label", a11yLabel);
+        btn.setAttribute("title", a11yLabel);
         const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        if (span) span.textContent = a11yLabel;
       });
 
       if (announce && liveRegion) {
