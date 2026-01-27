@@ -1,10 +1,19 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import Post from "./Post.astro";
 import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
+
+interface Props {
+  postLimit?: number;
+  skipPost?: string;
+  title?: string;
+  subtitle?: string;
+  lazyLoadImages?: boolean;
+  allPosts?: CollectionEntry<"project">[];
+}
 
 const {
   postLimit = config.latestPosts,
@@ -12,13 +21,18 @@ const {
   title = "Projets",
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
+  allPosts: providedPosts,
 } = Astro.props;
 
-const posts = (
-  await getCollection("project", ({ data }) => {
-    return !(data.title == skipPost);
-  })
-)
+let rawPosts: CollectionEntry<"project">[];
+if (providedPosts) {
+  rawPosts = providedPosts;
+} else {
+  rawPosts = await getCollection("project");
+}
+
+const posts = rawPosts
+  .filter((post) => post.data.title !== skipPost)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, postLimit);
 
@@ -30,8 +44,7 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-const allPosts = await getCollection("project");
-const remainingCount = allPosts.length - postLimit;
+const remainingCount = rawPosts.length - postLimit;
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">
