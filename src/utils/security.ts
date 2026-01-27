@@ -192,3 +192,20 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * Sanitizes a filename to prevent directory traversal and enforce safe characters.
+ * Allows: a-z, A-Z, 0-9, -, _, .
+ * Removes: ..
+ *
+ * @param filename - The filename to sanitize
+ * @returns The sanitized filename
+ */
+export function sanitizeFilename(filename: string): string {
+  if (!filename) return "";
+  // Allow only safe characters first (prevents bypasses like ". .")
+  let safe = filename.replace(/[^a-zA-Z0-9._-]/g, "");
+  // Remove directory traversal attempts
+  safe = safe.replace(/\.\./g, "");
+  return safe;
+}
