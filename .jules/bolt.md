@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-23 - Stable Event References in View Transitions
+
+**Learning:** In Astro components using View Transitions, defining event handler functions inside the initialization logic (closures) creates new function references on every navigation. This prevents `removeEventListener` from working correctly, leading to duplicate global listeners (memory leaks) and stale closures referencing detached DOM nodes.
+**Action:** Always define global event handlers (like `theme-change` listeners) in the module scope to ensure a stable reference. This guarantees that `removeEventListener` successfully cleans up the previous listener before adding the new one.
