@@ -61,38 +61,44 @@ import { Icon } from "astro-icon/components";
     );
   };
 
-  function initThemeToggle() {
+  // ⚡ Bolt: Module-scoped update function prevents closure leaks
+  // Dynamically queries DOM to ensure it always operates on current elements
+  const updateLabels = (isDark: boolean, announce = false) => {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
+    const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
-      });
+    buttons.forEach((btn) => {
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+      const span = btn.querySelector(".sr-only");
+      if (span) span.textContent = label;
+    });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
-      }
-    };
+    if (announce && liveRegion) {
+      liveRegion.textContent = isDark
+        ? "Mode sombre activé"
+        : "Mode clair activé";
+    }
+  };
+
+  // ⚡ Bolt: Module-scoped event handler
+  // Attached once per session, never leaks
+  const handleThemeChange = (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    updateLabels(detail.isDark, true);
+  };
+
+  // Attach global listener once
+  window.removeEventListener("theme-change", handleThemeChange);
+  window.addEventListener("theme-change", handleThemeChange);
+
+  function initThemeToggle() {
+    const buttons = document.querySelectorAll(".theme-toggle-btn");
 
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
     updateLabels(isDark);
-
-    // ⚡ Bolt: Listen for global theme changes to sync all buttons
-    window.removeEventListener("theme-change", handleThemeChange);
-    window.addEventListener("theme-change", handleThemeChange);
-
-    function handleThemeChange(e: Event) {
-      const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
 
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding

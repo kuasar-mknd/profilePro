@@ -71,3 +71,7 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-05-20 - Closure Leaks in Astro Modules
+**Learning:** Functions defined inside initialization handlers (like `initThemeToggle`) create closures that capture local variables (e.g., `buttons` NodeList). When re-run during View Transitions (`astro:after-swap`), these closures retain references to detached DOM nodes, causing memory leaks. Furthermore, passing these new closures to `removeEventListener` fails to remove previous listeners, leading to exponential listener stacking on global objects like `window`.
+**Action:** Move event handlers and DOM update logic to the module scope. Use dynamic DOM querying (e.g., `document.querySelectorAll`) inside these handlers to ensure they always operate on the live DOM and maintain stable function references for `addEventListener`/`removeEventListener`.
