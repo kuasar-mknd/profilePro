@@ -81,4 +81,29 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("theme toggle should work with keyboard shortcut", async ({ page }) => {
+    await page.goto("/");
+    const html = page.locator("html");
+    const isDarkInitial = await html.evaluate((el) =>
+      el.classList.contains("dark"),
+    );
+
+    // Press Shift+T
+    await page.keyboard.press("Shift+T");
+
+    if (isDarkInitial) {
+      await expect(html).not.toHaveClass(/dark/);
+    } else {
+      await expect(html).toHaveClass(/dark/);
+    }
+
+    // Toggle back
+    await page.keyboard.press("Shift+T");
+    if (isDarkInitial) {
+      await expect(html).toHaveClass(/dark/);
+    } else {
+      await expect(html).not.toHaveClass(/dark/);
+    }
+  });
 });
