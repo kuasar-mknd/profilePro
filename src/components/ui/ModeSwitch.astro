@@ -61,12 +61,33 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  // 🎨 Palette: Keyboard Shortcut Handler
+  const handleShortcut = (e: KeyboardEvent) => {
+    // Check for Shift + T
+    if (e.shiftKey && (e.key === "T" || e.key === "t")) {
+      // Ignore if focus is on an input field
+      const target = e.target as HTMLElement;
+      if (
+        ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      // Trigger toggle
+      handleThemeToggle(e);
+    }
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const baseLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
+      const label = `${baseLabel} (Shift+T)`;
+
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
@@ -88,6 +109,10 @@ import { Icon } from "astro-icon/components";
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
+
+    // 🎨 Palette: Add keyboard shortcut listener
+    document.removeEventListener("keydown", handleShortcut);
+    document.addEventListener("keydown", handleShortcut);
 
     function handleThemeChange(e: Event) {
       const detail = (e as CustomEvent).detail;
