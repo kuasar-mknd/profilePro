@@ -59,5 +59,10 @@ describe("Security Utilities", () => {
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
     });
+
+    it("should sanitize pipe and dollar characters", () => {
+      expect(sanitizeInput("User | Admin")).toBe("User &#124; Admin");
+      expect(sanitizeInput("Price: $100")).toBe("Price: &#36;100");
+    });
   });
 });
