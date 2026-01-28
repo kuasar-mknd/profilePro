@@ -10,7 +10,7 @@ Portfolio website for Samuel Dulex, focusing on video content creation and photo
 - **UI Components**: React v19
 - **Styling**: Tailwind CSS v4
 - **Language**: TypeScript & JavaScript (ESM)
-- **Package Manager**: npm
+- **Package Manager**: bun
 
 ## Project Structure
 
@@ -26,10 +26,10 @@ Portfolio website for Samuel Dulex, focusing on video content creation and photo
 
 ## Key Commands
 
-- **Start Dev Server**: `npm run dev`
-- **Build**: `npm run build`
-- **Lint**: `npm run lint`
-- **Check**: `npm run check` (Lint + Format check)
+- **Start Dev Server**: `bun run dev`
+- **Build**: `bun run build`
+- **Lint**: `bun run lint`
+- **Check**: `bun run check` (Lint + Format check)
 
 ## Conventions
 
