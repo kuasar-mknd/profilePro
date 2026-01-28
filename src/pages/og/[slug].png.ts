@@ -11,13 +11,19 @@ export async function getStaticPaths() {
   }));
 }
 
+// ⚡ Bolt: Cache font promise to avoid redundant fetches during build
+let fontPromise: Promise<ArrayBuffer> | null = null;
+
 export const GET: APIRoute = async ({ props }) => {
   const { project } = props;
 
   // Load font (Inter Bold) from CDN (WOFF is supported by Satori)
-  const fontData = await fetch(
-    "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
-  ).then((res) => res.arrayBuffer());
+  if (!fontPromise) {
+    fontPromise = fetch(
+      "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
+    ).then((res) => res.arrayBuffer());
+  }
+  const fontData = await fontPromise;
 
   const svg = await satori(
     {

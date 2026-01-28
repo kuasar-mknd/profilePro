@@ -1,26 +1,40 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import Post from "./Post.astro";
 import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
 
+interface Props {
+  postLimit?: number;
+  postLimitString?: string; // Handle string inputs often passed from other components
+  skipPost?: string;
+  title?: string;
+  subtitle?: string;
+  lazyLoadImages?: boolean;
+  allPosts?: CollectionEntry<"project">[];
+}
+
 const {
   postLimit = config.latestPosts,
+  postLimitString,
   skipPost = "",
   title = "Projets",
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
+  allPosts: initialAllPosts,
 } = Astro.props;
 
-const posts = (
-  await getCollection("project", ({ data }) => {
-    return !(data.title == skipPost);
-  })
-)
+// Handle potential string input for postLimit
+const limit = postLimitString ? parseInt(postLimitString, 10) : postLimit;
+
+const allPosts = initialAllPosts || (await getCollection("project"));
+
+const posts = allPosts
+  .filter((post) => post.data.title !== skipPost)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, postLimit);
+  .slice(0, limit);
 
 // Determine bento grid sizes based on index
 const getBentoClass = (index: number) => {
@@ -30,8 +44,7 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-const allPosts = await getCollection("project");
-const remainingCount = allPosts.length - postLimit;
+const remainingCount = allPosts.length - limit;
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">

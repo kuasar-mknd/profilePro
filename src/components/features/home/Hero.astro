@@ -1,11 +1,17 @@
 ---
 import { getImage } from "astro:assets";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
+interface Props {
+  projects?: CollectionEntry<"project">[];
+}
+
+const { projects: initialProjects } = Astro.props;
+
 // Fetch all project images
-const projects = await getCollection("project");
+const projects = initialProjects || (await getCollection("project"));
 const projectImages = projects.map((p) => ({
   src: p.data.image,
   alt: p.data.title,
