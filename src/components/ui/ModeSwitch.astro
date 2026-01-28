@@ -43,6 +43,7 @@ import { Icon } from "astro-icon/components";
    * - Uses class selector to support multiple instances (desktop/mobile)
    * - Dynamic aria-label and title for better accessibility
    * - Handles View Transitions properly
+   * - Adds global keyboard shortcut (Shift + T)
    */
 
   // ⚡ Bolt: Move handler to module scope to ensure stable reference for removal/idempotency
@@ -66,12 +67,16 @@ import { Icon } from "astro-icon/components";
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const baseLabel = isDark
+        ? "Activer le mode clair"
+        : "Activer le mode sombre";
+      const fullLabel = `${baseLabel} (Shift + T)`; // 🎨 Palette: Add shortcut hint
+
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
+        btn.setAttribute("aria-label", fullLabel);
+        btn.setAttribute("title", fullLabel);
         const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        if (span) span.textContent = baseLabel; // Keep sr-only label concise
       });
 
       if (announce && liveRegion) {
@@ -95,15 +100,42 @@ import { Icon } from "astro-icon/components";
     }
 
     buttons.forEach((btn) => {
-      // ⚡ Bolt: Robust cleanup and re-binding
-      // Even if dataset says initialized, the element might be new (swapped)
-      // but if it's the SAME element, we want to be safe.
-      // Actually, checking dataset is fine for standard usage, but removeEventListener is safer.
-
       btn.removeEventListener("click", handleThemeToggle);
       btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";
     });
+  }
+
+  // 🎨 Palette: Add global keyboard shortcut (Shift + T).
+  // The module script runs only once, so this listener is attached globally
+  // and persists across view transitions without re-attaching.
+  const handleGlobalShortcut = (e: KeyboardEvent) => {
+    const target = e.target as HTMLElement;
+    // Ignore if user is typing in a form field
+    if (
+      e.shiftKey &&
+      e.key.toUpperCase() === "T" &&
+      target.tagName !== "INPUT" &&
+      target.tagName !== "TEXTAREA" &&
+      target.tagName !== "SELECT" &&
+      !target.isContentEditable
+    ) {
+      e.preventDefault();
+      // Simulate a click on the first theme toggle button found
+      const firstButton = document.querySelector(
+        ".theme-toggle-btn",
+      ) as HTMLElement;
+      if (firstButton) {
+        firstButton.click();
+      }
+    }
+  };
+
+  // Add the listener only once, guarded by a global flag.
+  // This prevents issues with HMR or other scripts potentially re-evaluating this.
+  if (typeof (window as any).themeShortcutInitialized === "undefined") {
+    document.addEventListener("keydown", handleGlobalShortcut);
+    (window as any).themeShortcutInitialized = true;
   }
 
   // Initialize on load
