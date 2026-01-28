@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, sanitizeFilename } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,46 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("sanitizeFilename", () => {
+    it("should allow valid filenames", () => {
+      expect(sanitizeFilename("image.png")).toBe("image.png");
+      expect(sanitizeFilename("my-file_v1.txt")).toBe("my-file_v1.txt");
+    });
+
+    it("should strip path separators", () => {
+      expect(sanitizeFilename("path/to/file.txt")).toBe("pathtofile.txt");
+      expect(sanitizeFilename("..\\windows\\system32")).toBe("windowssystem32");
+    });
+
+    it("should neutralize directory traversal", () => {
+      expect(sanitizeFilename("../../etc/passwd")).toBe("etcpasswd");
+      expect(sanitizeFilename("..")).toBe("");
+      expect(sanitizeFilename("...")).toBe("");
+    });
+
+    it("should collapse multiple dots", () => {
+      expect(sanitizeFilename("file..name.txt")).toBe("file.name.txt");
+    });
+
+    it("should strip control characters and spaces", () => {
+      expect(sanitizeFilename("file name.txt")).toBe("filename.txt");
+      expect(sanitizeFilename("file\nname.txt")).toBe("filename.txt");
+    });
+
+    it("should remove leading and trailing dots", () => {
+      expect(sanitizeFilename(".hidden")).toBe("hidden");
+      expect(sanitizeFilename("file.")).toBe("file");
+    });
+
+    it("should handle empty or invalid inputs", () => {
+      expect(sanitizeFilename("")).toBe("");
+      // @ts-expect-error testing invalid input
+      expect(sanitizeFilename(null)).toBe("");
+      // @ts-expect-error testing invalid input
+      expect(sanitizeFilename(undefined)).toBe("");
     });
   });
 });

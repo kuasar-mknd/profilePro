@@ -192,3 +192,27 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * Sanitizes a filename to prevent directory traversal and usage of dangerous characters.
+ * Enforces a strict allowlist of characters: a-z, A-Z, 0-9, -, _, .
+ * Removes ".." sequences to prevent directory traversal.
+ *
+ * @param filename - The filename to sanitize
+ * @returns The sanitized filename or empty string if invalid
+ */
+export function sanitizeFilename(filename: string): string {
+  if (!filename || typeof filename !== "string") return "";
+
+  // 1. Enforce strict allowlist (removes /, \, spaces, control chars, etc.)
+  // This effectively neutralizes separators required for traversal.
+  let safe = filename.replace(/[^a-zA-Z0-9._-]/g, "");
+
+  // 2. Collapse multiple dots to prevent ".."
+  safe = safe.replace(/\.+/g, ".");
+
+  // 3. Remove leading/trailing dots to prevent hidden files or "current directory" references
+  safe = safe.replace(/^\.+|\.+$/g, "");
+
+  return safe;
+}
