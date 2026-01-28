@@ -1,4 +1,4 @@
 Contact: mailto:samuel@edulex.ch
 Policy: https://github.com/Kuasar-mk/portfolio/blob/master/SECURITY.md
 Canonical: https://portfolio.kuasar.xyz/.well-known/security.txt
-Expires: 2025-07-25T12:00:00.000Z
+Expires: 2026-02-18T12:00:00.000Z
