@@ -61,45 +61,46 @@ import { Icon } from "astro-icon/components";
     );
   };
 
-  function initThemeToggle() {
+  // ⚡ Bolt: Extracted logic to module scope to prevent closure memory leaks
+  const updateLabels = (isDark: boolean, announce = false) => {
+    // Dynamically query elements to ensure we always target the current DOM
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
-      });
+    const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+    buttons.forEach((btn) => {
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+      const span = btn.querySelector(".sr-only");
+      if (span) span.textContent = label;
+    });
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
-      }
-    };
+    if (announce && liveRegion) {
+      liveRegion.textContent = isDark
+        ? "Mode sombre activé"
+        : "Mode clair activé";
+    }
+  };
 
+  // ⚡ Bolt: Stable event listener reference
+  const handleThemeChange = (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    updateLabels(detail.isDark, true);
+  };
+
+  function initThemeToggle() {
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
     updateLabels(isDark);
 
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
+    // Now correctly removes the previous listener because handleThemeChange is stable
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
 
-    function handleThemeChange(e: Event) {
-      const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
-
+    const buttons = document.querySelectorAll(".theme-toggle-btn");
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
-      // Even if dataset says initialized, the element might be new (swapped)
-      // but if it's the SAME element, we want to be safe.
-      // Actually, checking dataset is fine for standard usage, but removeEventListener is safer.
-
       btn.removeEventListener("click", handleThemeToggle);
       btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";
