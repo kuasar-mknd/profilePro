@@ -192,3 +192,18 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * Sanitizes an email address to prevent XSS.
+ * This is a lightweight sanitizer that removes characters that are both invalid in emails
+ * and commonly used in XSS attacks. It is not as comprehensive as sanitizeInput,
+ * but is safe for email fields where characters like '%' must be preserved.
+ *
+ * @param email The email string to sanitize.
+ * @returns The sanitized email string.
+ */
+export function sanitizeEmailForXSS(email: string): string {
+  if (!email || typeof email !== "string") return "";
+  // Removes <, >, ", ' which are invalid in emails and used for XSS.
+  return email.replace(/[<>"']/g, "");
+}

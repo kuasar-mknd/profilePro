@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, sanitizeEmailForXSS } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,25 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("sanitizeEmailForXSS", () => {
+    it("should remove characters dangerous for XSS", () => {
+      expect(sanitizeEmailForXSS(`foo<'>bar@example.com`)).toBe(
+        "foobar@example.com",
+      );
+    });
+
+    it("should not alter valid email characters", () => {
+      expect(sanitizeEmailForXSS("test.name+alias%20@example.co.uk")).toBe(
+        "test.name+alias%20@example.co.uk",
+      );
+    });
+
+    it("should return an empty string for null or undefined input", () => {
+      expect(sanitizeEmailForXSS(null!)).toBe("");
+      expect(sanitizeEmailForXSS(undefined!)).toBe("");
     });
   });
 });
