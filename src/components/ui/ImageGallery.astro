@@ -10,6 +10,7 @@ import { Picture, getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 import EmptyState from "./EmptyState.astro";
+import { sanitizeFilename } from "../../utils/security";
 
 interface Props {
   folder?: string;
@@ -27,6 +28,9 @@ const {
   priorityCount = 0,
 } = Astro.props;
 
+// 🛡️ Sentinel: Sanitize folder name immediately
+const safeFolder = folder ? sanitizeFilename(folder) : undefined;
+
 let galleryImages: { src: ImageMetadata; filename: string; alt?: string }[] =
   [];
 
@@ -37,7 +41,7 @@ if (explicitImages && explicitImages.length > 0) {
     filename: `image-${index}`,
     alt: `Photo ${index + 1}`,
   }));
-} else if (folder) {
+} else if (safeFolder) {
   // Load from folder
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
@@ -46,10 +50,10 @@ if (explicitImages && explicitImages.length > 0) {
 
   galleryImages = Object.entries(allImages)
     .filter(([path]) => {
-      const folderMatch = path.includes(`/${folder}/`);
+      const folderMatch = path.includes(`/${safeFolder}/`);
       if (!folderMatch) return false;
 
-      const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
+      const isInSubfolder = path.split(`/${safeFolder}/`)[1]?.includes("/");
       if (isInSubfolder) return false;
 
       for (const pattern of excludePatterns) {
@@ -60,7 +64,7 @@ if (explicitImages && explicitImages.length > 0) {
     .map(([path, module]) => ({
       src: module.default,
       filename: path.split("/").pop() || "",
-      alt: `Photo - ${folder}`,
+      alt: `Photo - ${safeFolder}`,
     }))
     .sort((a, b) => a.filename.localeCompare(b.filename));
 }
@@ -135,8 +139,8 @@ const columnClasses = {
     <EmptyState
       icon="mdi:image-off"
       message={
-        folder
-          ? `Aucune image trouvée dans le dossier "${folder}"`
+        safeFolder
+          ? `Aucune image trouvée dans le dossier "${safeFolder}"`
           : "Aucune image à afficher."
       }
     />

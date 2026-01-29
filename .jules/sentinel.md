@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-18 - Filename Sanitization & Header Hardening
+
+**Vulnerability:** Input properties like `folder` in Astro components could theoretically be exploited for directory traversal if used in file system operations, even if Astro's `glob` is static. Additionally, missing security headers in meta tags leaves a gap for environments where HTTP headers aren't fully controlled.
+**Learning:** Always sanitize inputs that act as file identifiers or paths, even in static site generators. Adding `sanitizeFilename` with a strict allowlist is a robust defense.
+**Prevention:** Implemented `sanitizeFilename` (allowlist: alphanumeric, dot, dash, underscore, ampersand) and applied it to `ImageGallery`. Added `Referrer-Policy` and `Upgrade-Insecure-Requests` meta tags.

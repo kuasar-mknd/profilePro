@@ -42,6 +42,10 @@ if (postData?.data?.image) {
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- 🛡️ Sentinel: Defense-in-depth Security Headers -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
     <link
       rel="preconnect"
