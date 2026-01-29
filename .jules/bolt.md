@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-02-27 - Layout Thrashing in Interactive Components
+
+**Learning:** In interactive components like `TiltCard`, setting a style property (Write) immediately before reading layout metrics (Read) forces the browser to perform a synchronous reflow (Layout Thrashing). This is especially costly when triggered by high-frequency events like `mouseenter` across a grid of items.
+**Action:** Always enforce a "Read-then-Write" pattern: read all necessary layout metrics (e.g., `getBoundingClientRect`) at the start of the handler before modifying any styles or DOM attributes.
