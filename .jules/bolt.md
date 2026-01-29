@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - Pruning Unused Preloads
+
+**Learning:** Preloading non-critical fonts (like `Outfit` which is used only in elements hidden by initial animations) creates unnecessary network contention, delaying LCP assets (like Hero Logo and Title font).
+**Action:** Audit `<link rel="preload">` tags and remove those for assets not visible in the initial paint. Allow these assets to load naturally or via `font-display: swap` when they are actually needed (e.g., when animations reveal them).
