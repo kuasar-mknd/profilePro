@@ -420,6 +420,9 @@ if (entry.data.type === "video" && entry.data.image) {
             href={`/project/${nextPost.slug}`}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            id="nav-newer"
+            title={`${nextPost.data.title} (←)`}
+            aria-keyshortcuts="ArrowLeft"
           >
             <Icon
               name="mdi:arrow-left"
@@ -446,6 +449,9 @@ if (entry.data.type === "video" && entry.data.image) {
             href={`/project/${prevPost.slug}`}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            id="nav-older"
+            title={`${prevPost.data.title} (→)`}
+            aria-keyshortcuts="ArrowRight"
           >
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
@@ -513,4 +519,51 @@ if (entry.data.type === "video" && entry.data.image) {
       />
     </div>
   </div>
+  <script>
+    /**
+     * 🎨 Palette: Project Navigation Keyboard Shortcuts
+     * Adds ArrowLeft/ArrowRight navigation between projects
+     */
+    function initProjectNavigation() {
+      // ⚡ Bolt: Prevent duplicate listeners
+      if ((window as any).hasProjectNavigationInitialized) return;
+      (window as any).hasProjectNavigationInitialized = true;
+
+      document.addEventListener("keydown", (e) => {
+        // Guard: Don't navigate if Lightbox is open
+        const lightbox = document.getElementById("lightbox");
+        if (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+          return;
+
+        // Guard: Don't navigate if modifier keys are pressed
+        if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+
+        // Guard: Don't navigate if focus is on an input
+        const target = e.target as HTMLElement;
+        if (
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable
+        )
+          return;
+
+        if (e.key === "ArrowLeft") {
+          const newerLink = document.getElementById("nav-newer");
+          if (newerLink) {
+            e.preventDefault(); // Prevent horizontal scroll
+            newerLink.click();
+          }
+        } else if (e.key === "ArrowRight") {
+          const olderLink = document.getElementById("nav-older");
+          if (olderLink) {
+            e.preventDefault(); // Prevent horizontal scroll
+            olderLink.click();
+          }
+        }
+      });
+    }
+
+    // Initialize immediately
+    initProjectNavigation();
+  </script>
 </Base>
