@@ -492,4 +492,29 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Animation Cleanup Optimization
+   * Removes 'will-change' property after entrance animations complete
+   * to free up GPU memory (saves ~18 compositor layers).
+   */
+  function initLetterAnimationCleanup() {
+    const title = document.querySelector(".hero-title");
+    // Guard against missing element or duplicate initialization
+    if (!title || title.hasAttribute("data-cleanup-initialized")) return;
+
+    title.setAttribute("data-cleanup-initialized", "true");
+
+    title.addEventListener("animationend", (e: AnimationEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains("letter-animate")) {
+        // ⚡ Bolt: Release GPU layer
+        target.style.willChange = "auto";
+      }
+    });
+  }
+
+  // Run on initial load and navigation
+  initLetterAnimationCleanup();
+  document.addEventListener("astro:page-load", initLetterAnimationCleanup);
 </script>
