@@ -43,3 +43,12 @@ Standard sitemap index for search engines.
 - **Method:** `GET`
 - **Format:** XML
 - **Usage:** SEO / Search Engine Crawlers.
+
+### 3. Robots.txt
+
+Directives for search engine crawlers.
+
+- **URL:** `/robots.txt`
+- **Method:** `GET`
+- **Format:** Plain Text
+- **Usage:** SEO / Crawling Control.
