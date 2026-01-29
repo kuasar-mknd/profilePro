@@ -81,4 +81,20 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("contact form email field should show success icon on valid input", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+
+    const emailInput = page.locator('input[name="email"]');
+    await emailInput.fill("test@example.com");
+
+    // Check if the validation icon becomes visible
+    // The icon is a sibling of the input
+    const validationIcon = page.locator(
+      'input[name="email"] ~ .validation-icon',
+    );
+    await expect(validationIcon).toHaveAttribute("data-visible", "true");
+  });
 });
