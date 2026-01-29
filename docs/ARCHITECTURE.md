@@ -22,7 +22,7 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 - **Runtime State**:
   - **URL-Driven**: Most state (active page, project details) is derived from the URL.
   - **View Transitions**: The `<ClientRouter />` maintains a persistent SPA-like experience. Global state (like scroll position or theme) is preserved across navigations.
-  - **Islands**: Interactive components (VideoPlayer, ContactForm) manage their own local state using standard DOM events or framework-specific hooks (React).
+  - **Islands**: Interactive components (VideoPlayer, ContactForm) manage their own local state using standard DOM events.
 
 ### 3. Key Technologies
 
@@ -73,11 +73,13 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 2.  Follow the schema defined in `src/content/config.ts`:
     ```yaml
     title: "Project Title"
-    publishDate: 2024-01-01
-    description: "Short description"
-    img: "./image.jpg"
-    img_alt: "Description of image"
-    tags: ["Video", "Event"]
+    intro: "Short description"
+    tag: "Video"
+    image: "./image.jpg"
+    author: "samuel"
+    pubDate: 2024-01-01
+    type: "video"
+    videoUrl: "https://youtu.be/..."
     ---
     Content goes here...
     ```
