@@ -1,0 +1,41 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+// Filter for H2 and H3, and ensure we have enough content to warrant a ToC
+const filteredHeadings = headings.filter((h) => h.depth <= 3);
+const showToC = filteredHeadings.length >= 2;
+---
+
+{
+  showToC && (
+    <nav
+      aria-label="Table des matières"
+      class="mb-10 p-6 bg-pacamara-secondary/5 dark:bg-white/5 rounded-2xl border border-pacamara-secondary/10 dark:border-white/10"
+    >
+      <h2 class="text-lg font-bold font-pacamara-space mb-4 flex items-center gap-2 text-pacamara-dark dark:text-white">
+        <Icon
+          name="mdi:format-list-bulleted"
+          class="w-5 h-5 text-pacamara-accent"
+        />
+        Sommaire
+      </h2>
+      <ul class="space-y-2 font-outfit">
+        {filteredHeadings.map((h) => (
+          <li class={`${h.depth === 3 ? "ml-4" : ""}`}>
+            <a
+              href={`#${h.slug}`}
+              class="block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent"
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
