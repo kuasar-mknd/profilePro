@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - Transient Animation Cleanup
+
+**Learning:** One-shot entrance animations (like hero text reveals) that use `will-change` to smooth the transition often leave the property active indefinitely. This holds onto GPU layers unnecessarily after the 1-2 second animation is done.
+**Action:** Implement a `setTimeout` based cleanup script that reverts `will-change` to `auto` after the expected animation duration plus a buffer. Ensure this cleanup handles View Transitions (via `astro:page-load` and `astro:before-swap`) to prevent memory leaks or zombie timeouts.
