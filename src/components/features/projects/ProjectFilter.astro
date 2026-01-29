@@ -9,7 +9,7 @@ const { tags, activeTag } = Astro.props;
 >
   <a
     href="/project"
-    class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
+    class={`px-4 py-3 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
         ${!activeTag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
     aria-current={!activeTag ? "page" : undefined}
     aria-label={!activeTag
@@ -25,7 +25,7 @@ const { tags, activeTag } = Astro.props;
     tags.map((tag: string) => (
       <a
         href={`/project/tag/${tag}`}
-        class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
+        class={`px-4 py-3 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
             ${activeTag === tag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
         aria-current={activeTag === tag ? "page" : undefined}
         aria-label={

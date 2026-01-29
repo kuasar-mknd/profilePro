@@ -91,7 +91,15 @@ const { page, allTags } = Astro.props;
           >
             &larr; Précédent
           </a>
-        ) : null
+        ) : (
+          <span
+            class="text-base bg-transparent border border-pacamara-secondary/50 leading-none rounded-full py-3 px-6 text-pacamara-secondary/50 font-pacamara-space font-bold cursor-not-allowed opacity-50"
+            aria-disabled="true"
+            role="link"
+          >
+            &larr; Précédent
+          </span>
+        )
       }
       {
         page.url.next ? (
@@ -102,7 +110,15 @@ const { page, allTags } = Astro.props;
           >
             Suivant &rarr;
           </a>
-        ) : null
+        ) : (
+          <span
+            class="text-base bg-transparent border border-pacamara-secondary/50 leading-none rounded-full py-3 px-6 text-pacamara-secondary/50 font-pacamara-space font-bold cursor-not-allowed opacity-50"
+            aria-disabled="true"
+            role="link"
+          >
+            Suivant &rarr;
+          </span>
+        )
       }
     </div>
   </section>
