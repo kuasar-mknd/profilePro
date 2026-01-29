@@ -25,9 +25,13 @@ const staggerClass =
 ---
 
 <div
-  class:list={["reveal-on-scroll", directionClass, staggerClass, className]}
+  class:list={[
+    "reveal-on-scroll contain-layout-paint",
+    directionClass,
+    staggerClass,
+    className,
+  ]}
   data-threshold={threshold}
-  style="contain: layout paint;"
 >
   <slot />
 </div>
