@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-10-27 - Strict Filename Sanitization Policy
+
+**Vulnerability:** Path traversal and filesystem attacks via manipulated filenames.
+**Learning:** Standardizing filename handling with a strict allowlist (`[^a-zA-Z0-9._-]`) is the most robust defense against directory traversal and obfuscation techniques, even if it restricts character sets.
+**Prevention:** Use `sanitizeFilename` from `src/utils/security.ts` for all user-supplied filenames. It enforces the allowlist and explicitly neutralizes `..` sequences.
