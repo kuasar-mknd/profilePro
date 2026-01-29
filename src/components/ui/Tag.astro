@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
 const Element = href ? "a" : "span";
@@ -22,6 +24,13 @@ const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
       style="contain: layout style;"
     >
       <span>{tag}</span>
+      {href && (
+        <Icon
+          name="mdi:arrow-right"
+          class="ml-1.5 h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      )}
     </Element>
   )
 }
