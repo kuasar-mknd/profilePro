@@ -30,8 +30,24 @@
   /**
    * ⚡ Bolt: HamburgerButton Performance Optimization
    * Added initialization guard to prevent duplicate observers and handlers
+   * Refactored event listeners to prevent memory leaks on navigation
    */
   let menuObserver: MutationObserver | null = null;
+
+  // ⚡ Bolt: Move handler to module scope to prevent closure leaks and ensure single global listener
+  const handleEscapeKey = (e: KeyboardEvent) => {
+    if (e.key !== "Escape") return;
+
+    const button = document.getElementById("menu_toggle");
+    if (!button) return;
+
+    // Only close if currently expanded
+    if (button.getAttribute("aria-expanded") === "true") {
+      // 🎨 Palette: Reuse click logic to toggle (close) the menu
+      button.click();
+      button.focus();
+    }
+  };
 
   function menuToggle() {
     const button = document.querySelector("#menu_toggle");
@@ -100,19 +116,6 @@
       link.addEventListener("click", closeMenu);
     });
 
-    // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        button.getAttribute("aria-expanded") === "true"
-      ) {
-        closeMenu();
-        // Return focus to the toggle button
-        (button as HTMLElement).focus();
-      }
-    });
-
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
       menuObserver = new MutationObserver((mutations) => {
@@ -136,8 +139,6 @@
               navEl.classList.remove("translate-x-0");
               // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
               // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
               if (
                 navEl.classList.contains("translate-x-full") &&
                 !navEl.classList.contains("transitioning")
@@ -157,6 +158,11 @@
       attributeFilter: ["class"],
     });
   }
+
+  // ⚡ Bolt: Register global listener once with cleanup safety
+  // This prevents the listener from stacking up on every navigation
+  document.removeEventListener("keydown", handleEscapeKey);
+  document.addEventListener("keydown", handleEscapeKey);
 
   menuToggle();
   // Runs on view transitions navigation
