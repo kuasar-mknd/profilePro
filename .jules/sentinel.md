@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-23 - Directory Traversal Prevention in Filenames
+
+**Vulnerability:** Handling filenames without strict sanitization can lead to Directory Traversal (e.g., `../../etc/passwd`).
+**Learning:** While allowlists are effective, obfuscated patterns like `. .` (becoming `..` after stripping spaces) must be considered.
+**Prevention:** Implement `sanitizeFilename` with a strict allowlist (alphanumeric, dot, dash, underscore) and explicit neutralization of directory traversal sequences (collapsing multiple dots), applying the allowlist *before* neutralization.
