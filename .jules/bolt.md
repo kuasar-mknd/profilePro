@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-05-18 - Will-Change Alignment
+
+**Learning:** Mismatched `will-change` properties (e.g., `will-change: transform` on an element that only animates `opacity`) waste GPU memory by creating unnecessary layers that don't benefit the specific animation.
+**Action:** Always align `will-change` hints strictly with the properties being animated (e.g., `[will-change:opacity]` for `animate-pulse`).
