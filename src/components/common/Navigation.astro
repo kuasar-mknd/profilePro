@@ -18,7 +18,8 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/" ? "page" : undefined}
-        title="Retour à l'accueil">Accueil</a
+      >
+        Accueil</a
       >
     </li>
     <li>
@@ -30,7 +31,8 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath.startsWith("/project") ? "page" : undefined}
-        title="Voir mes projets">Projets</a
+      >
+        Projets</a
       >
     </li>
     <li>
@@ -42,7 +44,8 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/about" ? "page" : undefined}
-        title="En savoir plus sur moi">À propos</a
+      >
+        À propos</a
       >
     </li>
   </ul>

@@ -7,7 +7,8 @@ import { Icon } from "astro-icon/components";
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
   aria-label="Activer le mode sombre"
-  title="Activer le mode sombre"
+  title="Activer le mode sombre (Shift+T)"
+  aria-keyshortcuts="Shift+T"
 >
   <div
     class="flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
@@ -61,15 +62,42 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  // 🎨 Palette: Global Keyboard Shortcut (Shift+T)
+  const handleGlobalKeydown = (e: KeyboardEvent) => {
+    if (e.shiftKey && (e.key === "T" || e.key === "t")) {
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      e.preventDefault();
+      // Reuse logic
+      const element = document.documentElement;
+      element.classList.toggle("dark");
+
+      const isDarkNow = element.classList.contains("dark");
+      localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+
+      window.dispatchEvent(
+        new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
+      );
+    }
+  };
+
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const title = `${label} (Shift+T)`;
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", label);
+        btn.setAttribute("title", title);
         const span = btn.querySelector(".sr-only");
         if (span) span.textContent = label;
       });
@@ -111,4 +139,8 @@ import { Icon } from "astro-icon/components";
 
   // Re-initialize after view transitions
   document.addEventListener("astro:after-swap", initThemeToggle);
+
+  // 🎨 Palette: Register global shortcut
+  document.removeEventListener("keydown", handleGlobalKeydown);
+  document.addEventListener("keydown", handleGlobalKeydown);
 </script>
