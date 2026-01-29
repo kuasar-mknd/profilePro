@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, sanitizeFilename } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,47 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("sanitizeFilename", () => {
+    it("should allow valid alphanumeric filenames", () => {
+      expect(sanitizeFilename("image.png")).toBe("image.png");
+      expect(sanitizeFilename("my-file_v2.txt")).toBe("my-file_v2.txt");
+    });
+
+    it("should strip special characters and spaces", () => {
+      expect(sanitizeFilename("file name.jpg")).toBe("filename.jpg");
+      expect(sanitizeFilename("file@#$%.png")).toBe("file.png");
+    });
+
+    it("should prevent directory traversal", () => {
+      expect(sanitizeFilename("../etc/passwd")).toBe(".etcpasswd");
+      expect(sanitizeFilename("..")).toBe(".");
+      expect(sanitizeFilename(".../file")).toBe(".file");
+    });
+
+    it("should handle obfuscated traversal attempts", () => {
+      expect(sanitizeFilename(". .")).toBe("."); // space stripped -> .. -> .
+      expect(sanitizeFilename("..//file")).toBe(".file");
+    });
+
+    it("should handle control characters", () => {
+      expect(sanitizeFilename("file\u0000name.png")).toBe("filename.png");
+    });
+
+    it("should truncate long filenames", () => {
+      const longName = "a".repeat(300) + ".txt";
+      expect(sanitizeFilename(longName).length).toBe(255);
+      expect(sanitizeFilename(longName).endsWith(".txt")).toBe(false); // It's truncated
+    });
+
+    it("should handle empty or non-string inputs", () => {
+      expect(sanitizeFilename("")).toBe("");
+      // @ts-expect-error Testing invalid input
+      expect(sanitizeFilename(null)).toBe("");
+      // @ts-expect-error Testing invalid input
+      expect(sanitizeFilename(undefined)).toBe("");
     });
   });
 });
