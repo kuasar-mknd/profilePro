@@ -9,6 +9,19 @@ import config from "../config.mjs";
 
 const allProjects = await getCollection("project");
 
+// ⚡ Bolt: Optimize Hero data payload
+// Shuffle and slice here to avoid passing the entire collection to the component
+function shuffle(array: any[]) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+const heroProjects = shuffle(allProjects).slice(0, 15);
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -35,7 +48,7 @@ const jsonLd = {
 
 <Base jsonLd={jsonLd}>
   <main>
-    <Hero projects={allProjects} />
+    <Hero projects={heroProjects} />
     <ServicesPreview />
     <LatestPosts postLimit={7} allPosts={allProjects} />
     <CTASection />
