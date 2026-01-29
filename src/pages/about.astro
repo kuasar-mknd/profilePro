@@ -58,9 +58,17 @@ const skills = [
   { name: "Meta Ads", icon: "mdi:facebook" },
   { name: "SEO", icon: "mdi:chart-line" },
 ];
+
+import { getImage } from "astro:assets";
+// ⚡ Bolt: Preload LCP image
+const lcpImage = await getImage({
+  src: logo,
+  width: 700,
+  format: "avif",
+});
 ---
 
-<Base postData={{ data: { title, description } }}>
+<Base postData={{ data: { title, description } }} lcpImage={lcpImage.src}>
   <!-- Hero Section -->
   <section class="relative pt-32 pb-20 overflow-hidden">
     <!-- Animated background elements -->
