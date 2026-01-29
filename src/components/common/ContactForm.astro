@@ -186,7 +186,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       <div class="flex justify-end mt-1 gap-2">
         <div
           id="message-counter"
-          class="text-xs text-pacamara-primary/60 dark:text-white/60 font-medium transition-colors duration-300"
+          class="text-xs text-pacamara-primary/80 dark:text-white/80 font-medium transition-colors duration-300"
         >
           0 / 5000
         </div>
@@ -263,7 +263,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   </div>
 
   <p
-    class="text-xs text-center mt-6 text-pacamara-primary/50 dark:text-white/50"
+    class="text-xs text-center mt-6 text-pacamara-primary/70 dark:text-white/70"
   >
     Les champs marqués d'un <span class="sr-only">astérisque</span><span
       class="text-pacamara-accent"
@@ -271,7 +271,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     > sont obligatoires.
   </p>
   <p
-    class="text-xs text-center mt-2 text-pacamara-primary/50 dark:text-white/50"
+    class="text-xs text-center mt-2 text-pacamara-primary/70 dark:text-white/70"
   >
     Powered by Web3Forms
   </p>
@@ -429,8 +429,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           messageCounter.classList.remove(
             "text-orange-600",
             "dark:text-orange-400",
-            "text-pacamara-primary/60",
-            "dark:text-white/60",
+            "text-pacamara-primary/80",
+            "dark:text-white/80",
           );
           if (messageCounterSr)
             messageCounterSr.textContent =
@@ -443,8 +443,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           messageCounter.classList.remove(
             "text-red-500",
             "dark:text-red-400",
-            "text-pacamara-primary/60",
-            "dark:text-white/60",
+            "text-pacamara-primary/80",
+            "dark:text-white/80",
           );
           // Announce when nearing limit (every 10 chars or so naturally, but let's be explicit)
           if (messageCounterSr && remaining % 20 === 0) {
@@ -452,8 +452,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           }
         } else {
           messageCounter.classList.add(
-            "text-pacamara-primary/60",
-            "dark:text-white/60",
+            "text-pacamara-primary/80",
+            "dark:text-white/80",
           );
           messageCounter.classList.remove(
             "text-red-500",
@@ -487,8 +487,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "dark:text-orange-400",
         );
         messageCounter.classList.add(
-          "text-pacamara-primary/60",
-          "dark:text-white/60",
+          "text-pacamara-primary/80",
+          "dark:text-white/80",
         );
       }
       // 🎨 Palette: Reset validation icons
