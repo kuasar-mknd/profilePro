@@ -93,6 +93,14 @@ const { page, allTags } = Astro.props;
           </a>
         ) : null
       }
+
+      {/* 🎨 Palette: Pagination Indicator */}
+      <span
+        class="flex items-center text-pacamara-primary/60 dark:text-white/60 font-outfit text-sm font-medium"
+      >
+        Page {page.currentPage} sur {page.lastPage}
+      </span>
+
       {
         page.url.next ? (
           <a
