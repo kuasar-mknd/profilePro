@@ -81,29 +81,51 @@ const { page, allTags } = Astro.props;
         )
       }
     </div>
-    <div class="flex flex-row justify-center gap-7">
-      {
-        page.url.prev ? (
-          <a
-            href={page.url.prev}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-            aria-label="Page précédente"
-          >
-            &larr; Précédent
-          </a>
-        ) : null
-      }
-      {
-        page.url.next ? (
-          <a
-            href={page.url.next}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-            aria-label="Page suivante"
-          >
-            Suivant &rarr;
-          </a>
-        ) : null
-      }
-    </div>
+    {
+      page.lastPage > 1 && (
+        <div
+          class="flex flex-row justify-center items-center gap-4 sm:gap-7"
+          aria-label="Pagination"
+        >
+          {page.url.prev ? (
+            <a
+              href={page.url.prev}
+              class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              aria-label="Page précédente"
+            >
+              &larr; <span class="hidden sm:inline">Précédent</span>
+            </a>
+          ) : (
+            <span
+              class="text-base border border-transparent leading-none rounded-full py-3 px-6 text-pacamara-primary/30 dark:text-white/30 font-pacamara-space font-bold cursor-not-allowed"
+              aria-hidden="true"
+            >
+              &larr; <span class="hidden sm:inline">Précédent</span>
+            </span>
+          )}
+
+          <span class="text-sm font-outfit font-medium text-pacamara-primary/60 dark:text-white/60">
+            Page {page.currentPage} <span class="mx-1">/</span> {page.lastPage}
+          </span>
+
+          {page.url.next ? (
+            <a
+              href={page.url.next}
+              class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              aria-label="Page suivante"
+            >
+              <span class="hidden sm:inline">Suivant</span> &rarr;
+            </a>
+          ) : (
+            <span
+              class="text-base border border-transparent leading-none rounded-full py-3 px-6 text-pacamara-primary/30 dark:text-white/30 font-pacamara-space font-bold cursor-not-allowed"
+              aria-hidden="true"
+            >
+              <span class="hidden sm:inline">Suivant</span> &rarr;
+            </span>
+          )}
+        </div>
+      )
+    }
   </section>
 </Base>
