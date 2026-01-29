@@ -192,3 +192,37 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * Sanitizes a filename to prevent directory traversal and other file system attacks.
+ * - Removes control characters.
+ * - Enforces a strict allowlist: alphanumeric, dot, dash, underscore.
+ * - Neutralizes directory traversal patterns (..) by removing them.
+ * - Truncates to 255 characters.
+ *
+ * @param filename - The filename to sanitize
+ * @returns The sanitized filename
+ */
+export function sanitizeFilename(filename: string): string {
+  if (!filename || typeof filename !== "string") return "";
+
+  // 1. Strip control characters
+  let cleanName = filename.replace(/[\x00-\x1F\x7F]/g, "");
+
+  // 2. Enforce allowlist (alphanumeric, dot, dash, underscore)
+  // This removes slashes, backslashes, spaces, etc.
+  cleanName = cleanName.replace(/[^a-zA-Z0-9._-]/g, "");
+
+  // 3. Neutralize directory traversal patterns ".."
+  // Loop to handle recursive replacements (e.g. ".....")
+  while (cleanName.includes("..")) {
+    cleanName = cleanName.replace(/\.\./g, "");
+  }
+
+  // 4. Truncate to 255 characters
+  if (cleanName.length > 255) {
+    cleanName = cleanName.substring(0, 255);
+  }
+
+  return cleanName;
+}

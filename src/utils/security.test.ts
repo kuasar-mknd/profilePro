@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, sanitizeFilename } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,45 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("sanitizeFilename", () => {
+    it("should allow valid filenames", () => {
+      expect(sanitizeFilename("file.txt")).toBe("file.txt");
+      expect(sanitizeFilename("image-123.png")).toBe("image-123.png");
+      expect(sanitizeFilename("my_document.pdf")).toBe("my_document.pdf");
+    });
+
+    it("should remove directory traversal patterns", () => {
+      // Slashes are removed by allowlist, dots are processed
+      // ../../etc/passwd -> ..etcpasswd -> etcpasswd
+      expect(sanitizeFilename("../../etc/passwd")).toBe("etcpasswd");
+      expect(sanitizeFilename("..")).toBe("");
+      // foo/../bar -> foo..bar -> foobar
+      expect(sanitizeFilename("foo/../bar")).toBe("foobar");
+    });
+
+    it("should handle recursive directory traversal attempts", () => {
+      // ....// -> .... -> .. -> ""
+      expect(sanitizeFilename("....//")).toBe("");
+      // ..././ -> .... -> .. -> ""
+      expect(sanitizeFilename("..././")).toBe("");
+    });
+
+    it("should enforce allowlist", () => {
+      expect(sanitizeFilename("file.txt; rm -rf /")).toBe("file.txtrm-rf");
+      expect(sanitizeFilename("image.jpg<script>")).toBe("image.jpgscript");
+    });
+
+    it("should strip control characters", () => {
+      expect(sanitizeFilename("file\u0000.txt")).toBe("file.txt");
+      expect(sanitizeFilename("file\n.txt")).toBe("file.txt");
+    });
+
+    it("should truncate long filenames", () => {
+      const longName = "a".repeat(300);
+      expect(sanitizeFilename(longName).length).toBe(255);
     });
   });
 });
