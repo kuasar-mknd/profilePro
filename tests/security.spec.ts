@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import {
+  isValidUrl,
+  safeJson,
+  sanitizeFilename,
+  sanitizeInput,
+} from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -41,4 +46,34 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("sanitizeFilename removes dangerous characters", () => {
+  expect(sanitizeFilename("valid-file.jpg")).toBe("valid-file.jpg");
+  expect(sanitizeFilename("foo/bar.jpg")).toBe("foobar.jpg");
+  expect(sanitizeFilename("../../etc/passwd")).toBe("....etcpasswd"); // Dots are allowed, slashes removed
+  expect(sanitizeFilename("evil<script>.js")).toBe("evilscript.js");
+  expect(sanitizeFilename("foo bar.jpg")).toBe("foobar.jpg"); // Spaces removed
+  expect(sanitizeFilename("corps&ame")).toBe("corps&ame"); // Ampersand allowed
+});
+
+test("sanitizeFilename truncates long filenames", () => {
+  const longName = "a".repeat(300);
+  expect(sanitizeFilename(longName).length).toBe(255);
+});
+
+test("isValidUrl validates protocols correctly", () => {
+  expect(isValidUrl("https://example.com")).toBe(true);
+  expect(isValidUrl("/relative/path")).toBe(true);
+  expect(isValidUrl("javascript:alert(1)")).toBe(false);
+
+  // Mailto
+  expect(isValidUrl("mailto:test@example.com")).toBe(false);
+  expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(
+    true,
+  );
+
+  // Tel
+  expect(isValidUrl("tel:+1234567890")).toBe(false);
+  expect(isValidUrl("tel:+1234567890", { allowTel: true })).toBe(true);
 });

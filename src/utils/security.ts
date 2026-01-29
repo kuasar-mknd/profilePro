@@ -116,9 +116,25 @@ export const VIMEO_ID_REGEX =
   /^(?:https?:\/\/)?(?:www\.)?vimeo\.com\/(\d+)(?:\/(\w+))?$/;
 
 /**
+ * 🛡️ Sentinel: Sanitizes a filename to prevent directory traversal and usage of unsafe characters.
+ * Allows alphanumeric, dot, dash, underscore, and ampersand.
+ * Truncates to 255 characters.
+ *
+ * @param filename - The filename to sanitize
+ * @returns The sanitized filename
+ */
+export function sanitizeFilename(filename: string): string {
+  if (!filename) return "";
+  // Remove directory separators and dangerous characters
+  // Allow a-z, A-Z, 0-9, ., -, _, & (used in some folder names)
+  const sanitized = filename.replace(/[^a-zA-Z0-9._\-&]/g, "");
+  return sanitized.slice(0, 255);
+}
+
+/**
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
- * Optionally allows mailto:.
+ * Optionally allows mailto: and tel:.
  *
  * @param url - The URL to validate
  * @param options - Validation options
@@ -126,17 +142,17 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: { allowMailto?: boolean; allowTel?: boolean } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
-  const { allowMailto = false } = options;
+  const { allowMailto = false, allowTel = false } = options;
 
-  if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
-  }
+  if (/^(https?:\/\/|\/)/i.test(url)) return true;
+  if (allowMailto && /^mailto:/i.test(url)) return true;
+  if (allowTel && /^tel:/i.test(url)) return true;
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return false;
 }
 
 /**
