@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - IntersectionObserver Consolidation
+
+**Learning:** Having multiple IntersectionObservers for similar purposes (e.g., one for background blobs, one for carousel) increases memory overhead and duplicates logic. Centralizing them into a single global observer that targets multiple classes allows for better resource management and code maintainability.
+**Action:** Extend global observers to target multiple relevant classes (e.g., `.infinite-scroll`) rather than creating component-specific observers for generic visibility toggles.
