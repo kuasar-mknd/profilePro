@@ -132,11 +132,13 @@ export function isValidUrl(
 
   const { allowMailto = false } = options;
 
+  // 🛡️ Sentinel: Block protocol-relative URLs (e.g., //example.com) by ensuring
+  // a single slash is not followed by another slash.
   if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return /^(https?:\/\/|\/(?!\/))/i.test(url);
 }
 
 /**
