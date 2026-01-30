@@ -404,6 +404,56 @@ if (entry.data.type === "video" && entry.data.image) {
         addCopyButtons();
         // Re-run on navigation
         document.addEventListener("astro:after-swap", addCopyButtons);
+
+        /**
+         * 🎨 Palette: Keyboard Navigation
+         * Allows navigating between projects using ArrowLeft and ArrowRight keys
+         */
+        function handleProjectNavigation(e: KeyboardEvent) {
+          // Ignore if user is typing in an input
+          if (
+            ["INPUT", "TEXTAREA", "SELECT", "CONTENTEDITABLE"].includes(
+              (e.target as HTMLElement).tagName,
+            ) ||
+            (e.target as HTMLElement).isContentEditable
+          ) {
+            return;
+          }
+
+          // Ignore if modifier keys are pressed
+          if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+
+          // Ignore if Lightbox is open
+          const lightbox = document.getElementById("lightbox");
+          if (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+            return;
+
+          if (e.key === "ArrowLeft") {
+            const newerLink = document.getElementById("project-nav-newer");
+            if (newerLink) {
+              e.preventDefault(); // Prevent scroll
+              newerLink.click();
+            }
+          } else if (e.key === "ArrowRight") {
+            const olderLink = document.getElementById("project-nav-older");
+            if (olderLink) {
+              e.preventDefault(); // Prevent scroll
+              olderLink.click();
+            }
+          }
+        }
+
+        // Initialize listener
+        document.addEventListener("keydown", handleProjectNavigation);
+
+        // Cleanup before navigation to prevent duplicate listeners
+        document.addEventListener(
+          "astro:before-swap",
+          () => {
+            document.removeEventListener("keydown", handleProjectNavigation);
+          },
+          { once: true },
+        );
       </script>
     </div>
   </article>
@@ -417,9 +467,12 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         nextPost ? (
           <a
+            id="project-nav-newer"
             href={`/project/${nextPost.slug}`}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            title="Projet précédent (←)"
+            aria-keyshortcuts="ArrowLeft"
           >
             <Icon
               name="mdi:arrow-left"
@@ -443,9 +496,12 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         prevPost ? (
           <a
+            id="project-nav-older"
             href={`/project/${prevPost.slug}`}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            title="Projet suivant (→)"
+            aria-keyshortcuts="ArrowRight"
           >
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
