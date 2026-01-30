@@ -42,3 +42,20 @@ test("sanitizeInput strips control characters", () => {
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
 });
+
+import { isValidUrl } from "../src/utils/security";
+
+test("isValidUrl blocks protocol-relative URLs", () => {
+  expect(isValidUrl("//evil.com")).toBe(false);
+  expect(isValidUrl("https://google.com")).toBe(true);
+  expect(isValidUrl("/about")).toBe(true);
+});
+
+test("isValidUrl supports mailto when allowed", () => {
+  expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(true);
+  expect(isValidUrl("mailto:test@example.com", { allowMailto: false })).toBe(false);
+});
+
+test("isValidUrl blocks javascript URIs", () => {
+  expect(isValidUrl("javascript:alert(1)")).toBe(false);
+});
