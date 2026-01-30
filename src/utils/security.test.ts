@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -50,6 +50,25 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    it("should block protocol-relative URLs (open redirect risk)", () => {
+      expect(sanitizeUrl("//evil.com")).toBe("");
+      expect(sanitizeUrl("//google.com/search")).toBe("");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should block protocol-relative URLs", () => {
+      expect(isValidUrl("//evil.com")).toBe(false);
+      expect(isValidUrl("/good/path")).toBe(true);
+      expect(isValidUrl("https://good.com")).toBe(true);
+    });
+
+    it("should allow mailto if specified", () => {
+      expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(
+        true,
+      );
     });
   });
 
