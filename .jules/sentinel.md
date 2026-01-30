@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-24 - Protocol-Relative URL Open Redirects
+
+**Vulnerability:** URLs starting with `//` (protocol-relative) can be treated as relative paths by validation logic (starts with `/`), but are treated as absolute URLs by browsers, inheriting the current scheme. This can lead to Open Redirect vulnerabilities if the application intends to redirect to a local path.
+**Learning:** General-purpose URL validation regexes that allow relative paths often inadvertently allow protocol-relative URLs. Explicit checks are needed.
+**Prevention:** Updated `sanitizeUrl` and `isValidUrl` to explicitly block `//` unless opted-in.

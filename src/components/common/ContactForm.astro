@@ -48,7 +48,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
   <!-- Optional: Subject -->
-  <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
+  <input
+    type="hidden"
+    name="subject"
+    value="Nouveau message du Portfolio"
+    maxlength="100"
+  />
 
   <!-- Optional: Honeypot -->
   <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->

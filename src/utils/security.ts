@@ -28,6 +28,7 @@ export function safeJson(value: any): string {
  *
  * 🛡️ Sentinel Improvement:
  * - Expanded character map to include braces, brackets, and parentheses.
+ * - Added pipe (|) to prevent command injection.
  * - This helps prevent logic injection or syntax manipulation if the data
  *   is improperly handled in a JavaScript context.
  *
@@ -61,9 +62,10 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    "|": "&#124;", // Prevent command injection
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\|]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -119,6 +121,7 @@ export const VIMEO_ID_REGEX =
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
  * Optionally allows mailto:.
+ * Optionally allows protocol-relative URLs (//).
  *
  * @param url - The URL to validate
  * @param options - Validation options
@@ -126,11 +129,17 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: { allowMailto?: boolean; allowProtocolRelative?: boolean } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
-  const { allowMailto = false } = options;
+  const { allowMailto = false, allowProtocolRelative = false } = options;
+
+  // 🛡️ Sentinel: Block protocol-relative URLs unless explicitly allowed
+  // These can be used for Open Redirect attacks if not handled correctly.
+  if (!allowProtocolRelative && url.startsWith("//")) {
+    return false;
+  }
 
   if (allowMailto) {
     return /^(https?:\/\/|mailto:|\/)/i.test(url);
@@ -143,6 +152,7 @@ export function isValidUrl(
  * Sanitizes a URL to ensure it uses a safe protocol.
  * Allowed protocols: http, https, mailto, tel.
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
+ * BLOCKS: Protocol-relative URLs (//) to prevent Open Redirects.
  *
  * @param url - The URL to sanitize
  * @returns The sanitized URL or an empty string if invalid
@@ -156,6 +166,12 @@ export function sanitizeUrl(url: string): string {
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
+  }
+
+  // 🛡️ Sentinel: Block protocol-relative URLs (//)
+  // These are dangerous for Open Redirects if the application logic relies on the URL being local.
+  if (trimmedUrl.startsWith("//")) {
+    return "";
   }
 
   // Allow relative URLs (starting with / or #)
