@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-19 - Protocol-Relative URL Bypass & Testing Gap
+
+**Vulnerability:** `isValidUrl` allowed protocol-relative URLs (`//example.com`) despite documentation claiming hardening. Additionally, the `test` script was missing from `package.json`, hiding this regression.
+**Learning:** Documentation/Memory can diverge from code reality. Missing CI/CD test commands (like `bun run test`) can lead to silent security regressions.
+**Prevention:** Always verify security controls with live tests. Ensure `package.json` includes standard `test` scripts. Hardened `isValidUrl` with `\/(?!\/)` lookahead.
