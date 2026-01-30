@@ -1,0 +1,3 @@
+## 2025-02-18 - Duplicate IDs in Responsive Components
+**Learning:** Using `id` attributes for accessibility features (like `aria-live` regions) in components that are rendered multiple times for responsive layouts (e.g., separate desktop and mobile headers) causes duplicate IDs and breaks functionality. `document.getElementById` only returns the first instance, which might be hidden (`display: none`), causing screen readers to miss announcements if the user interacts with the visible instance.
+**Action:** Use class selectors (e.g., `.live-region`) instead of IDs for such components and iterate over all instances with `document.querySelectorAll` to update their state.
