@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import {
+  safeJson,
+  sanitizeInput,
+  isValidUrl,
+  sanitizeUrl,
+} from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -41,4 +46,16 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("isValidUrl rejects protocol-relative URLs", () => {
+  expect(isValidUrl("//example.com")).toBe(false);
+  expect(isValidUrl("/example")).toBe(true);
+  expect(isValidUrl("https://example.com")).toBe(true);
+});
+
+test("sanitizeUrl rejects protocol-relative URLs", () => {
+  expect(sanitizeUrl("//example.com")).toBe("");
+  expect(sanitizeUrl("/example")).toBe("/example");
+  expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
 });

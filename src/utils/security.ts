@@ -133,10 +133,10 @@ export function isValidUrl(
   const { allowMailto = false } = options;
 
   if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return /^(https?:\/\/|\/(?!\/))/i.test(url);
 }
 
 /**
@@ -157,6 +157,9 @@ export function sanitizeUrl(url: string): string {
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
   }
+
+  // 🛡️ Sentinel: Hardened validation blocks protocol-relative URLs
+  if (trimmedUrl.startsWith("//")) return "";
 
   // Allow relative URLs (starting with / or #)
   if (
