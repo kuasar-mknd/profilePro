@@ -11,6 +11,7 @@ import { Icon } from "astro-icon/components";
 import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
+import TableOfContents from "../../components/ui/TableOfContents.astro";
 
 import { getCollection, getEntry } from "astro:content";
 
@@ -37,7 +38,7 @@ const { entry, prevPost, nextPost, allProjects } = Astro.props;
 const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
 const readingTime = Math.ceil(wordCount / 200);
 
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
 const author = await getEntry(entry.data.author);
 
 const jsonLd = {
@@ -198,6 +199,9 @@ if (entry.data.type === "video" && entry.data.image) {
           { label: entry.data.title },
         ]}
       />
+
+      <TableOfContents headings={headings} />
+
       <Content />
 
       <!-- Share Button & Navigation -->
