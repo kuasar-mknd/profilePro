@@ -417,30 +417,38 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
    * Pauses the infinite scroll animation when the carousel is not in the viewport
    * to save GPU and main thread resources.
    */
+  let carouselObserver: IntersectionObserver | null = null;
+
   function initCarouselObserver() {
+    // ⚡ Bolt: Cleanup previous observer to prevent memory leaks
+    if (carouselObserver) {
+      carouselObserver.disconnect();
+      carouselObserver = null;
+    }
+
     const carousel = document.getElementById("hero-carousel");
     const track = document.getElementById("carousel-track");
 
     if (!carousel || !track) return;
 
-    // Guard against duplicate observers
-    if (carousel.dataset.observerInitialized === "true") return;
-    carousel.dataset.observerInitialized = "true";
-
-    const observer = new IntersectionObserver(
+    carouselObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            // ⚡ Bolt: Restore animation and GPU hint
             track.style.animationPlayState = "running";
+            track.style.willChange = "transform";
           } else {
+            // ⚡ Bolt: Pause animation and release GPU memory
             track.style.animationPlayState = "paused";
+            track.style.willChange = "auto";
           }
         });
       },
       { rootMargin: "200px" },
     ); // Pre-load animation slightly before it enters viewport
 
-    observer.observe(carousel);
+    carouselObserver.observe(carousel);
   }
 
   initCarouselObserver();
