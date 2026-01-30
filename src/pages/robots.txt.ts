@@ -3,6 +3,10 @@ import config from "../config.mjs";
 
 const robots = `
 User-agent: *
+Disallow: /404
+Disallow: /_astro/
+Disallow: /fonts/
+Disallow: /scripts/
 Allow: /
 Sitemap: ${new URL("sitemap-index.xml", config.url).href}
 `.trim();
