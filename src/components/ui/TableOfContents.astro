@@ -1,0 +1,54 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  headings: {
+    depth: number;
+    slug: string;
+    text: string;
+  }[];
+}
+
+const { headings } = Astro.props;
+
+// Filter for H2 and H3 only
+const toc = headings.filter((h) => h.depth > 1 && h.depth <= 3);
+---
+
+{
+  toc.length >= 2 && (
+    <nav
+      class="bg-pacamara-secondary/5 dark:bg-white/5 rounded-2xl p-6 mb-10 border border-pacamara-secondary/10 dark:border-white/10 not-prose"
+      aria-label="Table des matières"
+      style="contain: content;"
+    >
+      <div class="flex items-center gap-2 mb-4 text-pacamara-primary dark:text-white">
+        <Icon
+          name="mdi:format-list-bulleted"
+          class="w-5 h-5 text-pacamara-accent"
+          aria-hidden="true"
+        />
+        <h2 class="font-pacamara-space font-bold text-lg m-0 p-0 leading-none">
+          Sommaire
+        </h2>
+      </div>
+      <ul class="flex flex-col gap-1 m-0 p-0 list-none">
+        {toc.map((heading) => (
+          <li
+            class:list={[
+              "transition-transform duration-200 hover:translate-x-1",
+              heading.depth === 3 ? "ml-4 text-sm opacity-80" : "font-medium",
+            ]}
+          >
+            <a
+              href={`#${heading.slug}`}
+              class="text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors no-underline block py-1.5 border-b border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-md px-2 -mx-2"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
