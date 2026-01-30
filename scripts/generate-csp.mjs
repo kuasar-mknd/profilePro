@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import * as cheerio from "cheerio";
 import { glob } from "glob";
+import { existsSync } from "node:fs";
 
 const DIST_DIR = "dist";
 const HEADERS_FILE = "dist/_headers";
@@ -18,6 +19,14 @@ function calculateHash(content) {
 
 async function main() {
   console.log("🔒 Generating CSP hashes...");
+
+  // 🛡️ Sentinel: Verify source headers file exists to prevent build mishaps
+  if (!existsSync(PUBLIC_HEADERS_FILE)) {
+    console.error(
+      `❌ Error: Source headers file not found at ${PUBLIC_HEADERS_FILE}.`,
+    );
+    process.exit(1);
+  }
 
   // 1. Find all HTML files in dist/
   const htmlFiles = await glob(`${DIST_DIR}/**/*.html`);
