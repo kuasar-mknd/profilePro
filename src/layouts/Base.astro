@@ -484,6 +484,12 @@ if (postData?.data?.image) {
         relValues.add("noreferrer");
         link.setAttribute("rel", Array.from(relValues).join(" "));
 
+        // 🛡️ Sentinel: Prevent execution of javascript: URIs in external links
+        const href = link.getAttribute("href") || "";
+        if (href.trim().toLowerCase().startsWith("javascript:")) {
+          link.setAttribute("href", "about:blank");
+        }
+
         // Accessibility: Append warning to title
         const title = link.getAttribute("title") || "";
         if (!title.includes(warning.trim())) {
