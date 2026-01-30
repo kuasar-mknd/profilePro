@@ -81,21 +81,8 @@ if (postData?.data?.image) {
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="/fonts/outfit-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
-    <link
-      rel="preload"
-      href="/fonts/outfit-bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <!-- ⚡ Bolt: Removed Outfit Regular/Bold preloads as they are not used in the Hero/LCP area -->
+    <!-- This saves ~40KB of critical bandwidth for the LCP image and Space Grotesk font -->
     <!-- LCP Image Preload (Hero Logo) - Only on Homepage -->
     {
       Astro.url.pathname === "/" && (
