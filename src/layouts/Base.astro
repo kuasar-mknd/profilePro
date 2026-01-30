@@ -28,13 +28,31 @@ const {
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
 // ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
-let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
+// Generates a responsive srcset to match the <Picture> component exactly, preventing double-fetches
+// due to quality/size mismatches and ensuring mobile devices preload the correct size.
+let lcpImageSrcSet: string | null = null;
+let lcpImageSrc: string | null = null;
+
 if (postData?.data?.image) {
-  lcpImage = await getImage({
-    src: postData.data.image,
-    width: 1600,
-    format: "avif",
-  });
+  const widths = [640, 960, 1280, 1600];
+
+  const variants = await Promise.all(
+    widths.map((w) =>
+      getImage({
+        src: postData.data.image,
+        width: w,
+        format: "avif",
+        quality: 70, // Match [slug].astro quality
+      }),
+    ),
+  );
+
+  lcpImageSrcSet = variants
+    .map((v) => `${v.src} ${v.attributes.width}w`)
+    .join(", ");
+
+  // Fallback src (largest)
+  lcpImageSrc = variants[variants.length - 1].src;
 }
 ---
 
@@ -111,11 +129,13 @@ if (postData?.data?.image) {
 
     <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
     {
-      lcpImage && (
+      lcpImageSrcSet && lcpImageSrc && (
         <link
           rel="preload"
-          href={lcpImage.src}
           as="image"
+          href={lcpImageSrc}
+          imagesrcset={lcpImageSrcSet}
+          imagesizes="100vw"
           type="image/avif"
           fetchpriority="high"
         />

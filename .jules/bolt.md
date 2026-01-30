@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-25 - Responsive LCP Preloading
+
+**Learning:** Preloading a single large image (e.g., 1600px desktop Hero) works for desktop LCP but harms mobile performance by downloading unused bytes. Furthermore, if the rendering component (`<Picture>`) requests a different URL (due to `quality` or `width` mismatch), the browser will download *both* the preloaded image and the actual image (double-fetch).
+**Action:** Use `<link rel="preload" imagesrcset="..." imagesizes="...">` to let the browser select the correct preload size. Ensure `quality` and `widths` in the preload generation match the rendering component exactly to guarantee a cache hit.
