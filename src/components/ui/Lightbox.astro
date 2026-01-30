@@ -536,6 +536,23 @@
       const src = this.getImageSrc(this.currentIndex);
       const alt = currentElement.alt || "";
 
+      // Loading state
+      this.lightbox.classList.add("loading");
+      this.image.style.opacity = "0";
+
+      const onLoad = () => {
+        this.lightbox.classList.remove("loading");
+        this.image.style.opacity = "1";
+        // ⚡ Bolt: Preload adjacent images after current one loads
+        this.preloadAdjacentImages();
+      };
+
+      this.image.onload = onLoad;
+      this.image.onerror = () => {
+        this.lightbox.classList.remove("loading");
+        console.error("Image failed to load:", src);
+      };
+
       this.image.src = src;
       this.image.alt = alt || `Image ${this.currentIndex + 1}`;
       this.currentSpan.textContent = String(this.currentIndex + 1);
@@ -546,16 +563,10 @@
         this.announcer.textContent = `Image ${this.currentIndex + 1} sur ${this.galleryElements.length}. ${alt || "Image sans description"}`;
       }
 
-      // Loading state
-      this.lightbox.classList.add("loading");
-      this.image.style.opacity = "0";
-
-      this.image.onload = () => {
-        this.lightbox.classList.remove("loading");
-        this.image.style.opacity = "1";
-        // ⚡ Bolt: Preload adjacent images after current one loads
-        this.preloadAdjacentImages();
-      };
+      // ⚡ Bolt: Check if image is already cached (optimization side effect)
+      if (this.image.complete && this.image.naturalWidth > 0) {
+        onLoad();
+      }
     }
 
     /**
@@ -588,6 +599,12 @@
       // ⚡ Bolt: Lower priority for speculative preloads to protect LCP
       img.fetchPriority = "low";
       img.src = src;
+
+      // ⚡ Bolt: Off-main-thread decoding to prevent jank during swipe
+      // Forces the browser to decode the image in the background before it's needed
+      img.decode().catch(() => {
+        // Silently fail decoding; browser will try again when rendering
+      });
 
       // ⚡ Bolt: Store reference to prevent garbage collection cancelling the request
       this.preloadCache.push(img);
