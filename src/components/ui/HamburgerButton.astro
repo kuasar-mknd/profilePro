@@ -52,14 +52,20 @@
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
 
-      // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
+      // 🎨 Palette: Respect Reduced Motion
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const delay = prefersReducedMotion ? 0 : 300;
+
+      // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms or 0ms)
       setTimeout(() => {
         if (button.getAttribute("aria-expanded") === "false") {
           nav.classList.add("invisible");
           // ⚡ Bolt: Remove GPU layer promotion to free memory
           (nav as HTMLElement).style.willChange = "auto";
         }
-      }, 300);
+      }, delay);
     };
 
     const openMenu = () => {
