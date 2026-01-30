@@ -62,6 +62,33 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
     await expect(page.locator("#name")).toHaveAttribute("aria-invalid", "true");
   });
 
+  test("contact form should show validation checkmarks for valid inputs", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+
+    const contactForm = page.locator("#contact-form");
+    await contactForm.scrollIntoViewIfNeeded();
+
+    const nameInput = contactForm.locator('input[name="name"]');
+    const emailInput = contactForm.locator('input[name="email"]');
+
+    // Fill name (min 2 chars)
+    await nameInput.fill("Samuel");
+    // Verify checkmark for name
+    // Using xpath=.. to go up to the parent div, then finding the validation-icon
+    const nameCheckmark = nameInput.locator("xpath=..").locator(".validation-icon");
+    await expect(nameCheckmark).toHaveAttribute("data-visible", "true");
+
+    // Fill email
+    await emailInput.fill("samuel@example.com");
+    // Verify checkmark for email
+    const emailCheckmark = emailInput
+      .locator("xpath=..")
+      .locator(".validation-icon");
+    await expect(emailCheckmark).toHaveAttribute("data-visible", "true");
+  });
+
   test("theme toggle should work", async ({ page }) => {
     await page.goto("/");
 
