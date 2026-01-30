@@ -1,14 +1,12 @@
 ---
 import { Icon } from "astro-icon/components";
-
-const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 ---
 
 {
   /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
 }
 <form
-  action="https://api.web3forms.com/submit"
+  action="/api/submit-form"
   method="POST"
   class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px] contain-layout-paint"
   id="contact-form"
@@ -43,9 +41,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     class="absolute -top-20 -right-20 w-40 h-40 bg-linear-to-br from-pacamara-secondary/20 to-pacamara-accent/20 rounded-full blur-2xl pointer-events-none"
   >
   </div>
-
-  <!-- Access Key -->
-  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
@@ -669,7 +664,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "name",
           "email",
           "message",
-          "access_key",
           "subject",
           "botcheck",
           "form-load-timestamp",
@@ -682,14 +676,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
               // We skip sanitizeInput here because it escapes '%' which is valid in emails.
               data[key] = value;
             } else {
-              // 🛡️ Sentinel: Sanitize ALL other fields (name, message, subject) AND hidden fields (botcheck, access_key, timestamp)
+              // 🛡️ Sentinel: Sanitize ALL other fields (name, message, subject) AND hidden fields (botcheck, timestamp)
               // This prevents XSS attacks via hidden field manipulation if the backend echoes these values.
               data[key] = sanitizeInput(value);
             }
           }
         });
 
-        const response = await fetch("https://api.web3forms.com/submit", {
+        const response = await fetch("/api/submit-form", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
