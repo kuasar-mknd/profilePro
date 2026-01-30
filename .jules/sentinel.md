@@ -39,3 +39,8 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-27 - Protocol-Relative URL Bypass
+**Vulnerability:** The `isValidUrl` utility used a regex `/^(https?:\/\/|\/)/i` which inadvertently allowed protocol-relative URLs (e.g., `//evil.com`) because they start with `/`. This could lead to Open Redirect or Mixed Content vulnerabilities.
+**Learning:** Regex anchors like `^` apply to the start of the string, but simple character matching (like `/`) doesn't inherently look ahead. A double slash `//` satisfies the "starts with `/`" condition.
+**Prevention:** Use negative lookahead `\/(?!\/)` when validating relative paths to explicitly forbid the double-slash pattern while allowing single-slash root-relative paths.
