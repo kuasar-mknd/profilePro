@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-27 - Mobile-Hostile LCP Preloads
+
+**Learning:** Using `getImage()` in Astro frontmatter to generate a single URL for `<link rel="preload">` often results in a desktop-optimized asset (e.g., 1600px width) being forced on mobile users. This causes over-fetching and competes with the responsive `<Picture>` tag which might select a smaller source.
+**Action:** Avoid static preloads for responsive images unless `imagesrcset` is available. Prefer `fetchpriority="high"` on the `<img>` tag itself, which allows the browser to select the correct responsive candidate while maintaining high priority.

@@ -26,16 +26,6 @@ const {
   noindex = false,
 } = Astro.props;
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
-
-// ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
-let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
-if (postData?.data?.image) {
-  lcpImage = await getImage({
-    src: postData.data.image,
-    width: 1600,
-    format: "avif",
-  });
-}
 ---
 
 <!doctype html>
@@ -72,22 +62,6 @@ if (postData?.data?.image) {
       crossorigin
       fetchpriority="high"
     />
-    <!-- ⚡ Bolt: Removed fetchpriority="high" from non-LCP fonts (Light/Regular) -->
-    <!-- This reduces network contention, allowing the LCP Image and Heading Font to load faster -->
-    <link
-      rel="preload"
-      href="/fonts/outfit-light.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/outfit-regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
     <!-- ⚡ Bolt: Added Outfit Bold preload as it's used in Hero buttons (LCP) -->
     <link
       rel="preload"
@@ -102,19 +76,6 @@ if (postData?.data?.image) {
         <link
           rel="preload"
           href={heroLogo.src}
-          as="image"
-          type="image/avif"
-          fetchpriority="high"
-        />
-      )
-    }
-
-    <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
-    {
-      lcpImage && (
-        <link
-          rel="preload"
-          href={lcpImage.src}
           as="image"
           type="image/avif"
           fetchpriority="high"
