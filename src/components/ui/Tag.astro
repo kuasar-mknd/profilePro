@@ -9,6 +9,7 @@ const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
   tag && (
     <Element
       href={href}
+      rel={href ? "tag" : undefined}
       aria-label={ariaLabel}
       title={ariaLabel}
       class:list={[

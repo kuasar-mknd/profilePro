@@ -45,7 +45,7 @@ import { Icon } from "astro-icon/components";
       </a>
       <button
         id="go-back-btn"
-        class="group inline-flex items-center gap-2 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="group hidden items-center gap-2 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
         aria-label="Retourner à la page précédente"
       >
         <Icon
@@ -79,9 +79,12 @@ import { Icon } from "astro-icon/components";
     // But to be safe against double-binding on the same element instance:
     if (!btn || btn.dataset.initialized === "true") return;
 
-    // 🎨 Palette: Hide button if no history exists to prevent dead clicks
-    if (window.history.length <= 1) {
-      btn.classList.add("hidden");
+    // 🎨 Palette: Show button only if history exists to prevent dead clicks
+    // Hidden by default in CSS to prevent CLS
+    if (window.history.length > 1) {
+      btn.classList.remove("hidden");
+      btn.classList.add("inline-flex");
+    } else {
       return;
     }
 
