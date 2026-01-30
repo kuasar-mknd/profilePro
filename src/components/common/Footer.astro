@@ -272,13 +272,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
       }
     }
 
-    // Initialize on initial load and every view transition
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initCarbonBadge);
-    } else {
-      // Small timeout to ensure DOM is fully ready and painted
-      setTimeout(initCarbonBadge, 0);
-    }
+    // ⚡ Bolt: Initialize only on astro:page-load to prevent double execution on initial load
+    // astro:page-load fires on both initial load and subsequent navigations
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
