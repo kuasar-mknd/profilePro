@@ -13,10 +13,12 @@ const { icon, url, label } = Astro.props;
 
 // 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
 // Allow http, https, mailto, and relative paths (/)
-const safeUrl =
-  isValidUrl(url, { allowMailto: true, allowProtocolRelative: false })
-    ? url
-    : "#";
+const safeUrl = isValidUrl(url, {
+  allowMailto: true,
+  allowProtocolRelative: false,
+})
+  ? url
+  : "#";
 
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
