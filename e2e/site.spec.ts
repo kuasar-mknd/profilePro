@@ -81,4 +81,29 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("contact form email should show validation icon on valid input", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+
+    const contactForm = page.locator("#contact-form");
+    await contactForm.scrollIntoViewIfNeeded();
+
+    const emailInput = contactForm.locator('input[name="email"]');
+
+    // Type a valid email
+    await emailInput.fill("test@example.com");
+
+    // Check for validation icon
+    const validationIcon = contactForm.locator(
+      '.form-group:has(input[name="email"]) .validation-icon',
+    );
+
+    await expect(validationIcon).toHaveAttribute("data-visible", "true");
+
+    // Type an invalid email
+    await emailInput.fill("invalid-email");
+    await expect(validationIcon).toHaveAttribute("data-visible", "false");
+  });
 });
