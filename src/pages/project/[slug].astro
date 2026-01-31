@@ -418,8 +418,11 @@ if (entry.data.type === "video" && entry.data.image) {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
+            id="project-nav-newer"
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            title="Projet précédent (←)"
+            aria-keyshortcuts="ArrowLeft"
           >
             <Icon
               name="mdi:arrow-left"
@@ -444,8 +447,11 @@ if (entry.data.type === "video" && entry.data.image) {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
+            id="project-nav-older"
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            title="Projet suivant (→)"
+            aria-keyshortcuts="ArrowRight"
           >
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
@@ -513,4 +519,75 @@ if (entry.data.type === "video" && entry.data.image) {
       />
     </div>
   </div>
+
+  <script>
+    /**
+     * 🎨 Palette: Keyboard Navigation for Projects
+     * Allows navigating between projects using Arrow keys.
+     * Includes guards for inputs, modifiers, and lightbox state.
+     */
+    function initProjectNavigation() {
+      const handleKeydown = (e: KeyboardEvent) => {
+        // Guard: Ignore if user is typing in an input, textarea, or contenteditable
+        const target = e.target as HTMLElement;
+        if (
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable
+        ) {
+          return;
+        }
+
+        // Guard: Ignore if modifier keys are pressed
+        if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) {
+          return;
+        }
+
+        // Guard: Ignore if Lightbox is open
+        const lightbox = document.getElementById("lightbox");
+        if (lightbox && lightbox.getAttribute("aria-hidden") === "false") {
+          return;
+        }
+
+        if (e.key === "ArrowLeft") {
+          const newerLink = document.getElementById("project-nav-newer");
+          if (newerLink) {
+            e.preventDefault(); // Prevent scroll
+            newerLink.click();
+          }
+        } else if (e.key === "ArrowRight") {
+          const olderLink = document.getElementById("project-nav-older");
+          if (olderLink) {
+            e.preventDefault(); // Prevent scroll
+            olderLink.click();
+          }
+        }
+      };
+
+      // Clean up previous listener if any (though astro:page-load handles re-run, document listener persists)
+      // ⚡ Bolt: Robust pattern to prevent duplicate listeners
+      // We can use a named function and remove it, or use the AbortController pattern if supported,
+      // or simply rely on the fact that we are adding it to 'document'.
+      // Since 'initProjectNavigation' runs on every page load, we must ensure we don't stack listeners.
+      // A simple way is to attach to a specific element that gets replaced, or use a global flag/handler reference.
+      // However, since this script module is re-executed, we need to be careful.
+      // The safest way in Astro View Transitions without global state pollution is to attach to the window with cleanup.
+      // But let's use the 'removeEventListener' pattern with a module-level variable if possible?
+      // No, inline scripts in Astro are tricky with module scope.
+      // Best approach: Add listener, and on 'astro:before-swap' remove it.
+
+      document.addEventListener("keydown", handleKeydown);
+
+      document.addEventListener(
+        "astro:before-swap",
+        () => {
+          document.removeEventListener("keydown", handleKeydown);
+        },
+        { once: true },
+      );
+    }
+
+    // Initialize on load and after navigation
+    document.addEventListener("astro:page-load", initProjectNavigation);
+  </script>
 </Base>
