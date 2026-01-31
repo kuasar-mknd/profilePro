@@ -39,3 +39,8 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2026-01-31 - Link Neutralization and URL Validation
+**Vulnerability:** XSS via malicious 'javascript:' URIs and potential Open Redirects via protocol-relative URLs.
+**Learning:** Client-side scripts in layouts can serve as a universal security layer for links in static sites. Explicitly blocking protocol-relative URLs in utility functions prevents them from being used in sensitive contexts like redirects.
+**Prevention:** Implement 'javascript:' URI neutralization in global link handlers and harden URL validation utilities to block '//' by default.

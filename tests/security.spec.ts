@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import {
+  safeJson,
+  sanitizeInput,
+  isValidUrl,
+  sanitizeUrl,
+} from "../src/utils/security";
 
 test("safeJson escapes dangerous characters", () => {
   const input = {
@@ -25,6 +30,12 @@ test("sanitizeInput escapes HTML entities", () => {
   );
 });
 
+test("sanitizeInput handles pipe character", () => {
+  const input = "ls | grep";
+  const output = sanitizeInput(input);
+  expect(output).toBe("ls &#124; grep");
+});
+
 test("sanitizeInput handles other dangerous characters", () => {
   const input = "javascript:alert(1)";
   // ( and ) are escaped, so function call is broken in attribute context if strict
@@ -41,4 +52,21 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+
+test("isValidUrl handles protocol-relative URLs", () => {
+  expect(isValidUrl("https://google.com")).toBe(true);
+  expect(isValidUrl("/path/to/page")).toBe(true);
+  expect(isValidUrl("//google.com")).toBe(false); // Blocked by default
+  expect(isValidUrl("//google.com", { allowProtocolRelative: true })).toBe(
+    true,
+  );
+});
+
+test("sanitizeUrl blocks protocol-relative URLs", () => {
+  expect(sanitizeUrl("https://google.com")).toBe("https://google.com");
+  expect(sanitizeUrl("/path/to/page")).toBe("/path/to/page");
+  expect(sanitizeUrl("//google.com")).toBe("");
+  expect(sanitizeUrl("javascript:alert(1)")).toBe("");
 });
