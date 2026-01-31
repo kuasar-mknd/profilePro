@@ -409,7 +409,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     );
   }
 
-  initCarouselTouch();
   document.addEventListener("astro:page-load", initCarouselTouch);
 
   /**
@@ -443,7 +442,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     observer.observe(carousel);
   }
 
-  initCarouselObserver();
   document.addEventListener("astro:page-load", initCarouselObserver);
 
   /**
@@ -490,6 +488,5 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     });
   }
 
-  initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
 </script>
