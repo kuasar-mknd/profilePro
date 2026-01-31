@@ -1,0 +1,2119 @@
+22:29:46 [types] Generated 1ms
+
+ update  ▶ New version of Astro available: 5.17.1
+  Run bun x @astrojs/upgrade to update
+
+22:29:47 [content] Syncing content
+22:29:47 [content] Synced content
+22:29:47 [vite] Re-optimizing dependencies because vite config has changed
+
+ astro  v5.16.8 ready in 3142 ms
+
+┃ Local    http://localhost:4321/
+┃ Network  use --host to expose
+
+22:29:47 watching for file changes...
+22:30:26 [astro-icon] Loaded icons from src/icons, mdi
+22:30:32 [200] / 609ms
+22:30:33 [200] /_image 639ms
+22:30:33 [200] /_image 755ms
+22:30:33 [200] /_image 926ms
+22:30:33 [watch] astro_log.txt
+22:30:33 [watch] astro_log.txt
+22:30:34 [200] /_image 327ms
+22:30:34 [watch] astro_log.txt
+22:30:34 [watch] astro_log.txt
+22:30:34 [200] /_image 1941ms
+22:30:34 [200] /_image 745ms
+22:30:34 [watch] astro_log.txt
+22:30:34 [watch] astro_log.txt
+22:30:35 [200] /_image 916ms
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [200] /_image 2409ms
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [200] / 315ms
+22:30:35 [200] / 316ms
+22:30:35 [200] / 316ms
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [200] / 400ms
+22:30:35 [200] / 402ms
+22:30:35 [watch] astro_log.txt
+22:30:35 [watch] astro_log.txt
+22:30:35 [200] / 212ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:36 [200] / 219ms
+22:30:36 [200] /_image 763ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:36 [200] / 198ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:36 [200] / 191ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:36 [200] /_image 210ms
+22:30:36 [200] / 176ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:36 [200] / 252ms
+22:30:36 [watch] astro_log.txt
+22:30:36 [watch] astro_log.txt
+22:30:37 [200] / 269ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] /_image 4300ms
+22:30:37 [200] /_image 546ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] / 233ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] / 178ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] / 165ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] / 159ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] /_image 554ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:37 [200] / 174ms
+22:30:37 [watch] astro_log.txt
+22:30:37 [watch] astro_log.txt
+22:30:38 [200] / 162ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:38 [200] / 193ms
+22:30:38 [200] / 194ms
+22:30:38 [200] /_image 357ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:38 [200] / 194ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:38 [200] / 175ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:38 [200] / 152ms
+22:30:38 [200] /_image 320ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:38 [200] / 162ms
+22:30:38 [200] / 43ms
+22:30:38 [watch] astro_log.txt
+22:30:38 [watch] astro_log.txt
+22:30:39 [200] /_image 178ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] /_image 442ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] /_image 359ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] /_image 177ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] / 74ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] / 139ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] / 117ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:39 [200] / 76ms
+22:30:39 [watch] astro_log.txt
+22:30:39 [watch] astro_log.txt
+22:30:40 [200] /_image 497ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 119ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 167ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] /_image 260ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 201ms
+22:30:40 [200] / 201ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 197ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] /_image 292ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 217ms
+22:30:40 [200] / 218ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:40 [200] / 213ms
+22:30:40 [watch] astro_log.txt
+22:30:40 [watch] astro_log.txt
+22:30:41 [200] / 172ms
+22:30:41 [200] / 173ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 174ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 146ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 140ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 147ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 147ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 137ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:41 [200] / 144ms
+22:30:41 [watch] astro_log.txt
+22:30:41 [watch] astro_log.txt
+22:30:42 [200] / 156ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 134ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 139ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 150ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 140ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 155ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 166ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:42 [200] / 157ms
+22:30:42 [watch] astro_log.txt
+22:30:42 [watch] astro_log.txt
+22:30:43 [200] / 136ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 141ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 142ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 153ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 143ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 172ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 165ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:43 [200] / 153ms
+22:30:43 [watch] astro_log.txt
+22:30:43 [watch] astro_log.txt
+22:30:44 [200] / 160ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 134ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 137ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 137ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 135ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 135ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 135ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:44 [200] / 134ms
+22:30:44 [watch] astro_log.txt
+22:30:44 [watch] astro_log.txt
+22:30:45 [200] / 150ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 145ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 152ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 145ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 136ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 140ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 138ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 140ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:45 [200] / 146ms
+22:30:45 [watch] astro_log.txt
+22:30:45 [watch] astro_log.txt
+22:30:46 [200] / 141ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 137ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 139ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 143ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 140ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 145ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 144ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:46 [200] / 136ms
+22:30:46 [watch] astro_log.txt
+22:30:46 [watch] astro_log.txt
+22:30:47 [200] / 147ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 138ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 138ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 141ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 138ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 139ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 139ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:47 [200] / 158ms
+22:30:47 [watch] astro_log.txt
+22:30:47 [watch] astro_log.txt
+22:30:48 [200] / 138ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 135ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 149ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 155ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 147ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 147ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 141ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:48 [200] / 139ms
+22:30:48 [watch] astro_log.txt
+22:30:48 [watch] astro_log.txt
+22:30:49 [200] / 141ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 142ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 168ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 141ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 143ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 142ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 138ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:49 [200] / 138ms
+22:30:49 [watch] astro_log.txt
+22:30:49 [watch] astro_log.txt
+22:30:50 [200] / 159ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 140ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 149ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 142ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 150ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 144ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 141ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 143ms
+22:30:50 [watch] astro_log.txt
+22:30:50 [watch] astro_log.txt
+22:30:50 [200] / 142ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 144ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 163ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 138ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 158ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 144ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 131ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:51 [200] / 146ms
+22:30:51 [watch] astro_log.txt
+22:30:51 [watch] astro_log.txt
+22:30:52 [200] / 146ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 138ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 142ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 158ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 147ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 142ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 146ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 139ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:52 [200] / 134ms
+22:30:52 [watch] astro_log.txt
+22:30:52 [watch] astro_log.txt
+22:30:53 [200] / 133ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 139ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 148ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 144ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 137ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 137ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 135ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:53 [200] / 139ms
+22:30:53 [watch] astro_log.txt
+22:30:53 [watch] astro_log.txt
+22:30:54 [200] / 136ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 150ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 139ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 139ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 143ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 143ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 144ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:54 [200] / 146ms
+22:30:54 [watch] astro_log.txt
+22:30:54 [watch] astro_log.txt
+22:30:55 [200] / 159ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 141ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 137ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 146ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 141ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 135ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 134ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 141ms
+22:30:55 [watch] astro_log.txt
+22:30:55 [watch] astro_log.txt
+22:30:55 [200] / 138ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 136ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 138ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 132ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 142ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 144ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 142ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 142ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:56 [200] / 134ms
+22:30:56 [watch] astro_log.txt
+22:30:56 [watch] astro_log.txt
+22:30:57 [200] / 140ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 145ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 140ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 153ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 136ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 144ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 138ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:57 [200] / 135ms
+22:30:57 [watch] astro_log.txt
+22:30:57 [watch] astro_log.txt
+22:30:58 [200] / 140ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 139ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 138ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 140ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 141ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 139ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 145ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 149ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:58 [200] / 133ms
+22:30:58 [watch] astro_log.txt
+22:30:58 [watch] astro_log.txt
+22:30:59 [200] / 144ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 134ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 139ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 135ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 160ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 135ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 141ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:30:59 [200] / 154ms
+22:30:59 [watch] astro_log.txt
+22:30:59 [watch] astro_log.txt
+22:31:00 [200] / 149ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 144ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 138ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 136ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 134ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 154ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 139ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:00 [200] / 135ms
+22:31:00 [watch] astro_log.txt
+22:31:00 [watch] astro_log.txt
+22:31:01 [200] / 145ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 144ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 153ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 139ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 156ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 140ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 136ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:01 [200] / 136ms
+22:31:01 [watch] astro_log.txt
+22:31:01 [watch] astro_log.txt
+22:31:02 [200] / 140ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 140ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 133ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 146ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 143ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 141ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 136ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 132ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:02 [200] / 138ms
+22:31:02 [watch] astro_log.txt
+22:31:02 [watch] astro_log.txt
+22:31:03 [200] / 137ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 138ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 143ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 135ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 133ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 132ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 138ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:03 [200] / 137ms
+22:31:03 [watch] astro_log.txt
+22:31:03 [watch] astro_log.txt
+22:31:04 [200] / 138ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 141ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 133ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 137ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 138ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 134ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 132ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 133ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:04 [200] / 136ms
+22:31:04 [watch] astro_log.txt
+22:31:04 [watch] astro_log.txt
+22:31:05 [200] / 130ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 137ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 133ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 144ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 139ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 135ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 135ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:05 [200] / 133ms
+22:31:05 [watch] astro_log.txt
+22:31:05 [watch] astro_log.txt
+22:31:06 [200] / 132ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 136ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 134ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 145ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 132ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 132ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 137ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 134ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:06 [200] / 143ms
+22:31:06 [watch] astro_log.txt
+22:31:06 [watch] astro_log.txt
+22:31:07 [200] / 141ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 131ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 135ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 130ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 136ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 136ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 129ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 163ms
+22:31:07 [watch] astro_log.txt
+22:31:07 [watch] astro_log.txt
+22:31:07 [200] / 132ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 134ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 140ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 136ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 138ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 131ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 136ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 146ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:08 [200] / 139ms
+22:31:08 [watch] astro_log.txt
+22:31:08 [watch] astro_log.txt
+22:31:09 [200] / 145ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 132ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 138ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 138ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 134ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 144ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 154ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:09 [200] / 137ms
+22:31:09 [watch] astro_log.txt
+22:31:09 [watch] astro_log.txt
+22:31:10 [200] / 135ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 133ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 149ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 156ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 135ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 135ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 136ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 136ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:10 [200] / 140ms
+22:31:10 [watch] astro_log.txt
+22:31:10 [watch] astro_log.txt
+22:31:11 [200] / 133ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 132ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 141ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 137ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 138ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 133ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:11 [200] / 60ms
+22:31:11 [watch] astro_log.txt
+22:31:11 [watch] astro_log.txt
+22:31:27 [watch] verification/verify_palette.py
+22:31:27 [watch] verification/verify_palette.py
+22:31:27 [watch] astro_log.txt
+22:31:27 [watch] astro_log.txt
+22:31:56 [watch] verification/verify_palette.py
+22:31:56 [watch] verification/verify_palette.py
+22:31:56 [watch] astro_log.txt
+22:31:56 [watch] astro_log.txt
+22:32:02 [200] / 155ms
+22:32:02 [watch] astro_log.txt
+22:32:02 [watch] astro_log.txt
+22:32:03 [200] /_image 281ms
+22:32:03 [200] /_image 575ms
+22:32:03 [watch] astro_log.txt
+22:32:03 [watch] astro_log.txt
+22:32:03 [200] /_image 734ms
+22:32:03 [watch] astro_log.txt
+22:32:03 [watch] astro_log.txt
+22:32:04 [200] /_image 415ms
+22:32:04 [watch] astro_log.txt
+22:32:04 [watch] astro_log.txt
+22:32:04 [200] /_image 529ms
+22:32:04 [200] /_image 1690ms
+22:32:04 [watch] astro_log.txt
+22:32:04 [watch] astro_log.txt
+22:32:04 [200] /_image 716ms
+22:32:04 [watch] astro_log.txt
+22:32:04 [watch] astro_log.txt
+22:32:04 [watch] astro_log.txt
+22:32:04 [watch] astro_log.txt
+22:32:05 [200] / 316ms
+22:32:05 [200] / 325ms
+22:32:05 [200] / 326ms
+22:32:05 [200] / 284ms
+22:32:05 [200] /_image 455ms
+22:32:05 [watch] astro_log.txt
+22:32:05 [watch] astro_log.txt
+22:32:05 [watch] astro_log.txt
+22:32:05 [watch] astro_log.txt
+22:32:05 [200] /_image 2601ms
+22:32:05 [watch] astro_log.txt
+22:32:05 [watch] astro_log.txt
+22:32:05 [200] /_image 223ms
+22:32:06 [200] /_image 446ms
+22:32:06 [200] /_image 799ms
+22:32:06 [watch] astro_log.txt
+22:32:06 [watch] astro_log.txt
+22:32:07 [200] /_image 399ms
+22:32:07 [watch] astro_log.txt
+22:32:07 [watch] astro_log.txt
+22:32:07 [200] / 685ms
+22:32:07 [watch] astro_log.txt
+22:32:07 [watch] astro_log.txt
+22:32:07 [200] /_image 290ms
+22:32:07 [watch] astro_log.txt
+22:32:07 [watch] astro_log.txt
+22:32:07 [200] / 558ms
+22:32:07 [watch] astro_log.txt
+22:32:07 [watch] astro_log.txt
+22:32:08 [200] /_image 438ms
+22:32:08 [watch] astro_log.txt
+22:32:08 [watch] astro_log.txt
+22:32:08 [200] / 826ms
+22:32:08 [200] / 826ms
+22:32:08 [watch] astro_log.txt
+22:32:08 [watch] astro_log.txt
+22:32:08 [200] /_image 2931ms
+22:32:08 [200] /_image 5982ms
+22:32:08 [watch] astro_log.txt
+22:32:08 [watch] astro_log.txt
+22:32:08 [200] / 389ms
+22:32:08 [200] / 390ms
+22:32:08 [200] / 73ms
+22:32:08 [watch] astro_log.txt
+22:32:08 [watch] astro_log.txt
+22:32:08 [200] /_image 500ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:09 [200] / 170ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:09 [200] / 266ms
+22:32:09 [200] / 267ms
+22:32:09 [200] /_image 291ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:09 [200] / 278ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:09 [200] / 234ms
+22:32:09 [200] /_image 252ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:09 [200] / 191ms
+22:32:09 [watch] astro_log.txt
+22:32:09 [watch] astro_log.txt
+22:32:10 [200] / 252ms
+22:32:10 [200] / 40ms
+22:32:10 [watch] astro_log.txt
+22:32:10 [watch] astro_log.txt
+22:32:10 [200] /_image 389ms
+22:32:10 [watch] astro_log.txt
+22:32:10 [watch] astro_log.txt
+22:32:10 [200] /_image 4669ms
+22:32:10 [watch] astro_log.txt
+22:32:10 [watch] astro_log.txt
+22:32:10 [200] /_image 283ms
+22:32:10 [watch] astro_log.txt
+22:32:10 [watch] astro_log.txt
+22:32:10 [200] / 77ms
+22:32:10 [200] /_image 531ms
+22:32:10 [watch] astro_log.txt
+22:32:10 [watch] astro_log.txt
+22:32:12 [200] /_image 356ms
+22:32:12 [watch] astro_log.txt
+22:32:12 [watch] astro_log.txt
+22:32:12 [200] /_image 1343ms
+22:32:12 [watch] astro_log.txt
+22:32:12 [watch] astro_log.txt
+22:32:12 [200] / 384ms
+22:32:12 [watch] astro_log.txt
+22:32:12 [watch] astro_log.txt
+22:32:12 [200] /_image 561ms
+22:32:12 [watch] astro_log.txt
+22:32:12 [watch] astro_log.txt
+22:32:12 [200] / 355ms
+22:32:12 [watch] astro_log.txt
+22:32:12 [watch] astro_log.txt
+22:32:13 [200] / 229ms
+22:32:13 [200] / 229ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 210ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 162ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 160ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 145ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 140ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 148ms
+22:32:13 [watch] astro_log.txt
+22:32:13 [watch] astro_log.txt
+22:32:13 [200] / 150ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] / 138ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] / 143ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] / 161ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] /_image 3999ms
+22:32:14 [200] / 188ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] / 149ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] /_image 3646ms
+22:32:14 [200] / 169ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:14 [200] / 159ms
+22:32:14 [watch] astro_log.txt
+22:32:14 [watch] astro_log.txt
+22:32:15 [200] / 162ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 150ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 169ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 160ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 155ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 178ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:15 [200] / 184ms
+22:32:15 [watch] astro_log.txt
+22:32:15 [watch] astro_log.txt
+22:32:16 [200] / 179ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 153ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 173ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 160ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 156ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 146ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:16 [200] / 157ms
+22:32:16 [watch] astro_log.txt
+22:32:16 [watch] astro_log.txt
+22:32:17 [200] / 182ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 157ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 142ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 149ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 175ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 160ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:17 [200] / 156ms
+22:32:17 [watch] astro_log.txt
+22:32:17 [watch] astro_log.txt
+22:32:18 [200] / 173ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 194ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 154ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 158ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 172ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 158ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 138ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:18 [200] / 136ms
+22:32:18 [watch] astro_log.txt
+22:32:18 [watch] astro_log.txt
+22:32:19 [200] / 143ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 145ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 141ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 141ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 143ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 132ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 136ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:19 [200] / 138ms
+22:32:19 [watch] astro_log.txt
+22:32:19 [watch] astro_log.txt
+22:32:20 [200] / 140ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 139ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 131ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 125ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 131ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 134ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 129ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 130ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:20 [200] / 131ms
+22:32:20 [watch] astro_log.txt
+22:32:20 [watch] astro_log.txt
+22:32:21 [200] / 129ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 129ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 131ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 129ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 131ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 124ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 125ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 130ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:21 [200] / 131ms
+22:32:21 [watch] astro_log.txt
+22:32:21 [watch] astro_log.txt
+22:32:22 [200] / 127ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 128ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 131ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 130ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 133ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 128ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 134ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 132ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:22 [200] / 134ms
+22:32:22 [watch] astro_log.txt
+22:32:22 [watch] astro_log.txt
+22:32:23 [200] / 133ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 133ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 133ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 132ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 147ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 144ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 128ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 128ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:23 [200] / 134ms
+22:32:23 [watch] astro_log.txt
+22:32:23 [watch] astro_log.txt
+22:32:24 [200] / 135ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 136ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 132ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 130ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 131ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 131ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 126ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 132ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:24 [200] / 128ms
+22:32:24 [watch] astro_log.txt
+22:32:24 [watch] astro_log.txt
+22:32:25 [200] / 137ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 135ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 130ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 204ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 132ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 140ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 139ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:25 [200] / 141ms
+22:32:25 [watch] astro_log.txt
+22:32:25 [watch] astro_log.txt
+22:32:26 [200] / 138ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 129ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 138ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 132ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 133ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 130ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 129ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:26 [200] / 147ms
+22:32:26 [watch] astro_log.txt
+22:32:26 [watch] astro_log.txt
+22:32:27 [200] / 134ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 133ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 131ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 128ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 132ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 132ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 128ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 128ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:27 [200] / 130ms
+22:32:27 [watch] astro_log.txt
+22:32:27 [watch] astro_log.txt
+22:32:28 [200] / 135ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 128ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 131ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 132ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 129ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 128ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 128ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 129ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:28 [200] / 129ms
+22:32:28 [watch] astro_log.txt
+22:32:28 [watch] astro_log.txt
+22:32:29 [200] / 179ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:29 [200] / 149ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:29 [200] / 149ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:29 [200] / 187ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:29 [200] / 220ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:29 [200] / 196ms
+22:32:29 [watch] astro_log.txt
+22:32:29 [watch] astro_log.txt
+22:32:30 [200] / 185ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:30 [200] / 270ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:30 [200] / 233ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:30 [200] / 213ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:30 [200] / 139ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:30 [200] / 145ms
+22:32:30 [watch] astro_log.txt
+22:32:30 [watch] astro_log.txt
+22:32:31 [200] / 291ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 262ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 180ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 159ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 155ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 162ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:31 [200] / 137ms
+22:32:31 [watch] astro_log.txt
+22:32:31 [watch] astro_log.txt
+22:32:32 [200] / 218ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:32 [200] / 280ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:32 [200] / 174ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:32 [200] / 168ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:32 [200] / 181ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:32 [200] / 175ms
+22:32:32 [watch] astro_log.txt
+22:32:32 [watch] astro_log.txt
+22:32:33 [200] / 180ms
+22:32:33 [watch] astro_log.txt
+22:32:33 [watch] astro_log.txt
+22:32:33 [200] / 221ms
+22:32:33 [watch] astro_log.txt
+22:32:33 [watch] astro_log.txt
+22:32:33 [200] / 173ms
+22:32:33 [watch] astro_log.txt
+22:32:33 [watch] astro_log.txt
+22:32:33 [200] / 341ms
+22:32:33 [watch] astro_log.txt
+22:32:33 [watch] astro_log.txt
+22:32:33 [200] / 210ms
+22:32:33 [watch] astro_log.txt
+22:32:33 [watch] astro_log.txt
+22:32:34 [200] / 209ms
+22:32:34 [watch] astro_log.txt
+22:32:34 [watch] astro_log.txt
+22:32:34 [200] / 422ms
+22:32:34 [watch] astro_log.txt
+22:32:34 [watch] astro_log.txt
+22:32:34 [200] / 386ms
+22:32:34 [200] / 56ms
+22:32:34 [watch] astro_log.txt
+22:32:34 [watch] astro_log.txt
+22:32:35 [200] /_image 424ms
+22:32:35 [watch] astro_log.txt
+22:32:35 [watch] astro_log.txt
+22:32:35 [200] / 95ms
+22:32:35 [watch] astro_log.txt
+22:32:35 [watch] astro_log.txt
+22:32:39 [200] /_image 895ms
+22:32:40 [200] /_image 1812ms
+22:32:40 [watch] astro_log.txt
+22:32:40 [watch] astro_log.txt
+22:32:40 [200] /_image 2007ms
+22:32:40 [watch] astro_log.txt
+22:32:40 [watch] astro_log.txt
+22:32:40 [200] / 242ms
+22:32:40 [200] / 59ms
+22:32:40 [200] /_image 2312ms
+22:32:40 [watch] astro_log.txt
+22:32:40 [watch] astro_log.txt
+22:32:40 [200] / 104ms
+22:32:40 [watch] astro_log.txt
+22:32:40 [watch] astro_log.txt
+22:32:42 [200] /_image 3997ms
+22:32:42 [watch] astro_log.txt
+22:32:42 [watch] astro_log.txt
+22:32:42 [200] / 123ms
+22:32:42 [watch] astro_log.txt
+22:32:42 [watch] astro_log.txt
+22:32:46 [200] /_image 3590ms
+22:32:46 [watch] astro_log.txt
+22:32:46 [watch] astro_log.txt
+22:32:46 [200] /project 42ms
+22:32:46 [200] / 235ms
+22:32:46 [watch] astro_log.txt
+22:32:46 [watch] astro_log.txt
+22:32:46 [200] /_image 2131ms
+22:32:48 [200] /_image 1150ms
+22:32:48 [200] /_image 1305ms
+22:32:48 [200] /_image 1611ms
+22:32:48 [watch] astro_log.txt
+22:32:48 [watch] astro_log.txt
+22:32:48 [200] /_image 1898ms
+22:32:48 [200] /_image 1939ms
+22:32:48 [watch] astro_log.txt
+22:32:48 [watch] astro_log.txt
+22:32:49 [200] /_image 2302ms
+22:32:49 [200] /_image 1440ms
+22:32:49 [watch] astro_log.txt
+22:32:49 [watch] astro_log.txt
+22:32:50 [200] /_image 1670ms
+22:32:50 [watch] astro_log.txt
+22:32:50 [watch] astro_log.txt
+22:32:50 [200] /project 1768ms
+22:32:50 [200] /project 1508ms
+22:32:50 [watch] astro_log.txt
+22:32:50 [watch] astro_log.txt
+22:32:50 [200] /_image 1893ms
+22:32:50 [200] /_image 1921ms
+22:32:50 [watch] astro_log.txt
+22:32:50 [watch] astro_log.txt
+22:32:50 [200] /project 358ms
+22:32:50 [200] /project 286ms
+22:32:51 [watch] astro_log.txt
+22:32:51 [watch] astro_log.txt
+22:32:51 [200] /_image 2952ms
+22:32:51 [watch] astro_log.txt
+22:32:51 [watch] astro_log.txt
+22:32:51 [200] /project 259ms
+22:32:51 [200] /project 260ms
+22:32:51 [watch] astro_log.txt
+22:32:51 [watch] astro_log.txt
+22:32:51 [200] /_image 813ms
+22:32:51 [watch] astro_log.txt
+22:32:51 [watch] astro_log.txt
+22:32:51 [200] /_image 1110ms
+22:32:51 [watch] astro_log.txt
+22:32:51 [watch] astro_log.txt
+22:34:28 [watch] verification/verify_palette.py
+22:34:28 [watch] verification/verify_palette.py
+22:34:28 [watch] astro_log.txt
+22:34:28 [watch] astro_log.txt
+22:34:33 [200] / 90ms
+22:34:33 [watch] astro_log.txt
+22:34:33 [watch] astro_log.txt
+22:34:33 [200] /_image 207ms
+22:34:33 [200] /_image 271ms
+22:34:33 [watch] astro_log.txt
+22:34:33 [watch] astro_log.txt
+22:34:33 [200] /_image 373ms
+22:34:33 [watch] astro_log.txt
+22:34:33 [watch] astro_log.txt
+22:34:34 [200] /_image 183ms
+22:34:34 [watch] astro_log.txt
+22:34:34 [watch] astro_log.txt
+22:34:34 [200] /_image 145ms
+22:34:34 [200] /_image 1258ms
+22:34:34 [watch] astro_log.txt
+22:34:34 [watch] astro_log.txt
+22:34:34 [200] /_image 555ms
+22:34:34 [watch] astro_log.txt
+22:34:34 [watch] astro_log.txt
+22:34:34 [200] / 603ms
+22:34:35 [watch] astro_log.txt
+22:34:35 [watch] astro_log.txt
+22:34:35 [200] / 173ms
+22:34:35 [watch] astro_log.txt
+22:34:35 [watch] astro_log.txt
+22:34:35 [200] /_image 321ms
+22:34:35 [200] /_image 450ms
+22:34:35 [200] /_image 522ms
+22:34:35 [200] /_image 2070ms
+22:34:35 [watch] astro_log.txt
+22:34:35 [watch] astro_log.txt
+22:34:36 [200] /_image 557ms
+22:34:36 [watch] astro_log.txt
+22:34:36 [watch] astro_log.txt
+22:34:36 [200] /_image 266ms
+22:34:36 [watch] astro_log.txt
+22:34:36 [watch] astro_log.txt
+22:34:36 [200] / 550ms
+22:34:36 [200] / 551ms
+22:34:36 [watch] astro_log.txt
+22:34:36 [watch] astro_log.txt
+22:34:37 [200] /_image 382ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] / 613ms
+22:34:37 [200] /_image 2029ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] /_image 223ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] / 307ms
+22:34:37 [200] / 307ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] / 271ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] /_image 375ms
+22:34:37 [watch] astro_log.txt
+22:34:37 [watch] astro_log.txt
+22:34:37 [200] /_image 4340ms
+22:34:38 [200] / 272ms
+22:34:38 [200] / 273ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 189ms
+22:34:38 [200] / 196ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 191ms
+22:34:38 [200] /_image 349ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 144ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 170ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] /_image 196ms
+22:34:38 [200] / 156ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 158ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] /_image 260ms
+22:34:38 [watch] astro_log.txt
+22:34:38 [watch] astro_log.txt
+22:34:38 [200] / 156ms
+22:34:39 [200] / 114ms
+22:34:39 [watch] astro_log.txt
+22:34:39 [watch] astro_log.txt
+22:34:39 [200] /_image 3784ms
+22:34:39 [200] / 73ms
+22:34:39 [watch] astro_log.txt
+22:34:39 [watch] astro_log.txt
+22:34:39 [200] / 83ms
+22:34:39 [200] / 84ms
+22:34:39 [watch] astro_log.txt
+22:34:39 [watch] astro_log.txt
+22:34:40 [200] /_image 502ms
+22:34:40 [200] /_image 564ms
+22:34:40 [watch] astro_log.txt
+22:34:40 [watch] astro_log.txt
+22:34:41 [200] /_image 1084ms
+22:34:41 [watch] astro_log.txt
+22:34:41 [watch] astro_log.txt
+22:34:41 [200] /_image 1280ms
+22:34:41 [watch] astro_log.txt
+22:34:41 [watch] astro_log.txt
+22:34:41 [200] /_image 177ms
+22:34:41 [watch] astro_log.txt
+22:34:41 [watch] astro_log.txt
+22:34:41 [200] /_image 1668ms
+22:34:41 [watch] astro_log.txt
+22:34:41 [watch] astro_log.txt
+22:34:41 [200] / 508ms
+22:34:42 [200] /_image 2238ms
+22:34:42 [watch] astro_log.txt
+22:34:42 [watch] astro_log.txt
+22:34:44 [200] /project/48h-geneve-2024 540ms
+22:34:44 [watch] astro_log.txt
+22:34:44 [watch] astro_log.txt
+22:35:00 [200] HEAD /project/48h-geneve-2024 95ms
+22:35:00 [watch] astro_log.txt
+22:35:00 [watch] astro_log.txt
+22:35:16 [watch] verification/verify_palette.py
+22:35:16 [watch] verification/verify_palette.py
+22:35:16 [watch] astro_log.txt
+22:35:16 [watch] astro_log.txt
+22:35:21 [200] /project/48h-geneve-2024 130ms
+22:35:21 [watch] astro_log.txt
+22:35:21 [watch] astro_log.txt
+22:35:21 [200] /_image 261ms
+22:35:21 [200] /_image 392ms
+22:35:21 [watch] astro_log.txt
+22:35:21 [watch] astro_log.txt
+22:35:22 [200] /project/48h-geneve-2024 252ms
+22:35:22 [watch] astro_log.txt
+22:35:22 [watch] astro_log.txt
+22:35:22 [200] /_image 903ms
+22:35:29 [200] /_image 7673ms
+22:35:29 [watch] astro_log.txt
+22:35:29 [watch] astro_log.txt
+22:35:29 [200] /_image 7047ms
+22:35:29 [watch] astro_log.txt
+22:35:29 [watch] astro_log.txt
+22:35:30 [200] /_image 7656ms
+22:35:30 [watch] astro_log.txt
+22:35:30 [watch] astro_log.txt
+22:35:34 [200] /_image 13622ms
+22:35:34 [watch] astro_log.txt
+22:35:34 [watch] astro_log.txt
+22:35:35 [200] /_image 13443ms
+22:35:35 [watch] astro_log.txt
+22:35:35 [watch] astro_log.txt
+22:35:54 [watch] verification/verify_palette.py
+22:35:54 [watch] verification/verify_palette.py
+22:35:54 [watch] astro_log.txt
+22:35:54 [watch] astro_log.txt
+22:35:59 [200] / 85ms
+22:35:59 [watch] astro_log.txt
+22:35:59 [watch] astro_log.txt
+22:35:59 [200] /_image 323ms
+22:35:59 [watch] astro_log.txt
+22:35:59 [watch] astro_log.txt
+22:35:59 [200] /_image 409ms
+22:35:59 [200] /_image 564ms
+22:35:59 [watch] astro_log.txt
+22:35:59 [watch] astro_log.txt
+22:36:00 [200] /_image 270ms
+22:36:00 [200] /_image 1186ms
+22:36:00 [watch] astro_log.txt
+22:36:00 [watch] astro_log.txt
+22:36:00 [200] /_image 601ms
+22:36:00 [watch] astro_log.txt
+22:36:00 [watch] astro_log.txt
+22:36:00 [200] / 746ms
+22:36:00 [watch] astro_log.txt
+22:36:00 [watch] astro_log.txt
+22:36:00 [200] / 314ms
+22:36:01 [200] /_image 547ms
+22:36:01 [watch] astro_log.txt
+22:36:01 [watch] astro_log.txt
+22:36:01 [200] / 212ms
+22:36:01 [200] /_image 1811ms
+22:36:01 [watch] astro_log.txt
+22:36:01 [watch] astro_log.txt
+22:36:01 [200] / 179ms
+22:36:01 [watch] astro_log.txt
+22:36:01 [watch] astro_log.txt
+22:36:01 [200] /_image 352ms
+22:36:01 [watch] astro_log.txt
+22:36:01 [watch] astro_log.txt
+22:36:01 [200] / 371ms
+22:36:01 [200] / 80ms
+22:36:01 [200] / 81ms
+22:36:01 [watch] astro_log.txt
+22:36:01 [watch] astro_log.txt
+22:36:02 [200] /_image 472ms
+22:36:02 [200] /_image 241ms
+22:36:02 [watch] astro_log.txt
+22:36:02 [watch] astro_log.txt
+22:36:02 [200] /_image 364ms
+22:36:02 [200] /_image 311ms
+22:36:02 [watch] astro_log.txt
+22:36:02 [watch] astro_log.txt
+22:36:02 [200] / 163ms
+22:36:02 [200] / 163ms
+22:36:02 [200] /_image 600ms
+22:36:02 [watch] astro_log.txt
+22:36:02 [watch] astro_log.txt
+22:36:03 [200] /_image 314ms
+22:36:03 [200] /_image 435ms
+22:36:03 [watch] astro_log.txt
+22:36:03 [watch] astro_log.txt
+22:36:03 [200] /_image 4119ms
+22:36:03 [watch] astro_log.txt
+22:36:03 [watch] astro_log.txt
+22:36:03 [200] /_image 630ms
+22:36:03 [200] / 184ms
+22:36:03 [200] / 168ms
+22:36:03 [watch] astro_log.txt
+22:36:03 [watch] astro_log.txt
+22:36:03 [200] /_image 245ms
+22:36:04 [200] /_image 356ms
+22:36:04 [watch] astro_log.txt
+22:36:04 [watch] astro_log.txt
+22:36:04 [200] /_image 614ms
+22:36:04 [watch] astro_log.txt
+22:36:04 [watch] astro_log.txt
+22:36:04 [200] /_image 242ms
+22:36:04 [watch] astro_log.txt
+22:36:04 [watch] astro_log.txt
+22:36:04 [watch] astro_log.txt
+22:36:04 [watch] astro_log.txt
+22:36:05 [200] / 510ms
+22:36:05 [200] / 511ms
+22:36:05 [watch] astro_log.txt
+22:36:05 [watch] astro_log.txt
+22:36:05 [200] /_image 3595ms
+22:36:05 [watch] astro_log.txt
+22:36:05 [watch] astro_log.txt
+22:36:05 [200] /_image 445ms
+22:36:05 [200] / 646ms
+22:36:05 [200] / 647ms
+22:36:05 [200] / 109ms
+22:36:05 [200] / 111ms
+22:36:05 [watch] astro_log.txt
+22:36:05 [watch] astro_log.txt
+22:36:06 [200] /_image 294ms
+22:36:06 [watch] astro_log.txt
+22:36:06 [watch] astro_log.txt
+22:36:07 [200] / 181ms
+22:36:07 [200] /_image 4399ms
+22:36:07 [watch] astro_log.txt
+22:36:07 [watch] astro_log.txt
+22:36:07 [200] /_image 3910ms
+22:36:07 [watch] astro_log.txt
+22:36:07 [watch] astro_log.txt
+22:36:08 [200] / 69ms
+22:36:08 [watch] astro_log.txt
+22:36:08 [watch] astro_log.txt
+22:36:08 [200] /_image 289ms
+22:36:08 [watch] astro_log.txt
+22:36:08 [watch] astro_log.txt
+22:36:08 [200] /_image 200ms
+22:36:08 [watch] astro_log.txt
+22:36:08 [watch] astro_log.txt
+22:36:08 [200] / 156ms
+22:36:08 [watch] astro_log.txt
+22:36:08 [watch] astro_log.txt
+22:36:10 [200] /_image 4405ms
+22:36:10 [watch] astro_log.txt
+22:36:10 [watch] astro_log.txt
+22:36:10 [200] / 150ms
+22:36:10 [watch] astro_log.txt
+22:36:10 [watch] astro_log.txt
+22:36:11 [200] /_image 3996ms
+22:36:11 [watch] astro_log.txt
+22:36:11 [watch] astro_log.txt
+22:36:11 [200] / 122ms
+22:36:11 [watch] astro_log.txt
+22:36:11 [watch] astro_log.txt
+22:36:12 [200] /_image 3701ms
+22:36:12 [watch] astro_log.txt
+22:36:12 [watch] astro_log.txt
+22:36:12 [200] /_image 3635ms
+22:36:12 [watch] astro_log.txt
+22:36:12 [watch] astro_log.txt
+22:36:13 [200] / 98ms
+22:36:13 [watch] astro_log.txt
+22:36:13 [watch] astro_log.txt
+22:36:14 [200] /_image 3700ms
+22:36:14 [watch] astro_log.txt
+22:36:14 [watch] astro_log.txt
+22:36:14 [200] / 84ms
+22:36:14 [watch] astro_log.txt
+22:36:14 [watch] astro_log.txt
+22:36:15 [200] /_image 3267ms
+22:36:15 [watch] astro_log.txt
+22:36:15 [watch] astro_log.txt
+22:36:15 [200] / 125ms
+22:36:15 [watch] astro_log.txt
+22:36:15 [watch] astro_log.txt
+22:36:16 [200] /_image 3121ms
+22:36:16 [watch] astro_log.txt
+22:36:16 [watch] astro_log.txt
+22:36:16 [200] / 88ms
+22:36:16 [watch] astro_log.txt
+22:36:16 [watch] astro_log.txt
+22:36:18 [200] /_image 3386ms
+22:36:18 [watch] astro_log.txt
+22:36:18 [watch] astro_log.txt
+22:36:18 [200] / 80ms
+22:36:18 [watch] astro_log.txt
+22:36:18 [watch] astro_log.txt
+22:36:19 [200] /_image 3554ms
+22:36:19 [watch] astro_log.txt
+22:36:19 [watch] astro_log.txt
+22:36:19 [200] / 102ms
+22:36:19 [watch] astro_log.txt
+22:36:19 [watch] astro_log.txt
+22:36:20 [200] /_image 3100ms
+22:36:20 [watch] astro_log.txt
+22:36:20 [watch] astro_log.txt
+22:36:20 [200] / 74ms
+22:36:20 [watch] astro_log.txt
+22:36:20 [watch] astro_log.txt
+22:36:22 [200] /_image 3902ms
+22:36:22 [watch] astro_log.txt
+22:36:22 [watch] astro_log.txt
+22:36:23 [200] / 117ms
+22:36:23 [watch] astro_log.txt
+22:36:23 [watch] astro_log.txt
+22:36:24 [200] /_image 4326ms
+22:36:24 [watch] astro_log.txt
+22:36:24 [watch] astro_log.txt
+22:36:24 [200] / 117ms
+22:36:24 [watch] astro_log.txt
+22:36:24 [watch] astro_log.txt
+22:36:25 [200] /_image 4678ms
+22:36:25 [watch] astro_log.txt
+22:36:25 [watch] astro_log.txt
+22:36:25 [200] / 152ms
+22:36:25 [watch] astro_log.txt
+22:36:25 [watch] astro_log.txt
+22:36:28 [200] /_image 4707ms
+22:36:28 [watch] astro_log.txt
+22:36:28 [watch] astro_log.txt
+22:36:28 [200] / 98ms
+22:36:28 [watch] astro_log.txt
+22:36:28 [watch] astro_log.txt
+22:36:29 [200] /project/48h-geneve-2024 306ms
+22:36:29 [watch] astro_log.txt
+22:36:29 [watch] astro_log.txt
+22:36:29 [200] /_image 4555ms
+22:36:29 [watch] astro_log.txt
+22:36:29 [watch] astro_log.txt
+22:36:30 [200] /_image 4281ms
+22:36:30 [watch] astro_log.txt
+22:36:30 [watch] astro_log.txt
+22:36:31 [200] /_image 1731ms
+22:36:31 [200] /_image 1862ms
+22:36:31 [watch] astro_log.txt
+22:36:31 [watch] astro_log.txt
+22:36:32 [200] /project/48h-geneve-2024 230ms
+22:36:32 [200] /project/48h-geneve-2024 231ms
+22:36:32 [watch] astro_log.txt
+22:36:32 [watch] astro_log.txt
+22:36:33 [200] /_image 4944ms
+22:36:40 [200] /_image 11112ms
+22:36:40 [watch] astro_log.txt
+22:36:40 [watch] astro_log.txt
+22:36:41 [200] / 7611ms
+22:36:41 [watch] astro_log.txt
+22:36:41 [watch] astro_log.txt
+22:36:44 [200] /_image 11715ms
+22:36:44 [watch] astro_log.txt
+22:36:44 [watch] astro_log.txt
+22:36:44 [200] / 89ms
+22:36:44 [watch] astro_log.txt
+22:36:44 [watch] astro_log.txt
+22:36:45 [200] /_image 4041ms
+22:36:45 [watch] astro_log.txt
+22:36:45 [watch] astro_log.txt
+22:36:45 [200] / 145ms
+22:36:45 [watch] astro_log.txt
+22:36:45 [watch] astro_log.txt
+22:36:48 [200] /_image 3966ms
+22:36:48 [watch] astro_log.txt
+22:36:48 [watch] astro_log.txt
+22:36:49 [200] / 170ms
+22:36:49 [watch] astro_log.txt
+22:36:49 [watch] astro_log.txt
+22:36:49 [watch] astro_log.txt
+22:36:49 [watch] astro_log.txt
+22:36:49 [200] /_image 3596ms
+22:36:49 [watch] astro_log.txt
+22:36:49 [watch] astro_log.txt
+22:36:49 [200] /_image 20081ms
+22:36:50 [200] / 106ms
+22:36:50 [watch] astro_log.txt
+22:36:50 [watch] astro_log.txt
+22:36:51 [200] /_image 18526ms
+22:36:51 [watch] astro_log.txt
+22:36:51 [watch] astro_log.txt
+22:36:51 [200] / 70ms
+22:36:51 [watch] astro_log.txt
+22:36:51 [watch] astro_log.txt
+22:36:52 [200] /_image 3512ms
+22:36:52 [watch] astro_log.txt
+22:36:52 [watch] astro_log.txt
+22:36:53 [200] / 72ms
+22:36:53 [watch] astro_log.txt
+22:36:53 [watch] astro_log.txt
+22:36:53 [200] /_image 3233ms
+22:36:53 [watch] astro_log.txt
+22:36:53 [watch] astro_log.txt
+22:36:53 [200] / 81ms
+22:36:53 [watch] astro_log.txt
+22:36:53 [watch] astro_log.txt
+22:36:54 [200] /_image 3123ms
+22:36:54 [watch] astro_log.txt
+22:36:54 [watch] astro_log.txt
+22:36:54 [200] / 82ms
+22:36:54 [watch] astro_log.txt
+22:36:54 [watch] astro_log.txt
+22:36:56 [200] /_image 3428ms
+22:36:56 [watch] astro_log.txt
+22:36:56 [watch] astro_log.txt
+22:36:56 [200] / 62ms
+22:36:56 [watch] astro_log.txt
+22:36:56 [watch] astro_log.txt
+22:36:57 [200] /_image 3411ms
+22:36:57 [watch] astro_log.txt
+22:36:57 [watch] astro_log.txt
+22:36:57 [200] / 155ms
+22:36:57 [watch] astro_log.txt
+22:36:57 [watch] astro_log.txt
+22:36:58 [200] /_image 3480ms
+22:36:58 [watch] astro_log.txt
+22:36:58 [watch] astro_log.txt
+22:36:58 [200] / 63ms
+22:36:58 [watch] astro_log.txt
+22:36:58 [watch] astro_log.txt
+22:37:00 [200] /_image 3143ms
+22:37:00 [watch] astro_log.txt
+22:37:00 [watch] astro_log.txt
+22:37:00 [200] / 60ms
+22:37:00 [watch] astro_log.txt
+22:37:00 [watch] astro_log.txt
+22:37:01 [200] /_image 3248ms
+22:37:01 [watch] astro_log.txt
+22:37:01 [watch] astro_log.txt
+22:37:01 [200] / 63ms
+22:37:01 [watch] astro_log.txt
+22:37:01 [watch] astro_log.txt
+22:37:02 [200] /_image 3325ms
+22:37:02 [watch] astro_log.txt
+22:37:02 [watch] astro_log.txt
+22:37:02 [200] / 61ms
+22:37:02 [watch] astro_log.txt
+22:37:02 [watch] astro_log.txt
+22:37:04 [200] /_image 3451ms
+22:37:04 [watch] astro_log.txt
+22:37:04 [watch] astro_log.txt
+22:37:04 [200] /_image 3156ms
+22:37:04 [watch] astro_log.txt
+22:37:04 [watch] astro_log.txt
+22:37:05 [200] /_image 2948ms
+22:37:05 [watch] astro_log.txt
+22:37:05 [watch] astro_log.txt
+22:37:34 [watch] verification/verify_palette.py
+22:37:34 [watch] verification/verify_palette.py
+22:37:34 [watch] astro_log.txt
+22:37:34 [watch] astro_log.txt

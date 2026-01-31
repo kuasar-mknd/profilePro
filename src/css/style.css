@@ -148,6 +148,10 @@
   footer,
   .hero-buttons,
   .hero-carousel,
+  .contact-form-section,
+  #cta-section,
+  .fixed,
+  [role="status"],
   #lightbox,
   #back-to-top,
   .group.mode-switch-btn {
