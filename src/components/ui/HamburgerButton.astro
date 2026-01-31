@@ -29,11 +29,19 @@
 <script>
   /**
    * ⚡ Bolt: HamburgerButton Performance Optimization
-   * Added initialization guard to prevent duplicate observers and handlers
+   * - Uses cleanup pattern to prevent event listener leaks on navigation
+   * - Consolidated initialization logic for View Transitions
    */
   let menuObserver: MutationObserver | null = null;
+  let cleanupHamburger: (() => void) | null = null;
 
-  function menuToggle() {
+  function initHamburger() {
+    // ⚡ Cleanup previous listeners if they exist (safety check)
+    if (cleanupHamburger) {
+      cleanupHamburger();
+      cleanupHamburger = null;
+    }
+
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
@@ -81,10 +89,9 @@
       nav.classList.add("translate-x-0");
     };
 
-    button.addEventListener("click", function () {
+    // Named handlers for cleanup
+    const onToggleClick = () => {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-      // 🎨 Palette: Announce menu state change to screen readers
       const liveRegion = document.getElementById("menu-live-region");
 
       if (isExpanded) {
@@ -94,15 +101,13 @@
         openMenu();
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
-    });
+    };
 
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
-    });
+    const onLinkClick = () => {
+      closeMenu();
+    };
 
-    // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
+    const onKeydown = (e: KeyboardEvent) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
@@ -111,7 +116,18 @@
         // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
+    };
+
+    // Attach listeners
+    button.addEventListener("click", onToggleClick);
+
+    const links = nav.querySelectorAll("a");
+    links.forEach((link) => {
+      link.addEventListener("click", onLinkClick);
     });
+
+    // 🎨 Palette: Close menu on Escape key for accessibility
+    document.addEventListener("keydown", onKeydown);
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
@@ -134,15 +150,11 @@
             } else {
               navEl.classList.add("translate-x-full");
               navEl.classList.remove("translate-x-0");
-              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
-              // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
               if (
                 navEl.classList.contains("translate-x-full") &&
                 !navEl.classList.contains("transitioning")
               ) {
-                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
+                // navEl.classList.add("invisible"); // Optional
               }
             }
           }
@@ -151,14 +163,28 @@
     }
 
     // ⚡ Always ensure observer is connected to current documentElement
-    menuObserver.disconnect(); // Safety disconnect before reconnect
+    menuObserver.disconnect();
     menuObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
+
+    // ⚡ Register cleanup
+    cleanupHamburger = () => {
+      button.removeEventListener("click", onToggleClick);
+      links.forEach((link) => {
+        link.removeEventListener("click", onLinkClick);
+      });
+      document.removeEventListener("keydown", onKeydown);
+      menuObserver?.disconnect();
+      cleanupHamburger = null;
+    };
+
+    document.addEventListener("astro:before-swap", cleanupHamburger, {
+      once: true,
+    });
   }
 
-  menuToggle();
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", menuToggle);
+  // Initialize only via event listener to avoid double execution on initial load
+  document.addEventListener("astro:page-load", initHamburger);
 </script>
