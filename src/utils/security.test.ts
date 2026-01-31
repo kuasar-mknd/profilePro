@@ -59,5 +59,10 @@ describe("Security Utilities", () => {
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
     });
+
+    it("should strip control characters", () => {
+      // \x00 is null, \x0B is vertical tab
+      expect(sanitizeInput("hello\x00world\x0B!")).toBe("helloworld!");
+    });
   });
 });
