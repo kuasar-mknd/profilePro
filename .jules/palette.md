@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-05-20 - Navigation for Long Content
+**Learning:** For content-heavy pages like project case studies, a Table of Contents significantly improves navigability and user engagement. It acts as a roadmap, allowing users to jump to sections of interest (Credits, Gallery, Synopsis) without scrolling blindly.
+**Action:** When implementing detail pages with structured content (H2/H3), always consider adding an auto-generated TOC.

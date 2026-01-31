@@ -1,0 +1,49 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to keep only H2 and H3, and ensure we have enough headings to justify a TOC
+const toc = headings.filter((h) => h.depth > 1 && h.depth <= 3);
+const shouldRender = toc.length > 1;
+---
+
+{
+  shouldRender && (
+    <nav
+      class="mb-10 p-6 bg-pacamara-secondary/5 dark:bg-white/5 rounded-2xl border border-pacamara-secondary/10 dark:border-white/10"
+      aria-labelledby="toc-heading"
+    >
+      <h2
+        id="toc-heading"
+        class="text-lg font-bold font-pacamara-space mb-4 text-pacamara-dark dark:text-white flex items-center gap-2"
+      >
+        <span class="text-pacamara-accent" aria-hidden="true">
+          #
+        </span>
+        Sommaire
+      </h2>
+      <ul class="flex flex-col gap-2 list-none p-0 m-0">
+        {toc.map((heading) => (
+          <li
+            class:list={[
+              "transition-colors duration-200",
+              heading.depth === 3 ? "ml-4 text-sm" : "font-medium",
+            ]}
+          >
+            <a
+              href={`#${heading.slug}`}
+              class="block py-1 text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:text-pacamara-accent group"
+            >
+              <span class="group-focus-visible:underline decoration-2 underline-offset-4">
+                {heading.text}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
