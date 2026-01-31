@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-20 - Contact Form Timestamp Bypass
+
+**Vulnerability:** The timestamp trap in `ContactForm.astro` relied on `parseInt` which returns `NaN` for invalid input, and `Date.now() - NaN` results in `NaN`, causing the spam check `diff < 2000` to return false (pass).
+**Learning:** Always validate that numeric inputs are actually numbers (using `isNaN` or similar) before using them in security logic. Logic that relies on "failure" of a condition must handle invalid types gracefully (fail closed).
+**Prevention:** Added `isNaN(loadTimestamp)` check to fail if the timestamp is invalid.

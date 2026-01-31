@@ -635,10 +635,35 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
       const submitTimestamp = Date.now();
-      if (submitTimestamp - loadTimestamp < 2000) {
+      // 🛡️ Sentinel: Fix bypass where non-numeric timestamp (NaN) allowed submission
+      if (isNaN(loadTimestamp) || submitTimestamp - loadTimestamp < 2000) {
         // 2 seconds threshold
         showError(
           "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
+        );
+        return;
+      }
+
+      // 🛡️ Sentinel: Content-based Spam Detection (Enhancement)
+      // Check for excessive URLs in message (common in spam)
+      const urlCount = (messageInput.value.match(/https?:\/\//g) || []).length;
+      if (urlCount > 3) {
+        messageInput.setAttribute("aria-invalid", "true");
+        showError(
+          "Votre message contient trop de liens. Veuillez réduire le nombre d'URL.",
+          messageInput,
+        );
+        return;
+      }
+
+      // 🛡️ Sentinel: Simple Keyword Blocklist (Enhancement)
+      const spamKeywords = ["crypto", "investment", "forex", "casino"];
+      const lowerMessage = messageInput.value.toLowerCase();
+      if (spamKeywords.some((keyword) => lowerMessage.includes(keyword))) {
+        messageInput.setAttribute("aria-invalid", "true");
+        showError(
+          "Votre message contient des termes bloqués. Veuillez reformuler.",
+          messageInput,
         );
         return;
       }
