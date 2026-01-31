@@ -125,7 +125,7 @@ if (entry.data.type === "video" && entry.data.image) {
       <div
         class="inline-flex items-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
       >
-        <Tag tag={entry.data.tag} />
+        <Tag tag={entry.data.tag} href={`/project/tag/${entry.data.tag}`} />
         <PublishDate date={entry.data.pubDate} />
 
         <span
@@ -134,8 +134,10 @@ if (entry.data.type === "video" && entry.data.image) {
         >
         <span
           class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
-          >{readingTime} min de lecture</span
         >
+          <span class="sr-only">Temps de lecture :</span>
+          {readingTime} min de lecture
+        </span>
       </div>
       <h1
         class="font-pacamara-space font-bold text-5xl md:text-7xl lg:text-8xl mb-6 text-pacamara-dark dark:text-white animate-slide-up opacity-0 leading-tight tracking-tight drop-shadow-sm dark:drop-shadow-lg delay-400"

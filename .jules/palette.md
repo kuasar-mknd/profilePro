@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-02-22 - Interactive Metadata & Dark Mode Contrast
+**Learning:** Metadata tags (like project categories) are often perceived as clickable navigation elements. Making them links enhances discovery. Also, default component variants must explicitly handle dark mode to avoid low contrast issues (e.g. indigo text on black background).
+**Action:** Ensure `Tag` components accept `href` and verify default color variants against dark backgrounds using `dark:` modifiers.
