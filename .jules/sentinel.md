@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-05-20 - External API Response Validation
+
+**Vulnerability:** Relying on external APIs (like Vimeo oEmbed) to return safe URLs without validation can lead to injection (e.g., `javascript:` protocol).
+**Learning:** Even trusted providers should be treated with "Zero Trust" regarding input.
+**Prevention:** Validated `thumbnail_url` from Vimeo using `isValidUrl` before using it in the DOM.
