@@ -123,17 +123,27 @@ if (postData?.data?.image) {
     }
 
     <!-- ⚡ Bolt: Speculation Rules API for instant navigation -->
+    <!-- ⚡ Bolt: Tiered Strategy - Prefetch on hover (low cost), Prerender on interaction (high certainty) -->
     <script
       type="speculationrules"
       is:inline
       set:html={safeJson({
-        prerender: [
+        prefetch: [
           {
             source: "document",
             where: {
               href_matches: "/*",
             },
             eagerness: "moderate",
+          },
+        ],
+        prerender: [
+          {
+            source: "document",
+            where: {
+              href_matches: "/*",
+            },
+            eagerness: "conservative",
           },
         ],
       })}
