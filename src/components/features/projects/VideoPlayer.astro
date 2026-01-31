@@ -43,7 +43,8 @@ let posterUrl: string | null = null;
 if (poster) {
   // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
   // Allow http, https, and relative paths (starting with /)
-  if (isValidUrl(poster)) {
+  // Explicitly disallow protocol-relative URLs (//) to enforce HTTPS and prevent open redirects
+  if (isValidUrl(poster, { allowProtocolRelative: false })) {
     posterUrl = poster;
   }
 }
