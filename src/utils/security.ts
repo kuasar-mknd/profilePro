@@ -27,9 +27,8 @@ export function safeJson(value: any): string {
  * Replaces dangerous characters with their HTML entity equivalents.
  *
  * 🛡️ Sentinel Improvement:
- * - Expanded character map to include braces, brackets, and parentheses.
- * - This helps prevent logic injection or syntax manipulation if the data
- *   is improperly handled in a JavaScript context.
+ * - Expanded character map to include braces, brackets, parentheses, pipes, and carets.
+ * - This helps prevent logic injection, command injection, or syntax manipulation.
  *
  * Note: For server-side rendering or robust XSS prevention, use a dedicated library like 'sanitize-html'.
  * This function is intended for lightweight client-side usage (e.g., form inputs) where the output
@@ -61,9 +60,11 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    "|": "&#124;", // Prevent command injection
+    "^": "&#94;", // Prevent regex/logic injection
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\|^]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -118,7 +119,7 @@ export const VIMEO_ID_REGEX =
 /**
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
- * Optionally allows mailto:.
+ * Optionally allows mailto: and protocol-relative (//).
  *
  * @param url - The URL to validate
  * @param options - Validation options
@@ -126,11 +127,17 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: { allowMailto?: boolean; allowProtocolRelative?: boolean } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
-  const { allowMailto = false } = options;
+  const { allowMailto = false, allowProtocolRelative = false } = options;
+
+  // 🛡️ Sentinel: Explicitly block protocol-relative URLs (starts with //) by default
+  // unless explicitly allowed. This prevents open redirects.
+  if (!allowProtocolRelative && url.startsWith("//")) {
+    return false;
+  }
 
   if (allowMailto) {
     return /^(https?:\/\/|mailto:|\/)/i.test(url);
@@ -143,6 +150,7 @@ export function isValidUrl(
  * Sanitizes a URL to ensure it uses a safe protocol.
  * Allowed protocols: http, https, mailto, tel.
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
+ * Blocks protocol-relative URLs (//) to prevent open redirects.
  *
  * @param url - The URL to sanitize
  * @returns The sanitized URL or an empty string if invalid
@@ -158,12 +166,15 @@ export function sanitizeUrl(url: string): string {
     return "about:blank";
   }
 
-  // Allow relative URLs (starting with / or #)
-  if (
-    trimmedUrl.startsWith("/") ||
-    trimmedUrl.startsWith("#") ||
-    trimmedUrl.startsWith("?")
-  ) {
+  // Allow relative URLs (starting with /)
+  if (trimmedUrl.startsWith("/")) {
+    // 🛡️ Sentinel: Explicitly block protocol-relative URLs (//)
+    if (trimmedUrl.startsWith("//")) return "";
+    return trimmedUrl;
+  }
+
+  // Allow anchors and query strings
+  if (trimmedUrl.startsWith("#") || trimmedUrl.startsWith("?")) {
     return trimmedUrl;
   }
 

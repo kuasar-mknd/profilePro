@@ -52,10 +52,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
   <!-- Optional: Honeypot -->
   <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
+  <!-- Using opacity-0 and off-screen positioning instead of display:none (class="hidden") to catch smarter bots -->
   <input
     type="checkbox"
     name="botcheck"
-    class="hidden"
+    class="opacity-0 absolute -left-[9999px] pointer-events-none -z-50"
     tabindex="-1"
     autocomplete="off"
     aria-hidden="true"
