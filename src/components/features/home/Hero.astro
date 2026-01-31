@@ -492,4 +492,31 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Animation Performance Optimization
+   * Clean up will-change property after entrance animations complete
+   * to release GPU memory (compositor layers).
+   */
+  function initLetterAnimationCleanup() {
+    const letters = document.querySelectorAll(".letter-animate");
+
+    // Guard against duplicate listeners
+    if (letters.length === 0) return;
+    if (letters[0].getAttribute("data-cleanup-attached") === "true") return;
+
+    letters.forEach((letter) => {
+      letter.setAttribute("data-cleanup-attached", "true");
+      letter.addEventListener(
+        "animationend",
+        () => {
+          (letter as HTMLElement).style.willChange = "auto";
+        },
+        { once: true }, // Automatically removes listener
+      );
+    });
+  }
+
+  initLetterAnimationCleanup();
+  document.addEventListener("astro:page-load", initLetterAnimationCleanup);
 </script>
