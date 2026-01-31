@@ -56,7 +56,10 @@ if (!posterUrl && provider === "youtube" && videoId) {
       `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
     );
     const data = await response.json();
-    posterUrl = data.thumbnail_url;
+    // 🛡️ Sentinel: Validate external URL to prevent XSS/Injection
+    if (isValidUrl(data.thumbnail_url)) {
+      posterUrl = data.thumbnail_url;
+    }
   } catch (e) {
     // 🛡️ Sentinel: Silence detailed error logging in production
     if (import.meta.env.DEV) {
