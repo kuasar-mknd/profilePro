@@ -65,4 +65,5 @@ Run the test suite with:
 ```bash
 bun run check
 bun run lighthouse
+bun run test:e2e
 ```
