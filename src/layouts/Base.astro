@@ -133,6 +133,15 @@ if (postData?.data?.image) {
             where: {
               href_matches: "/*",
             },
+            eagerness: "conservative",
+          },
+        ],
+        prefetch: [
+          {
+            source: "document",
+            where: {
+              href_matches: "/*",
+            },
             eagerness: "moderate",
           },
         ],
