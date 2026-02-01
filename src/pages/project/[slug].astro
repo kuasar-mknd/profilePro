@@ -134,7 +134,9 @@ if (entry.data.type === "video" && entry.data.image) {
         >
         <span
           class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
-          >{readingTime} min de lecture</span
+        >
+          <span class="sr-only">Temps de lecture :</span>
+          {readingTime} min de lecture</span
         >
       </div>
       <h1
@@ -404,6 +406,64 @@ if (entry.data.type === "video" && entry.data.image) {
         addCopyButtons();
         // Re-run on navigation
         document.addEventListener("astro:after-swap", addCopyButtons);
+
+        /**
+         * 🎨 Palette: Project Navigation Keyboard Shortcuts
+         * Handles ArrowLeft and ArrowRight for quick navigation between projects
+         */
+        function initProjectNavigation() {
+          const handleKeydown = (e: KeyboardEvent) => {
+            // Guard: Ignore if Lightbox is open
+            const lightbox = document.getElementById("lightbox");
+            if (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+              return;
+
+            // Guard: Ignore if focus is in an input or textarea
+            const target = e.target as HTMLElement;
+            if (
+              target.tagName === "INPUT" ||
+              target.tagName === "TEXTAREA" ||
+              target.isContentEditable
+            ) {
+              return;
+            }
+
+            // Guard: Ignore if modifier keys are pressed
+            if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+
+            if (e.key === "ArrowLeft") {
+              const newerLink = document.getElementById(
+                "project-nav-newer",
+              ) as HTMLAnchorElement;
+              if (newerLink) {
+                e.preventDefault();
+                newerLink.click();
+              }
+            } else if (e.key === "ArrowRight") {
+              const olderLink = document.getElementById(
+                "project-nav-older",
+              ) as HTMLAnchorElement;
+              if (olderLink) {
+                e.preventDefault();
+                olderLink.click();
+              }
+            }
+          };
+
+          document.addEventListener("keydown", handleKeydown);
+
+          // Cleanup listener on page swap
+          document.addEventListener(
+            "astro:before-swap",
+            () => {
+              document.removeEventListener("keydown", handleKeydown);
+            },
+            { once: true },
+          );
+        }
+
+        initProjectNavigation();
+        document.addEventListener("astro:after-swap", initProjectNavigation);
       </script>
     </div>
   </article>
@@ -418,8 +478,11 @@ if (entry.data.type === "video" && entry.data.image) {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
+            id="project-nav-newer"
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            aria-keyshortcuts="ArrowLeft"
+            title={`Projet précédent (←) : ${nextPost.data.title}`}
           >
             <Icon
               name="mdi:arrow-left"
@@ -428,7 +491,7 @@ if (entry.data.type === "video" && entry.data.image) {
             />
             <div class="flex-1 text-left">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
-                Projet précédent
+                Projet précédent <span aria-hidden="true">(←)</span>
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {nextPost.data.title}
@@ -444,12 +507,15 @@ if (entry.data.type === "video" && entry.data.image) {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
+            id="project-nav-older"
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            aria-keyshortcuts="ArrowRight"
+            title={`Projet suivant (→) : ${prevPost.data.title}`}
           >
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
-                Projet suivant
+                <span aria-hidden="true">(→)</span> Projet suivant
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {prevPost.data.title}
