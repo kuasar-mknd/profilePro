@@ -59,5 +59,9 @@ describe("Security Utilities", () => {
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
     });
+
+    it("should sanitize extended special characters", () => {
+      expect(sanitizeInput("| ^ $ *")).toBe("&#124; &#94; &#36; &#42;");
+    });
   });
 });

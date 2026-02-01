@@ -55,7 +55,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <input
     type="checkbox"
     name="botcheck"
-    class="hidden"
+    class="opacity-0 absolute top-0 left-0 -z-50 w-0 h-0"
     tabindex="-1"
     autocomplete="off"
     aria-hidden="true"
@@ -126,6 +126,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           name="email"
           id="email"
           autocomplete="email"
+          autocapitalize="none"
+          autocorrect="off"
           required
           maxlength="254"
           inputmode="email"
