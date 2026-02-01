@@ -42,8 +42,20 @@
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
+    // 🎨 Palette: Escape key handler (Declared early for closure access)
+    // ⚡ Bolt: Defined here to allow adding/removing listener to prevent leaks
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeMenu();
+        (button as HTMLElement).focus();
+      }
+    };
+
     // 🎨 Palette: Encapsulated close logic for reusability
     const closeMenu = () => {
+      // ⚡ Bolt: Cleanup listener to prevent memory leaks
+      document.removeEventListener("keydown", onEscape);
+
       document.documentElement.classList.remove("overflow-hidden");
       button.setAttribute("aria-expanded", "false");
       button.setAttribute("aria-label", "Ouvrir le menu");
@@ -63,6 +75,9 @@
     };
 
     const openMenu = () => {
+      // ⚡ Bolt: Add listener only when menu is open
+      document.addEventListener("keydown", onEscape);
+
       // ⚡ Bolt: Make visible immediately so transition can be seen
       nav.classList.remove("invisible");
 
@@ -98,19 +113,6 @@
 
     nav.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", closeMenu);
-    });
-
-    // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        button.getAttribute("aria-expanded") === "true"
-      ) {
-        closeMenu();
-        // Return focus to the toggle button
-        (button as HTMLElement).focus();
-      }
     });
 
     // ⚡ Reuse observer if already created

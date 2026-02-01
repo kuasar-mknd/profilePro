@@ -27,11 +27,10 @@ export async function getStaticPaths() {
       prevPost:
         index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
       nextPost: index > 0 ? projectEntries[index - 1] : null,
-      allProjects,
     },
   }));
 }
-const { entry, prevPost, nextPost, allProjects } = Astro.props;
+const { entry, prevPost, nextPost } = Astro.props;
 
 // Calculate reading time
 const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
@@ -509,7 +508,6 @@ if (entry.data.type === "video" && entry.data.image) {
         postLimit={2}
         skipPost={entry.data.title}
         lazyLoadImages={true}
-        allPosts={allProjects}
       />
     </div>
   </div>
