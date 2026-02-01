@@ -431,9 +431,9 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            track.style.animationPlayState = "running";
+            track.classList.remove("paused");
           } else {
-            track.style.animationPlayState = "paused";
+            track.classList.add("paused");
           }
         });
       },
