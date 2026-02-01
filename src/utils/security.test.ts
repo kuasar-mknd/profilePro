@@ -1,9 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import {
-  sanitizeUrl,
-  sanitizeInput,
-  validateFormTimestamp,
-} from "./security";
+import { sanitizeUrl, sanitizeInput, validateFormTimestamp } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
