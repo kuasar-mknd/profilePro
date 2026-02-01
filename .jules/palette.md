@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2025-02-23 - Tag Affordance
+**Learning:** Tags can be purely informational or interactive navigational elements. Visually distinguishing interactive tags (via hover states like underlines) prevents user frustration and "rage clicks".
+**Action:** When a `Tag` component has an `href`, ensure it provides visual feedback (e.g., `hover:underline`) to signal interactivity.
