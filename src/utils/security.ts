@@ -61,9 +61,13 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    "|": "&#124;", // Prevent pipe/command injection
+    "^": "&#94;", // Prevent regex/logic injection
+    "$": "&#36;", // Prevent variable/logic injection
+    "*": "&#42;", // Prevent wildcard/regex injection
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\|^$*]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }

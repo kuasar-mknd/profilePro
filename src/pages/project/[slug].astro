@@ -357,6 +357,15 @@ if (entry.data.type === "video" && entry.data.image) {
          */
         function addCopyButtons() {
           const announcer = document.getElementById("code-copy-announcer");
+          const copyIcon =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+          const checkIcon =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+          const parser = new DOMParser();
+          const parseSvg = (svgString: string) =>
+            parser.parseFromString(svgString, "image/svg+xml").documentElement;
+
           document.querySelectorAll(".prose pre").forEach((node) => {
             const pre = node as HTMLElement;
             if (pre.parentElement?.classList.contains("code-wrapper")) return;
@@ -370,16 +379,16 @@ if (entry.data.type === "video" && entry.data.image) {
             btn.className =
               "absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 text-white/70 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20 hover:text-white focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-pacamara-accent backdrop-blur-sm";
             btn.ariaLabel = "Copier le code";
-            btn.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+            // 🛡️ Sentinel: Safe DOM manipulation instead of innerHTML
+            btn.appendChild(parseSvg(copyIcon));
 
             btn.addEventListener("click", async () => {
               try {
                 await navigator.clipboard.writeText(
                   pre.textContent || pre.innerText,
                 );
-                btn.innerHTML =
-                  '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                // 🛡️ Sentinel: Safe DOM manipulation
+                btn.replaceChildren(parseSvg(checkIcon));
 
                 // 🎨 Palette: Announce success to screen readers
                 if (announcer) {
@@ -387,8 +396,8 @@ if (entry.data.type === "video" && entry.data.image) {
                 }
 
                 setTimeout(() => {
-                  btn.innerHTML =
-                    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                  // 🛡️ Sentinel: Safe DOM manipulation
+                  btn.replaceChildren(parseSvg(copyIcon));
                   if (announcer) {
                     announcer.textContent = "";
                   }
