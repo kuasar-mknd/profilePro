@@ -47,7 +47,15 @@ const {
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
-      let bounds: DOMRect | null = null;
+      // ⚡ Bolt: Use plain object for document-relative bounds
+      interface CardBounds {
+        left: number;
+        top: number;
+        width: number;
+        height: number;
+      }
+
+      let bounds: CardBounds | null = null;
       let frameId: number | null = null;
       let targetX = 0;
       let targetY = 0;
@@ -77,8 +85,9 @@ const {
       function onMouseMove(e: MouseEvent) {
         if (!bounds) return;
 
-        targetX = e.clientX;
-        targetY = e.clientY;
+        // ⚡ Bolt: Use page coordinates to handle scrolling correctly
+        targetX = e.pageX;
+        targetY = e.pageY;
 
         // ⚡ Use requestAnimationFrame to throttle visual updates
         if (!frameId) {
@@ -114,10 +123,14 @@ const {
         cardStyle.willChange = "transform";
 
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
-        bounds = el.getBoundingClientRect();
-
-        // ⚡ Bolt: Hint browser to promote layer only during interaction
-        cardStyle.setProperty("will-change", "transform");
+        // ⚡ Bolt: Calculate document-relative coordinates to persist accuracy during scroll
+        const rect = el.getBoundingClientRect();
+        bounds = {
+          left: rect.left + window.scrollX,
+          top: rect.top + window.scrollY,
+          width: rect.width,
+          height: rect.height,
+        };
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);
