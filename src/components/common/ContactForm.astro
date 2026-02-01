@@ -635,11 +635,36 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
       const submitTimestamp = Date.now();
-      if (submitTimestamp - loadTimestamp < 2000) {
+
+      // Fix: check for NaN to prevent bypass (Date.now() - NaN < 2000 is always false)
+      if (isNaN(loadTimestamp) || submitTimestamp - loadTimestamp < 2000) {
         // 2 seconds threshold
         showError(
           "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
         );
+        return;
+      }
+
+      // 🛡️ Sentinel: Keyword blocklist and URL limit to prevent automated spam
+      const messageText = messageInput?.value || "";
+      const forbiddenKeywords = [
+        "crypto",
+        "investment",
+        "forex",
+        "bitcoin",
+        "casino",
+        "lottery",
+        "winner",
+      ];
+      const urlCount = (messageText.match(/https?:\/\//gi) || []).length;
+
+      if (
+        forbiddenKeywords.some((keyword) =>
+          messageText.toLowerCase().includes(keyword),
+        ) ||
+        urlCount > 3
+      ) {
+        showError("Votre message a été identifié comme indésirable.");
         return;
       }
 
