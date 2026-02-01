@@ -50,6 +50,7 @@ const { authorData } = Astro.props;
       <a
         href="/about"
         class="inline-flex items-center gap-2 text-pacamara-accent font-bold hover:text-pacamara-secondary transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg p-1 -m-1"
+        aria-label={`En savoir plus sur ${authorData.data.displayName}`}
       >
         En savoir plus
         <svg
@@ -58,6 +59,7 @@ const { authorData } = Astro.props;
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
