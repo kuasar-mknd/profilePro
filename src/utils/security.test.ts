@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -50,6 +50,35 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//malicious.com")).toBe("");
+      // Should still allow normal relative paths
+      expect(sanitizeUrl("/example")).toBe("/example");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should allow valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should allow relative paths", () => {
+      expect(isValidUrl("/path")).toBe(true);
+      expect(isValidUrl("/")).toBe(true);
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//")).toBe(false);
+    });
+
+    it("should block invalid schemes", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+      expect(isValidUrl("ftp://example.com")).toBe(false);
     });
   });
 
