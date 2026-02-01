@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-10-24 - Tiered Speculation Rules Strategy
+
+**Learning:** Using `prerender` with `moderate` (hover) eagerness for all links (`/*`) is too aggressive, potentially causing bandwidth spikes and CPU usage on casual hovers.
+**Action:** Implement a tiered strategy: use `prefetch` with `moderate` eagerness (hover) for lightweight resource loading, and `prerender` with `conservative` eagerness (pointer down) for heavy rendering only when intent is high.
