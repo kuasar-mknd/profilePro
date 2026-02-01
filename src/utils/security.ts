@@ -192,3 +192,40 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * Validates the form submission timestamp to prevent spam (bots).
+ * Checks if the time difference between load and submit is within a reasonable human threshold.
+ *
+ * @param loadTimestampStr - The timestamp string from the form hidden input
+ * @param currentTimestamp - The current timestamp (defaults to Date.now())
+ * @param minDuration - Minimum duration in ms (default 2000ms)
+ * @param maxDuration - Maximum duration in ms (default 24h) - optional expiration
+ * @returns True if the timestamp is valid and human-like
+ */
+export function validateFormTimestamp(
+  loadTimestampStr: string,
+  currentTimestamp: number = Date.now(),
+  minDuration: number = 2000,
+  maxDuration: number = 86400000, // 24 hours
+): boolean {
+  if (!loadTimestampStr) return false;
+
+  const loadTimestamp = parseInt(loadTimestampStr, 10);
+
+  // 🛡️ Sentinel: Fix bypass where parseInt returns NaN
+  if (isNaN(loadTimestamp)) return false;
+
+  const duration = currentTimestamp - loadTimestamp;
+
+  // Check if too fast (bot)
+  if (duration < minDuration) return false;
+
+  // Check if negative (future timestamp? clock skew? tampering?)
+  if (duration < 0) return false;
+
+  // Check if expired (session too old)
+  if (duration > maxDuration) return false;
+
+  return true;
+}
