@@ -1,5 +1,9 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import {
+  sanitizeUrl,
+  sanitizeInput,
+  validateFormTimestamp,
+} from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +62,45 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("validateFormTimestamp", () => {
+    const NOW = 1620000000000; // Fixed timestamp for testing
+
+    it("should return true for valid duration", () => {
+      const loadTime = NOW - 3000; // 3 seconds ago
+      expect(validateFormTimestamp(loadTime.toString(), NOW)).toBe(true);
+    });
+
+    it("should return false for too fast submission (bot)", () => {
+      const loadTime = NOW - 1000; // 1 second ago (threshold is 2000ms)
+      expect(validateFormTimestamp(loadTime.toString(), NOW)).toBe(false);
+    });
+
+    it("should return false for empty timestamp", () => {
+      expect(validateFormTimestamp("", NOW)).toBe(false);
+    });
+
+    it("should return false for non-numeric timestamp", () => {
+      expect(validateFormTimestamp("abc", NOW)).toBe(false);
+      expect(validateFormTimestamp("NaN", NOW)).toBe(false);
+    });
+
+    it("should return false for future timestamp", () => {
+      const loadTime = NOW + 1000; // Future
+      expect(validateFormTimestamp(loadTime.toString(), NOW)).toBe(false);
+    });
+
+    it("should return false for expired timestamp", () => {
+      const loadTime = NOW - 86400001; // > 24 hours ago
+      expect(validateFormTimestamp(loadTime.toString(), NOW)).toBe(false);
+    });
+
+    it("should respect custom thresholds", () => {
+      const loadTime = NOW - 3000;
+      // Min duration 5000ms, should fail
+      expect(validateFormTimestamp(loadTime.toString(), NOW, 5000)).toBe(false);
     });
   });
 });
