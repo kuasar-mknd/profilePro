@@ -404,6 +404,50 @@ if (entry.data.type === "video" && entry.data.image) {
         addCopyButtons();
         // Re-run on navigation
         document.addEventListener("astro:after-swap", addCopyButtons);
+
+        // 🎨 Palette: Keyboard navigation for projects
+        const handleProjectNav = (e: KeyboardEvent) => {
+          // ⚡ Bolt: Ignore if Lightbox is open (aria-hidden is "false" when open)
+          const lightbox = document.getElementById("lightbox");
+          if (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+            return;
+
+          // Ignore if focus is on input/textarea/contenteditable
+          const active = document.activeElement as HTMLElement;
+          if (
+            active &&
+            (active.tagName === "INPUT" ||
+              active.tagName === "TEXTAREA" ||
+              active.isContentEditable)
+          )
+            return;
+
+          // Ignore if modifiers are pressed
+          if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+
+          if (e.key === "ArrowLeft") {
+            const link = document.getElementById("project-nav-newer");
+            if (link) {
+              // 🎨 Palette: Visual feedback could be added here (e.g., active state)
+              link.click();
+            }
+          } else if (e.key === "ArrowRight") {
+            const link = document.getElementById("project-nav-older");
+            if (link) {
+              link.click();
+            }
+          }
+        };
+
+        // Initialize listener
+        document.addEventListener("astro:page-load", () => {
+          document.addEventListener("keydown", handleProjectNav);
+        });
+
+        // Cleanup for View Transitions
+        document.addEventListener("astro:before-swap", () => {
+          document.removeEventListener("keydown", handleProjectNav);
+        });
       </script>
     </div>
   </article>
@@ -418,8 +462,11 @@ if (entry.data.type === "video" && entry.data.image) {
         nextPost ? (
           <a
             href={`/project/${nextPost.slug}`}
+            id="project-nav-newer"
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
+            title={`Projet précédent (←)`}
+            aria-keyshortcuts="ArrowLeft"
           >
             <Icon
               name="mdi:arrow-left"
@@ -444,8 +491,11 @@ if (entry.data.type === "video" && entry.data.image) {
         prevPost ? (
           <a
             href={`/project/${prevPost.slug}`}
+            id="project-nav-older"
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
+            title={`Projet suivant (→)`}
+            aria-keyshortcuts="ArrowRight"
           >
             <div class="flex-1 text-right">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
