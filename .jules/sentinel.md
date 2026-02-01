@@ -39,3 +39,7 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+## 2026-02-01 - [Timestamp Trap Bypass]
+**Vulnerability:** A numeric comparison against NaN in JavaScript (e.g., `Date.now() - NaN < 2000`) always evaluates to false, effectively bypassing threshold-based security checks if the input is manipulated to be non-numeric.
+**Learning:** The `parseInt` function returns `NaN` for invalid inputs, which can lead to logical bypasses in security features like timestamp traps or rate limiters.
+**Prevention:** Always use `isNaN()` to validate the result of `parseInt` before using it in a security-critical comparison.
