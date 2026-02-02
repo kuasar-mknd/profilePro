@@ -4,9 +4,11 @@ import { Icon } from "astro-icon/components";
 
 <button
   type="button"
+  role="switch"
+  aria-checked="false"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
+  aria-label="Mode sombre"
   title="Activer le mode sombre (Shift+T)"
   aria-keyshortcuts="Shift+T"
 >
@@ -34,15 +36,14 @@ import { Icon } from "astro-icon/components";
       >Lune</span
     >
   </div>
-  <span class="sr-only">Activer le mode sombre</span>
   <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
 <script>
   /**
    * 🎨 Palette: Theme Switcher UX Improvement
-   * - Uses class selector to support multiple instances (desktop/mobile)
-   * - Dynamic aria-label and title for better accessibility
+   * - Uses role="switch" for better semantics
+   * - Uses aria-checked to indicate state
    * - Handles View Transitions properly
    */
 
@@ -93,13 +94,16 @@ import { Icon } from "astro-icon/components";
     const liveRegion = document.getElementById("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      const title = `${label} (Shift+T)`;
+      // 🎨 Palette: Update ARIA state
       buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", title);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
+        btn.setAttribute("aria-checked", isDark ? "true" : "false");
+        // Keep title dynamic for tooltip utility
+        btn.setAttribute(
+          "title",
+          isDark
+            ? "Désactiver le mode sombre (Shift+T)"
+            : "Activer le mode sombre (Shift+T)",
+        );
       });
 
       if (announce && liveRegion) {
@@ -124,10 +128,6 @@ import { Icon } from "astro-icon/components";
 
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
-      // Even if dataset says initialized, the element might be new (swapped)
-      // but if it's the SAME element, we want to be safe.
-      // Actually, checking dataset is fine for standard usage, but removeEventListener is safer.
-
       btn.removeEventListener("click", handleThemeToggle);
       btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";

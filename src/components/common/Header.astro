@@ -149,16 +149,6 @@ const logo2x = await getImage({
       attributeFilter: ["class"],
     });
 
-    function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape" && html.classList.contains("overflow-hidden")) {
-        // Find and click the hamburger button to close
-        const btn = document.querySelector(
-          'button[aria-controls="navigation_wrapper"]',
-        );
-        if (btn instanceof HTMLElement) btn.click();
-      }
-    }
-
     function handleTab(e: KeyboardEvent) {
       if (e.key !== "Tab" || !navWrapper) return;
 
@@ -184,7 +174,6 @@ const logo2x = await getImage({
     }
 
     function setupFocusTrap() {
-      document.addEventListener("keydown", handleEscape);
       navWrapper?.addEventListener("keydown", handleTab);
       // Focus first element
       const firstLink = navWrapper?.querySelector("a");
@@ -196,7 +185,6 @@ const logo2x = await getImage({
     }
 
     function removeFocusTrap() {
-      document.removeEventListener("keydown", handleEscape);
       navWrapper?.removeEventListener("keydown", handleTab);
       cleanupTrap = null;
     }
