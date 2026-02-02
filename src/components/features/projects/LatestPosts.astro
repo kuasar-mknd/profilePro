@@ -13,7 +13,7 @@ interface Props {
   title?: string;
   subtitle?: string;
   lazyLoadImages?: boolean;
-  allPosts?: CollectionEntry<"project">[];
+  allPosts?: (CollectionEntry<"project"> & { readingTime?: number })[];
 }
 
 const {
@@ -91,6 +91,7 @@ const remainingCount = allPosts.length - limit;
               num={index}
               bentoSize={bentoClass}
               priority={!lazyLoadImages && index < 2}
+              readingTime={post.readingTime}
             />
           </ScrollReveal>
         );
