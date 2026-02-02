@@ -4,7 +4,7 @@
 
 ## 📡 Public Endpoints
 
-These endpoints are generated during the build process and are available publicly.
+These endpoints are generated as **static assets** during the build process and are served directly by the CDN.
 
 ### 1. RSS Feed
 

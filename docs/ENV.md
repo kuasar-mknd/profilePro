@@ -14,6 +14,7 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 ## 🛡 Secrets
 
 **NEVER** commit your `.env` file. Use `.env.example` as a template.
+Ensure `.env` is added to your `.gitignore` to prevent accidental leaks.
 
 ### `.env.example` content:
 

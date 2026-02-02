@@ -1,6 +1,7 @@
 # AI Integration Documentation
 
 > **Status:** No active AI integration.
+> **Last Verified:** 2026-02-20
 > **Plan:** Future integration for project summarization.
 
 ## 🤖 Models & Configuration

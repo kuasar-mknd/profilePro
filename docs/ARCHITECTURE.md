@@ -115,3 +115,10 @@ Workflows are defined in `.github/workflows/`:
 - **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
 - **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
 - **Content Collections**: Type-safe content management for Markdown/MDX.
+
+### Clean Architecture Mapping
+
+While this is a static site, the structure mirrors Clean Architecture principles:
+- **Domain/Entities**: `src/content/` (Data models via schemas).
+- **Use Cases/Application**: `src/pages/` (Routing and page logic).
+- **Infrastructure/UI**: `src/components/` and `src/layouts/`.
