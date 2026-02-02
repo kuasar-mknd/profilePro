@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -21,6 +21,11 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("/path/to/resource?query=1")).toBe(
         "/path/to/resource?query=1",
       );
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//cdn.com/script.js")).toBe("");
     });
 
     it("should block javascript: scheme", () => {
@@ -50,6 +55,23 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should return true for valid URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("/path/to/resource")).toBe(true);
+    });
+
+    it("should return false for invalid URLs", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+      expect(isValidUrl("data:text/plain,hello")).toBe(false);
+    });
+
+    it("should return false for protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//cdn.com/lib.js")).toBe(false);
     });
   });
 
