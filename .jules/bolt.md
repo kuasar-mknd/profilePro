@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-02-23 - Duplicate Event Listeners in Shared Components
+
+**Learning:** Components initialized multiple times (like on `astro:after-swap`) that attach listeners to `document` MUST implement cleanup or checking mechanisms. I found `HamburgerButton.astro` adding a global `keydown` listener on every navigation, causing stacked listeners and race conditions with `Header.astro`.
+**Action:** Centralized the Escape key handling in `Header.astro` (which already had robust cleanup) and removed the redundant listener from `HamburgerButton.astro`.
