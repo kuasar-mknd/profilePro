@@ -133,10 +133,12 @@ export function isValidUrl(
   const { allowMailto = false } = options;
 
   if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+    // 🛡️ Sentinel: Block protocol-relative URLs (//) which can lead to open redirects or XSS.
+    // Negative lookahead (?!/) ensures that if it starts with /, the next char is not /.
+    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return /^(https?:\/\/|\/(?!\/))/i.test(url);
 }
 
 /**
@@ -159,8 +161,9 @@ export function sanitizeUrl(url: string): string {
   }
 
   // Allow relative URLs (starting with / or #)
+  // 🛡️ Sentinel: Block protocol-relative URLs (//) by ensuring / is not followed by /
   if (
-    trimmedUrl.startsWith("/") ||
+    (trimmedUrl.startsWith("/") && !trimmedUrl.startsWith("//")) ||
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
@@ -183,9 +186,10 @@ export function sanitizeUrl(url: string): string {
     // or a malformed URL.
     // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
     // If it contains a colon but is not a recognized protocol, it's likely unsafe.
-    if (!trimmedUrl.includes(":")) {
+    if (!trimmedUrl.includes(":") && !trimmedUrl.startsWith("//")) {
       // This could be a relative path like "images/foo.png" or "path/to/page"
       // We allow these as they are generally safe unless they contain control characters (already checked).
+      // 🛡️ Sentinel: Explicitly block protocol-relative URLs (//) here as well.
       return trimmedUrl;
     }
 
