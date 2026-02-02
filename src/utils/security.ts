@@ -61,9 +61,12 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    $: "&#36;", // Prevent template injection
+    "|": "&#124;", // Prevent command injection
+    "^": "&#94;", // Prevent regex/command injection
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\$|^]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -78,7 +81,7 @@ export function sanitizeInput(str: string): string {
  * - Avoids nested quantifiers that could lead to ReDoS
  */
 export const EMAIL_PATTERN =
-  /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+  /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$/;
 
 /**
  * Validates an email address against strict structural requirements.
