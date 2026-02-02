@@ -1,11 +1,19 @@
 ---
 import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// Palette: Generate accessible date label
+const fullDate = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "long",
+}).format(date);
+const label = `Publié le ${fullDate}`;
 ---
 
 <time
   datetime={date.toISOString()}
-  class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
+  aria-label={label}
+  title={label}
+  class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit cursor-help"
 >
   {dateFormat(date, "dd-mm-yyyy")}
 </time>
