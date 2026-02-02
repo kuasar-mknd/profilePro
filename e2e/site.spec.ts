@@ -81,4 +81,33 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("contact form should show validation success icon for valid email", async ({
+    page,
+  }) => {
+    await page.goto("/about");
+
+    const contactForm = page.locator("#contact-form");
+    await contactForm.scrollIntoViewIfNeeded();
+
+    const emailInput = contactForm.locator('input[name="email"]');
+    // The validation icon is a sibling to the input
+    const validationIcon = contactForm.locator(
+      'input[name="email"] ~ .validation-icon',
+    );
+
+    // Initial state: hidden (data-visible="false" or missing, let's check attribute presence logic)
+    // The HTML has data-[visible=true] styling but JS toggles data-visible attribute
+    // In JS: iconWrapper.dataset.visible = isValid ? "true" : "false";
+    // Initially it might not be set or set to false depending on how it's rendered.
+    // Let's assume checking for "true" is the key.
+
+    // Type invalid email
+    await emailInput.fill("invalid-email");
+    await expect(validationIcon).toHaveAttribute("data-visible", "false");
+
+    // Type valid email
+    await emailInput.fill("test@example.com");
+    await expect(validationIcon).toHaveAttribute("data-visible", "true");
+  });
 });
