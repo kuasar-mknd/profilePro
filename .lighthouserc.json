@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "url": ["http://localhost:4321/"],
-      "startServerCommand": "npm run preview",
+      "startServerCommand": "bun run preview",
       "numberOfRuns": 3
     },
     "assert": {
