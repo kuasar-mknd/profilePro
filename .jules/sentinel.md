@@ -39,3 +39,8 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-05-14 - Fix protocol-relative URL vulnerability
+**Vulnerability:** `isValidUrl` and `sanitizeUrl` allowed protocol-relative URLs (`//example.com`), which could be used for Open Redirects or XSS bypasses.
+**Learning:** Checking for strings starting with `/` is not sufficient for "internal" links, as `//` is interpreted as a protocol-relative URL by browsers.
+**Prevention:** Use negative lookahead in regex `/(?!\/)/` or explicit `!url.startsWith("//")` checks when validating root-relative paths.
