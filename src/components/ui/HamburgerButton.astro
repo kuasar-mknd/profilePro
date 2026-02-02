@@ -32,13 +32,22 @@
    * Added initialization guard to prevent duplicate observers and handlers
    */
   let menuObserver: MutationObserver | null = null;
+  let cleanup: (() => void) | null = null;
 
-  function menuToggle() {
-    const button = document.querySelector("#menu_toggle");
-    const nav = document.querySelector("#navigation_wrapper");
+  function initHamburger() {
+    // ⚡ Cleanup previous listeners
+    if (cleanup) {
+      cleanup();
+      cleanup = null;
+    }
+
+    const button = document.getElementById("menu_toggle");
+    const nav = document.getElementById("navigation_wrapper");
 
     // ⚡ Early return guards
     if (!button || !nav) return;
+
+    // Prevent double initialization on same page
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
@@ -81,7 +90,7 @@
       nav.classList.add("translate-x-0");
     };
 
-    button.addEventListener("click", function () {
+    const onClick = () => {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
 
       // 🎨 Palette: Announce menu state change to screen readers
@@ -94,15 +103,17 @@
         openMenu();
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
-    });
+    };
 
+    button.addEventListener("click", onClick);
+
+    const onLinkClick = () => closeMenu();
     nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
+      link.addEventListener("click", onLinkClick);
     });
 
     // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
+    const onKeydown = (e: KeyboardEvent) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
@@ -111,7 +122,8 @@
         // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
-    });
+    };
+    document.addEventListener("keydown", onKeydown);
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
@@ -127,23 +139,12 @@
             btn.setAttribute("aria-expanded", String(isMenuOpen));
 
             if (isMenuOpen) {
-              // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
               navEl.classList.remove("invisible");
               navEl.classList.remove("translate-x-full");
               navEl.classList.add("translate-x-0");
             } else {
               navEl.classList.add("translate-x-full");
               navEl.classList.remove("translate-x-0");
-              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
-              // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
-              if (
-                navEl.classList.contains("translate-x-full") &&
-                !navEl.classList.contains("transitioning")
-              ) {
-                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
-              }
             }
           }
         });
@@ -151,14 +152,33 @@
     }
 
     // ⚡ Always ensure observer is connected to current documentElement
-    menuObserver.disconnect(); // Safety disconnect before reconnect
+    menuObserver.disconnect();
     menuObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
+
+    // Register cleanup
+    cleanup = () => {
+      button.removeEventListener("click", onClick);
+      document.removeEventListener("keydown", onKeydown);
+      nav.querySelectorAll("a").forEach((link) => {
+        link.removeEventListener("click", onLinkClick);
+      });
+      if (menuObserver) menuObserver.disconnect();
+      cleanup = null;
+    };
+
+    // Ensure cleanup runs before next swap
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        if (cleanup) cleanup();
+      },
+      { once: true },
+    );
   }
 
-  menuToggle();
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", menuToggle);
+  // Initialize on load and after view transitions
+  document.addEventListener("astro:page-load", initHamburger);
 </script>

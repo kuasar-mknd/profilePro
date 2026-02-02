@@ -1,11 +1,21 @@
 ---
 import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// 🎨 Palette: Accessibility Enhancement
+// Create a descriptive label for screen readers (e.g., "Publié le 25 juillet 2025")
+const longDate = new Intl.DateTimeFormat("fr-FR", {
+  dateStyle: "long",
+}).format(date);
+
+const a11yLabel = `Publié le ${longDate}`;
 ---
 
 <time
   datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
+  aria-label={a11yLabel}
+  title={a11yLabel}
 >
   {dateFormat(date, "dd-mm-yyyy")}
 </time>

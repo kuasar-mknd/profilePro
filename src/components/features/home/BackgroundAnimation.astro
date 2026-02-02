@@ -64,6 +64,7 @@
     let blobX = 0;
     let blobY = 0;
     let isVisible = false;
+    let hasMoved = false;
     let animationFrameId: number | null = null;
 
     // ⚡ Cache style reference
@@ -104,9 +105,12 @@
       if (!isVisible) {
         isVisible = true;
         blobStyle.opacity = "1";
-        // Initialize position to prevent jump
-        blobX = mouseX;
-        blobY = mouseY;
+        // Initialize position to prevent jump on FIRST interaction only
+        if (!hasMoved) {
+          blobX = mouseX;
+          blobY = mouseY;
+          hasMoved = true;
+        }
         animate();
       }
     };
