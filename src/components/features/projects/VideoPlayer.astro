@@ -1,6 +1,7 @@
 ---
 const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
+import { Picture } from "astro:assets";
 import {
   isValidUrl,
   YOUTUBE_ID_REGEX,
@@ -37,20 +38,27 @@ const getVideoDetails = (url: string) => {
 const { id: videoId, hash, provider } = getVideoDetails(videoUrl);
 
 let posterUrl: string | null = null;
+let posterImage: ImageMetadata | null = null;
 
 // ⚡ Bolt: Prioritize custom poster (likely optimized local asset)
 // This avoids external requests to YouTube/Vimeo APIs during build and improves privacy/performance
 if (poster) {
-  // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
-  // Allow http, https, and relative paths (starting with /)
-  if (isValidUrl(poster)) {
-    posterUrl = poster;
+  if (typeof poster === "object" && "src" in poster) {
+    // It's an ImageMetadata object (local import)
+    posterImage = poster;
+  } else if (typeof poster === "string") {
+    // 🛡️ Sentinel: Validate poster URL to prevent XSS (javascript: URI)
+    // Allow http, https, and relative paths (starting with /)
+    if (isValidUrl(poster)) {
+      posterUrl = poster;
+    }
   }
 }
 
-if (!posterUrl && provider === "youtube" && videoId) {
+// Fallback to provider thumbnails if no custom poster provided
+if (!posterUrl && !posterImage && provider === "youtube" && videoId) {
   posterUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-} else if (!posterUrl && provider === "vimeo" && videoId) {
+} else if (!posterUrl && !posterImage && provider === "vimeo" && videoId) {
   try {
     const response = await fetch(
       `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
@@ -70,12 +78,14 @@ if (!posterUrl && provider === "youtube" && videoId) {
 
 // ⚡ Bolt: Construct embed ID with hash for Vimeo privacy support
 const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
+
+// Determine if we have any poster to show
 ---
 
 <div
   class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
   style="contain: layout style;"
-  data-poster-url={posterUrl}
+  data-poster-url={posterUrl || (posterImage ? posterImage.src : "")}
 >
   <Skeleton class="absolute inset-0 z-0" />
   {
@@ -85,17 +95,33 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           class="absolute inset-0 z-10 transition-opacity duration-500"
           id={`poster-${videoId}`}
         >
-          {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
-          <img
-            src={posterUrl}
-            alt={`Aperçu de ${videoTitle}`}
-            class="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchpriority="low"
-            width="1280"
-            height="720"
-          />
+          {/* ⚡ Bolt: Support both local optimized assets (Picture/AVIF) and external URLs (img) */}
+          {posterImage ? (
+            <Picture
+              src={posterImage}
+              alt={`Aperçu de ${videoTitle}`}
+              class="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px"
+              formats={["avif", "webp"]}
+              fallbackFormat="webp"
+            />
+          ) : (
+            <img
+              src={posterUrl}
+              alt={`Aperçu de ${videoTitle}`}
+              class="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              width="1280"
+              height="720"
+            />
+          )}
+
           <button
             class="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center cursor-pointer border-none outline-none focus-visible:bg-black/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-inset"
             id={`play-btn-${videoId}`}
@@ -268,16 +294,31 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
     const wrappers = document.querySelectorAll(".video-player-wrapper");
     wrappers.forEach((wrapper) => {
       const posterImg = wrapper.querySelector("img");
+      const posterPicture = wrapper.querySelector("picture"); // Support for <picture>
       const skeleton = wrapper.querySelector(".skeleton");
-      if (posterImg && skeleton) {
+
+      if ((posterImg || posterPicture) && skeleton) {
         const removeSkeleton = () => {
           skeleton.classList.add("opacity-0");
           setTimeout(() => skeleton.remove(), 500);
         };
-        if (posterImg.complete) {
-          removeSkeleton();
-        } else {
-          posterImg.addEventListener("load", removeSkeleton, { once: true });
+
+        if (posterImg) {
+          if (posterImg.complete) {
+            removeSkeleton();
+          } else {
+            posterImg.addEventListener("load", removeSkeleton, { once: true });
+          }
+        } else if (posterPicture) {
+          // Check the img inside the picture
+          const img = posterPicture.querySelector("img");
+          if (img) {
+            if (img.complete) {
+              removeSkeleton();
+            } else {
+              img.addEventListener("load", removeSkeleton, { once: true });
+            }
+          }
         }
       }
     });

@@ -1,5 +1,5 @@
 ---
-import { Picture, getImage } from "astro:assets";
+import { Picture } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -64,18 +64,7 @@ const jsonLd = {
     : {}),
 };
 
-// ⚡ Bolt: Generate optimized WebP poster for video player
-// This prevents serving the original massive image or fetching external provider thumbnails
-let optimizedPoster: string | null = null;
-if (entry.data.type === "video" && entry.data.image) {
-  const img = await getImage({
-    src: entry.data.image,
-    width: 1280, // HD is sufficient for video poster
-    format: "webp",
-    quality: 80,
-  });
-  optimizedPoster = img.src;
-}
+// ⚡ Bolt: Pass raw ImageMetadata to VideoPlayer to enable AVIF support via <Picture>
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
@@ -159,7 +148,7 @@ if (entry.data.type === "video" && entry.data.image) {
         <div class="w-full rounded-3xl overflow-hidden shadow-2xl mb-16 mt-12 animate-slide-up opacity-0 ring-1 ring-white/10 delay-600 [content-visibility:auto] [contain-intrinsic-size:auto_500px]">
           <VideoPlayer
             videoUrl={entry.data.videoUrl}
-            poster={optimizedPoster || entry.data.image?.src}
+            poster={entry.data.image}
             videoTitle={entry.data.title}
           />
         </div>
@@ -219,7 +208,11 @@ if (entry.data.type === "video" && entry.data.image) {
             <div
               class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 group-[.copied]:opacity-0 group-[.copied]:translate-y-2"
             >
-              <Icon name="mdi:share-variant" class="w-5 h-5" />
+              <Icon
+                name="mdi:share-variant"
+                class="w-5 h-5"
+                aria-hidden="true"
+              />
               <span class="font-medium">Partager ce projet</span>
             </div>
             <!-- Copied State -->
@@ -227,7 +220,7 @@ if (entry.data.type === "video" && entry.data.image) {
               class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 opacity-0 -translate-y-2 group-[.copied]:opacity-100 group-[.copied]:translate-y-0 text-green-600 dark:text-green-400"
               aria-hidden="true"
             >
-              <Icon name="mdi:check" class="w-5 h-5" />
+              <Icon name="mdi:check" class="w-5 h-5" aria-hidden="true" />
               <span class="font-medium">Lien copié !</span>
             </div>
           </div>
@@ -489,7 +482,7 @@ if (entry.data.type === "video" && entry.data.image) {
         class="inline-flex items-center gap-2 px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
       >
         <span>Discuter de votre projet</span>
-        <Icon name="mdi:arrow-right" class="w-5 h-5" />
+        <Icon name="mdi:arrow-right" class="w-5 h-5" aria-hidden="true" />
       </a>
     </div>
   </div>
