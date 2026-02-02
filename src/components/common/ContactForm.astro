@@ -135,6 +135,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         />
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none transition-opacity duration-300"
+          aria-hidden="true"
         >
         </div>
         <!-- 🎨 Palette: Validation Icon -->
@@ -562,10 +563,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     emailInput?.addEventListener("input", () => {
-      if (
-        emailInput.hasAttribute("aria-invalid") &&
-        isValidEmail(emailInput.value)
-      ) {
+      const isValid = isValidEmail(emailInput.value);
+      updateValidationIcon(emailInput, isValid);
+
+      if (emailInput.hasAttribute("aria-invalid") && isValid) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
