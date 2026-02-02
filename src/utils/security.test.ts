@@ -1,7 +1,22 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should return true for valid URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("/path")).toBe(true);
+    });
+
+    it("should return false for protocol-relative URLs", () => {
+      expect(isValidUrl("//attacker.com")).toBe(false);
+    });
+
+    it("should return false for invalid inputs", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -50,6 +65,11 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//attacker.com")).toBe("");
+      expect(sanitizeUrl(" //attacker.com ")).toBe("");
     });
   });
 
