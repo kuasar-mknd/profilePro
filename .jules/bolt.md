@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - Leaking Listeners in View Transitions
+
+**Learning:** Attaching global event listeners (e.g., `document.addEventListener`) inside a function that runs on every navigation (like `astro:after-swap`) without explicit cleanup creates a memory leak where listeners accumulate over time (N navigations = N listeners).
+**Action:** Move global listeners to a singleton initialization pattern (using `astro:page-load` with a guard or cleanup) or delegate the event handling to a persistent parent component (like `Header` or `Layout`) that manages the lifecycle correctly.

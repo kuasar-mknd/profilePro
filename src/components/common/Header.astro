@@ -155,7 +155,11 @@ const logo2x = await getImage({
         const btn = document.querySelector(
           'button[aria-controls="navigation_wrapper"]',
         );
-        if (btn instanceof HTMLElement) btn.click();
+        if (btn instanceof HTMLElement) {
+          btn.click();
+          // ⚡ Bolt: Restore focus to button after closing via keyboard
+          btn.focus();
+        }
       }
     }
 
