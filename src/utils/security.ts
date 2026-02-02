@@ -130,6 +130,10 @@ export function isValidUrl(
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
+  // 🛡️ Sentinel: Explicitly block protocol-relative URLs (starting with //)
+  // to prevent open redirects.
+  if (url.startsWith("//")) return false;
+
   const { allowMailto = false } = options;
 
   if (allowMailto) {
@@ -156,6 +160,11 @@ export function sanitizeUrl(url: string): string {
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
+  }
+
+  // 🛡️ Sentinel: Explicitly block protocol-relative URLs (//)
+  if (trimmedUrl.startsWith("//")) {
+    return "";
   }
 
   // Allow relative URLs (starting with / or #)
