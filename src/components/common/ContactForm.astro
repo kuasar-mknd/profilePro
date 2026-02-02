@@ -413,6 +413,69 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       "#message-counter-sr",
     ) as HTMLElement;
 
+    // 🎨 Palette: Auto-save draft logic
+    const STORAGE_KEY = "contact_form_draft";
+    let saveTimeout: number;
+
+    const saveDraft = () => {
+      clearTimeout(saveTimeout);
+      saveTimeout = window.setTimeout(() => {
+        const draft = {
+          name: nameInput?.value || "",
+          email: emailInput?.value || "",
+          message: messageInput?.value || "",
+          timestamp: Date.now(),
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+      }, 500); // Debounce 500ms
+    };
+
+    const loadDraft = () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+
+      try {
+        const draft = JSON.parse(saved);
+        // Expiration: 24h
+        if (Date.now() - draft.timestamp > 86400000) {
+          localStorage.removeItem(STORAGE_KEY);
+          return;
+        }
+
+        // Only restore if fields are empty (don't overwrite new input)
+        let restored = false;
+        if (nameInput && !nameInput.value && draft.name) {
+          nameInput.value = draft.name;
+          restored = true;
+        }
+        if (emailInput && !emailInput.value && draft.email) {
+          emailInput.value = draft.email;
+          restored = true;
+        }
+        if (messageInput && !messageInput.value && draft.message) {
+          messageInput.value = draft.message;
+          restored = true;
+        }
+
+        if (restored) {
+          // Trigger events to update UI (validation icons, counters)
+          const event = new Event("input", { bubbles: true });
+          if (nameInput) nameInput.dispatchEvent(event);
+          if (emailInput) emailInput.dispatchEvent(event);
+          if (messageInput) messageInput.dispatchEvent(event);
+        }
+      } catch {
+        // Corrupt data
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    };
+
+    // Initialize auto-save
+    loadDraft();
+    nameInput?.addEventListener("input", saveDraft);
+    emailInput?.addEventListener("input", saveDraft);
+    messageInput?.addEventListener("input", saveDraft);
+
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
@@ -477,6 +540,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      localStorage.removeItem(STORAGE_KEY);
       // Reset counter
       if (messageCounter && messageInput) {
         messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
@@ -716,6 +780,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "contact_form_last_submission",
             Date.now().toString(),
           );
+          localStorage.removeItem(STORAGE_KEY);
           form.reset();
         } else {
           throw new Error(result.message || "Submission failed");
