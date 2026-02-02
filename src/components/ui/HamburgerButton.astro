@@ -100,18 +100,8 @@
       link.addEventListener("click", closeMenu);
     });
 
-    // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        button.getAttribute("aria-expanded") === "true"
-      ) {
-        closeMenu();
-        // Return focus to the toggle button
-        (button as HTMLElement).focus();
-      }
-    });
+    // ⚡ Bolt: Escape key handling delegated to Header.astro (via Focus Trap)
+    // This prevents adding redundant global listeners on every navigation (memory leak).
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
