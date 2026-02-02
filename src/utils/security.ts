@@ -130,6 +130,12 @@ export function isValidUrl(
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
+  // 🛡️ Sentinel: Block control characters to align with sanitizeUrl
+  if (/[\x00-\x1F\x7F]/.test(url)) return false;
+
+  // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (starting with //)
+  if (url.startsWith("//")) return false;
+
   const { allowMailto = false } = options;
 
   if (allowMailto) {
@@ -145,16 +151,22 @@ export function isValidUrl(
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
  *
  * @param url - The URL to sanitize
- * @returns The sanitized URL or an empty string if invalid
+ * @returns The sanitized URL or 'about:blank' if invalid
  */
 export function sanitizeUrl(url: string): string {
-  if (!url) return "";
+  if (!url) return "about:blank";
 
   // Trim whitespace
   let trimmedUrl = url.trim();
 
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
+    return "about:blank";
+  }
+
+  // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (starting with //)
+  // This prevents open redirect vulnerabilities or loading insecure content if base is HTTP.
+  if (trimmedUrl.startsWith("//")) {
     return "about:blank";
   }
 
@@ -177,7 +189,7 @@ export function sanitizeUrl(url: string): string {
       return trimmedUrl;
     }
 
-    return ""; // Block other protocols (javascript:, data:, etc.)
+    return "about:blank"; // Block other protocols (javascript:, data:, etc.)
   } catch {
     // If it fails to parse as absolute URL, it might be a relative path without a leading slash
     // or a malformed URL.
@@ -189,6 +201,6 @@ export function sanitizeUrl(url: string): string {
       return trimmedUrl;
     }
 
-    return ""; // Block anything else that looks like a protocol but isn't whitelisted
+    return "about:blank"; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }

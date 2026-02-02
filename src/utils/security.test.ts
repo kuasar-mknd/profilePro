@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -24,17 +24,19 @@ describe("Security Utilities", () => {
     });
 
     it("should block javascript: scheme", () => {
-      expect(sanitizeUrl("javascript:alert(1)")).toBe("");
-      expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
+      expect(sanitizeUrl("javascript:alert(1)")).toBe("about:blank");
+      expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("about:blank");
     });
 
     it("should block data: scheme", () => {
-      expect(sanitizeUrl("data:text/html,<script>alert(1)</script>")).toBe("");
+      expect(sanitizeUrl("data:text/html,<script>alert(1)</script>")).toBe(
+        "about:blank",
+      );
     });
 
     it("should block unknown schemes", () => {
-      expect(sanitizeUrl("ftp://example.com")).toBe("");
-      expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("");
+      expect(sanitizeUrl("ftp://example.com")).toBe("about:blank");
+      expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("about:blank");
     });
 
     it("should handle mixed case schemes", () => {
@@ -50,6 +52,35 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("about:blank");
+      expect(sanitizeUrl(" //example.com ")).toBe("about:blank");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should return true for valid URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+      expect(isValidUrl("/about")).toBe(true);
+    });
+
+    it("should return false for protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//")).toBe(false);
+    });
+
+    it("should return false for control characters", () => {
+      expect(isValidUrl("\x01https://example.com")).toBe(false);
+    });
+
+    it("should support allowMailto option", () => {
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+      expect(isValidUrl("mailto:user@example.com")).toBe(false);
     });
   });
 
