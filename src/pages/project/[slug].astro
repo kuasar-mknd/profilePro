@@ -20,6 +20,19 @@ export async function getStaticPaths() {
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 
+  // ⚡ Bolt: Memory Optimization
+  // Pre-calculate reading time and strip body content to reduce build memory usage
+  // and page payload size. "allProjects" is passed to every page, so this prevents duplication of heavy content.
+  const lightweightProjects = projectEntries.map((p) => {
+    const wordCount = p.body ? p.body.split(/\s+/g).length : 0;
+    const readingTime = Math.ceil(wordCount / 200);
+    return {
+      ...p,
+      body: "", // Remove heavy content
+      readingTime,
+    };
+  });
+
   return projectEntries.map((entry, index) => ({
     params: { slug: entry.slug },
     props: {
@@ -27,7 +40,7 @@ export async function getStaticPaths() {
       prevPost:
         index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
       nextPost: index > 0 ? projectEntries[index - 1] : null,
-      allProjects,
+      allProjects: lightweightProjects,
     },
   }));
 }

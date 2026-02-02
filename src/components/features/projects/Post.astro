@@ -1,5 +1,10 @@
 ---
-const { postData, bentoSize = "", priority = false } = Astro.props;
+const {
+  postData,
+  bentoSize = "",
+  priority = false,
+  readingTime: overrideReadingTime,
+} = Astro.props;
 import { Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
@@ -9,7 +14,7 @@ const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
 const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = overrideReadingTime ?? Math.ceil(wordCount / 200);
 ---
 
 <article
