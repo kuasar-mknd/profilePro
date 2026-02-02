@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, EMAIL_PATTERN } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,31 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+
+    it("should escape template injection and command characters", () => {
+      const input = "Hello $ { world } | ^";
+      const actual = sanitizeInput(input);
+      expect(actual).toContain("&#36;"); // $
+      expect(actual).toContain("&#124;"); // |
+      expect(actual).toContain("&#94;"); // ^
+      expect(actual).toContain("&#123;"); // {
+      expect(actual).toContain("&#125;"); // }
+    });
+  });
+
+  describe("EMAIL_PATTERN", () => {
+    it("should accept IDN TLDs and enforce 2 chars", () => {
+      // Valid cases
+      expect(EMAIL_PATTERN.test("test@example.com")).toBe(true);
+      expect(EMAIL_PATTERN.test("test@example.co.uk")).toBe(true);
+      expect(EMAIL_PATTERN.test("test@example.xn--p1ai")).toBe(true); // .рф (IDN)
+      expect(EMAIL_PATTERN.test("test@example.museum")).toBe(true);
+
+      // Invalid cases
+      expect(EMAIL_PATTERN.test("test@example.a")).toBe(false); // Too short
+      expect(EMAIL_PATTERN.test("test@example")).toBe(false); // No TLD
+      expect(EMAIL_PATTERN.test("test@.com")).toBe(false); // No domain
     });
   });
 });
