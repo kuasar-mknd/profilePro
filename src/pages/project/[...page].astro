@@ -81,7 +81,10 @@ const { page, allTags } = Astro.props;
         )
       }
     </div>
-    <div class="flex flex-row justify-center gap-7">
+    <nav
+      class="flex flex-row items-center justify-center gap-7 mt-8"
+      aria-label="Pagination"
+    >
       {
         page.url.prev ? (
           <a
@@ -91,8 +94,22 @@ const { page, allTags } = Astro.props;
           >
             &larr; Précédent
           </a>
-        ) : null
+        ) : (
+          <span
+            class="invisible text-base border border-transparent leading-none rounded-full py-3 px-6 font-pacamara-space font-bold"
+            aria-hidden="true"
+          >
+            &larr; Précédent
+          </span>
+        )
       }
+
+      <span
+        class="text-sm font-medium text-pacamara-primary/60 dark:text-white/60 font-outfit"
+      >
+        Page {page.currentPage} sur {page.lastPage}
+      </span>
+
       {
         page.url.next ? (
           <a
@@ -102,8 +119,15 @@ const { page, allTags } = Astro.props;
           >
             Suivant &rarr;
           </a>
-        ) : null
+        ) : (
+          <span
+            class="invisible text-base border border-transparent leading-none rounded-full py-3 px-6 font-pacamara-space font-bold"
+            aria-hidden="true"
+          >
+            Suivant &rarr;
+          </span>
+        )
       }
-    </div>
+    </nav>
   </section>
 </Base>
