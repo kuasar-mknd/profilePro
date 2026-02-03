@@ -32,8 +32,15 @@
    * Added initialization guard to prevent duplicate observers and handlers
    */
   let menuObserver: MutationObserver | null = null;
+  let cleanupMenuListeners: (() => void) | null = null;
 
   function menuToggle() {
+    // ⚡ Bolt: Cleanup previous global listeners to prevent memory leaks
+    if (cleanupMenuListeners) {
+      cleanupMenuListeners();
+      cleanupMenuListeners = null;
+    }
+
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
@@ -102,7 +109,7 @@
 
     // 🎨 Palette: Close menu on Escape key for accessibility
     // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
+    const handleKeydown = (e: KeyboardEvent) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
@@ -111,7 +118,14 @@
         // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleKeydown);
+
+    // Register cleanup
+    cleanupMenuListeners = () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
