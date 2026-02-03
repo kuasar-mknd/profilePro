@@ -20,14 +20,25 @@ export async function getStaticPaths() {
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 
+  // ⚡ Bolt: Create lightweight project objects for listings to save memory during build
+  // Stripping the 'body' content from potentially large collections prevents OOM
+  const lightweightProjects = projectEntries.map((p) => {
+    const wordCount = p.body ? p.body.split(/\s+/g).length : 0;
+    const readingTime = Math.ceil(wordCount / 200);
+    const { body, ...rest } = p;
+    return { ...rest, readingTime, body: undefined };
+  });
+
   return projectEntries.map((entry, index) => ({
     params: { slug: entry.slug },
     props: {
       entry,
       prevPost:
-        index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
-      nextPost: index > 0 ? projectEntries[index - 1] : null,
-      allProjects,
+        index + 1 < projectEntries.length
+          ? lightweightProjects[index + 1]
+          : null,
+      nextPost: index > 0 ? lightweightProjects[index - 1] : null,
+      allProjects: lightweightProjects,
     },
   }));
 }

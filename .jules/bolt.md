@@ -71,3 +71,7 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-10-27 - Optimized Build Memory and Props Serialization
+**Learning:** Passing full `CollectionEntry` objects (including large markdown bodies) to component props (like `prevPost`, `nextPost`, `allPosts`) in `getStaticPaths` significantly increases build-time memory usage and serialization overhead.
+**Action:** Create "lightweight" versions of collection entries by stripping heavy fields (like `body`) and pre-calculating derived values (like `readingTime`) before passing them to layout/list components.

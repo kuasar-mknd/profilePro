@@ -8,8 +8,12 @@ const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
-const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+// ⚡ Bolt: Use pre-calculated reading time if available (from getStaticPaths optimization)
+let readingTime = postData.readingTime;
+if (readingTime === undefined) {
+  const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
+  readingTime = Math.ceil(wordCount / 200);
+}
 ---
 
 <article
