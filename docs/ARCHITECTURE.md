@@ -99,6 +99,7 @@ Workflows are defined in `.github/workflows/`:
     - Installs dependencies.
     - Runs `bun run check` (Lint + Types + Format).
     - Runs `bun run test:e2e` (Playwright).
+      - Playwright handles the dev server startup automatically via `webServer` config.
     - Builds the site `bun run build`.
 
 2.  **Security**:
