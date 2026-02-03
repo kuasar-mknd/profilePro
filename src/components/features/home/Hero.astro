@@ -164,12 +164,33 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         Me contacter
       </a>
     </div>
+
+    <!-- 🎨 Palette: Scroll Indicator -->
+    <button
+      id="scroll-indicator"
+      class="mt-12 mx-auto flex flex-col items-center gap-2 transition-all duration-500 hover:text-pacamara-accent focus-visible:text-pacamara-accent focus-visible:outline-none group opacity-0 translate-y-4"
+      aria-label="Défiler vers le bas"
+    >
+      <span
+        class="text-[10px] font-bold uppercase tracking-[0.2em] text-pacamara-primary/40 dark:text-white/40 group-hover:text-pacamara-accent transition-colors"
+        >Scroll</span
+      >
+      <div
+        class="w-5 h-8 border-2 border-pacamara-primary/20 dark:border-white/20 rounded-full relative group-hover:border-pacamara-accent transition-colors"
+      >
+        <div
+          class="w-1 h-1 bg-pacamara-accent rounded-full absolute top-2 left-1/2 -translate-x-1/2 animate-bounce"
+        >
+        </div>
+      </div>
+    </button>
   </div>
 
   <!-- Infinite Scroll Carousel -->
   <div
     class="w-full mt-16 overflow-hidden hero-carousel touch-carousel contain-layout-paint"
     id="hero-carousel"
+    aria-hidden="true"
   >
     <div class="infinite-scroll py-8 pb-12 duration-120s" id="carousel-track">
       {/* Duplicate slides for seamless infinite scroll */}
@@ -283,6 +304,11 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   .hero-carousel {
     opacity: 0;
     animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+  }
+
+  /* 🎨 Palette: Scroll Indicator Entrance */
+  #scroll-indicator {
+    animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
   }
 
   @keyframes fade-slide-up {
@@ -492,4 +518,64 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * 🎨 Palette: Scroll Indicator Interaction
+   * - Smooth scrolls to #services section on click
+   * - Fades out indicator when user scrolls down
+   */
+  function initScrollIndicator() {
+    const indicator = document.getElementById("scroll-indicator");
+    const target = document.getElementById("services");
+
+    if (!indicator) return;
+
+    // Guard against duplicate listeners
+    if (indicator.dataset.initialized === "true") return;
+    indicator.dataset.initialized = "true";
+
+    // Click handler: Scroll to services
+    indicator.addEventListener("click", () => {
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        // Fallback if target not found
+        window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+      }
+    });
+
+    // Scroll handler: Fade out
+    const onScroll = () => {
+      if (window.scrollY > 100) {
+        indicator.classList.add(
+          "opacity-0",
+          "translate-y-4",
+          "pointer-events-none",
+        );
+      } else {
+        indicator.classList.remove(
+          "opacity-0",
+          "translate-y-4",
+          "pointer-events-none",
+        );
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Initial check in case page is already scrolled
+    onScroll();
+
+    // Cleanup for View Transitions
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("scroll", onScroll);
+      },
+      { once: true },
+    );
+  }
+
+  initScrollIndicator();
+  document.addEventListener("astro:page-load", initScrollIndicator);
 </script>
