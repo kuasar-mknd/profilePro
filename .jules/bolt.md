@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-02-27 - SSG Data Flow Optimization
+
+**Learning:** Passing full content collections (including large Markdown/MDX bodies) to `Astro.props` in `getStaticPaths` significantly increases build-time memory usage and potential hydration payload size.
+**Action:** Create lightweight versions of data objects (stripping `body` and pre-calculating derived fields) before passing them to page components, especially for list/grid views that don't render the full content.

@@ -20,6 +20,20 @@ export async function getStaticPaths() {
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 
+  // ⚡ Bolt: Create lightweight version of projects to reduce build memory usage
+  // Strip body content and pre-calculate reading time for "LatestPosts" component
+  const lightweightProjects = allProjects.map((p) => {
+    const wordCount = p.body ? p.body.split(/\s+/g).length : 0;
+    const readingTime = Math.ceil(wordCount / 200);
+
+    // Create a new object to avoid mutating the original
+    return {
+      ...p,
+      body: undefined, // Strip body to save memory
+      readingTime, // Pass pre-calculated reading time
+    };
+  });
+
   return projectEntries.map((entry, index) => ({
     params: { slug: entry.slug },
     props: {
@@ -27,7 +41,7 @@ export async function getStaticPaths() {
       prevPost:
         index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
       nextPost: index > 0 ? projectEntries[index - 1] : null,
-      allProjects,
+      allProjects: lightweightProjects,
     },
   }));
 }
