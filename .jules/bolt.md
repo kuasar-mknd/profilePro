@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - String Allocation in Render Loops
+
+**Learning:** Using `text.split(/\s+/).length` inside render loops (like calculating reading time for a list of posts) creates unnecessary intermediate arrays for every item, increasing GC pressure.
+**Action:** For simple counting tasks, use an iterator-based approach (O(N) time, O(1) space) to process the string without allocating new objects.

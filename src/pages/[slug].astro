@@ -5,6 +5,7 @@ import { Icon } from "astro-icon/components";
 import Base from "../layouts/Base.astro";
 
 import { getCollection } from "astro:content";
+import { calculateReadingTime } from "../utils/readingTime";
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection("project");
@@ -19,8 +20,7 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 // Calculate Reading Time
-const wordCount = entry.body.split(/\s+/g).length;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = calculateReadingTime(entry.body);
 ---
 
 <Base postData={entry}>
