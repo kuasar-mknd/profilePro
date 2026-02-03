@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-18 - Dependency Hardening & Error Silencing
+
+**Vulnerability:** 19 vulnerabilities identified in build and runtime dependencies (including Critical/High severity in `tar`, `fast-xml-parser`, `h3`, `devalue`), and potential stack trace leaks in client-side code copy functionality.
+**Learning:** Regular dependency audits are crucial even for static sites, as build tools process untrusted content. Client-side error logging should be strictly guarded to prevent information leakage in production.
+**Prevention:** Executed `npm audit fix` to resolve known CVEs and wrapped `console.error` calls in `src/pages/project/[slug].astro` with `import.meta.env.DEV`.

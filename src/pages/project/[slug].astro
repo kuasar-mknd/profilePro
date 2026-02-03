@@ -394,7 +394,9 @@ if (entry.data.type === "video" && entry.data.image) {
                   }
                 }, 2000);
               } catch (err) {
-                console.error("Failed to copy code", err);
+                if (import.meta.env.DEV) {
+                  console.error("Failed to copy code", err);
+                }
               }
             });
             wrapper.appendChild(btn);
