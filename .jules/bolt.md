@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2025-02-23 - Double Execution of Inline Scripts in Swapped Components
+
+**Learning:** `is:inline` scripts inside non-persisted components (like Footer) are re-executed on every View Transition because the component HTML is replaced. If these scripts attach global event listeners (like `astro:page-load`) or trigger network requests, they duplicate execution on every navigation, causing memory leaks and redundant API calls.
+**Action:** Remove `is:inline` to convert them to module scripts (which run once per session), or use robust cleanup logic. Prefer module scripts with `astro:page-load` for lifecycle management.

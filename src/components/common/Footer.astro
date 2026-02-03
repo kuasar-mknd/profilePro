@@ -113,13 +113,28 @@ import SocialIcon from "../ui/SocialIcon.astro";
     </div>
   </div>
 
-  <script is:inline>
+  <script>
     /**
      * ⚡ Bolt: Custom Website Carbon Badge Implementation
      * Re-implemented locally to avoid global scope pollution issues with external script
      * during View Transitions (SPAs).
      */
+    interface CarbonData {
+      c: number | string;
+      p: number;
+      url: string;
+      t?: number;
+    }
+
+    let carbonObserver: IntersectionObserver | null = null;
+
     function initCarbonBadge() {
+      // ⚡ Bolt: Cleanup previous observer
+      if (carbonObserver) {
+        carbonObserver.disconnect();
+        carbonObserver = null;
+      }
+
       const isProduction =
         !["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
           window.location.hostname,
@@ -142,7 +157,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
       const cacheKey = "wcb_" + wcU;
 
       // Render function
-      const render = (data) => {
+      const render = (data: CarbonData) => {
         if (!wcb) return;
         wcb.replaceChildren(); // Clear loading state
 
@@ -205,13 +220,9 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const loading = document.createElement("div");
         loading.className =
           "animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60";
-        loading.textContent = "Measuring CO2...";
-        // Use sub for the '2'
+        loading.textContent = "Measuring CO";
         const sub = document.createElement("sub");
         sub.textContent = "2";
-        // To reconstruct "CO<sub>2</sub>...", we need to append nodes manually or use a different structure.
-        // Let's just use "Measuring CO2..." as text for simplicity and security, or append correctly.
-        loading.textContent = "Measuring CO";
         loading.appendChild(sub);
         loading.append("...");
         wcb.appendChild(loading);
@@ -259,26 +270,25 @@ import SocialIcon from "../ui/SocialIcon.astro";
 
       // ⚡ Bolt: Lazy load if not cached or expired to save initial bandwidth
       if (!isValidCache) {
-        const observer = new IntersectionObserver(
+        carbonObserver = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting) {
               fetchData();
-              observer.disconnect();
+              // ⚡ Bolt: Cleanup immediate observer
+              if (carbonObserver) {
+                carbonObserver.disconnect();
+                carbonObserver = null;
+              }
             }
           },
           { rootMargin: "200px" },
         );
-        observer.observe(wcb);
+        carbonObserver.observe(wcb);
       }
     }
 
     // Initialize on initial load and every view transition
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initCarbonBadge);
-    } else {
-      // Small timeout to ensure DOM is fully ready and painted
-      setTimeout(initCarbonBadge, 0);
-    }
+    // ⚡ Bolt: astro:page-load handles both initial load and subsequent navigations
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
