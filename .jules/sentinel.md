@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-18 - Client-Side DOM Injection
+
+**Vulnerability:** Usage of `innerHTML` for UI updates prevents strict CSP (Trusted Types) and risks XSS if inputs become dynamic.
+**Learning:** Even for static content, `innerHTML` creates technical debt for security audits.
+**Prevention:** Use `document.createElementNS` (for SVGs) and `replaceChildren` to safely update DOM nodes without invoking the HTML parser.
