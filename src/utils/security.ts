@@ -192,3 +192,29 @@ export function sanitizeUrl(url: string): string {
     return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }
+
+/**
+ * 🛡️ Sentinel: Validates form submission time to prevent bots.
+ * Handles NaN, future timestamps, fast submissions, and session expiry.
+ *
+ * @param loadTimestamp - When the form was loaded (ms)
+ * @param threshold - Minimum time in ms (default 2s)
+ * @param expiry - Maximum time in ms (default 24h)
+ * @returns { valid: boolean, error?: string }
+ */
+export function validateFormTimestamp(
+  loadTimestamp: number,
+  threshold = 2000,
+  expiry = 86400000,
+): { valid: boolean; error?: string } {
+  if (isNaN(loadTimestamp)) return { valid: false, error: "Invalid timestamp" };
+
+  const now = Date.now();
+  const diff = now - loadTimestamp;
+
+  if (diff < 0) return { valid: false, error: "Future timestamp" };
+  if (diff < threshold) return { valid: false, error: "Too fast" };
+  if (diff > expiry) return { valid: false, error: "Expired session" };
+
+  return { valid: true };
+}

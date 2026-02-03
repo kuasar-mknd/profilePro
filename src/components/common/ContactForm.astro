@@ -363,7 +363,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </style>
 
 <script>
-  import { sanitizeInput, isValidEmail } from "../../utils/security";
+  import {
+    sanitizeInput,
+    isValidEmail,
+    validateFormTimestamp,
+  } from "../../utils/security";
 
   /**
    * ⚡ Bolt: ContactForm Performance Optimization
@@ -634,12 +638,20 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
       // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
-      const submitTimestamp = Date.now();
-      if (submitTimestamp - loadTimestamp < 2000) {
-        // 2 seconds threshold
-        showError(
-          "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
-        );
+      const validation = validateFormTimestamp(loadTimestamp);
+
+      if (!validation.valid) {
+        if (validation.error === "Too fast") {
+          showError(
+            "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
+          );
+        } else if (validation.error === "Expired session") {
+          showError(
+            "Votre session a expiré. Veuillez rafraîchir la page et réessayer.",
+          );
+        } else {
+          showError("Une erreur de sécurité est survenue. Veuillez réessayer.");
+        }
         return;
       }
 

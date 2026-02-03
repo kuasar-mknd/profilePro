@@ -1,3 +1,9 @@
+## 2026-02-03 - Secure DOM manipulation for client-side SVGs
+
+**Vulnerability:** Use of `innerHTML` to update UI elements (like feedback icons) with SVG strings creates an XSS vector if the string content ever becomes dynamic.
+**Learning:** `innerHTML` is a dangerous sink even with trusted strings. Using `DOMParser` with `replaceChildren` allows for safe, controlled insertion of SVG elements into the DOM while avoiding the risks of raw string evaluation.
+**Prevention:** Avoid `innerHTML` for dynamic UI updates; use `DOMParser` to safely parse strings and `replaceChildren` to update target elements.
+
 ## 2024-07-25 - Modernizing Mixed Content Handling
 
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
