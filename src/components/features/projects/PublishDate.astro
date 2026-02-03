@@ -1,11 +1,28 @@
 ---
-import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// Use Intl.DateTimeFormat for localization
+const fullDate = new Intl.DateTimeFormat("fr-FR", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(date);
+
+// Match the existing visual style (dd-mm-yyyy) using Intl
+const visualDate = new Intl.DateTimeFormat("fr-FR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})
+  .format(date)
+  .replace(/\//g, "-");
 ---
 
 <time
   datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
+  aria-label={`Publié le ${fullDate}`}
+  title={fullDate}
 >
-  {dateFormat(date, "dd-mm-yyyy")}
+  {visualDate}
 </time>
