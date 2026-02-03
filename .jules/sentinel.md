@@ -39,3 +39,9 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
+
+## 2025-02-19 - Safe DOM Manipulation Pattern
+
+**Vulnerability:** Use of `innerHTML` for UI updates, even with static content, invites future XSS risks and bypasses security linters.
+**Learning:** `DOMParser().parseFromString(str, "image/svg+xml").documentElement` combined with `replaceChildren()` is a robust, lightweight alternative for inserting complex SVG icons dynamically without `innerHTML`.
+**Prevention:** Adopt this pattern for all client-side icon toggles or dynamic content insertion.
