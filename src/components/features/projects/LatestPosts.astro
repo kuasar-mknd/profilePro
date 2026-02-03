@@ -13,7 +13,14 @@ interface Props {
   title?: string;
   subtitle?: string;
   lazyLoadImages?: boolean;
-  allPosts?: CollectionEntry<"project">[];
+  // ⚡ Bolt: Allow lightweight project objects (without body) for better performance
+  allPosts?: (
+    | CollectionEntry<"project">
+    | (Omit<CollectionEntry<"project">, "body"> & {
+        body?: string;
+        readingTime?: number;
+      })
+  )[];
 }
 
 const {
@@ -91,6 +98,7 @@ const remainingCount = allPosts.length - limit;
               num={index}
               bentoSize={bentoClass}
               priority={!lazyLoadImages && index < 2}
+              readingTime={(post as any).readingTime}
             />
           </ScrollReveal>
         );
