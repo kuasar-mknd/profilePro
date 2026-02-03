@@ -6,6 +6,13 @@ import ScrollReveal from "../../ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
 
+// ⚡ Bolt: Allow lightweight project objects (missing body, added readingTime)
+type ProjectEntry = CollectionEntry<"project">;
+type LightweightProjectEntry = Omit<ProjectEntry, "body"> & {
+  body?: string;
+  readingTime?: number;
+};
+
 interface Props {
   postLimit?: number;
   postLimitString?: string; // Handle string inputs often passed from other components
@@ -13,7 +20,7 @@ interface Props {
   title?: string;
   subtitle?: string;
   lazyLoadImages?: boolean;
-  allPosts?: CollectionEntry<"project">[];
+  allPosts?: (ProjectEntry | LightweightProjectEntry)[];
 }
 
 const {
