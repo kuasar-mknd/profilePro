@@ -1,5 +1,7 @@
 name: "CodeQL"
 
+# 🛡️ Sentinel: Automated Security Scanning
+
 on:
   push:
     branches: ["master"]
