@@ -47,6 +47,26 @@ export default [
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     },
   },
+  // 🛡️ Sentinel: Security Hardening
+  // Prevent console leaks in production code
+  {
+    rules: {
+      "no-console": "error",
+    },
+  },
+  // Allow console in scripts and config files (Build tools)
+  {
+    files: [
+      "scripts/**",
+      "*.config.js",
+      "*.config.mjs",
+      "*.config.cjs",
+      "analyze_lighthouse.cjs",
+    ],
+    rules: {
+      "no-console": "off",
+    },
+  },
   // General rules for all files
   {
     ignores: ["dist/**", "node_modules/**", ".astro/**", "public/**"],
