@@ -1,6 +1,9 @@
 ---
 import config from "../../config.mjs";
 import SocialIcon from "../ui/SocialIcon.astro";
+
+// 🎨 Palette: Standardized suffix for external links
+const newTabSuffix = " (ouvre un nouvel onglet)";
 ---
 
 {
@@ -106,8 +109,8 @@ import SocialIcon from "../ui/SocialIcon.astro";
           target="_blank"
           rel="noopener noreferrer"
           class="font-medium hover:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2"
-          aria-label="Astro (ouvre un nouvel onglet)"
-          title="Astro (ouvre un nouvel onglet)">Astro</a
+          aria-label={`Astro${newTabSuffix}`}
+          title={`Astro${newTabSuffix}`}>Astro</a
         >
       </span>
     </div>
@@ -179,9 +182,9 @@ import SocialIcon from "../ui/SocialIcon.astro";
           "bg-pacamara-secondary text-white px-3 py-2 text-sm font-bold hover:bg-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-pacamara-accent";
         link.textContent = "Website Carbon";
 
-        const warning = " (ouvre un nouvel onglet)";
-        link.setAttribute("aria-label", "Website Carbon" + warning);
-        link.setAttribute("title", "Website Carbon" + warning);
+        const newTabSuffix = " (ouvre un nouvel onglet)";
+        link.setAttribute("aria-label", "Website Carbon" + newTabSuffix);
+        link.setAttribute("title", "Website Carbon" + newTabSuffix);
 
         badgeContainer.appendChild(scoreSpan);
         badgeContainer.appendChild(link);
