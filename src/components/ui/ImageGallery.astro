@@ -39,40 +39,76 @@ if (explicitImages && explicitImages.length > 0) {
   }));
 } else if (folder) {
   // Load from folder
+  // ⚡ Bolt: Memory Optimization - Switch to lazy loading (eager: false)
+  // This prevents loading ALL project images into memory for every page render.
+  // We filter paths first, then resolve only the necessary modules.
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: true },
+    { eager: false },
   );
 
-  galleryImages = Object.entries(allImages)
-    .filter(([path]) => {
-      // ⚡ Bolt: Optimize path checking (avoid split allocation)
-      const folderPart = `/${folder}/`;
-      const folderIndex = path.indexOf(folderPart);
-      if (folderIndex === -1) return false;
+  // Filter paths first
+  const filteredEntries = Object.entries(allImages).filter(([path]) => {
+    // ⚡ Bolt: Optimize path checking (avoid split allocation)
+    const folderPart = `/${folder}/`;
+    const folderIndex = path.indexOf(folderPart);
+    if (folderIndex === -1) return false;
 
-      // Check for subfolders by looking for slashes after the folder match
-      const remainderIndex = folderIndex + folderPart.length;
-      const remainder = path.substring(remainderIndex);
-      if (remainder.includes("/")) return false;
+    // Check for subfolders by looking for slashes after the folder match
+    const remainderIndex = folderIndex + folderPart.length;
+    const remainder = path.substring(remainderIndex);
+    if (remainder.includes("/")) return false;
 
-      for (const pattern of excludePatterns) {
-        if (path.includes(pattern)) return false;
-      }
-      return true;
-    })
-    .map(([path, module]) => ({
-      src: module.default,
-      filename: path.substring(path.lastIndexOf("/") + 1) || "",
-      alt: `Photo - ${folder}`,
-    }))
-    .sort((a, b) => a.filename.localeCompare(b.filename));
+    for (const pattern of excludePatterns) {
+      if (path.includes(pattern)) return false;
+    }
+    return true;
+  });
+
+  // Resolve modules and map
+  galleryImages = await Promise.all(
+    filteredEntries.map(async ([path, loader]) => {
+      const module = await loader();
+      return {
+        src: module.default,
+        filename: path.substring(path.lastIndexOf("/") + 1) || "",
+        alt: `Photo - ${folder}`,
+      };
+    }),
+  );
+
+  galleryImages.sort((a, b) => a.filename.localeCompare(b.filename));
+}
+
+// Debug logging
+if (folder && galleryImages.length > 0) {
+  console.log(
+    `[ImageGallery] Folder: ${folder}, Images: ${galleryImages.length}`,
+  );
+}
+
+// ⚡ Bolt: Helper for limited concurrency
+async function asyncBatch<T, R>(
+  items: T[],
+  batchSize: number,
+  fn: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    const batchResults = await Promise.all(batch.map(fn));
+    results.push(...batchResults);
+  }
+  return results;
 }
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-const optimizedImages = await Promise.all(
-  galleryImages.map(async (img) => {
+// Uses batched execution (size 5) to prevent OOM/CPU starvation with thousands of images.
+const optimizedImages = await asyncBatch(
+  galleryImages,
+  5,
+  async (img) => {
     const optimized = await getImage({
       src: img.src,
       width: 1600,
@@ -83,7 +119,7 @@ const optimizedImages = await Promise.all(
       ...img,
       lightboxSrc: optimized.src,
     };
-  }),
+  },
 );
 
 // Column class mapping
