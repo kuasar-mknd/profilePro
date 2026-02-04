@@ -102,6 +102,7 @@ const remainingCount = allPosts.length - limit;
       <a
         href="/project"
         class="group relative h-full min-h-[280px] rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 text-center bg-linear-to-br from-pacamara-secondary/10 via-pacamara-accent/10 to-pacamara-secondary/10 dark:from-pacamara-secondary/20 dark:via-pacamara-accent/20 dark:to-pacamara-secondary/20 border-2 border-dashed border-pacamara-secondary/30 dark:border-white/20 hover:border-pacamara-accent hover:bg-pacamara-accent/5 transition-all duration-500 card-glow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        aria-label="Voir tous les projets"
       >
         <div
           class="absolute inset-0 bg-linear-to-br from-pacamara-accent/0 to-pacamara-secondary/0 group-hover:from-pacamara-accent/10 group-hover:to-pacamara-secondary/10 transition-all duration-500"
@@ -115,6 +116,7 @@ const remainingCount = allPosts.length - limit;
             <Icon
               name="mdi:folder-multiple-image"
               class="w-8 h-8 text-pacamara-accent"
+              aria-hidden="true"
             />
           </div>
 
@@ -139,6 +141,7 @@ const remainingCount = allPosts.length - limit;
             <Icon
               name="mdi:arrow-right"
               class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+              aria-hidden="true"
             />
           </div>
         </div>
