@@ -3,6 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Post from "./Post.astro";
 import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
+import { getReadingTime } from "../../../utils/readingTime";
 import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
 
@@ -84,6 +85,8 @@ const remainingCount = allPosts.length - limit;
     {
       posts.map((post, index) => {
         const bentoClass = getBentoClass(index);
+        // ⚡ Bolt: Pre-calculate reading time to avoid redundant processing in child components
+        const readingTime = getReadingTime(post.body);
         return (
           <ScrollReveal delay={0.1 * index} class={bentoClass}>
             <Post
@@ -91,6 +94,7 @@ const remainingCount = allPosts.length - limit;
               num={index}
               bentoSize={bentoClass}
               priority={!lazyLoadImages && index < 2}
+              readingTime={readingTime}
             />
           </ScrollReveal>
         );
