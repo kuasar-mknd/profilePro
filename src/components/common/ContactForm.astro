@@ -413,6 +413,31 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       "#message-counter-sr",
     ) as HTMLElement;
 
+    // 🎨 Palette: Draft Persistence
+    const DRAFT_KEY = "contact_form_draft";
+    const saveDraft = () => {
+      try {
+        localStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            n: nameInput?.value,
+            e: emailInput?.value,
+            m: messageInput?.value,
+            t: Date.now(),
+          }),
+        );
+      } catch {}
+    };
+    const debouncedSave = ((t: ReturnType<typeof setTimeout> | null) => () => {
+      if (t) clearTimeout(t);
+      t = setTimeout(saveDraft, 500);
+    })(null);
+    form.addEventListener(
+      "input",
+      (e) =>
+        (e.target as HTMLElement).matches("input, textarea") && debouncedSave(),
+    );
+
     // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
@@ -477,6 +502,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
+      localStorage.removeItem(DRAFT_KEY);
       // Reset counter
       if (messageCounter && messageInput) {
         messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
@@ -562,10 +588,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     emailInput?.addEventListener("input", () => {
-      if (
-        emailInput.hasAttribute("aria-invalid") &&
-        isValidEmail(emailInput.value)
-      ) {
+      const isValid = isValidEmail(emailInput.value);
+      updateValidationIcon(emailInput, isValid);
+      if (emailInput.hasAttribute("aria-invalid") && isValid) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
@@ -594,6 +619,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         }
       }
     }
+
+    // 🎨 Palette: Load draft after all listeners are attached
+    try {
+      const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "");
+      if (d && Date.now() - d.t < 86400000) {
+        if (nameInput) nameInput.value = d.n || "";
+        if (emailInput) emailInput.value = d.e || "";
+        if (messageInput) messageInput.value = d.m || "";
+        [nameInput, emailInput, messageInput].forEach((i) =>
+          i?.dispatchEvent(new Event("input")),
+        );
+      }
+    } catch {}
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -717,6 +755,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             Date.now().toString(),
           );
           form.reset();
+          localStorage.removeItem(DRAFT_KEY);
         } else {
           throw new Error(result.message || "Submission failed");
         }
@@ -735,6 +774,5 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
   }
 
-  initContactForm();
   document.addEventListener("astro:page-load", initContactForm);
 </script>
