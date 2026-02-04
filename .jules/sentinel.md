@@ -1,3 +1,9 @@
+## 2025-02-19 - Protocol-Relative URL Blocking
+
+**Vulnerability:** `isValidUrl` allowed protocol-relative URLs (`//example.com`) because it only checked for a leading `/`. This could lead to Open Redirects or XSS if these URLs were trusted as "relative paths".
+**Learning:** Regex checking for starting with `/` (`^\/`) matches `//`. Negative lookahead `\/(?!\/)` is required to distinguish root-relative paths from protocol-relative ones.
+**Prevention:** Updated `isValidUrl` and `sanitizeUrl` to explicitly reject `//` patterns.
+
 ## 2024-07-25 - Modernizing Mixed Content Handling
 
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.
