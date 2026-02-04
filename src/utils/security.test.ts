@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -21,6 +21,12 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("/path/to/resource?query=1")).toBe(
         "/path/to/resource?query=1",
       );
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//malicious.com")).toBe("");
+      expect(sanitizeUrl("//example.com:80")).toBe("");
     });
 
     it("should block javascript: scheme", () => {
@@ -50,6 +56,28 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should allow valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should allow relative paths", () => {
+      expect(isValidUrl("/about")).toBe(true);
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//malicious.com")).toBe(false);
+    });
+
+    it("should allow mailto if option is set", () => {
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
     });
   });
 
