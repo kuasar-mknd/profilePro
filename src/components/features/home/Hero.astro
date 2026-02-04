@@ -217,7 +217,12 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     display: inline-block;
     opacity: 0;
     animation: letter-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    will-change: transform, opacity;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .letter-animate {
+      will-change: transform, opacity;
+    }
   }
 
   .hero-title .letter-animate:nth-child(1) {
@@ -492,4 +497,27 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
+
+  /**
+   * ⚡ Bolt: Animation Cleanup
+   * Removes will-change property after entrance animation to free GPU memory.
+   */
+  function initAnimationCleanup() {
+    const title = document.querySelector(".hero-title") as HTMLElement | null;
+    if (!title) return;
+
+    // Guard to prevent duplicate listeners
+    if (title.dataset.cleanupInitialized === "true") return;
+    title.dataset.cleanupInitialized = "true";
+
+    title.addEventListener("animationend", (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains("letter-animate")) {
+        target.style.willChange = "auto";
+      }
+    });
+  }
+
+  initAnimationCleanup();
+  document.addEventListener("astro:page-load", initAnimationCleanup);
 </script>
