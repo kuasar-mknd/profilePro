@@ -1,4 +1,8 @@
 
+## 2026-02-04 - Consistency in Validation Feedback
+**Learning:** Inconsistent feedback across similar form fields (e.g., one field missing a checkmark while others have it) creates user confusion and distrust.
+**Action:** Audit all form fields in a group to ensure they share the same validation visual cues (icons, colors, announcements).
+
 ## 🎨 Interaction: Positive Validation Feedback (2025-02-18)
 **Learning:** Users benefit from immediate positive reinforcement, not just error removal. Inline validation checkmarks provide "delight" and reduce anxiety.
 **Action:** Use `data-visible` attributes for simple state toggling in CSS instead of complex class manipulation for visual feedback elements.
