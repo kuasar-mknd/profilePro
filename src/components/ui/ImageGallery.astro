@@ -105,22 +105,18 @@ async function asyncBatch<T, R>(
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
 // Uses batched execution (size 5) to prevent OOM/CPU starvation with thousands of images.
-const optimizedImages = await asyncBatch(
-  galleryImages,
-  5,
-  async (img) => {
-    const optimized = await getImage({
-      src: img.src,
-      width: 1600,
-      format: "webp",
-      quality: 80,
-    });
-    return {
-      ...img,
-      lightboxSrc: optimized.src,
-    };
-  },
-);
+const optimizedImages = await asyncBatch(galleryImages, 5, async (img) => {
+  const optimized = await getImage({
+    src: img.src,
+    width: 1600,
+    format: "webp",
+    quality: 80,
+  });
+  return {
+    ...img,
+    lightboxSrc: optimized.src,
+  };
+});
 
 // Column class mapping
 const columnClasses = {
