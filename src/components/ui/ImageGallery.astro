@@ -46,11 +46,15 @@ if (explicitImages && explicitImages.length > 0) {
 
   galleryImages = Object.entries(allImages)
     .filter(([path]) => {
-      const folderMatch = path.includes(`/${folder}/`);
-      if (!folderMatch) return false;
+      // ⚡ Bolt: Optimize path checking (avoid split allocation)
+      const folderPart = `/${folder}/`;
+      const folderIndex = path.indexOf(folderPart);
+      if (folderIndex === -1) return false;
 
-      const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
-      if (isInSubfolder) return false;
+      // Check for subfolders by looking for slashes after the folder match
+      const remainderIndex = folderIndex + folderPart.length;
+      const remainder = path.substring(remainderIndex);
+      if (remainder.includes("/")) return false;
 
       for (const pattern of excludePatterns) {
         if (path.includes(pattern)) return false;
@@ -59,7 +63,7 @@ if (explicitImages && explicitImages.length > 0) {
     })
     .map(([path, module]) => ({
       src: module.default,
-      filename: path.split("/").pop() || "",
+      filename: path.substring(path.lastIndexOf("/") + 1) || "",
       alt: `Photo - ${folder}`,
     }))
     .sort((a, b) => a.filename.localeCompare(b.filename));

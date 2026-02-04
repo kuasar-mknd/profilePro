@@ -3,13 +3,13 @@ const { postData, bentoSize = "", priority = false } = Astro.props;
 import { Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
+import { getReadingTime } from "../../../utils/readingTime";
 
 const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
-const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(postData.body || "");
 ---
 
 <article
