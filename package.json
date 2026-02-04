@@ -22,6 +22,9 @@
     "content-creation",
     "samuel-dulex"
   ],
+  "overrides": {
+    "@isaacs/brace-expansion": "5.0.1"
+  },
   "scripts": {
     "images": "node scripts/optimize-images.js",
     "dev": "bun run images && astro dev",
