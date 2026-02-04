@@ -3,7 +3,6 @@ import { Picture } from "astro:assets";
 import { Icon } from "astro-icon/components";
 
 import Base from "../layouts/Base.astro";
-import { getReadingTime } from "../utils/readingTime";
 
 import { getCollection } from "astro:content";
 
@@ -20,7 +19,8 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 // Calculate Reading Time
-const readingTime = getReadingTime(entry.body);
+const wordCount = entry.body.split(/\s+/g).length;
+const readingTime = Math.ceil(wordCount / 200);
 ---
 
 <Base postData={entry}>
