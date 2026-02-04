@@ -6,3 +6,7 @@
 ## 2024-07-18 - State-Predictive Labels
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition *to*, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
+
+## 2026-02-04 - Localized Date Accessibility
+**Learning:** Visual design often favors compact numeric dates (e.g., `dd-mm-yyyy`) which are ambiguous for screen readers. `Intl.DateTimeFormat` allows generating robust, localized verbose strings for `aria-label` without importing heavy libraries.
+**Action:** Always wrap numeric `<time>` elements with a verbose `aria-label` using `Intl` for the site's locale.
