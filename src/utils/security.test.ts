@@ -1,7 +1,26 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { isValidUrl, sanitizeUrl, sanitizeInput } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should return true for valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should return true for relative paths", () => {
+      expect(isValidUrl("/about")).toBe(true);
+    });
+
+    it("should return false for protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+    });
+
+    it("should return false for javascript: scheme", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -21,6 +40,11 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("/path/to/resource?query=1")).toBe(
         "/path/to/resource?query=1",
       );
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//malicious-site.com/xss")).toBe("");
     });
 
     it("should block javascript: scheme", () => {
