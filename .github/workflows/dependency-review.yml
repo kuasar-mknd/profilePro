@@ -1,5 +1,7 @@
 name: "Dependency Review"
 
+# 🛡️ Sentinel: Block vulnerable dependencies
+
 on: [pull_request]
 
 permissions:

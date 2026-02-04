@@ -73,11 +73,13 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 2.  Follow the schema defined in `src/content/config.ts`:
     ```yaml
     title: "Project Title"
-    publishDate: 2024-01-01
-    description: "Short description"
-    img: "./image.jpg"
-    img_alt: "Description of image"
-    tags: ["Video", "Event"]
+    pubDate: 2024-01-01
+    intro: "Short description"
+    image: "./image.jpg"
+    tag: "Video"
+    author: "samuel"
+    type: "video" # optional: video, photo, general (default)
+    videoUrl: "https://vimeo.com/..." # optional, required if type is video
     ---
     Content goes here...
     ```

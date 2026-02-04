@@ -7,7 +7,7 @@ Portfolio website for Samuel Dulex, focusing on video content creation and photo
 ## Tech Stack
 
 - **Core Framework**: Astro v5
-- **UI Components**: React v19
+- **UI Components**: Astro Components & Vanilla JS
 - **Styling**: Tailwind CSS v4
 - **Language**: TypeScript & JavaScript (ESM)
 - **Package Manager**: bun
