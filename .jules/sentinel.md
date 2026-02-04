@@ -1,3 +1,9 @@
+## 2025-05-15 - Protocol-Relative URL Bypass
+
+**Vulnerability:** URL validation and sanitization functions (`isValidUrl`, `sanitizeUrl`) allowed protocol-relative URLs (starting with `//`), which could bypass protocol whitelisting and lead to open redirects or unauthorized resource loading.
+**Learning:** Checking for `startsWith("/")` is insufficient for identifying internal relative paths if it doesn't also exclude `//`. Browsers interpret `//` as an absolute URL inheriting the current protocol.
+**Prevention:** Use a negative lookahead in regular expressions (e.g., `/\/(?!\/)/`) or explicit `startsWith("//")` checks to differentiate between internal relative paths and protocol-relative URLs.
+
 ## 2024-07-25 - Modernizing Mixed Content Handling
 
 **Vulnerability:** The deprecated `block-all-mixed-content` directive was used, which simply blocks insecure content, potentially breaking user experience without attempting recovery.

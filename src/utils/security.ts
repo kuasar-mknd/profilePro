@@ -61,9 +61,12 @@ export function sanitizeInput(str: string): string {
     "]": "&#93;",
     "%": "&#37;", // Prevent URL-encoding attacks
     "\\": "&#92;", // Prevent escaping attacks
+    $: "&#36;", // Prevent template/variable injection
+    "|": "&#124;", // Prevent pipe/logic injection
+    "^": "&#94;", // Prevent regex/logic injection
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'\/`=(){}[\]%\\$|^]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -130,13 +133,17 @@ export function isValidUrl(
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
+  // 🛡️ Sentinel: Reject control characters to prevent filter bypass/injection
+  if (/[\x00-\x1F\x7F]/.test(url)) return false;
+
   const { allowMailto = false } = options;
 
-  if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
-  }
+  // 🛡️ Sentinel: Regex improved to block protocol-relative URLs (//)
+  const pattern = allowMailto
+    ? /^(https?:\/\/|mailto:|\/(?!\/))/i
+    : /^(https?:\/\/|\/(?!\/))/i;
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return pattern.test(url);
 }
 
 /**
@@ -153,8 +160,9 @@ export function sanitizeUrl(url: string): string {
   // Trim whitespace
   let trimmedUrl = url.trim();
 
-  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
-  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) and protocol-relative URLs (//)
+  // to avoid filter bypass and open redirect/resource injection.
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl) || trimmedUrl.startsWith("//")) {
     return "about:blank";
   }
 

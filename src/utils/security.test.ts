@@ -1,7 +1,40 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should allow valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should allow relative paths", () => {
+      expect(isValidUrl("/about")).toBe(true);
+      expect(isValidUrl("/")).toBe(true);
+    });
+
+    it("should block protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+    });
+
+    it("should block javascript: scheme", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+
+    it("should block control characters", () => {
+      expect(isValidUrl("https://example.com\n")).toBe(false);
+      expect(isValidUrl("https://example.com\r")).toBe(false);
+      expect(isValidUrl("https://example.com\x01")).toBe(false);
+    });
+
+    it("should optionally allow mailto", () => {
+      expect(isValidUrl("mailto:user@example.com")).toBe(false);
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -51,6 +84,10 @@ describe("Security Utilities", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
     });
+
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("about:blank");
+    });
   });
 
   describe("sanitizeInput", () => {
@@ -58,6 +95,12 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+
+    it("should sanitize $, |, and ^", () => {
+      expect(sanitizeInput("$")).toBe("&#36;");
+      expect(sanitizeInput("|")).toBe("&#124;");
+      expect(sanitizeInput("^")).toBe("&#94;");
     });
   });
 });

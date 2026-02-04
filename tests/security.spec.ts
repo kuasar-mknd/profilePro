@@ -30,6 +30,11 @@ test("sanitizeInput handles other dangerous characters", () => {
   // ( and ) are escaped, so function call is broken in attribute context if strict
   const output = sanitizeInput(input);
   expect(output).toBe("javascript:alert&#40;1&#41;");
+
+  // Check $, |, ^
+  expect(sanitizeInput("const $ = () => {}")).toContain("&#36;");
+  expect(sanitizeInput("a | b")).toContain("&#124;");
+  expect(sanitizeInput("2 ^ 3")).toContain("&#94;");
 });
 
 test("sanitizeInput strips control characters", () => {
