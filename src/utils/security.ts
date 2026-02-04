@@ -132,11 +132,12 @@ export function isValidUrl(
 
   const { allowMailto = false } = options;
 
-  if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
-  }
+  // 🛡️ Sentinel: Prevent protocol-relative URLs (//) which can lead to Open Redirects
+  const pattern = allowMailto
+    ? /^(https?:\/\/|mailto:|\/(?!\/))/i
+    : /^(https?:\/\/|\/(?!\/))/i;
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  return pattern.test(url);
 }
 
 /**
@@ -164,6 +165,10 @@ export function sanitizeUrl(url: string): string {
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
+    // 🛡️ Sentinel: Block protocol-relative URLs (//) to prevent Open Redirects
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    }
     return trimmedUrl;
   }
 
