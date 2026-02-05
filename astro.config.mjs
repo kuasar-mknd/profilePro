@@ -42,17 +42,17 @@ export default defineConfig({
     }),
     sitemap(),
     icon(),
-    compress({
-      CSS: true,
-      HTML: {
-        "html-minifier-terser": {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false, // Sharp handles this
-      JavaScript: true,
-      SVG: true,
-    }),
+    // compress({
+    //   CSS: true,
+    //   HTML: {
+    //     "html-minifier-terser": {
+    //       removeAttributeQuotes: false,
+    //     },
+    //   },
+    //   Image: false, // Sharp handles this
+    //   JavaScript: true,
+    //   SVG: true,
+    // }),
   ],
   site: "https://portfolio.kuasar.xyz",
   prefetch: {
