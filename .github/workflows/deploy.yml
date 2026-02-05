@@ -68,6 +68,9 @@ jobs:
       - name: Build Astro
         run: bun run build
         timeout-minutes: 20
+        env:
+          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
