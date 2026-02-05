@@ -88,40 +88,45 @@ import { Icon } from "astro-icon/components";
     }
   };
 
-  function initThemeToggle() {
+  // ⚡ Bolt: Shared update logic (module-scoped to be accessible by handlers)
+  const updateLabels = (isDark: boolean, announce = false) => {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
     const liveRegion = document.getElementById("theme-live-region");
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      const title = `${label} (Shift+T)`;
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", title);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
-      });
+    const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+    const title = `${label} (Shift+T)`;
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
-      }
-    };
+    buttons.forEach((btn) => {
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", title);
+      const span = btn.querySelector(".sr-only");
+      if (span) span.textContent = label;
+    });
 
+    if (announce && liveRegion) {
+      liveRegion.textContent = isDark
+        ? "Mode sombre activé"
+        : "Mode clair activé";
+    }
+  };
+
+  // ⚡ Bolt: Global event handler (module-scoped for stable reference)
+  const handleThemeChange = (e: Event) => {
+    const detail = (e as CustomEvent).detail;
+    updateLabels(detail.isDark, true);
+  };
+
+  function initThemeToggle() {
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
     updateLabels(isDark);
 
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
+    // Using named function ensures clean removal of previous listeners
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
 
-    function handleThemeChange(e: Event) {
-      const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
-
+    const buttons = document.querySelectorAll(".theme-toggle-btn");
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
       // Even if dataset says initialized, the element might be new (swapped)
