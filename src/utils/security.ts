@@ -133,10 +133,12 @@ export function isValidUrl(
   const { allowMailto = false } = options;
 
   if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+  return /^(https?:\/\/|\/(?!\/))/i.test(url);
 }
 
 /**
