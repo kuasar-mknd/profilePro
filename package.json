@@ -22,6 +22,9 @@
     "content-creation",
     "samuel-dulex"
   ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "images": "node scripts/optimize-images.js",
     "dev": "bun run images && astro dev",
