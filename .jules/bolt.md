@@ -71,13 +71,3 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
-
-## 2026-02-27 - Strict Listener Cleanup in View Transitions
-
-**Learning:** When using `document.addEventListener` inside component scripts (like for `keydown` handling), these listeners persist across View Transition swaps even if the component is re-rendered. Without strict cleanup, this causes listeners to stack (1 -> 2 -> 3...), leading to memory leaks and erratic behavior (e.g., toggling menus multiple times).
-**Action:** Use a module-level variable to store a cleanup closure. Inside the initialization function (triggered by `astro:page-load`), first call this cleanup closure (if it exists) to remove old listeners, then define the new listeners and assign a new cleanup closure. This guarantees O(1) active listeners regardless of navigation count.
-
-## 2026-03-01 - Build-Time Image Optimization Concurrency
-
-**Learning:** Astro's `getImage` function in `astro:assets` is resource-intensive (sharp/CPU/RAM). When processing large arrays of images (e.g., a gallery) using `Promise.all(images.map(getImage))`, it attempts to process everything simultaneously, leading to Out-Of-Memory (OOM) errors and build timeouts in constrained environments (e.g., Render.com free tier).
-**Action:** Process image optimizations in batches (concurrency limit ~4) using a loop or utility function. This caps memory pressure without significant build time penalties. Note that `import.meta.glob(..., { eager: false })` might seem like a solution but can break TypeScript inference in Astro components; batching is the safer runtime/build-time fix.

@@ -29,23 +29,18 @@
 <script>
   /**
    * ⚡ Bolt: HamburgerButton Performance Optimization
-   * Implements Singleton pattern with strict listener cleanup to prevent memory leaks
-   * during View Transitions.
+   * Added initialization guard to prevent duplicate observers and handlers
    */
-  let cleanupMenu: (() => void) | null = null;
+  let menuObserver: MutationObserver | null = null;
 
-  function initMenu() {
-    // ⚡ Bolt: Cleanup previous instance listeners before re-initializing
-    if (cleanupMenu) {
-      cleanupMenu();
-      cleanupMenu = null;
-    }
-
+  function menuToggle() {
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
-    // ⚡ Early return if elements don't exist
+    // ⚡ Early return guards
     if (!button || !nav) return;
+    if ((button as HTMLElement).dataset.initialized === "true") return;
+    (button as HTMLElement).dataset.initialized = "true";
 
     // 🎨 Palette: Encapsulated close logic for reusability
     const closeMenu = () => {
@@ -86,7 +81,7 @@
       nav.classList.add("translate-x-0");
     };
 
-    const handleToggle = () => {
+    button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
 
       // 🎨 Palette: Announce menu state change to screen readers
@@ -99,10 +94,15 @@
         openMenu();
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
-    };
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
 
     // 🎨 Palette: Close menu on Escape key for accessibility
-    const handleKeydown = (e: KeyboardEvent) => {
+    // Users expect Escape to close overlays/modals
+    document.addEventListener("keydown", (e) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
@@ -111,58 +111,54 @@
         // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
-    };
-
-    // Close on link click
-    const handleLinkClick = () => closeMenu();
-
-    // Attach listeners
-    button.addEventListener("click", handleToggle);
-    const links = nav.querySelectorAll("a");
-    links.forEach((link) => link.addEventListener("click", handleLinkClick));
-    document.addEventListener("keydown", handleKeydown);
-
-    // Observer to sync state
-    const menuObserver = new MutationObserver((mutations) => {
-      const btn = document.querySelector("#menu_toggle");
-      const navEl = document.querySelector("#navigation_wrapper");
-      if (!btn || !navEl) return;
-
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          const isMenuOpen =
-            document.documentElement.classList.contains("overflow-hidden");
-          btn.setAttribute("aria-expanded", String(isMenuOpen));
-
-          if (isMenuOpen) {
-            // ⚡ Bolt: Handle external triggers
-            navEl.classList.remove("invisible");
-            navEl.classList.remove("translate-x-full");
-            navEl.classList.add("translate-x-0");
-          } else {
-            navEl.classList.add("translate-x-full");
-            navEl.classList.remove("translate-x-0");
-          }
-        }
-      });
     });
 
+    // ⚡ Reuse observer if already created
+    if (!menuObserver) {
+      menuObserver = new MutationObserver((mutations) => {
+        const btn = document.querySelector("#menu_toggle");
+        const navEl = document.querySelector("#navigation_wrapper");
+        if (!btn || !navEl) return;
+
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            const isMenuOpen =
+              document.documentElement.classList.contains("overflow-hidden");
+            btn.setAttribute("aria-expanded", String(isMenuOpen));
+
+            if (isMenuOpen) {
+              // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
+              navEl.classList.remove("invisible");
+              navEl.classList.remove("translate-x-full");
+              navEl.classList.add("translate-x-0");
+            } else {
+              navEl.classList.add("translate-x-full");
+              navEl.classList.remove("translate-x-0");
+              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
+              // But if closed externally, ensure hidden eventually.
+              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
+              // Since this observer watches the *result*, if it's already closed, hide it.
+              if (
+                navEl.classList.contains("translate-x-full") &&
+                !navEl.classList.contains("transitioning")
+              ) {
+                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // ⚡ Always ensure observer is connected to current documentElement
+    menuObserver.disconnect(); // Safety disconnect before reconnect
     menuObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-
-    // ⚡ Bolt: Register cleanup function
-    cleanupMenu = () => {
-      button.removeEventListener("click", handleToggle);
-      document.removeEventListener("keydown", handleKeydown);
-      links.forEach((link) =>
-        link.removeEventListener("click", handleLinkClick),
-      );
-      menuObserver.disconnect();
-    };
   }
 
-  // Initialize on load and after swap
-  document.addEventListener("astro:page-load", initMenu);
+  menuToggle();
+  // Runs on view transitions navigation
+  document.addEventListener("astro:after-swap", menuToggle);
 </script>
