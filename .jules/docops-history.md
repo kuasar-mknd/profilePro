@@ -9,3 +9,4 @@
 | 2026-01-11 | Documentation & Workflows | src/env.d.ts, docs/ENV.md, docs/ARCHITECTURE.md, .github/workflows/ci.yml, package.json                                 | Added type safety for env vars; Documented asset pipeline; Hardened CI permissions; Added missing dev dependency.   |
 | 2026-02-19 | Docs & Workflows | agent.md, CONTRIBUTING.md, .github/workflows/deploy.yml, package.json, .husky/pre-commit | Updated docs to use Bun; Fixed deploy workflow Node version; Optimized husky hooks. |
 | 2026-02-20 | Docs & Workflows | README.md, CONTRIBUTING.md, .github/workflows/deploy.yml, docs/ARCHITECTURE.md | Corrected Playwright docs; Hardened deploy workflow with secrets; Documented pipeline |
+| 2026-02-20 | Dependencies | package.json, package-lock.json, bun.lock | Moved build dependencies (sharp, astro-compress, rollup-plugin-visualizer) to `dependencies` and fixed `prepare` script to enable production builds on Render |
