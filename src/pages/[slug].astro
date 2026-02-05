@@ -5,6 +5,7 @@ import { Icon } from "astro-icon/components";
 import Base from "../layouts/Base.astro";
 
 import { getCollection } from "astro:content";
+import { getReadingTime } from "../utils/readingTime";
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection("project");
@@ -19,8 +20,7 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 // Calculate Reading Time
-const wordCount = entry.body.split(/\s+/g).length;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(entry.body);
 ---
 
 <Base postData={entry}>
@@ -106,59 +106,66 @@ const readingTime = Math.ceil(wordCount / 200);
 </Base>
 
 <script>
-  const shareBtn = document.getElementById("share-btn");
-  const announcer = document.getElementById("share-announcer");
+  function initShare() {
+    const shareBtn = document.getElementById("share-btn");
+    const announcer = document.getElementById("share-announcer");
 
-  if (shareBtn) {
-    shareBtn.addEventListener("click", async () => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: document.title,
-            url: window.location.href,
-          });
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            console.error(
-              "Error sharing:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
-        }
-      } else {
-        // Fallback: copy to clipboard
-        try {
-          await navigator.clipboard.writeText(window.location.href);
-
-          // 🎨 Palette: Haptic Feedback
-          if (navigator.vibrate) navigator.vibrate([50]);
-
-          if (!shareBtn.classList.contains("copied")) {
-            shareBtn.classList.add("copied");
-
-            // Accessibility update
-            if (announcer) {
-              announcer.textContent = "Lien copié dans le presse-papiers";
+    if (shareBtn) {
+      // ⚡ Bolt: Cleanup previous listeners not needed as button is replaced on swap
+      shareBtn.addEventListener("click", async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: document.title,
+              url: window.location.href,
+            });
+          } catch (err) {
+            // 🛡️ Sentinel: Dev-only logging
+            if (import.meta.env.DEV) {
+              console.error(
+                "Error sharing:",
+                err instanceof Error ? err.message : "Unknown error",
+              );
             }
-
-            setTimeout(() => {
-              shareBtn.classList.remove("copied");
-              if (announcer) {
-                announcer.textContent = "";
-              }
-            }, 2000);
           }
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            console.error(
-              "Failed to copy:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
+        } else {
+          // Fallback: copy to clipboard
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+
+            // 🎨 Palette: Haptic Feedback
+            if (navigator.vibrate) navigator.vibrate([50]);
+
+            if (!shareBtn.classList.contains("copied")) {
+              shareBtn.classList.add("copied");
+
+              // Accessibility update
+              if (announcer) {
+                announcer.textContent = "Lien copié dans le presse-papiers";
+              }
+
+              setTimeout(() => {
+                shareBtn.classList.remove("copied");
+                if (announcer) {
+                  announcer.textContent = "";
+                }
+              }, 2000);
+            }
+          } catch (err) {
+            // 🛡️ Sentinel: Dev-only logging
+            if (import.meta.env.DEV) {
+              console.error(
+                "Failed to copy:",
+                err instanceof Error ? err.message : "Unknown error",
+              );
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
+
+  // Initialize on load and after view transitions
+  // ⚡ Bolt: Fixes event listener not attaching on navigation
+  document.addEventListener("astro:page-load", initShare);
 </script>
