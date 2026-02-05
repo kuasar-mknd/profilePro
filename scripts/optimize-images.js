@@ -80,7 +80,7 @@ async function processImages() {
           })
           .avif({
             quality: CONFIG.quality,
-            effort: 9,
+            effort: 4,
             chromaSubsampling: "4:4:4",
           })
           .toFile(outputPath);
@@ -95,7 +95,7 @@ async function processImages() {
           })
           .avif({
             quality: CONFIG.quality,
-            effort: 9, // Compression CPU intensive (mais fichier + petit)
+            effort: 4, // Compression équilibrée (CPU/Temps)
             chromaSubsampling: "4:4:4", // Garde 100% des informations de couleur
           })
           .toFile(outputPath);
