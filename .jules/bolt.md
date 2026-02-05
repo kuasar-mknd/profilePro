@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-27 - Strict Listener Cleanup in View Transitions
+
+**Learning:** When using `document.addEventListener` inside component scripts (like for `keydown` handling), these listeners persist across View Transition swaps even if the component is re-rendered. Without strict cleanup, this causes listeners to stack (1 -> 2 -> 3...), leading to memory leaks and erratic behavior (e.g., toggling menus multiple times).
+**Action:** Use a module-level variable to store a cleanup closure. Inside the initialization function (triggered by `astro:page-load`), first call this cleanup closure (if it exists) to remove old listeners, then define the new listeners and assign a new cleanup closure. This guarantees O(1) active listeners regardless of navigation count.
