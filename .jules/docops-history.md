@@ -10,3 +10,4 @@
 | 2026-02-19 | Docs & Workflows | agent.md, CONTRIBUTING.md, .github/workflows/deploy.yml, package.json, .husky/pre-commit | Updated docs to use Bun; Fixed deploy workflow Node version; Optimized husky hooks. |
 | 2026-02-20 | Docs & Workflows | README.md, CONTRIBUTING.md, .github/workflows/deploy.yml, docs/ARCHITECTURE.md | Corrected Playwright docs; Hardened deploy workflow with secrets; Documented pipeline |
 | 2026-02-20 | Dependencies | package.json, package-lock.json, bun.lock | Moved build dependencies (sharp, astro-compress, rollup-plugin-visualizer) to `dependencies` and fixed `prepare` script to enable production builds on Render |
+| 2026-02-20 | Workflows | .github/workflows/ci.yml, .github/workflows/deploy.yml | Pinned Bun version to 1.2.14 to avoid lockfile version mismatches in CI/CD |
