@@ -73,7 +73,7 @@ const chunk = <T,>(arr: T[], size: number) =>
     arr.slice(i * size, i * size + size),
   );
 
-const optimizedImages: (typeof galleryImages[0] & { lightboxSrc: string })[] =
+const optimizedImages: ((typeof galleryImages)[0] & { lightboxSrc: string })[] =
   [];
 for (const batch of chunk(galleryImages, 4)) {
   const processed = await Promise.all(
