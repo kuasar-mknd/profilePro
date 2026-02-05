@@ -43,6 +43,7 @@ const readingTime = Math.ceil(wordCount / 200);
           class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3"
           aria-label="Partager cet article"
           title="Partager cet article"
+          aria-pressed="false"
         >
           <div class="grid grid-cols-1 grid-rows-1 place-items-center">
             <!-- Normal State -->
@@ -136,6 +137,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
           if (!shareBtn.classList.contains("copied")) {
             shareBtn.classList.add("copied");
+            shareBtn.setAttribute("aria-pressed", "true");
 
             // Accessibility update
             if (announcer) {
@@ -144,6 +146,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
             setTimeout(() => {
               shareBtn.classList.remove("copied");
+              shareBtn.setAttribute("aria-pressed", "false");
               if (announcer) {
                 announcer.textContent = "";
               }
