@@ -499,6 +499,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.classList.remove("loading");
+        submitButton.removeAttribute("aria-busy");
       }
       (form.querySelector("input") as HTMLInputElement)?.focus();
     });
@@ -659,6 +660,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       if (submitButton) {
         submitButton.classList.add("loading");
         submitButton.disabled = true;
+        submitButton.setAttribute("aria-busy", "true");
       }
 
       try {
@@ -728,6 +730,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
         if (submitButton) {
           submitButton.classList.remove("loading");
+          submitButton.removeAttribute("aria-busy");
         }
         showError("Une erreur est survenue. Veuillez réessayer plus tard.");
         form.setAttribute("aria-describedby", "form-error-message");

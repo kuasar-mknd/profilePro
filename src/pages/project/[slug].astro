@@ -211,6 +211,7 @@ if (entry.data.type === "video" && entry.data.image) {
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
           aria-label="Partager ce projet"
+          aria-pressed="false"
         >
           <div
             class="grid grid-cols-1 grid-rows-1 place-items-center px-6 py-3"
@@ -328,6 +329,7 @@ if (entry.data.type === "video" && entry.data.image) {
 
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
+                  shareBtn.setAttribute("aria-pressed", "true");
 
                   // Accessibility update
                   if (announcer) {
@@ -336,6 +338,7 @@ if (entry.data.type === "video" && entry.data.image) {
 
                   setTimeout(() => {
                     shareBtn.classList.remove("copied");
+                    shareBtn.setAttribute("aria-pressed", "false");
                     if (announcer) {
                       announcer.textContent = "";
                     }
@@ -386,9 +389,13 @@ if (entry.data.type === "video" && entry.data.image) {
                   announcer.textContent = "Code copié dans le presse-papiers";
                 }
 
+                // Update label for direct focus feedback
+                btn.setAttribute("aria-label", "Copié !");
+
                 setTimeout(() => {
                   btn.innerHTML =
                     '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                  btn.setAttribute("aria-label", "Copier le code");
                   if (announcer) {
                     announcer.textContent = "";
                   }
