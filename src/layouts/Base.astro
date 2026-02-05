@@ -194,8 +194,7 @@ if (postData?.data?.image) {
     <!-- Scroll Sentinel for Back to Top visibility -->
     <div
       id="scroll-sentinel"
-      class="absolute top-0 w-full h-[300px] pointer-events-none -z-50"
-      style="contain: strict;"
+      class="absolute top-0 w-full h-[300px] pointer-events-none -z-50 [contain:strict]"
       aria-hidden="true"
     >
     </div>
@@ -224,7 +223,7 @@ if (postData?.data?.image) {
       class={`grow ${noPadding ? "" : "pt-24"}`}
       transition:animate="fade"
       tabindex="-1"
-      style="contain: layout;"
+      class="[contain:layout]"
     >
       <slot />
     </main>
