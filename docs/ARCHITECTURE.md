@@ -105,9 +105,8 @@ Workflows are defined in `.github/workflows/`:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
     - **Dependency Review**: Checks for vulnerable packages in PRs.
 
-3.  **Deploy** (`deploy.yml`):
-    - Deploys to Cloudflare Pages via GitHub Actions.
-    - Injects `PUBLIC_` secrets (Web3Forms, Analytics) during the build process to ensure functionality in the static output.
+3.  **Deploy**:
+    - Deploys to Cloudflare Pages (typically handled via Cloudflare's own integration or a separate deploy workflow).
 
 ---
 

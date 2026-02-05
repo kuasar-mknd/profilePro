@@ -50,7 +50,7 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
     - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
-    - Playwright démarre automatiquement le serveur de développement (via `bun run dev`).
+    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `bun run dev` dans un autre terminal avant les tests.
 5.  **Build failed (assets)** :
     - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
