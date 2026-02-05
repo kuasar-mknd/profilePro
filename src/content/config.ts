@@ -1,4 +1,5 @@
 import { defineCollection, reference, z } from "astro:content";
+import { isValidUrl } from "../utils/security";
 
 const authorCollection = defineCollection({
   type: "data", // v2.5.0 and later
@@ -21,7 +22,13 @@ const projectCollection = defineCollection({
       author: reference("author"),
       pubDate: z.date(),
       type: z.enum(["video", "photo", "general"]).optional().default("general"),
-      videoUrl: z.string().url().optional(), // For video projects (YouTube/Vimeo ID or URL)
+      videoUrl: z
+        .string()
+        .url()
+        .refine((url) => isValidUrl(url), {
+          message: "URL must be a valid HTTP or HTTPS URL",
+        })
+        .optional(), // For video projects (YouTube/Vimeo ID or URL)
       gallery: z.array(image()).optional(), // For photo projects
 
       // SEO Fields
