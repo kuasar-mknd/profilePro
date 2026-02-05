@@ -39,9 +39,3 @@
 **Vulnerability:** XSS via JSON injection in `<script>` tags.
 **Learning:** `JSON.stringify` is not safe for generating HTML because it doesn't escape characters like `<` which can be used to close the script tag and inject arbitrary code.
 **Prevention:** Use `safeJson` utility which escapes potentially dangerous characters when embedding JSON in HTML.
-
-## 2025-02-18 - CSP Hardening via WAAPI
-
-**Vulnerability:** Inline styles (e.g., `style="contain: strict"`) and JS-driven style updates (e.g., `element.style.transform = ...`) often force the use of `style-src 'unsafe-inline'`, weakening XSS protection.
-**Learning:** The Web Animations API (WAAPI) bypasses CSP `style-src` restrictions because it doesn't use the `style` attribute, allowing high-performance dynamic animations without compromising security.
-**Prevention:** Replaced all static inline styles with Tailwind arbitrary values (e.g., `[contain:strict]`) and refactored dynamic animations to use `element.animate()`. This allows a strict CSP without `unsafe-inline`.

@@ -73,7 +73,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 ---
 
 <div
-  class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group [contain:layout_style]"
+  class="video-player-wrapper w-full aspect-video rounded-xl overflow-hidden shadow-xl bg-black relative group"
+  style="contain: layout style;"
   data-poster-url={posterUrl}
 >
   <Skeleton class="absolute inset-0 z-0" />
@@ -107,8 +108,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
               role="presentation"
             >
               <div
-                class="absolute inset-0 rounded-full border-t-2 border-white animate-spin opacity-0 transition-opacity duration-300 motion-reduce:animate-none [contain:strict]"
+                class="absolute inset-0 rounded-full border-t-2 border-white animate-spin opacity-0 transition-opacity duration-300 motion-reduce:animate-none"
                 id={`spinner-${videoId}`}
+                style="contain: strict;"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
