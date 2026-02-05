@@ -1555,7 +1555,7 @@
 
     "isomorphic-fetch": ["isomorphic-fetch@3.0.0", "", { "dependencies": { "node-fetch": "^2.6.1", "whatwg-fetch": "^3.4.1" } }, "sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA=="],
 
-    "jackspeak": ["jackspeak@4.1.2", "", { "dependencies": { "@isaacs/cliui": "^9.0.0" } }, "sha512-gu/nHjAF9VNicuQS/AOO7AYrNDBbhcM4iFDbOmshcDrpiTuuica1Jk9Jd5XEymIIkDf4UxrqZec8BDX06esu3w=="],
+    "jackspeak": ["jackspeak@4.2.0", "", { "dependencies": { "@isaacs/cliui": "^9.0.0" } }, "sha512-BkhUe04oZOTwnfvyPIWEHet40vNSU1VA2Vg8NbJ2cP7MEFWcaIG6B1Y7BWalIwdkUcjJmg1t+ZdIK7qsRJ37Bg=="],
 
     "jake": ["jake@10.9.4", "", { "dependencies": { "async": "^3.2.6", "filelist": "^1.0.4", "picocolors": "^1.1.1" }, "bin": "bin/cli.js" }, "sha512-wpHYzhxiVQL+IV05BLE2Xn34zW1S223hvjtqk0+gsPrwd/8JNLXJgZZM/iPFsYc1xyphF+6M6EvdE5E9MBGkDA=="],
 

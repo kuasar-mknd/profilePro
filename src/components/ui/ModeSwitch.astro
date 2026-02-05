@@ -35,7 +35,7 @@ import { Icon } from "astro-icon/components";
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
-  <span class="sr-only theme-live-region" aria-live="polite"></span>
+  <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
 <script>
@@ -60,34 +60,6 @@ import { Icon } from "astro-icon/components";
     window.dispatchEvent(
       new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
     );
-  };
-
-  // 🎨 Palette: Global Theme Change Handler
-  // Moved to module scope to avoid closure staleness and memory leaks
-  const handleThemeChange = (e: Event) => {
-    const detail = (e as CustomEvent).detail;
-    const isDark = detail.isDark;
-
-    // Dynamically query elements to ensure we have the current DOM references
-    const buttons = document.querySelectorAll(".theme-toggle-btn");
-    // Only update the first live region found to avoid duplicate announcements
-    const liveRegion = document.querySelector(".theme-live-region");
-
-    const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-    const title = `${label} (Shift+T)`;
-
-    buttons.forEach((btn) => {
-      btn.setAttribute("aria-label", label);
-      btn.setAttribute("title", title);
-      const span = btn.querySelector(".sr-only");
-      if (span) span.textContent = label;
-    });
-
-    if (liveRegion) {
-      liveRegion.textContent = isDark
-        ? "Mode sombre activé"
-        : "Mode clair activé";
-    }
   };
 
   // 🎨 Palette: Global Keyboard Shortcut (Shift+T)
@@ -118,8 +90,9 @@ import { Icon } from "astro-icon/components";
 
   function initThemeToggle() {
     const buttons = document.querySelectorAll(".theme-toggle-btn");
+    const liveRegion = document.getElementById("theme-live-region");
 
-    const updateLocalLabels = (isDark: boolean) => {
+    const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
       const title = `${label} (Shift+T)`;
       buttons.forEach((btn) => {
@@ -128,16 +101,26 @@ import { Icon } from "astro-icon/components";
         const span = btn.querySelector(".sr-only");
         if (span) span.textContent = label;
       });
+
+      if (announce && liveRegion) {
+        liveRegion.textContent = isDark
+          ? "Mode sombre activé"
+          : "Mode clair activé";
+      }
     };
 
     // Initialize state
     const isDark = document.documentElement.classList.contains("dark");
-    updateLocalLabels(isDark);
+    updateLabels(isDark);
 
     // ⚡ Bolt: Listen for global theme changes to sync all buttons
-    // Remove before add ensures strictly one listener
     window.removeEventListener("theme-change", handleThemeChange);
     window.addEventListener("theme-change", handleThemeChange);
+
+    function handleThemeChange(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      updateLabels(detail.isDark, true);
+    }
 
     buttons.forEach((btn) => {
       // ⚡ Bolt: Robust cleanup and re-binding
