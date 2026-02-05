@@ -27,7 +27,8 @@ const projectCollection = defineCollection({
         .string()
         .url()
         .refine((url) => isValidUrl(url), {
-          message: "Invalid URL or insecure protocol (must be http, https or /)",
+          message:
+            "Invalid URL or insecure protocol (must be http, https or /)",
         })
         .optional(), // For video projects (YouTube/Vimeo ID or URL)
       gallery: z.array(image()).optional(), // For photo projects
