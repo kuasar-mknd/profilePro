@@ -33,6 +33,58 @@
    */
   let menuObserver: MutationObserver | null = null;
 
+  // ⚡ Bolt: Shared actions (module-scoped)
+  const closeMenuAction = (button: Element, nav: Element) => {
+    document.documentElement.classList.remove("overflow-hidden");
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-label", "Ouvrir le menu");
+    button.setAttribute("title", "Ouvrir le menu");
+    button.removeAttribute("aria-keyshortcuts");
+    nav.classList.add("translate-x-full");
+    nav.classList.remove("translate-x-0");
+
+    // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
+    setTimeout(() => {
+      if (button.getAttribute("aria-expanded") === "false") {
+        nav.classList.add("invisible");
+        // ⚡ Bolt: Remove GPU layer promotion to free memory
+        (nav as HTMLElement).style.willChange = "auto";
+      }
+    }, 300);
+  };
+
+  const openMenuAction = (button: Element, nav: Element) => {
+    // ⚡ Bolt: Make visible immediately so transition can be seen
+    nav.classList.remove("invisible");
+
+    // ⚡ Bolt: Promote layer for smooth animation
+    (nav as HTMLElement).style.willChange = "transform";
+
+    // Force reflow to ensure transition triggers
+    void (nav as HTMLElement).offsetWidth;
+
+    document.documentElement.classList.add("overflow-hidden");
+    button.setAttribute("aria-expanded", "true");
+    button.setAttribute("aria-label", "Fermer le menu");
+    button.setAttribute("title", "Fermer le menu (Esc)");
+    button.setAttribute("aria-keyshortcuts", "Escape");
+    nav.classList.remove("translate-x-full");
+    nav.classList.add("translate-x-0");
+  };
+
+  // ⚡ Bolt: Global Escape handler (module-scoped)
+  const handleEscapeKey = (e: KeyboardEvent) => {
+    const button = document.querySelector("#menu_toggle");
+    const nav = document.querySelector("#navigation_wrapper");
+    if (!button || !nav) return;
+
+    if (e.key === "Escape" && button.getAttribute("aria-expanded") === "true") {
+      closeMenuAction(button, nav);
+      // Return focus to the toggle button
+      (button as HTMLElement).focus();
+    }
+  };
+
   function menuToggle() {
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
@@ -42,76 +94,28 @@
     if ((button as HTMLElement).dataset.initialized === "true") return;
     (button as HTMLElement).dataset.initialized = "true";
 
-    // 🎨 Palette: Encapsulated close logic for reusability
-    const closeMenu = () => {
-      document.documentElement.classList.remove("overflow-hidden");
-      button.setAttribute("aria-expanded", "false");
-      button.setAttribute("aria-label", "Ouvrir le menu");
-      button.setAttribute("title", "Ouvrir le menu");
-      button.removeAttribute("aria-keyshortcuts");
-      nav.classList.add("translate-x-full");
-      nav.classList.remove("translate-x-0");
-
-      // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
-      setTimeout(() => {
-        if (button.getAttribute("aria-expanded") === "false") {
-          nav.classList.add("invisible");
-          // ⚡ Bolt: Remove GPU layer promotion to free memory
-          (nav as HTMLElement).style.willChange = "auto";
-        }
-      }, 300);
-    };
-
-    const openMenu = () => {
-      // ⚡ Bolt: Make visible immediately so transition can be seen
-      nav.classList.remove("invisible");
-
-      // ⚡ Bolt: Promote layer for smooth animation
-      (nav as HTMLElement).style.willChange = "transform";
-
-      // Force reflow to ensure transition triggers
-      void (nav as HTMLElement).offsetWidth;
-
-      document.documentElement.classList.add("overflow-hidden");
-      button.setAttribute("aria-expanded", "true");
-      button.setAttribute("aria-label", "Fermer le menu");
-      button.setAttribute("title", "Fermer le menu (Esc)");
-      button.setAttribute("aria-keyshortcuts", "Escape");
-      nav.classList.remove("translate-x-full");
-      nav.classList.add("translate-x-0");
-    };
-
+    // Bind click events
     button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-      // 🎨 Palette: Announce menu state change to screen readers
       const liveRegion = document.getElementById("menu-live-region");
 
       if (isExpanded) {
-        closeMenu();
+        closeMenuAction(button, nav);
         if (liveRegion) liveRegion.textContent = "Menu fermé";
       } else {
-        openMenu();
+        openMenuAction(button, nav);
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
     });
 
     nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
+      link.addEventListener("click", () => closeMenuAction(button, nav));
     });
 
     // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "Escape" &&
-        button.getAttribute("aria-expanded") === "true"
-      ) {
-        closeMenu();
-        // Return focus to the toggle button
-        (button as HTMLElement).focus();
-      }
-    });
+    // ⚡ Bolt: Ensure single listener registration
+    document.removeEventListener("keydown", handleEscapeKey);
+    document.addEventListener("keydown", handleEscapeKey);
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
