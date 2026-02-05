@@ -562,11 +562,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     emailInput?.addEventListener("input", () => {
-      const isValid = isValidEmail(emailInput.value);
-      // 🎨 Palette: Validation Icon
-      updateValidationIcon(emailInput, isValid);
-
-      if (emailInput.hasAttribute("aria-invalid") && isValid) {
+      if (
+        emailInput.hasAttribute("aria-invalid") &&
+        isValidEmail(emailInput.value)
+      ) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
