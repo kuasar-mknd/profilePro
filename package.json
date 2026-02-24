@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "Portfolio professionnel de Samuel Dulex - Spécialiste en création de contenu vidéo et captation d'événements",
+  "description": "Portfolio professionnel de Samuel Dulex - Sp\u00e9cialiste en cr\u00e9ation de contenu vid\u00e9o et captation d'\u00e9v\u00e9nements",
   "author": {
     "name": "Samuel Dulex",
     "url": "https://kuasar.xyz"
@@ -26,7 +26,7 @@
     "images": "node scripts/optimize-images.js",
     "dev": "bun run images && astro dev",
     "start": "bun run images && astro dev",
-    "build": "bun run images && astro build && node scripts/generate-csp.mjs",
+    "build": "bun run images && NODE_OPTIONS=\"--max-old-space-size=4096\" astro build && node scripts/generate-csp.mjs",
     "preview": "bun run images && astro preview",
     "astro": "astro",
     "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
@@ -39,7 +39,7 @@
     "lighthouse": "lhci autorun",
     "analyze": "ANALYZE=true bun run build && open dist/stats.html",
     "check": "bun run format:check && bun run lint && bun run typecheck",
-    "typecheck": "astro check",
+    "typecheck": "NODE_OPTIONS=\"--max-old-space-size=4096\" astro check",
     "test:e2e": "playwright test",
     "prepare": "husky || true",
     "lint-staged": "lint-staged"
