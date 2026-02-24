@@ -32,8 +32,15 @@
    * Added initialization guard to prevent duplicate observers and handlers
    */
   let menuObserver: MutationObserver | null = null;
+  let cleanupMenu: (() => void) | null = null;
 
-  function menuToggle() {
+  function initMenu() {
+    // ⚡ Bolt: Cleanup previous listeners to prevent memory leaks on navigation
+    if (cleanupMenu) {
+      cleanupMenu();
+      cleanupMenu = null;
+    }
+
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
@@ -102,7 +109,7 @@
 
     // 🎨 Palette: Close menu on Escape key for accessibility
     // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
@@ -111,7 +118,9 @@
         // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleEscape);
 
     // ⚡ Reuse observer if already created
     if (!menuObserver) {
@@ -134,10 +143,6 @@
             } else {
               navEl.classList.add("translate-x-full");
               navEl.classList.remove("translate-x-0");
-              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
-              // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
               if (
                 navEl.classList.contains("translate-x-full") &&
                 !navEl.classList.contains("transitioning")
@@ -156,9 +161,17 @@
       attributes: true,
       attributeFilter: ["class"],
     });
+
+    // ⚡ Register cleanup
+    cleanupMenu = () => {
+      document.removeEventListener("keydown", handleEscape);
+      if (menuObserver) {
+        menuObserver.disconnect();
+        // Note: We don't null menuObserver to reuse the instance
+      }
+    };
   }
 
-  menuToggle();
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", menuToggle);
+  // Use astro:page-load for initial load and subsequent navigations
+  document.addEventListener("astro:page-load", initMenu);
 </script>
