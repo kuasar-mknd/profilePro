@@ -11,9 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Quality is already checked in CI workflow, but we re-check here to be safe before deploy
-  # Or we could rely on CI status check if configured in repo settings.
-  # For safety, we keep it but it runs in parallel with other checks if needed.
   quality:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -27,7 +24,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: "1.2.14"
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Run Quality Checks
@@ -52,7 +49,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: "1.2.14"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -68,6 +65,9 @@ jobs:
       - name: Build Astro
         run: bun run build
         timeout-minutes: 20
+        env:
+          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
