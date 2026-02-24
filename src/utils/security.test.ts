@@ -1,5 +1,13 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput, isValidEmail, safeJson, isValidUrl, YOUTUBE_ID_REGEX, VIMEO_ID_REGEX } from "./security";
+import {
+  sanitizeUrl,
+  sanitizeInput,
+  isValidEmail,
+  safeJson,
+  isValidUrl,
+  YOUTUBE_ID_REGEX,
+  VIMEO_ID_REGEX,
+} from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -140,7 +148,9 @@ describe("Security Utilities", () => {
     });
 
     it("should allow mailto when option is enabled", () => {
-      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(true);
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
     });
 
     it("should return false for invalid inputs", () => {
@@ -161,7 +171,7 @@ describe("Security Utilities", () => {
           `https://www.youtube.com/u/w/${id}`,
           `https://www.youtube.com/watch?v=${id}&feature=shared`,
         ];
-        formats.forEach(url => {
+        formats.forEach((url) => {
           const match = url.match(YOUTUBE_ID_REGEX);
           expect(match).not.toBeNull();
           expect(match![1]).toBe(id);
