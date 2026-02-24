@@ -65,22 +65,12 @@ if (explicitImages && explicitImages.length > 0) {
     .sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
-// ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
-// Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-const optimizedImages = await Promise.all(
-  galleryImages.map(async (img) => {
-    const optimized = await getImage({
-      src: img.src,
-      width: 1600,
-      format: "webp",
-      quality: 80,
-    });
-    return {
-      ...img,
-      lightboxSrc: optimized.src,
-    };
-  }),
-);
+// ⚡ Bolt: Use source AVIF directly for Lightbox (already optimized to 1600px by scripts/optimize-images.js)
+// This drastically reduces build time and memory usage by avoiding redundant re-encoding of hundreds of images.
+const optimizedImages = galleryImages.map((img) => ({
+  ...img,
+  lightboxSrc: img.src.src,
+}));
 
 // Column class mapping
 const columnClasses = {
@@ -102,10 +92,10 @@ const columnClasses = {
           {/* ⚡ Bolt: Smart Loading - Eager load priority images, lazy load the rest */}
           <Picture
             src={image.src}
-            widths={[400, 800]}
+            widths={[800]}
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-            formats={["avif", "webp"]}
-            fallbackFormat="webp"
+            formats={["avif"]}
+            fallbackFormat="avif"
             alt={image.alt || `Photo ${index + 1}`}
             class="gallery-image focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             data-gallery-image
