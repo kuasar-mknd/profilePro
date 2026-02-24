@@ -65,22 +65,29 @@ if (explicitImages && explicitImages.length > 0) {
     .sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
-// ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
+// ⚡ Bolt: Pre-generate optimized full-size images for Lightbox with bounded concurrency
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-const optimizedImages = await Promise.all(
-  galleryImages.map(async (img) => {
-    const optimized = await getImage({
-      src: img.src,
-      width: 1600,
-      format: "webp",
-      quality: 80,
-    });
-    return {
-      ...img,
-      lightboxSrc: optimized.src,
-    };
-  }),
-);
+const CONCURRENCY_LIMIT = 5;
+const optimizedImages = [];
+
+for (let i = 0; i < galleryImages.length; i += CONCURRENCY_LIMIT) {
+  const chunk = galleryImages.slice(i, i + CONCURRENCY_LIMIT);
+  const optimizedChunk = await Promise.all(
+    chunk.map(async (img) => {
+      const optimized = await getImage({
+        src: img.src,
+        width: 1600,
+        format: "webp",
+        quality: 80,
+      });
+      return {
+        ...img,
+        lightboxSrc: optimized.src,
+      };
+    }),
+  );
+  optimizedImages.push(...optimizedChunk);
+}
 
 // Column class mapping
 const columnClasses = {
