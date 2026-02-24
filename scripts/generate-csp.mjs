@@ -25,25 +25,27 @@ async function main() {
   const scriptHashes = new Set();
   const styleHashes = new Set();
 
-  // 2. Extract inline scripts and styles
-  for (const file of htmlFiles) {
-    const content = await fs.readFile(file, "utf-8");
-    const $ = cheerio.load(content);
+  // 2. Extract inline scripts and styles in parallel
+  await Promise.all(
+    htmlFiles.map(async (file) => {
+      const content = await fs.readFile(file, "utf-8");
+      const $ = cheerio.load(content);
 
-    $("script").each((_, el) => {
-      const inlineContent = $(el).html();
-      if (inlineContent && inlineContent.trim().length > 0) {
-        scriptHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
-      }
-    });
+      $("script").each((_, el) => {
+        const inlineContent = $(el).html();
+        if (inlineContent && inlineContent.trim().length > 0) {
+          scriptHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
+        }
+      });
 
-    $("style").each((_, el) => {
-      const inlineContent = $(el).html();
-      if (inlineContent && inlineContent.trim().length > 0) {
-        styleHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
-      }
-    });
-  }
+      $("style").each((_, el) => {
+        const inlineContent = $(el).html();
+        if (inlineContent && inlineContent.trim().length > 0) {
+          styleHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
+        }
+      });
+    }),
+  );
 
   console.log(
     `✨ Found ${scriptHashes.size} inline scripts and ${styleHashes.size} inline styles.`,
