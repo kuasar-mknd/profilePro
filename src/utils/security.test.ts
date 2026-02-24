@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,45 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("isValidUrl", () => {
+    it("should return true for valid http and https URLs", () => {
+      expect(isValidUrl("http://example.com")).toBe(true);
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("HTTPS://EXAMPLE.COM")).toBe(true);
+    });
+
+    it("should return true for relative paths", () => {
+      expect(isValidUrl("/")).toBe(true);
+      expect(isValidUrl("/path/to/resource")).toBe(true);
+    });
+
+    it("should handle mailto protocol based on options", () => {
+      expect(isValidUrl("mailto:user@example.com")).toBe(false);
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+      expect(isValidUrl("MAILTO:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+    });
+
+    it("should return false for dangerous protocols", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+      expect(isValidUrl("data:text/html,test")).toBe(false);
+      expect(isValidUrl("vbscript:msgbox(1)")).toBe(false);
+    });
+
+    it("should return false for invalid types and empty strings", () => {
+      expect(isValidUrl("")).toBe(false);
+      // @ts-expect-error - testing invalid input type
+      expect(isValidUrl(null)).toBe(false);
+      // @ts-expect-error - testing invalid input type
+      expect(isValidUrl(undefined)).toBe(false);
+      // @ts-expect-error - testing invalid input type
+      expect(isValidUrl(123)).toBe(false);
     });
   });
 });
