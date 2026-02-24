@@ -12,8 +12,7 @@
  * @param value - The value to serialize
  * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function safeJson(value: any): string {
+export function safeJson(value: unknown): string {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")

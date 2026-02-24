@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, safeJson } from "./security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
@@ -58,6 +58,19 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("safeJson", () => {
+    it("should escape dangerous characters", () => {
+      const input = { html: "<script>&</script>", unicode: "\u2028\u2029" };
+      const output = safeJson(input);
+      expect(output).not.toContain("<");
+      expect(output).not.toContain(">");
+      expect(output).not.toContain("&");
+      expect(output).toContain("\\u003c");
+      expect(output).toContain("\\u003e");
+      expect(output).toContain("\\u0026");
     });
   });
 });

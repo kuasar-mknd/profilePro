@@ -12,13 +12,13 @@ const { projects: initialProjects } = Astro.props;
 
 // Fetch all project images
 const projects = initialProjects || (await getCollection("project"));
-const projectImages = projects.map((p) => ({
-  src: p.data.image,
+const projectImages = projects.filter((p) => p.data.image).map((p) => ({
+  src: p.data.image!,
   alt: p.data.title,
 }));
 
 // Shuffle images function
-function shuffle(array: any[]) {
+function shuffle<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
