@@ -7,6 +7,7 @@
  * 2. Explicit image array: <ImageGallery images={myImagesArray} />
  */
 import { Picture, getImage } from "astro:assets";
+import { limitConcurrency } from "../../utils/async";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 import EmptyState from "./EmptyState.astro";
@@ -67,8 +68,7 @@ if (explicitImages && explicitImages.length > 0) {
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-const optimizedImages = await Promise.all(
-  galleryImages.map(async (img) => {
+const optimizedImages = await limitConcurrency(galleryImages, 3, async (img) => {
     const optimized = await getImage({
       src: img.src,
       width: 1600,
@@ -79,8 +79,7 @@ const optimizedImages = await Promise.all(
       ...img,
       lightboxSrc: optimized.src,
     };
-  }),
-);
+});
 
 // Column class mapping
 const columnClasses = {
