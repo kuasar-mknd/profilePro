@@ -240,6 +240,7 @@ if (entry.data.type === "video" && entry.data.image) {
 
       <!-- Script for interactions -->
       <script>
+        import { shareContent } from "../../utils/share";
         // Reading Progress
         const progressBar = document.getElementById("scroll-progress");
 
@@ -302,58 +303,29 @@ if (entry.data.type === "video" && entry.data.image) {
 
         if (shareBtn) {
           shareBtn.addEventListener("click", async () => {
-            if (navigator.share) {
-              try {
-                await navigator.share({
-                  title: document.title,
-                  url: window.location.href,
-                });
-              } catch (err) {
-                // 🛡️ Sentinel: Dev-only logging
-                if (import.meta.env.DEV) {
-                  console.error(
-                    "Error sharing:",
-                    err instanceof Error ? err.message : "Unknown error",
-                  );
+            const result = await shareContent();
+
+            if (result === "copied") {
+              if (!shareBtn.classList.contains("copied")) {
+                shareBtn.classList.add("copied");
+
+                // Accessibility update
+                if (announcer) {
+                  announcer.textContent = "Lien copié dans le presse-papiers";
                 }
-              }
-            } else {
-              // Fallback: Copy to clipboard
-              try {
-                await navigator.clipboard.writeText(window.location.href);
 
-                // 🎨 Palette: Visual, Audible, and Haptic Feedback
-                // Vibrate for 50ms on mobile devices
-                if (navigator.vibrate) navigator.vibrate([50]);
-
-                if (!shareBtn.classList.contains("copied")) {
-                  shareBtn.classList.add("copied");
-
-                  // Accessibility update
+                setTimeout(() => {
+                  shareBtn.classList.remove("copied");
                   if (announcer) {
-                    announcer.textContent = "Lien copié dans le presse-papiers";
+                    announcer.textContent = "";
                   }
-
-                  setTimeout(() => {
-                    shareBtn.classList.remove("copied");
-                    if (announcer) {
-                      announcer.textContent = "";
-                    }
-                  }, 2000);
-                }
-              } catch (err) {
-                // 🛡️ Sentinel: Dev-only logging
-                if (import.meta.env.DEV) {
-                  console.error("Failed to copy", err);
-                }
+                }, 2000);
               }
             }
           });
         }
-
         /**
          * 🎨 Palette: Add copy button to code blocks
-         * Wraps code blocks and adds a copy button for better developer experience
          */
         function addCopyButtons() {
           const announcer = document.getElementById("code-copy-announcer");

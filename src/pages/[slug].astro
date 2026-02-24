@@ -106,57 +106,30 @@ const readingTime = Math.ceil(wordCount / 200);
 </Base>
 
 <script>
+  import { shareContent } from "../utils/share";
+
   const shareBtn = document.getElementById("share-btn");
   const announcer = document.getElementById("share-announcer");
 
   if (shareBtn) {
     shareBtn.addEventListener("click", async () => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: document.title,
-            url: window.location.href,
-          });
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            console.error(
-              "Error sharing:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
+      const result = await shareContent();
+
+      if (result === "copied") {
+        if (!shareBtn.classList.contains("copied")) {
+          shareBtn.classList.add("copied");
+
+          // Accessibility update
+          if (announcer) {
+            announcer.textContent = "Lien copié dans le presse-papiers";
           }
-        }
-      } else {
-        // Fallback: copy to clipboard
-        try {
-          await navigator.clipboard.writeText(window.location.href);
 
-          // 🎨 Palette: Haptic Feedback
-          if (navigator.vibrate) navigator.vibrate([50]);
-
-          if (!shareBtn.classList.contains("copied")) {
-            shareBtn.classList.add("copied");
-
-            // Accessibility update
+          setTimeout(() => {
+            shareBtn.classList.remove("copied");
             if (announcer) {
-              announcer.textContent = "Lien copié dans le presse-papiers";
+              announcer.textContent = "";
             }
-
-            setTimeout(() => {
-              shareBtn.classList.remove("copied");
-              if (announcer) {
-                announcer.textContent = "";
-              }
-            }, 2000);
-          }
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            console.error(
-              "Failed to copy:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
+          }, 2000);
         }
       }
     });
