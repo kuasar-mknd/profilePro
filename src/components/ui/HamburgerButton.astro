@@ -31,7 +31,6 @@
    * ⚡ Bolt: HamburgerButton Performance Optimization
    * Added initialization guard to prevent duplicate observers and handlers
    */
-  let menuObserver: MutationObserver | null = null;
   let cleanupMenu: (() => void) | null = null;
 
   function initMenu() {
@@ -122,41 +121,41 @@
 
     document.addEventListener("keydown", handleEscape);
 
-    // ⚡ Reuse observer if already created
-    if (!menuObserver) {
-      menuObserver = new MutationObserver((mutations) => {
-        const btn = document.querySelector("#menu_toggle");
-        const navEl = document.querySelector("#navigation_wrapper");
-        if (!btn || !navEl) return;
+    // ⚡ Bolt: Create a new observer for each page load to capture current elements
+    const menuObserver = new MutationObserver((mutations) => {
+      // ⚡ Bolt: We can either reuse the closure-captured `button`/`nav` (which are fresh for this call)
+      // or look them up again. Since initMenu runs fresh, `button` and `nav` are correct.
+      // But we must check if they are still connected to DOM (they should be unless swapped out)
 
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            const isMenuOpen =
-              document.documentElement.classList.contains("overflow-hidden");
-            btn.setAttribute("aria-expanded", String(isMenuOpen));
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const isMenuOpen =
+            document.documentElement.classList.contains("overflow-hidden");
 
-            if (isMenuOpen) {
-              // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
-              navEl.classList.remove("invisible");
-              navEl.classList.remove("translate-x-full");
-              navEl.classList.add("translate-x-0");
-            } else {
-              navEl.classList.add("translate-x-full");
-              navEl.classList.remove("translate-x-0");
-              if (
-                navEl.classList.contains("translate-x-full") &&
-                !navEl.classList.contains("transitioning")
-              ) {
-                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
-              }
+          // Update aria-expanded if state changed externally
+          if (button.getAttribute("aria-expanded") !== String(isMenuOpen)) {
+             button.setAttribute("aria-expanded", String(isMenuOpen));
+          }
+
+          if (isMenuOpen) {
+            // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
+            nav.classList.remove("invisible");
+            nav.classList.remove("translate-x-full");
+            nav.classList.add("translate-x-0");
+          } else {
+            nav.classList.add("translate-x-full");
+            nav.classList.remove("translate-x-0");
+            if (
+              nav.classList.contains("translate-x-full") &&
+              !nav.classList.contains("transitioning")
+            ) {
+              // nav.classList.add("invisible"); // Might cut off animation if triggered during anim.
             }
           }
-        });
+        }
       });
-    }
+    });
 
-    // ⚡ Always ensure observer is connected to current documentElement
-    menuObserver.disconnect(); // Safety disconnect before reconnect
     menuObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
@@ -165,10 +164,7 @@
     // ⚡ Register cleanup
     cleanupMenu = () => {
       document.removeEventListener("keydown", handleEscape);
-      if (menuObserver) {
-        menuObserver.disconnect();
-        // Note: We don't null menuObserver to reuse the instance
-      }
+      menuObserver.disconnect();
     };
   }
 
