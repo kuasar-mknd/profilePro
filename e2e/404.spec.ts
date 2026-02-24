@@ -4,7 +4,8 @@ test.describe("404 Page", () => {
   test("should display 404 page for non-existent routes", async ({ page }) => {
     await page.goto("/this-page-does-not-exist-at-all");
 
-    await expect(page.locator("h1")).toContainText(/Oups/i);
+    // Using first() to avoid strict mode violation if other h1s exist (e.g. debug tools)
+    await expect(page.locator("h1").first()).toContainText(/Oups/i);
     await expect(page.locator("text=404")).toBeVisible();
   });
 
