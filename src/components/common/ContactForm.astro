@@ -369,6 +369,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
    * ⚡ Bolt: ContactForm Performance Optimization
    * Uses early return pattern and initialization guard to prevent duplicate bindings.
    */
+  interface Web3FormsResponse {
+    success: boolean;
+    message?: string;
+  }
+
   function initContactForm() {
     const form = document.getElementById("contact-form") as HTMLFormElement;
 
@@ -700,7 +705,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           body: JSON.stringify(data),
         });
 
-        const result = (await response.json()) as any;
+        const result = (await response.json()) as Web3FormsResponse;
 
         // 🛡️ Sentinel: Handle server-side rate limiting (429 Too Many Requests)
         if (response.status === 429) {
@@ -738,7 +743,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       } catch (error) {
         // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
         if (import.meta.env.DEV) {
-          console.error("Form submission failed:", error);
+          console.error("Form submission failed:", error); // eslint-disable-line no-console
         }
 
         if (submitButton) {

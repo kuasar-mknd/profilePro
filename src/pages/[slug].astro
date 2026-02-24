@@ -1,112 +1,126 @@
 ---
-import { Picture } from "astro:assets";
-import { Icon } from "astro-icon/components";
-
 import Base from "../layouts/Base.astro";
-
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
+import ProjectFilter from "../components/features/projects/ProjectFilter.astro";
+import LatestPosts from "../components/features/projects/LatestPosts.astro";
+import Tag from "../components/ui/Tag.astro";
+import CTASection from "../components/common/CTASection.astro";
+import { Icon } from "astro-icon/components";
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro";
 
 export async function getStaticPaths() {
-  const projectEntries = await getCollection("project");
-
-  return projectEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
+  const projects = await getCollection("project");
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
   }));
 }
-const { entry } = Astro.props;
 
-const { Content } = await entry.render();
+const { project } = Astro.props;
+const { Content } = await render(project);
 
-// Calculate Reading Time
-const wordCount = entry.body.split(/\s+/g).length;
-const readingTime = Math.ceil(wordCount / 200);
+const allProjects = await getCollection("project");
+const tags = [...new Set(allProjects.flatMap((p) => [p.data.tag]))].sort();
+
+// Metadata and structured data
+const title = `${project.data.title} | Projets | Samuel Dulex`;
+const description = project.data.seoDescription || project.data.intro;
+const image = project.data.image;
 ---
 
-<Base postData={entry}>
-  <article class="px-7 pt-10 mx-auto w-full">
-    <div
-      class="mx-auto
-      prose lg:prose-xl prose-headings:font-bold prose-headings:text-pacamara-dark prose-headings:mb-3"
-    >
-      <h1 class="transition-all duration-300 dark:text-white text-balance">
-        {entry.data.title}
-      </h1>
-      <div
-        class="flex items-center gap-4 mt-4 text-sm text-pacamara-primary/60 dark:text-white/60 font-outfit"
-      >
-        <span>⏱️ {readingTime} min de lecture</span>
+<Base {title} {description} {image}>
+  <main class="pt-32 pb-20">
+    <div class="container mx-auto px-6">
+      <Breadcrumbs
+        items={[
+          { label: "Accueil", href: "/" },
+          { label: "Projets", href: "/project" },
+          { label: project.data.title, href: `/${project.id}` },
+        ]}
+      />
 
-        <!-- 🎨 Palette: Enhanced Share Button -->
-        <button
-          id="share-btn"
-          class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3"
-          aria-label="Partager cet article"
-          title="Partager cet article"
-        >
-          <div class="grid grid-cols-1 grid-rows-1 place-items-center">
-            <!-- Normal State -->
-            <div
-              class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 group-[.copied]:opacity-0 group-[.copied]:translate-y-2"
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-8">
+        {/* Sidebar */}
+        <aside class="lg:col-span-3 space-y-8 order-2 lg:order-1">
+          <ProjectFilter tags={tags} activeTag={null} />
+          <LatestPosts />
+
+          <div
+            class="p-6 bg-pacamara-secondary/5 dark:bg-white/5 rounded-2xl border border-pacamara-secondary/10 dark:border-white/10"
+          >
+            <h3
+              class="text-sm font-bold uppercase tracking-wider text-pacamara-primary/40 dark:text-white/40 mb-4"
             >
-              <Icon name="mdi:share-variant" class="w-4 h-4" />
-              <span>Partager</span>
-            </div>
-            <!-- Copied State -->
-            <div
-              class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 opacity-0 -translate-y-2 group-[.copied]:opacity-100 group-[.copied]:translate-y-0 text-green-600 dark:text-green-400"
-              aria-hidden="true"
-            >
-              <Icon name="mdi:check" class="w-4 h-4" />
-              <span>Copié !</span>
+              Partager ce projet
+            </h3>
+            <div class="flex gap-4">
+              <button
+                class="share-btn p-3 bg-white dark:bg-pacamara-dark rounded-xl border border-pacamara-secondary/10 dark:border-white/10 text-pacamara-primary dark:text-white hover:border-pacamara-accent transition-colors group relative"
+                title="Partager sur les réseaux"
+                id="share-project"
+                aria-label="Partager ce projet"
+              >
+                <Icon
+                  name="mdi:share-variant"
+                  class="w-5 h-5 group-hover:scale-110 transition-transform"
+                />
+                <span id="share-announcer" class="sr-only" aria-live="polite"
+                ></span>
+              </button>
             </div>
           </div>
-        </button>
-        <!-- Screen reader announcer -->
-        <div id="share-announcer" class="sr-only" aria-live="polite"></div>
+        </aside>
+
+        {/* Content */}
+        <article class="lg:col-span-9 order-1 lg:order-2">
+          <header class="mb-12">
+            <div class="flex flex-wrap gap-2 mb-6">
+              {[project.data.tag].map((tag) => <Tag {tag} />)}
+            </div>
+            <h1
+              class="text-4xl md:text-6xl font-bold text-pacamara-primary dark:text-white mb-6"
+            >
+              {project.data.title}
+            </h1>
+            <p
+              class="text-xl text-pacamara-primary/60 dark:text-white/60 leading-relaxed max-w-3xl"
+            >
+              {project.data.intro}
+            </p>
+          </header>
+
+          <div
+            class="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-pacamara-accent prose-img:rounded-3xl shadow-xl"
+          >
+            <Content />
+          </div>
+        </article>
       </div>
     </div>
-    {
-      entry.data.image && (
-        <Picture
-          src={entry.data.image}
-          widths={[400, 800, 1200]}
-          sizes="(max-width: 768px) 100vw, 800px"
-          formats={["avif", "webp"]}
-          fallbackFormat="webp"
-          alt={entry.data.title}
-          width={1200}
-          height={600}
-          loading="eager"
-          decoding="sync"
-          fetchpriority="high"
-          class="block relative mx-auto mt-10 object-cover h-72 md:h-[350px] image-shine rounded-[15px]"
-          transition:name={`project-image-${entry.slug}`}
-          quality={75}
-        />
-      )
-    }
-    <div
-      class="lg:px-0 pt-10 mb-5 mx-auto
-            prose lg:prose-xl
-            prose-headings:transition-all prose-headings:duration-300 prose-headings:font-pacamara-space prose-headings:font-bold prose-headings:text-pacamara-accent prose-headings:mb-0 prose-headings:pb-3 prose-headings:mt-6
-            prose-p:transition-all prose-p:duration-300 prose-p:text-pacamara-primary/80
-            prose-li:transition-all prose-li:duration-300 prose-li:text-pacamara-primary/80
-            prose-td:transition-all prose-td:duration-300 prose-td:text-pacamara-primary/80
-            prose-a:underline prose-a:font-semibold prose-a:transition-all prose-a:duration-300 prose-a:text-pacamara-accent hover:prose-a:text-pacamara-dark
-            prose-strong:transition-all prose-strong:duration-300 prose-strong:font-bold
-            prose-hr:transition-all prose-hr:duration-300 prose-hr:border-pacamara-secondary/40
-            prose-img:rounded-xl prose-img:mx-auto
-            prose-code:transition-all prose-code:duration-300 prose-code:text-pacamara-dark
-            dark:prose-headings:text-pacamara-accent dark:prose-p:text-white/70 dark:prose-a:text-white dark:hover:prose-a:text-pacamara-accent dark:prose-strong:text-white dark:prose-li:text-white dark:prose-code:text-white dark:prose-td:text-white/70 dark:prose-hr:border-pacamara-accent/30 dark:prose-tr:border-pacamara-accent/30 dark:prose-thead:border-pacamara-accent/30"
-    >
-      <Content />
-    </div>
-  </article>
+  </main>
+
+  <CTASection />
 </Base>
 
+<style>
+  .share-btn.copied::after {
+    content: "Copié !";
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-pacamara-accent);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+</style>
+
 <script>
-  const shareBtn = document.getElementById("share-btn");
+  const shareBtn = document.getElementById("share-project");
   const announcer = document.getElementById("share-announcer");
 
   if (shareBtn) {
@@ -115,11 +129,13 @@ const readingTime = Math.ceil(wordCount / 200);
         try {
           await navigator.share({
             title: document.title,
+            text: "Découvrez ce projet sur le portfolio de Samuel Dulex",
             url: window.location.href,
           });
         } catch (err) {
           // 🛡️ Sentinel: Dev-only logging
           if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
             console.error(
               "Error sharing:",
               err instanceof Error ? err.message : "Unknown error",
@@ -132,26 +148,23 @@ const readingTime = Math.ceil(wordCount / 200);
           await navigator.clipboard.writeText(window.location.href);
 
           // 🎨 Palette: Haptic Feedback
-          if (navigator.vibrate) navigator.vibrate([50]);
+          if (navigator.vibrate) navigator.vibrate(50);
 
-          if (!shareBtn.classList.contains("copied")) {
-            shareBtn.classList.add("copied");
-
-            // Accessibility update
-            if (announcer) {
-              announcer.textContent = "Lien copié dans le presse-papiers";
-            }
-
-            setTimeout(() => {
-              shareBtn.classList.remove("copied");
-              if (announcer) {
-                announcer.textContent = "";
-              }
-            }, 2000);
+          shareBtn.classList.add("copied");
+          if (announcer) {
+            announcer.textContent = "Lien copié dans le presse-papier";
           }
+
+          setTimeout(() => {
+            shareBtn.classList.remove("copied");
+            if (announcer) {
+              announcer.textContent = "";
+            }
+          }, 2000);
         } catch (err) {
           // 🛡️ Sentinel: Dev-only logging
           if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
             console.error(
               "Failed to copy:",
               err instanceof Error ? err.message : "Unknown error",
