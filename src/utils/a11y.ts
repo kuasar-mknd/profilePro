@@ -15,7 +15,8 @@ export interface FocusTrap {
  * @returns An object with activate and deactivate methods.
  */
 export function createFocusTrap(container: HTMLElement): FocusTrap {
-  const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  const focusableSelectors =
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
   const handleTab = (e: KeyboardEvent) => {
     if (e.key !== "Tab") return;
@@ -24,7 +25,9 @@ export function createFocusTrap(container: HTMLElement): FocusTrap {
     if (focusableElements.length === 0) return;
 
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
     if (e.shiftKey) {
       if (document.activeElement === firstElement) {
@@ -51,7 +54,7 @@ export function createFocusTrap(container: HTMLElement): FocusTrap {
     },
     deactivate: () => {
       container.removeEventListener("keydown", handleTab);
-    }
+    },
   };
 }
 
@@ -61,7 +64,9 @@ export function createFocusTrap(container: HTMLElement): FocusTrap {
  * @param callback Function called with the new menu state.
  * @returns The MutationObserver instance.
  */
-export function watchMenuState(callback: (isOpen: boolean) => void): MutationObserver {
+export function watchMenuState(
+  callback: (isOpen: boolean) => void,
+): MutationObserver {
   const html = document.documentElement;
   let wasOpen = html.classList.contains("overflow-hidden");
 
