@@ -20,6 +20,9 @@ const CONFIG = {
   quality: 68,
 };
 
+// Map to track created directories to avoid redundant fs.mkdir calls
+const createdDirs = new Set();
+
 async function processFile(file) {
   // Calcul des chemins pour respecter la structure des dossiers
   const relativePath = path.relative(CONFIG.inputDir, file);
@@ -30,7 +33,10 @@ async function processFile(file) {
   const outputPath = path.join(targetDir, `${filename}.avif`);
 
   // Crée le dossier de destination s'il n'existe pas
-  await fs.mkdir(targetDir, { recursive: true });
+  if (!createdDirs.has(targetDir)) {
+    await fs.mkdir(targetDir, { recursive: true });
+    createdDirs.add(targetDir);
+  }
 
   // --- SYSTÈME DE CACHE INTELLIGENT ---
   try {
@@ -39,8 +45,6 @@ async function processFile(file) {
 
     // Si l'image optimisée existe et est plus récente que l'original, on passe
     if (statsOutput.mtime > statsOriginal.mtime) {
-      // Décommenter pour voir les fichiers ignorés
-      // console.log(`⏭️  Ignoré (à jour): ${relativePath}`);
       return;
     }
   } catch {
@@ -52,7 +56,8 @@ async function processFile(file) {
 
   try {
     // Pipeline Sharp optimisé
-    const image = sharp(file).rotate(); // Applique la rotation EXIF (important pour les portraits !)
+    // Limit Sharp memory usage per instance
+    const image = sharp(file, { failOn: 'none' }).rotate();
 
     // Special handling for slides to enforce 9:16 aspect ratio
     if (filename.startsWith("slide-")) {
@@ -62,7 +67,7 @@ async function processFile(file) {
           height: 1920,
           fit: "cover",
           position: "center",
-          withoutEnlargement: false, // Allow enlargement to fill the crop if needed
+          withoutEnlargement: false,
           kernel: "lanczos3",
         })
         .avif({
@@ -75,15 +80,15 @@ async function processFile(file) {
       await image
         .resize({
           width: CONFIG.maxWidth,
-          height: CONFIG.maxWidth, // On contraint les deux dimensions
-          fit: "inside", // L'image doit "tenir dedans" sans être coupée ni déformée
-          withoutEnlargement: true, // Ne pas agrandir une petite image
-          kernel: "lanczos3", // Meilleur algo de rééchantillonnage (netteté)
+          height: CONFIG.maxWidth,
+          fit: "inside",
+          withoutEnlargement: true,
+          kernel: "lanczos3",
         })
         .avif({
           quality: CONFIG.quality,
-          effort: 9, // Compression CPU intensive (mais fichier + petit)
-          chromaSubsampling: "4:4:4", // Garde 100% des informations de couleur
+          effort: 9,
+          chromaSubsampling: "4:4:4",
         })
         .toFile(outputPath);
     }
@@ -99,33 +104,37 @@ async function processImages() {
   console.log(`🔥 OPTIMISATION IMAGES : START`);
   console.log(`🎯 Cible: ${CONFIG.maxWidth}px max @ Q${CONFIG.quality} (AVIF)`);
 
-  // Récupère toutes les images (y compris dans les sous-dossiers)
-  const files = await glob(`${CONFIG.inputDir}/**/*.{jpg,jpeg,png,tiff,webp}`);
+  try {
+    const files = await glob(`${CONFIG.inputDir}/**/*.{jpg,jpeg,png,tiff,webp}`);
 
-  if (files.length === 0) {
-    console.log('⚠️  Aucune image trouvée dans le dossier "originals".');
-    return;
-  }
-
-  console.log(`🚀 Traitement de ${files.length} images...`);
-
-  // Parallel processing with concurrency limit
-  const concurrency = os.cpus().length || 4;
-  console.log(`🧵 Concurrence: ${concurrency} workers`);
-
-  const queue = [...files];
-  const workers = Array.from({ length: concurrency }, async () => {
-    while (queue.length > 0) {
-      const file = queue.shift();
-      if (file) {
-        await processFile(file);
-      }
+    if (files.length === 0) {
+      console.log('⚠️  Aucune image trouvée dans le dossier "originals".');
+      return;
     }
-  });
 
-  await Promise.all(workers);
+    console.log(`🚀 Traitement de ${files.length} images...`);
 
-  console.log("🏁 Terminé ! Vos assets sont prêts.");
+    // Parallel processing with concurrency limit
+    // Allow overriding via environment variable for memory-constrained environments
+    const concurrency = parseInt(process.env.CONCURRENCY) || os.cpus().length || 4;
+    console.log(`🧵 Concurrence: ${concurrency} workers`);
+
+    const queue = [...files];
+    const workers = Array.from({ length: concurrency }, async () => {
+      while (queue.length > 0) {
+        const file = queue.shift();
+        if (file) {
+          await processFile(file);
+        }
+      }
+    });
+
+    await Promise.all(workers);
+    console.log("🏁 Terminé ! Vos assets sont prêts.");
+  } catch (error) {
+    console.error("❌ Erreur globale lors de l'optimisation des images:", error);
+    process.exit(1);
+  }
 }
 
 processImages();
