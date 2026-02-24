@@ -3,7 +3,6 @@ import { glob } from "glob";
 import fs from "fs/promises";
 import path from "path";
 import pLimit from "p-limit";
-import os from "os";
 
 // --- CONFIGURATION SWEET SPOT ---
 const CONFIG = {
@@ -111,7 +110,7 @@ async function processImages() {
 
   console.log(`🚀 Traitement de ${files.length} images...`);
 
-  const limit = pLimit(os.cpus().length);
+  const limit = pLimit(2); // 🛡️ Sentinel: Conservative concurrency to prevent OOM on Render Free Tier
   const tasks = files.map((file) => limit(() => processImage(file)));
 
   await Promise.all(tasks);
