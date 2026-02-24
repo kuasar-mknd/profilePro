@@ -71,6 +71,7 @@
     "workbox-window": "^7.4.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260303.0",
     "@iconify-json/mdi": "^1.2.3",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.57.0",

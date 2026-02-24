@@ -3,3 +3,8 @@ pages_build_output_dir = "dist"
 compatibility_date = "2024-09-23"
 
 
+
+# 🛡️ Sentinel: KV Namespace for server-side rate limiting
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "xxxx-placeholder-xxxx" # Replace with real ID in Cloudflare Dashboard
