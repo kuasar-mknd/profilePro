@@ -98,110 +98,53 @@ const logo2x = await getImage({
 </style>
 
 <script>
-  // ⚡ Bolt: Singleton Pattern for Header Observer
+  import { createFocusTrap, watchMenuState } from "../../utils/a11y";
+  import type { FocusTrap } from "../../utils/a11y";
+
+  // ⚡ Bolt: Singleton Pattern for Header Observer & Focus Trap
   let headerObserver: MutationObserver | null = null;
-  let cleanupTrap: (() => void) | null = null;
+  let focusTrap: FocusTrap | null = null;
 
   function initMobileMenuAccessibility() {
-    // ⚡ Bolt: Cleanup previous observer to prevent stacking and memory leaks
+    // ⚡ Bolt: Cleanup previous instances to prevent stacking and memory leaks
     if (headerObserver) {
       headerObserver.disconnect();
       headerObserver = null;
     }
 
-    // ⚡ Bolt: Ensure previous focus trap listeners are removed if they were active
-    if (cleanupTrap) {
-      cleanupTrap();
-      cleanupTrap = null;
+    if (focusTrap) {
+      focusTrap.deactivate();
+      focusTrap = null;
     }
 
     const navWrapper = document.getElementById("navigation_wrapper");
-    const html = document.documentElement;
-
-    // Guard clause if header elements aren't found
     if (!navWrapper) return;
 
-    // ⚡ Bolt: Track state to avoid redundant operations
-    let wasOpen = html.classList.contains("overflow-hidden");
+    // 🎨 Palette: Initialize focus trap for the mobile menu
+    focusTrap = createFocusTrap(navWrapper);
 
-    // Observer to detect when menu is opened (via class change on html)
-    headerObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          const isOpen = html.classList.contains("overflow-hidden");
-
-          // ⚡ Bolt: Only toggle trap if state actually changed
-          // Prevents re-running setup logic on unrelated class changes (e.g. theme toggle)
-          if (isOpen !== wasOpen) {
-            wasOpen = isOpen;
-            if (isOpen) {
-              setupFocusTrap();
-            } else {
-              removeFocusTrap();
-            }
-          }
-        }
-      });
-    });
-
-    headerObserver.observe(html, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape" && html.classList.contains("overflow-hidden")) {
-        // Find and click the hamburger button to close
-        const btn = document.querySelector(
-          'button[aria-controls="navigation_wrapper"]',
-        );
-        if (btn instanceof HTMLElement) btn.click();
-      }
-    }
-
-    function handleTab(e: KeyboardEvent) {
-      if (e.key !== "Tab" || !navWrapper) return;
-
-      const focusableElements = navWrapper.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[
-        focusableElements.length - 1
-      ] as HTMLElement;
-
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
+    // 🎨 Palette: Observer to detect when menu is opened/closed
+    headerObserver = watchMenuState((isOpen) => {
+      if (isOpen) {
+        focusTrap?.activate();
       } else {
-        if (document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
-        }
+        focusTrap?.deactivate();
       }
-    }
-
-    function setupFocusTrap() {
-      document.addEventListener("keydown", handleEscape);
-      navWrapper?.addEventListener("keydown", handleTab);
-      // Focus first element
-      const firstLink = navWrapper?.querySelector("a");
-      if (firstLink instanceof HTMLElement)
-        setTimeout(() => firstLink.focus(), 100);
-
-      // ⚡ Bolt: Register cleanup function for this specific instance
-      cleanupTrap = removeFocusTrap;
-    }
-
-    function removeFocusTrap() {
-      document.removeEventListener("keydown", handleEscape);
-      navWrapper?.removeEventListener("keydown", handleTab);
-      cleanupTrap = null;
-    }
+    });
   }
 
-  // Initialize only via event listener to avoid double execution on initial load
+  // ⚡ Bolt: Lifecycle Management
   document.addEventListener("astro:page-load", initMobileMenuAccessibility);
+
+  // ⚡ Bolt: Ensure cleanup on navigation to prevent stale references
+  document.addEventListener("astro:before-swap", () => {
+    if (headerObserver) {
+      headerObserver.disconnect();
+      headerObserver = null;
+    }
+    if (focusTrap) {
+      focusTrap.deactivate();
+      focusTrap = null;
+    }
+  });
 </script>
