@@ -240,6 +240,7 @@ if (entry.data.type === "video" && entry.data.image) {
 
       <!-- Script for interactions -->
       <script>
+  /* eslint-disable no-console */
         // Reading Progress
         const progressBar = document.getElementById("scroll-progress");
 
@@ -311,6 +312,7 @@ if (entry.data.type === "video" && entry.data.image) {
               } catch (err) {
                 // 🛡️ Sentinel: Dev-only logging
                 if (import.meta.env.DEV) {
+
                   console.error(
                     "Error sharing:",
                     err instanceof Error ? err.message : "Unknown error",
@@ -344,6 +346,7 @@ if (entry.data.type === "video" && entry.data.image) {
               } catch (err) {
                 // 🛡️ Sentinel: Dev-only logging
                 if (import.meta.env.DEV) {
+
                   console.error("Failed to copy", err);
                 }
               }
@@ -394,7 +397,10 @@ if (entry.data.type === "video" && entry.data.image) {
                   }
                 }, 2000);
               } catch (err) {
-                console.error("Failed to copy code", err);
+                if (import.meta.env.DEV) {
+
+                  console.error("Failed to copy code", err);
+                }
               }
             });
             wrapper.appendChild(btn);

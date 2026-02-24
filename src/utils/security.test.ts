@@ -23,6 +23,16 @@ describe("Security Utilities", () => {
       );
     });
 
+    it("should allow relative paths without leading slash", () => {
+      expect(sanitizeUrl("images/logo.png")).toBe("images/logo.png");
+      expect(sanitizeUrl("path/to/page")).toBe("path/to/page");
+    });
+
+    it("should block malformed URLs with colons", () => {
+      expect(sanitizeUrl("http://:8080")).toBe("");
+      expect(sanitizeUrl("invalid:url")).toBe("");
+    });
+
     it("should block javascript: scheme", () => {
       expect(sanitizeUrl("javascript:alert(1)")).toBe("");
       expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");

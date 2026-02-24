@@ -60,6 +60,7 @@ if (!posterUrl && provider === "youtube" && videoId) {
   } catch (e) {
     // 🛡️ Sentinel: Silence detailed error logging in production
     if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
       console.error(
         `Failed to fetch Vimeo thumbnail for ${videoId}:`,
         e instanceof Error ? e.message : "Unknown error",
@@ -145,6 +146,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 </div>
 
 <script>
+
   // ⚡ Bolt: Event Delegation for Video Players
   // Reduces listener count from N (videos) to 1 (document)
   // Handles initializing new players on interaction instead of on load

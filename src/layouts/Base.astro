@@ -285,6 +285,7 @@ if (postData?.data?.image) {
     </button>
 
     <script>
+
       /**
        * ⚡ Bolt: Back to Top Performance Optimization
        * - Implements cleanup pattern to prevent event listener leaks on navigation
@@ -519,6 +520,7 @@ if (postData?.data?.image) {
       document.addEventListener("astro:page-load", secureLinks);
     </script>
     <script>
+
       /**
        * ⚡ Bolt: Global Background Animation Optimizer
        * Pauses infinite CSS animations (.floating, .floating-slow) when elements
@@ -561,6 +563,7 @@ if (postData?.data?.image) {
       document.addEventListener("astro:after-swap", initAnimationOptimizer);
     </script>
     <script>
+  /* eslint-disable no-console */
       import { registerSW } from "virtual:pwa-register";
 
       if ("serviceWorker" in navigator) {
@@ -568,10 +571,12 @@ if (postData?.data?.image) {
           immediate: true,
           onNeedRefresh() {
             if (import.meta.env.DEV)
+
               console.log("⚡ Bolt PWA: New content available");
           },
           onOfflineReady() {
             if (import.meta.env.DEV)
+
               console.log("⚡ Bolt PWA: App ready to work offline");
           },
         });
