@@ -45,3 +45,5 @@
 **Vulnerability:** Timestamp-based spam traps relied on `submitTime - loadTime < 2000`. If `loadTime` is manipulated to be invalid (NaN), the comparison `NaN < 2000` evaluates to `false`, bypassing the check.
 **Learning:** Mathematical comparisons in JavaScript involving `NaN` always return `false`. This can create silent fail-open vulnerabilities in security logic.
 **Prevention:** Always explicitly check for `isNaN()` or validity of inputs before performing numerical security comparisons.
+
+**Update:** PR was merged into master.
