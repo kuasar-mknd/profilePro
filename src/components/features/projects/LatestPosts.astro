@@ -7,22 +7,20 @@ import { Icon } from "astro-icon/components";
 import EmptyState from "../../ui/EmptyState.astro";
 
 const {
-  postLimit: rawPostLimit = config.latestPosts,
+  postLimit = config.latestPosts,
   skipPost = "",
   title = "Projets",
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
 } = Astro.props;
 
-const postLimit = Number(rawPostLimit);
-
-const allPosts = (
+const posts = (
   await getCollection("project", ({ data }) => {
     return !(data.title == skipPost);
   })
-).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-const posts = allPosts.slice(0, postLimit);
+)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, postLimit);
 
 // Determine bento grid sizes based on index
 const getBentoClass = (index: number) => {
@@ -32,8 +30,8 @@ const getBentoClass = (index: number) => {
 };
 
 // Get total project count for the CTA
-// ⚡ Bolt: Optimized to reuse the filtered collection
-const remainingCount = Math.max(0, allPosts.length - postLimit);
+const allPosts = await getCollection("project");
+const remainingCount = allPosts.length - postLimit;
 ---
 
 <section class="container mx-auto max-w-7xl px-7 py-16 latest-posts-section">
