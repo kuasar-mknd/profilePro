@@ -673,7 +673,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         }
       } catch (error) {
         if (import.meta.env.DEV) {
-          console.error("Form submission failed:", error);
+          console.error("Form submission failed:", error); // eslint-disable-line no-console
         }
 
         if (submitButton) {
