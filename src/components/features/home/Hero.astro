@@ -27,23 +27,33 @@ function shuffle(array: any[]) {
 }
 
 const slides = shuffle([...projectImages]).slice(0, 15);
-const optimizedSlides = await Promise.all(
-  slides.map(async (slide) => {
-    const [w224, w288, w448, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
-    ]);
 
-    return {
-      alt: slide.alt,
-      src: w288.src,
-      srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 224px, 288px",
-    };
-  }),
-);
+// ⚡ Bolt: Bounded concurrency for Hero slides optimization
+// Prevents resource exhaustion (OOM) on memory-constrained build environments
+const CONCURRENCY_LIMIT = 3;
+const optimizedSlides = [];
+
+for (let i = 0; i < slides.length; i += CONCURRENCY_LIMIT) {
+  const chunk = slides.slice(i, i + CONCURRENCY_LIMIT);
+  const optimizedChunk = await Promise.all(
+    chunk.map(async (slide) => {
+      const [w224, w288, w448, w576] = await Promise.all([
+        getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
+        getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
+        getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
+        getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
+      ]);
+
+      return {
+        alt: slide.alt,
+        src: w288.src,
+        srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
+        sizes: "(max-width: 768px) 224px, 288px",
+      };
+    }),
+  );
+  optimizedSlides.push(...optimizedChunk);
+}
 
 const allSlides = [...optimizedSlides, ...optimizedSlides];
 

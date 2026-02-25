@@ -13,8 +13,9 @@
  * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function safeJson(value: any): string {
-  return JSON.stringify(value)
+export function safeJson(value: unknown): string {
+  const json = JSON.stringify(value) || "null";
+  return json
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026")
