@@ -76,3 +76,7 @@
 
 **Learning:** In Astro components using View Transitions, defining event handler functions inside the initialization logic (closures) creates new function references on every navigation. This prevents `removeEventListener` from working correctly, leading to duplicate global listeners (memory leaks) and stale closures referencing detached DOM nodes.
 **Action:** Always define global event handlers (like `theme-change` listeners) in the module scope to ensure a stable reference. This guarantees that `removeEventListener` successfully cleans up the previous listener before adding the new one.
+
+## 2026-02-23 - PR Status Update
+
+**Note:** The PR `bolt-fix-modeswitch-leak` was closed as duplicate/superseded. Changes have been incorporated into master via another path. Local development aligned with this outcome.
