@@ -16,7 +16,7 @@ import { safeJson } from "../utils/security";
 import logo from "../assets/logo.avif";
 
 // Precompute LCP image URL for preloading
-const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
+const heroLogo = await getImage({ src: logo, width: 360, format: "webp" });
 
 const {
   postData,
@@ -33,7 +33,7 @@ if (postData?.data?.image) {
   lcpImage = await getImage({
     src: postData.data.image,
     width: 1600,
-    format: "avif",
+    format: "webp",
   });
 }
 ---
@@ -103,7 +103,7 @@ if (postData?.data?.image) {
           rel="preload"
           href={heroLogo.src}
           as="image"
-          type="image/avif"
+          type="image/webp"
           fetchpriority="high"
         />
       )
@@ -116,7 +116,7 @@ if (postData?.data?.image) {
           rel="preload"
           href={lcpImage.src}
           as="image"
-          type="image/avif"
+          type="image/webp"
           fetchpriority="high"
         />
       )

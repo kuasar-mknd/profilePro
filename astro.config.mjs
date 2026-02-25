@@ -18,7 +18,8 @@ export default defineConfig({
     service: {
       entrypoint: "astro/assets/services/sharp",
     },
-    formats: ["avif"],
+    // ⚡ Bolt: Build Performance - Switch to WebP to prevent timeouts on Render (AVIF is too slow)
+    formats: ["webp"],
   },
   integrations: [
     mdx({
