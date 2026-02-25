@@ -42,16 +42,6 @@ if (postData?.data?.image) {
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    {
-      /* 🛡️ Sentinel: Dev-only CSP to enforce security during development while allowing HMR.
-         Explicitly excludes upgrade-insecure-requests to avoid breaking localhost. */
-      import.meta.env.DEV && (
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://*; connect-src 'self' https://* ws: wss:;"
-        />
-      )
-    }
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
     <link
       rel="preconnect"
