@@ -13,6 +13,7 @@ import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getCollection, getEntry } from "astro:content";
+import { sanitizeUrl } from "../../utils/security";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -194,7 +195,10 @@ if (entry.data.type === "video" && entry.data.image) {
         items={[
           { label: "Accueil", href: "/" },
           { label: "Projets", href: "/project" },
-          { label: entry.data.tag, href: `/project/tag/${entry.data.tag}` },
+          {
+            label: entry.data.tag,
+            href: sanitizeUrl(`/project/tag/${entry.data.tag}`),
+          },
           { label: entry.data.title },
         ]}
       />
@@ -422,7 +426,7 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         nextPost ? (
           <a
-            href={`/project/${nextPost.slug}`}
+            href={sanitizeUrl(`/project/${nextPost.slug}`)}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
           >
@@ -448,7 +452,7 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         prevPost ? (
           <a
-            href={`/project/${prevPost.slug}`}
+            href={sanitizeUrl(`/project/${prevPost.slug}`)}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
           >

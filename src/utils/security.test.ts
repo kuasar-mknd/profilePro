@@ -36,6 +36,7 @@ describe("Security Utilities", () => {
     it("should block javascript: scheme", () => {
       expect(sanitizeUrl("javascript:alert(1)")).toBe("");
       expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
+      expect(sanitizeUrl("JaVaScRiPt:alert(1)")).toBe("");
     });
 
     it("should block data: scheme", () => {
@@ -61,6 +62,10 @@ describe("Security Utilities", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
     });
+
+    it("should block vbscript", () => {
+      expect(sanitizeUrl("vbscript:msgbox(1)")).toBe("");
+    });
   });
 
   describe("sanitizeInput", () => {
@@ -68,6 +73,10 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+
+    it("should sanitize percent sign to prevent URL encoding attacks", () => {
+      expect(sanitizeInput("100%")).toBe("100&#37;");
     });
   });
 });
