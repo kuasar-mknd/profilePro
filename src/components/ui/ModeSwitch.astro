@@ -4,10 +4,12 @@ import { Icon } from "astro-icon/components";
 
 <button
   type="button"
+  role="switch"
+  aria-checked="false"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
-  title="Activer le mode sombre (Shift+T)"
+  aria-label="Mode sombre"
+  title="Basculer le mode sombre (Shift+T)"
   aria-keyshortcuts="Shift+T"
 >
   <div
@@ -26,50 +28,67 @@ import { Icon } from "astro-icon/components";
     <span
       aria-hidden="true"
       class="hidden text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:inline-block"
-      >Soleil</span
+      >Désactivé</span
     >
     <span
       aria-hidden="true"
       class="text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:hidden"
-      >Lune</span
+      >Activé</span
     >
   </div>
-  <span class="sr-only">Activer le mode sombre</span>
   <span class="sr-only" aria-live="polite" id="theme-live-region"></span>
 </button>
 
 <script>
   /**
-   * 🎨 Palette: Theme Switcher UX Improvement
-   * - Uses class selector to support multiple instances (desktop/mobile)
-   * - Dynamic aria-label and title for better accessibility
-   * - Handles View Transitions properly
+   * 🎨 Palette: Semantic Switch & Event Cleanup
+   * - Uses role="switch" for better accessibility semantics
+   * - Implements robust event listener cleanup to prevent stacking on View Transitions
    */
 
-  const handleThemeToggle = (e: Event) => {
-    e.preventDefault();
-    const element = document.documentElement;
-    element.classList.toggle("dark");
+  // Module-level variable to store cleanup function for the current page lifecycle
+  let cleanupTheme: (() => void) | null = null;
 
-    const isDarkNow = element.classList.contains("dark");
-    localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+  function initThemeToggle() {
+    // ⚡ Bolt: Cleanup previous listeners before initializing new ones
+    if (cleanupTheme) {
+      cleanupTheme();
+      cleanupTheme = null;
+    }
 
-    window.dispatchEvent(
-      new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
-    );
-  };
+    const buttons = document.querySelectorAll(".theme-toggle-btn");
+    const liveRegion = document.getElementById("theme-live-region");
 
-  const handleGlobalKeydown = (e: KeyboardEvent) => {
-    if (e.shiftKey && (e.key === "T" || e.key === "t")) {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
-        return;
+    // Helper to update UI state
+    const updateUI = (isDark: boolean, announce = false) => {
+      const label = isDark ? "Mode sombre activé" : "Mode sombre désactivé";
+
+      buttons.forEach((btn) => {
+        // Update semantic state
+        btn.setAttribute("aria-checked", isDark ? "true" : "false");
+
+        // Update title for hover/tooltip
+        btn.setAttribute(
+          "title",
+          `Basculer le mode sombre (${isDark ? "Activé" : "Désactivé"}) (Shift+T)`,
+        );
+
+        // Update sr-only text for screen readers if needed (though aria-checked handles state)
+        // We keep the live region for immediate feedback on change
+      });
+
+      if (announce && liveRegion) {
+        liveRegion.textContent = label;
       }
+    };
 
+    // Initial State Check
+    const isDark = document.documentElement.classList.contains("dark");
+    updateUI(isDark);
+
+    // --- Event Handlers ---
+
+    const handleThemeToggle = (e: Event) => {
       e.preventDefault();
       const element = document.documentElement;
       element.classList.toggle("dark");
@@ -77,54 +96,64 @@ import { Icon } from "astro-icon/components";
       const isDarkNow = element.classList.contains("dark");
       localStorage.setItem("theme", isDarkNow ? "dark" : "light");
 
+      // Dispatch custom event for other components (if any)
       window.dispatchEvent(
         new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
       );
-    }
-  };
+    };
 
-  function initThemeToggle() {
-    const buttons = document.querySelectorAll(".theme-toggle-btn");
-    const liveRegion = document.getElementById("theme-live-region");
+    const handleGlobalKeydown = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.key === "T" || e.key === "t")) {
+        const target = e.target as HTMLElement;
+        // Ignore if user is typing in an input
+        if (
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable
+        ) {
+          return;
+        }
 
-    const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
-      const title = `${label} (Shift+T)`;
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        btn.setAttribute("title", title);
-        const span = btn.querySelector(".sr-only");
-        if (span) span.textContent = label;
-      });
+        e.preventDefault();
+        const element = document.documentElement;
+        element.classList.toggle("dark");
 
-      if (announce && liveRegion) {
-        liveRegion.textContent = isDark
-          ? "Mode sombre activé"
-          : "Mode clair activé";
+        const isDarkNow = element.classList.contains("dark");
+        localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+
+        window.dispatchEvent(
+          new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
+        );
       }
     };
 
-    const isDark = document.documentElement.classList.contains("dark");
-    updateLabels(isDark);
-
-    window.removeEventListener("theme-change", handleThemeChange);
-    window.addEventListener("theme-change", handleThemeChange);
-
-    function handleThemeChange(e: Event) {
+    const handleThemeChange = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      updateLabels(detail.isDark, true);
-    }
+      updateUI(detail.isDark, true);
+    };
+
+    // --- Add Listeners ---
 
     buttons.forEach((btn) => {
-      btn.removeEventListener("click", handleThemeToggle);
       btn.addEventListener("click", handleThemeToggle);
       (btn as HTMLElement).dataset.initialized = "true";
     });
+
+    window.addEventListener("theme-change", handleThemeChange);
+    document.addEventListener("keydown", handleGlobalKeydown);
+
+    // --- Register Cleanup ---
+
+    cleanupTheme = () => {
+      buttons.forEach((btn) => {
+        btn.removeEventListener("click", handleThemeToggle);
+      });
+      window.removeEventListener("theme-change", handleThemeChange);
+      document.removeEventListener("keydown", handleGlobalKeydown);
+    };
   }
 
-  initThemeToggle();
-  document.addEventListener("astro:after-swap", initThemeToggle);
-
-  document.removeEventListener("keydown", handleGlobalKeydown);
-  document.addEventListener("keydown", handleGlobalKeydown);
+  // Initialize on load and after view transitions
+  // No need for separate 'astro:after-swap' listener because 'astro:page-load' fires on both initial load and after swap
+  document.addEventListener("astro:page-load", initThemeToggle);
 </script>

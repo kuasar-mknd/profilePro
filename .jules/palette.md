@@ -1,3 +1,6 @@
+## 2025-02-19 - Semantic Switch & Event Cleanup
+**Learning:** For binary settings like Dark Mode, `role="switch"` with `aria-checked` is semantically clearer than toggle buttons with predictive labels, as it explicitly announces the current state. Also, in Astro View Transitions, global event listeners (window/document) MUST be cleaned up using a module-level variable before re-initialization to prevent memory leaks and duplicate execution.
+**Action:** Use `role="switch"` for settings toggles and implement strict cleanup patterns for global listeners in `astro:page-load` scripts.
 
 ## 🎨 Interaction: Positive Validation Feedback (2025-02-18)
 **Learning:** Users benefit from immediate positive reinforcement, not just error removal. Inline validation checkmarks provide "delight" and reduce anxiety.
