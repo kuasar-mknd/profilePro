@@ -211,6 +211,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     display: inline-block;
     opacity: 0;
     animation: letter-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
   }
 
   .hero-title .letter-animate:nth-child(1) {
