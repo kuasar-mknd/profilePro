@@ -2,16 +2,12 @@ import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import * as cheerio from "cheerio";
 import { glob } from "glob";
+import path from "node:path";
 
 const DIST_DIR = "dist";
-const HEADERS_FILE = "dist/_headers";
+const HEADERS_FILE = path.join(DIST_DIR, "_headers");
 const PUBLIC_HEADERS_FILE = "public/_headers";
 
-/**
- * Calculates the SHA-256 hash of a string.
- * @param {string} content
- * @returns {string}
- */
 function calculateHash(content) {
   return crypto.createHash("sha256").update(content).digest("base64");
 }
@@ -19,59 +15,71 @@ function calculateHash(content) {
 async function main() {
   console.log("🔒 Generating CSP hashes...");
 
+  // Check if dist/ exists
+  const distExists = await fs.stat(DIST_DIR).then(() => true).catch(() => false);
+  if (!distExists) {
+    console.error(`❌ Error: Directory "${DIST_DIR}" does not exist. Build might have failed.`);
+    process.exit(1);
+  }
+
   // 1. Find all HTML files in dist/
   const htmlFiles = await glob(`${DIST_DIR}/**/*.html`);
+  if (htmlFiles.length === 0) {
+    console.warn(`⚠️  No HTML files found in ${DIST_DIR}. Skipping CSP generation.`);
+    return;
+  }
 
   const scriptHashes = new Set();
   const styleHashes = new Set();
 
   // 2. Extract inline scripts and styles
   for (const file of htmlFiles) {
-    const content = await fs.readFile(file, "utf-8");
-    const $ = cheerio.load(content);
+    try {
+      const content = await fs.readFile(file, "utf-8");
+      const $ = cheerio.load(content);
 
-    $("script").each((_, el) => {
-      const inlineContent = $(el).html();
-      if (inlineContent && inlineContent.trim().length > 0) {
-        scriptHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
-      }
-    });
+      $("script").each((_, el) => {
+        const inlineContent = $(el).html();
+        if (inlineContent && inlineContent.trim().length > 0) {
+          scriptHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
+        }
+      });
 
-    $("style").each((_, el) => {
-      const inlineContent = $(el).html();
-      if (inlineContent && inlineContent.trim().length > 0) {
-        styleHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
-      }
-    });
+      $("style").each((_, el) => {
+        const inlineContent = $(el).html();
+        if (inlineContent && inlineContent.trim().length > 0) {
+          styleHashes.add(`'sha256-${calculateHash(inlineContent)}'`);
+        }
+      });
+    } catch (err) {
+      console.warn(`⚠️  Could not read or process file ${file}: ${err.message}`);
+    }
   }
 
   console.log(
     `✨ Found ${scriptHashes.size} inline scripts and ${styleHashes.size} inline styles.`,
   );
 
-  // 3. Read the template _headers file (from public/ or dist/ if copied)
-  // We prefer reading from public/ as source of truth, but dist/ might have it copied already.
-  // Let's read from public/_headers to be safe and write to dist/_headers.
+  // 3. Read the template _headers file
   try {
+    const publicHeadersExists = await fs.stat(PUBLIC_HEADERS_FILE).then(() => true).catch(() => false);
+    if (!publicHeadersExists) {
+      console.warn(`⚠️  "${PUBLIC_HEADERS_FILE}" not found. Skipping hash injection.`);
+      return;
+    }
+
     let headersContent = await fs.readFile(PUBLIC_HEADERS_FILE, "utf-8");
 
     // 4. Inject hashes
-    // We look for the Content-Security-Policy line
     const cspRegex = /(Content-Security-Policy:.*)/g;
 
-    // Helper to inject into a specific directive
     const injectIntoDirective = (policy, directive, hashes) => {
-      // 🛡️ Sentinel: Match exact directive to prevent partial matches (e.g., script-src matching script-src-elem)
-      // Lookahead (?=\s|;|$) ensures we match the whole word
-      // Negative lookahead (?![a-zA-Z-]) prevents matching substrings (e.g. script-src matching script-src-elem)
       const regex = new RegExp(
         `(${directive}(?![a-zA-Z-])(?=\\s|;|$)[^;]*)(;?)`,
       );
       if (regex.test(policy)) {
         return policy.replace(regex, `$1 ${Array.from(hashes).join(" ")}$2`);
       } else {
-        // Directive doesn't exist, append it
-        // Ensure proper spacing/semicolon separation
         const separator = policy.trim().endsWith(";") ? " " : "; ";
         return `${policy}${separator}${directive} ${Array.from(hashes).join(" ")}`;
       }
@@ -81,30 +89,16 @@ async function main() {
       let newPolicy = match;
 
       if (scriptHashes.size > 0) {
-        // 🛡️ Sentinel: Prioritize script-src-elem if present, as it overrides script-src for script tags
         if (new RegExp("script-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
-          newPolicy = injectIntoDirective(
-            newPolicy,
-            "script-src-elem",
-            scriptHashes,
-          );
+          newPolicy = injectIntoDirective(newPolicy, "script-src-elem", scriptHashes);
         } else {
-          newPolicy = injectIntoDirective(
-            newPolicy,
-            "script-src",
-            scriptHashes,
-          );
+          newPolicy = injectIntoDirective(newPolicy, "script-src", scriptHashes);
         }
       }
 
       if (styleHashes.size > 0) {
-        // 🛡️ Sentinel: Prioritize style-src-elem if present
         if (new RegExp("style-src-elem(?=\\s|;|$)", "i").test(newPolicy)) {
-          newPolicy = injectIntoDirective(
-            newPolicy,
-            "style-src-elem",
-            styleHashes,
-          );
+          newPolicy = injectIntoDirective(newPolicy, "style-src-elem", styleHashes);
         } else {
           newPolicy = injectIntoDirective(newPolicy, "style-src", styleHashes);
         }

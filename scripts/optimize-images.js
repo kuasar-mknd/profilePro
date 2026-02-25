@@ -4,6 +4,10 @@ import fs from "fs/promises";
 import path from "path";
 import os from "os";
 
+// ⚡ Optimize Sharp for memory-constrained environments
+sharp.cache(false);
+sharp.concurrency(1);
+
 // --- CONFIGURATION SWEET SPOT ---
 const CONFIG = {
   inputDir: "originals", // Source (non versionnée)
@@ -34,8 +38,12 @@ async function processFile(file) {
 
   // Crée le dossier de destination s'il n'existe pas
   if (!createdDirs.has(targetDir)) {
-    await fs.mkdir(targetDir, { recursive: true });
-    createdDirs.add(targetDir);
+    try {
+      await fs.mkdir(targetDir, { recursive: true });
+      createdDirs.add(targetDir);
+    } catch  {
+      // Ignore errors if directory already exists (race condition)
+    }
   }
 
   // --- SYSTÈME DE CACHE INTELLIGENT ---
@@ -56,7 +64,6 @@ async function processFile(file) {
 
   try {
     // Pipeline Sharp optimisé
-    // Limit Sharp memory usage per instance
     const image = sharp(file, { failOn: 'none' }).rotate();
 
     // Special handling for slides to enforce 9:16 aspect ratio
@@ -105,6 +112,11 @@ async function processImages() {
   console.log(`🎯 Cible: ${CONFIG.maxWidth}px max @ Q${CONFIG.quality} (AVIF)`);
 
   try {
+    if (!await fs.stat(CONFIG.inputDir).catch(() => false)) {
+      console.log(`⚠️  Dossier "${CONFIG.inputDir}" introuvable. Skip.`);
+      return;
+    }
+
     const files = await glob(`${CONFIG.inputDir}/**/*.{jpg,jpeg,png,tiff,webp}`);
 
     if (files.length === 0) {
@@ -114,10 +126,11 @@ async function processImages() {
 
     console.log(`🚀 Traitement de ${files.length} images...`);
 
-    // Parallel processing with concurrency limit
-    // Allow overriding via environment variable for memory-constrained environments
-    const concurrency = parseInt(process.env.CONCURRENCY) || os.cpus().length || 4;
-    console.log(`🧵 Concurrence: ${concurrency} workers`);
+    // Parallel processing with conservative concurrency
+    // Use 2 by default, or 1 if memory is very tight, or override via ENV
+    const defaultConcurrency = os.cpus().length > 1 ? 2 : 1;
+    const concurrency = parseInt(process.env.CONCURRENCY) || defaultConcurrency;
+    console.log(`🧵 Concurrence: ${concurrency} workers (Sharp threads: 1)`);
 
     const queue = [...files];
     const workers = Array.from({ length: concurrency }, async () => {
