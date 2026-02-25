@@ -58,3 +58,5 @@
 **Vulnerability:** The timestamp-based spam trap logic `submitTimestamp - loadTimestamp < threshold` failed when `loadTimestamp` was `NaN` (e.g. empty or manipulated input), because `NaN < number` evaluates to `false`, bypassing the check.
 **Learning:** Always explicitly check for `isNaN()` when performing arithmetic security checks on user input.
 **Prevention:** Added `isNaN(loadTimestamp)` to the validation condition in `ContactForm.astro`.
+
+**Status Update:** PR #sentinel-hardening-trilogy closed as duplicate/superseded by merged branch.
