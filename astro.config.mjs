@@ -16,6 +16,10 @@ export default defineConfig({
   image: {
     domains: ["kuasar.xyz"],
     service: {
+      config: {
+        avif: { effort: 4 },
+        webp: { effort: 4 },
+      },
       entrypoint: "astro/assets/services/sharp",
     },
     formats: ["avif"],

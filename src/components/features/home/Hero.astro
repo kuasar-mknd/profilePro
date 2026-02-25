@@ -35,18 +35,16 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
 const optimizedSlides = await limitConcurrency(slides, 3, async (slide) => {
     // Generate candidates for srcset matching the original Picture configuration
-    const [w224, w288, w448, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
+    const [w288, w576] = await Promise.all([
       getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
       getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
     ]);
 
     return {
       alt: slide.alt,
       src: w288.src, // Default src
-      srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 224px, 288px",
+      srcset: `${w288.src} 288w, ${w576.src} 576w`,
+      sizes: "(max-width: 768px) 288px, 576px",
     };
 });
 
