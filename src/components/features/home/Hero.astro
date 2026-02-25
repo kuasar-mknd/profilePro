@@ -407,6 +407,40 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   document.addEventListener("astro:page-load", initCarouselTouch);
 
   /**
+   * ⚡ Bolt: Carousel Visibility Optimization
+   * Pauses the infinite scroll animation when the carousel is not in the viewport
+   * to save GPU and main thread resources.
+   */
+  function initCarouselObserver() {
+    const carousel = document.getElementById("hero-carousel");
+    const track = document.getElementById("carousel-track");
+
+    if (!carousel || !track) return;
+
+    // Guard against duplicate observers
+    if (carousel.dataset.observerInitialized === "true") return;
+    carousel.dataset.observerInitialized = "true";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            track.style.animationPlayState = "running";
+          } else {
+            track.style.animationPlayState = "paused";
+          }
+        });
+      },
+      { rootMargin: "200px" },
+    ); // Pre-load animation slightly before it enters viewport
+
+    observer.observe(carousel);
+  }
+
+  initCarouselObserver();
+  document.addEventListener("astro:page-load", initCarouselObserver);
+
+  /**
    * 🎨 Palette: Smart Focus for Contact CTA
    * Smooth scrolls to form and intelligently manages focus:
    * - Desktop: Focuses input for immediate typing
