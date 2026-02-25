@@ -213,22 +213,32 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
     }, 500);
   }
 
-  // ⚡ Bolt: Singleton event listener
-  document.removeEventListener("click", handleVideoClick);
-  document.addEventListener("click", handleVideoClick);
+  // ⚡ Bolt: Singleton event listener pattern for View Transitions
+  // Ensures we don't accumulate listeners when the component script re-runs
+  function setupVideoPlayerListeners() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    // Cleanup previous click listener if it exists
+    if (win.__videoPlayerClickHandler) {
+      document.removeEventListener("click", win.__videoPlayerClickHandler);
+    }
+
+    // Register new click listener
+    win.__videoPlayerClickHandler = handleVideoClick;
+    document.addEventListener("click", handleVideoClick);
+  }
+
+  setupVideoPlayerListeners();
 
   // ⚡ Bolt: Prefetch Plyr resources on hover/focus to improve perceived performance
   // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
   function initVideoPrefetch() {
-    // Check if already prefetched this session (global flag)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((window as any)._plyrPrefetched) return;
-
     const wrappers = document.querySelectorAll(".video-player-wrapper");
     if (wrappers.length === 0) return;
 
+    // Prefetch logic - idempotent
     const prefetch = () => {
-      // Double check inside the handler in case it fired multiple times quickly
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((window as any)._plyrPrefetched) return;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -236,7 +246,6 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 
       // Start fetching chunks in background
       // The browser dedupes these requests automatically
-      // When the user clicks, the 'await import' in handleVideoClick will resolve instantly from cache
       try {
         // @ts-ignore
         import("plyr/dist/plyr.css");
@@ -245,25 +254,33 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
       } catch {
         // Silent failure is acceptable for prefetch
       }
-
-      // Cleanup listeners globally since we only need to fetch once
-      wrappers.forEach((w) => {
-        w.removeEventListener("mouseenter", prefetch);
-        w.removeEventListener("touchstart", prefetch);
-        w.removeEventListener("focusin", prefetch);
-      });
     };
 
     // Attach passive listeners to all video wrappers
+    // We attach these every time because elements are new on navigation
     wrappers.forEach((wrapper) => {
-      wrapper.addEventListener("mouseenter", prefetch, { passive: true });
-      wrapper.addEventListener("touchstart", prefetch, { passive: true });
-      wrapper.addEventListener("focusin", prefetch, { passive: true });
+      // Remove old listeners if any (though likely new elements)
+      wrapper.removeEventListener("mouseenter", prefetch);
+      wrapper.removeEventListener("touchstart", prefetch);
+      wrapper.removeEventListener("focusin", prefetch);
+
+      wrapper.addEventListener("mouseenter", prefetch, {
+        passive: true,
+        once: true,
+      });
+      wrapper.addEventListener("touchstart", prefetch, {
+        passive: true,
+        once: true,
+      });
+      wrapper.addEventListener("focusin", prefetch, {
+        passive: true,
+        once: true,
+      });
     });
   }
 
-  // ⚡ Bolt: Initialize Skeletons (must be per-element as it depends on individual load)
-  document.addEventListener("astro:page-load", () => {
+  // ⚡ Bolt: Initialize Skeletons and Prefetch
+  function initVideoPlayer() {
     initVideoPrefetch();
 
     const wrappers = document.querySelectorAll(".video-player-wrapper");
@@ -271,6 +288,10 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
       const posterImg = wrapper.querySelector("img");
       const skeleton = wrapper.querySelector(".skeleton");
       if (posterImg && skeleton) {
+        // Skip if already initialized (though unlikely on new DOM)
+        if (wrapper.hasAttribute("data-skeleton-init")) return;
+        wrapper.setAttribute("data-skeleton-init", "true");
+
         const removeSkeleton = () => {
           skeleton.classList.add("opacity-0");
           setTimeout(() => skeleton.remove(), 500);
@@ -282,7 +303,28 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
         }
       }
     });
-  });
+  }
+
+  // ⚡ Bolt: Manage page load listener singleton
+  function setupPageLoadListener() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__videoPlayerLoadHandler) {
+      document.removeEventListener(
+        "astro:page-load",
+        win.__videoPlayerLoadHandler,
+      );
+    }
+
+    win.__videoPlayerLoadHandler = initVideoPlayer;
+    document.addEventListener("astro:page-load", initVideoPlayer);
+
+    // Run immediately for current execution
+    initVideoPlayer();
+  }
+
+  setupPageLoadListener();
 </script>
 
 <style>

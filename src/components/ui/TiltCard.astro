@@ -128,6 +128,21 @@ const {
     });
   }
 
-  // Re-run on page transitions (astro:page-load fires on initial load too)
-  document.addEventListener("astro:page-load", initTiltCards);
+  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
+  function setupTiltListeners() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__tiltInitHandler) {
+      document.removeEventListener("astro:page-load", win.__tiltInitHandler);
+    }
+
+    win.__tiltInitHandler = initTiltCards;
+    document.addEventListener("astro:page-load", initTiltCards);
+
+    // Run immediately
+    initTiltCards();
+  }
+
+  setupTiltListeners();
 </script>

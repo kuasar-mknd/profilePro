@@ -410,9 +410,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     );
   }
 
-  initCarouselTouch();
-  document.addEventListener("astro:page-load", initCarouselTouch);
-
   /**
    * ⚡ Bolt: Carousel Visibility Optimization
    * Pauses the infinite scroll animation when the carousel is not in the viewport
@@ -443,9 +440,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
     observer.observe(carousel);
   }
-
-  initCarouselObserver();
-  document.addEventListener("astro:page-load", initCarouselObserver);
 
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
@@ -491,6 +485,28 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     });
   }
 
-  initHeroCTA();
-  document.addEventListener("astro:page-load", initHeroCTA);
+  // ⚡ Bolt: Singleton Listener Pattern
+  // Consolidates initialization logic and prevents listener accumulation
+  function setupHeroListeners() {
+    const initAll = () => {
+      initCarouselTouch();
+      initCarouselObserver();
+      initHeroCTA();
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__heroInitHandler) {
+      document.removeEventListener("astro:page-load", win.__heroInitHandler);
+    }
+
+    win.__heroInitHandler = initAll;
+    document.addEventListener("astro:page-load", initAll);
+
+    // Run immediately for current execution
+    initAll();
+  }
+
+  setupHeroListeners();
 </script>
