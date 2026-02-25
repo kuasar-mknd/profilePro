@@ -1,5 +1,6 @@
 ---
 import { getImage } from "astro:assets";
+
 import { getCollection, type CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
@@ -19,9 +20,9 @@ const projectImages = projects.map((p) => ({
 
 // Shuffle images function
 function shuffle(array: any[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+  for (let idx = array.length - 1; idx > 0; idx--) {
+    const j = Math.floor(Math.random() * (idx + 1));
+    [array[idx], array[j]] = [array[j], array[idx]];
   }
   return array;
 }
@@ -32,24 +33,20 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
 // the performance benefits of a single <img> tag.
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
-const optimizedSlides = await Promise.all(
-  slides.map(async (slide) => {
-    // Generate candidates for srcset matching the original Picture configuration
-    const [w224, w288, w448, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
-    ]);
+const optimizedSlides = [];
+for (const slide of slides) {
+  const w224 = await getImage({ src: slide.src, width: 224, format: "webp", quality: 80 });
+  const w288 = await getImage({ src: slide.src, width: 288, format: "webp", quality: 80 });
+  const w448 = await getImage({ src: slide.src, width: 448, format: "webp", quality: 80 });
+  const w576 = await getImage({ src: slide.src, width: 576, format: "webp", quality: 80 });
 
-    return {
-      alt: slide.alt,
-      src: w288.src, // Default src
-      srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 224px, 288px",
-    };
-  }),
-);
+  optimizedSlides.push({
+    alt: slide.alt,
+    src: w288.src,
+    srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
+    sizes: "(max-width: 768px) 224px, 288px",
+  });
+}
 
 // ⚡ Bolt: Duplicate slides for seamless infinite scroll
 // Limited to 15 unique items (30 total) to cap DOM nodes and memory usage
