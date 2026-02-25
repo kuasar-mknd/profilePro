@@ -18,3 +18,6 @@ Implementing a Defense-in-Depth strategy since no critical vulnerabilities were 
 ### 🔮 Future Watchlist
 - **Local Fonts:** Move Open Graph image fonts to local `node_modules` reference to remove build-time external dependency. (Blocked by environment access to `node_modules` currently).
 - **CSP Refinement:** Investigate if `data:` can be removed from `img-src` and `font-src`.
+
+### 🔄 PR Status Update
+- **"The Hardener" Batch:** PR was closed as duplicate/superseded by changes merged into master. Work acknowledged and stopped.
