@@ -2,21 +2,7 @@
 const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
 const Element = href ? "a" : "span";
-
-// 🎨 Palette: Accessibility Enhancement - Active State Detection
-// Normalize paths (strip trailing slashes) to accurately detect if this tag matches the current page
-const currentPath = Astro.url.pathname.replace(/\/$/, "");
-const targetPath = href ? href.replace(/\/$/, "") : "";
-// Decode URI component to handle special characters (e.g. accents) in URL
-const decodedCurrentPath = decodeURIComponent(currentPath);
-const decodedTargetPath = decodeURIComponent(targetPath);
-const isActive = href && decodedCurrentPath === decodedTargetPath;
-
-const ariaLabel = href
-  ? isActive
-    ? `Page actuelle : Tag ${tag}`
-    : `Voir les projets avec le tag ${tag}`
-  : undefined;
+const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
 ---
 
 {
@@ -25,17 +11,13 @@ const ariaLabel = href
       href={href}
       aria-label={ariaLabel}
       title={ariaLabel}
-      aria-current={isActive ? "page" : undefined}
       class:list={[
-        "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm transition-all duration-300 relative z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
-        isActive
-          ? "bg-pacamara-accent text-white border border-pacamara-accent cursor-default"
-          : isDark
-            ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-            : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
+        "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm",
+        isDark
+          ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+          : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
         href &&
-          !isActive &&
-          "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent cursor-pointer",
+          "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent transition-all duration-300 relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
       ]}
       style="contain: layout style;"
     >
