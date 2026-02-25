@@ -2,7 +2,18 @@
 const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
 const Element = href ? "a" : "span";
-const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
+
+// 🎨 Palette: Determine active state based on current URL
+// Normalize paths by removing trailing slashes for consistent comparison
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const targetPath = href ? href.replace(/\/$/, "") || "/" : "";
+const isActive = href && currentPath === targetPath;
+
+const ariaLabel = isActive
+  ? `Page actuelle : Tag ${tag}`
+  : href
+    ? `Voir les projets avec le tag ${tag}`
+    : `Tag : ${tag}`;
 ---
 
 {
@@ -11,13 +22,21 @@ const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
       href={href}
       aria-label={ariaLabel}
       title={ariaLabel}
+      aria-current={isActive ? "page" : undefined}
       class:list={[
-        "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm",
-        isDark
-          ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-          : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
+        "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm transition-all duration-300",
+        // Active state style (overrides variant)
+        isActive
+          ? "bg-pacamara-accent border border-pacamara-accent text-white shadow-md cursor-default"
+          : isDark
+            ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+            : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
+        // Hover effects only if linked and NOT active
         href &&
-          "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent transition-all duration-300 relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
+          !isActive &&
+          "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
+        // If active, keep z-index but remove pointer interaction cues
+        isActive && "relative z-20",
       ]}
       style="contain: layout style;"
     >
