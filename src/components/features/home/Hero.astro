@@ -1,5 +1,6 @@
 ---
 import { getImage } from "astro:assets";
+import { limitConcurrency } from "../../../utils/async";
 import { getCollection, type CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
@@ -27,22 +28,26 @@ function shuffle(array: any[]) {
 }
 
 const slides = shuffle([...projectImages]).slice(0, 15);
-const optimizedSlides = await Promise.all(
-  slides.map(async (slide) => {
-    const [w224, w288, w448, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
+
+// 🚀 Optimization: Added limitConcurrency to prevent build timeouts/OOM
+// and reduced the number of image variants to 2 (mobile/desktop + retina)
+// as suggested by memory for Render free tier compatibility.
+const optimizedSlides = await limitConcurrency(
+  slides,
+  async (slide) => {
+    const [w288, w576] = await Promise.all([
       getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
       getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
     ]);
 
     return {
       alt: slide.alt,
       src: w288.src,
-      srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 224px, 288px",
+      srcset: `${w288.src} 288w, ${w576.src} 576w`,
+      sizes: "(max-width: 768px) 288px, 288px", // Simplified sizes
     };
-  }),
+  },
+  3, // Concurrency limit
 );
 
 const allSlides = [...optimizedSlides, ...optimizedSlides];
@@ -207,18 +212,39 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     }
   }
 
-  .hero-title .letter-animate:nth-child(1) { animation-delay: 0.1s; }
-  .hero-title .letter-animate:nth-child(2) { animation-delay: 0.15s; }
-  .hero-title .letter-animate:nth-child(3) { animation-delay: 0.2s; }
-  .hero-title .letter-animate:nth-child(4) { animation-delay: 0.25s; }
-  .hero-title .letter-animate:nth-child(5) { animation-delay: 0.3s; }
-  .hero-title .letter-animate:nth-child(6) { animation-delay: 0.35s; }
-  .hero-title .letter-animate:nth-child(7) { animation-delay: 0.4s; }
-  .hero-title .letter-animate:nth-child(8) { animation-delay: 0.45s; }
-  .hero-title .letter-animate:nth-child(9) { animation-delay: 0.5s; }
-  .hero-title .letter-animate:nth-child(10) { animation-delay: 0.55s; }
+  .hero-title .letter-animate:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .hero-title .letter-animate:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .hero-title .letter-animate:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .hero-title .letter-animate:nth-child(4) {
+    animation-delay: 0.25s;
+  }
+  .hero-title .letter-animate:nth-child(5) {
+    animation-delay: 0.3s;
+  }
+  .hero-title .letter-animate:nth-child(6) {
+    animation-delay: 0.35s;
+  }
+  .hero-title .letter-animate:nth-child(7) {
+    animation-delay: 0.4s;
+  }
+  .hero-title .letter-animate:nth-child(8) {
+    animation-delay: 0.45s;
+  }
+  .hero-title .letter-animate:nth-child(9) {
+    animation-delay: 0.5s;
+  }
+  .hero-title .letter-animate:nth-child(10) {
+    animation-delay: 0.55s;
+  }
 
-  .hero-logo {}
+  .hero-logo {
+  }
 
   .lcp-image {
     transition: transform 0.5s ease;
