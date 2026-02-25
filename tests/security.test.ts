@@ -7,7 +7,7 @@ import {
   isValidUrl,
   YOUTUBE_ID_REGEX,
   VIMEO_ID_REGEX,
-} from "./security";
+} from "../src/utils/security";
 
 describe("Security Utilities", () => {
   describe("sanitizeUrl", () => {
