@@ -781,10 +781,6 @@
     contain: layout paint;
   }
 
-  .contain-strict {
-    contain: strict;
-  }
-
   /* Content Visibility */
   .cv-auto-400 {
     content-visibility: auto;
