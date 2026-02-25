@@ -23,3 +23,9 @@ Each entry should include:
 **Vulnerability:** Use of `innerHTML` to inject static SVGs into the DOM. While not immediately exploitable if content is static, it encourages unsafe patterns and bypasses some CSP protections.
 **Learning:** `document.createElementNS` is the correct API for creating SVG elements dynamically. It requires the namespace URI `http://www.w3.org/2000/svg`.
 **Prevention:** Replaced `innerHTML` assignments with a `createIcon` helper using `createElementNS` in client-side scripts.
+
+## 2026-02-25 - Protocol-Relative URL Bypass
+
+**Vulnerability:** Open Redirect via protocol-relative URLs (`//evil.com`) in `sanitizeUrl`.
+**Learning:** Checking for `startsWith('/')` is insufficient for local path validation because `//` also starts with `/` but is treated as a protocol-relative URL by browsers. This bypasses protocol whitelisting.
+**Prevention:** Explicitly check for and block strings starting with `//` when sanitizing URLs for local/relative path usage.

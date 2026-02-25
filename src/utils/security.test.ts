@@ -61,6 +61,11 @@ describe("Security Utilities", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
     });
+
+    it("should block protocol-relative URLs (open redirect risk)", () => {
+      expect(sanitizeUrl("//evil.com")).toBe("");
+      expect(sanitizeUrl("  //evil.com  ")).toBe("");
+    });
   });
 
   describe("sanitizeInput", () => {
