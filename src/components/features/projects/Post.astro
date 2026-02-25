@@ -78,7 +78,7 @@ const readingTime = Math.ceil(wordCount / 200);
         <Tag
           tag={postData.data.tag}
           variant="dark"
-          href={`/project/tag/${postData.data.tag}`}
+          href={`/project/tag/${encodeURIComponent(postData.data.tag)}`}
         />
       </div>
 

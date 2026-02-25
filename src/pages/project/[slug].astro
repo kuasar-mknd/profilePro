@@ -195,7 +195,10 @@ if (entry.data.type === "video" && entry.data.image) {
         items={[
           { label: "Accueil", href: "/" },
           { label: "Projets", href: "/project" },
-          { label: entry.data.tag, href: `/project/tag/${entry.data.tag}` },
+          {
+            label: entry.data.tag,
+            href: `/project/tag/${encodeURIComponent(entry.data.tag)}`,
+          },
           { label: entry.data.title },
         ]}
       />

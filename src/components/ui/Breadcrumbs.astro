@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { safeJson } from "../../utils/security";
+import { safeJson, sanitizeUrl } from "../../utils/security";
 
 interface Props {
   items: {
@@ -15,12 +15,15 @@ const { items } = Astro.props;
 const schema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: items.map((item, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: item.label,
-    item: item.href ? new URL(item.href, Astro.url).href : undefined,
-  })),
+  itemListElement: items.map((item, index) => {
+    const safeHref = item.href ? sanitizeUrl(item.href) : undefined;
+    return {
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      item: safeHref ? new URL(safeHref, Astro.url).href : undefined,
+    };
+  }),
 };
 ---
 
@@ -35,6 +38,7 @@ const schema = {
     {
       items.map((item, index) => {
         const isLast = index === items.length - 1;
+        const safeHref = item.href ? sanitizeUrl(item.href) : undefined;
 
         return (
           <li class="flex items-center gap-2">
@@ -56,7 +60,7 @@ const schema = {
               </span>
             ) : (
               <a
-                href={item.href}
+                href={safeHref || undefined}
                 class="hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-md p-1.5 -m-1.5"
               >
                 {item.label}
