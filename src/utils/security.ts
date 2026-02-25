@@ -164,6 +164,10 @@ export function sanitizeUrl(url: string): string {
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
+    // 🛡️ Sentinel: Block protocol-relative URLs (//) to prevent Open Redirect
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    }
     return trimmedUrl;
   }
 
