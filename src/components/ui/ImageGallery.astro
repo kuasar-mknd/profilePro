@@ -10,6 +10,7 @@ import { Picture, getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 import EmptyState from "./EmptyState.astro";
+import { limitConcurrency } from "../../utils/async";
 
 interface Props {
   folder?: string;
@@ -67,8 +68,11 @@ if (explicitImages && explicitImages.length > 0) {
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-const optimizedImages = await Promise.all(
-  galleryImages.map(async (img) => {
+// ⚡ Bolt: Limit concurrency to 5 images to prevent build OOM
+const optimizedImages = await limitConcurrency(
+  galleryImages,
+  5,
+  async (img) => {
     const optimized = await getImage({
       src: img.src,
       width: 1600,
@@ -79,7 +83,7 @@ const optimizedImages = await Promise.all(
       ...img,
       lightboxSrc: optimized.src,
     };
-  }),
+  },
 );
 
 // Column class mapping
