@@ -23,7 +23,7 @@ const logo2x = await getImage({
 
 <header
   id="main-header"
-  class="fixed w-full top-0 z-50 transition-colors duration-300 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-b border-white/20 dark:border-white/5 print:absolute print:border-none print:bg-transparent"
+  class="fixed w-full top-0 z-50 transition-colors duration-300 bg-white/80 dark:bg-pacamara-dark/80 backdrop-blur-md border-b border-white/20 dark:border-white/5"
 >
   <div class="container mx-auto px-7 h-20 flex items-center justify-between">
     <a
@@ -53,17 +53,17 @@ const logo2x = await getImage({
         />
       </div>
       <span
-        class="font-pacamara-space font-bold text-lg text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors print:text-black"
+        class="font-pacamara-space font-bold text-lg text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors"
         >Samuel Dulex</span
       >
     </a>
 
-    <div class="hidden md:flex items-center gap-8 print:hidden">
+    <div class="hidden md:flex items-center gap-8">
       <Navigation />
       <ModeSwitch />
     </div>
 
-    <div class="md:hidden flex items-center gap-4 relative z-50 print:hidden">
+    <div class="md:hidden flex items-center gap-4 relative z-50">
       <ModeSwitch />
       <HamburgerButton />
     </div>
