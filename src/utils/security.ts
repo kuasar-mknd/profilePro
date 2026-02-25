@@ -158,6 +158,11 @@ export function sanitizeUrl(url: string): string {
     return "about:blank";
   }
 
+  // 🛡️ Sentinel: Block protocol-relative URLs (//example.com) to prevent Open Redirects
+  if (trimmedUrl.startsWith("//")) {
+    return "";
+  }
+
   // Allow relative URLs (starting with / or #)
   if (
     trimmedUrl.startsWith("/") ||
