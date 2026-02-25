@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build & Deploy
     needs: [quality]
+    timeout-minutes: 45
     permissions:
       contents: read
       deployments: write
@@ -64,7 +65,7 @@ jobs:
 
       - name: Build Astro
         run: bun run build
-        timeout-minutes: 20
+        timeout-minutes: 45
         env:
           PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
