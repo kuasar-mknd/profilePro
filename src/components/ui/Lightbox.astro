@@ -206,6 +206,7 @@
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
+    will-change: transform, opacity;
   }
 
   .lightbox[aria-hidden="false"] .lightbox-image {
@@ -470,10 +471,6 @@
       if (trigger) this.triggerElement = trigger;
       this.currentIndex = index;
       this.updateImage();
-
-      // ⚡ Bolt: Optimize GPU usage by applying will-change only during interaction
-      this.image.style.willChange = "transform, opacity";
-
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
 
@@ -501,11 +498,6 @@
         this.triggerElement.focus();
         this.triggerElement = null;
       }
-
-      // ⚡ Bolt: Remove GPU layer promotion after transition completes
-      setTimeout(() => {
-        this.image.style.willChange = "auto";
-      }, 300);
     }
 
     /**
