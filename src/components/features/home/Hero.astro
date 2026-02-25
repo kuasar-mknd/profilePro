@@ -34,8 +34,8 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
 // the performance benefits of a single <img> tag.
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
-// ⚡ Bolt: Limit concurrency to 5 slides (20 concurrent image ops) to prevent build OOM
-const optimizedSlides = await limitConcurrency(slides, 5, async (slide) => {
+// ⚡ Bolt: Limit concurrency to 2 slides to prevent build OOM on Render
+const optimizedSlides = await limitConcurrency(slides, 2, async (slide) => {
   // Generate candidates for srcset matching the original Picture configuration
   const [w224, w288, w448, w576] = await Promise.all([
     getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),

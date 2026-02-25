@@ -68,10 +68,10 @@ if (explicitImages && explicitImages.length > 0) {
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-// ⚡ Bolt: Limit concurrency to 5 images to prevent build OOM
+// ⚡ Bolt: Limit concurrency to 2 images to prevent build OOM on Render
 const optimizedImages = await limitConcurrency(
   galleryImages,
-  5,
+  2,
   async (img) => {
     const optimized = await getImage({
       src: img.src,
