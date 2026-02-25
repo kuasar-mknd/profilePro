@@ -568,10 +568,12 @@ if (postData?.data?.image) {
           immediate: true,
           onNeedRefresh() {
             if (import.meta.env.DEV)
+              // eslint-disable-next-line no-console
               console.log("⚡ Bolt PWA: New content available");
           },
           onOfflineReady() {
             if (import.meta.env.DEV)
+              // eslint-disable-next-line no-console
               console.log("⚡ Bolt PWA: App ready to work offline");
           },
         });

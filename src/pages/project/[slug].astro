@@ -15,7 +15,8 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 import { getCollection, getEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const projectEntries = (await getCollection("project")).sort(
+  const allProjects = await getCollection("project");
+  const projectEntries = allProjects.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 
@@ -26,10 +27,11 @@ export async function getStaticPaths() {
       prevPost:
         index + 1 < projectEntries.length ? projectEntries[index + 1] : null,
       nextPost: index > 0 ? projectEntries[index - 1] : null,
+      allProjects,
     },
   }));
 }
-const { entry, prevPost, nextPost } = Astro.props;
+const { entry, prevPost, nextPost, allProjects } = Astro.props;
 
 // Calculate reading time
 const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
@@ -309,6 +311,7 @@ if (entry.data.type === "video" && entry.data.image) {
               } catch (err) {
                 // 🛡️ Sentinel: Dev-only logging
                 if (import.meta.env.DEV) {
+                  // eslint-disable-next-line no-console
                   console.error(
                     "Error sharing:",
                     err instanceof Error ? err.message : "Unknown error",
@@ -342,6 +345,7 @@ if (entry.data.type === "video" && entry.data.image) {
               } catch (err) {
                 // 🛡️ Sentinel: Dev-only logging
                 if (import.meta.env.DEV) {
+                  // eslint-disable-next-line no-console
                   console.error("Failed to copy", err);
                 }
               }
@@ -392,7 +396,10 @@ if (entry.data.type === "video" && entry.data.image) {
                   }
                 }, 2000);
               } catch (err) {
-                console.error("Failed to copy code", err);
+                if (import.meta.env.DEV) {
+                  // eslint-disable-next-line no-console
+                  console.error("Failed to copy code", err);
+                }
               }
             });
             wrapper.appendChild(btn);
@@ -504,9 +511,10 @@ if (entry.data.type === "video" && entry.data.image) {
       </h2>
       {/* ⚡ Bolt: Lazy load footer images to prioritize LCP */}
       <LatestPosts
-        postLimit="2"
+        postLimit={2}
         skipPost={entry.data.title}
         lazyLoadImages={true}
+        allPosts={allProjects}
       />
     </div>
   </div>
