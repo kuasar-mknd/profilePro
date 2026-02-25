@@ -56,7 +56,7 @@ jobs:
         run: bun run check
 
       - name: Run Unit Tests
-        run: bun test src tests
+        run: bun run test
 
       - name: Install Playwright Browsers
         run: bun x playwright install --with-deps

@@ -127,6 +127,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `bun run dev` : Optimise les images et lance le serveur de développement.
 - `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
 - `bun run check` : Vérifie le code (linting + formatage + types).
+- `bun run test` : Lance les tests unitaires.
 - `bun run lighthouse` : Lance l'audit de performance.
 - `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
 

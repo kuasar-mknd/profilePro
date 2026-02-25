@@ -9,3 +9,5 @@
 | 2026-01-11 | Documentation & Workflows | src/env.d.ts, docs/ENV.md, docs/ARCHITECTURE.md, .github/workflows/ci.yml, package.json                                 | Added type safety for env vars; Documented asset pipeline; Hardened CI permissions; Added missing dev dependency.   |
 | 2026-02-19 | Docs & Workflows | agent.md, CONTRIBUTING.md, .github/workflows/deploy.yml, package.json, .husky/pre-commit | Updated docs to use Bun; Fixed deploy workflow Node version; Optimized husky hooks. |
 | 2026-02-27 | Docs & CI        | docs/, .github/workflows/ci.yml, src/, eslint.config.js                                    | Updated Architecture doc (PWA, Images); Fixed CI linting; Added Unit Tests to CI    |
+| 2026-02-27 | Deployment       | package.json, bun.lock, package-lock.json                                                  | Moved build-critical devDeps (sharp, cheerio, astro-compress, etc.) to dependencies to fix Render build failure |
+| 2026-02-27 | Scripts          | package.json, README.md, .github/workflows/ci.yml                                          | Added `test` script; Updated CI to use `bun run test`; Documented test command      |
