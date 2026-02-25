@@ -45,3 +45,9 @@
 **Vulnerability:** Static form values (like email subjects or access keys) stored in hidden inputs can be modified by users via DevTools, leading to potential integrity issues or parameter tampering.
 **Learning:** Relying on client-side hidden inputs for sensitive or controlled values is insecure as the DOM is fully user-controllable.
 **Prevention:** Inject static values programmatically in the submission script and remove them from the HTML DOM entirely.
+
+## 2025-02-18 - Lightbox XSS Mitigation
+
+**Vulnerability:** Dynamic image sources read from `data-lightbox-src` attributes were used directly as image sources without sanitization, allowing potential XSS via `javascript:` protocol.
+**Learning:** Always sanitize URLs sourced from the DOM before using them in sensitive attributes like `src` or `href`, even if they seem benign.
+**Prevention:** Applied `sanitizeUrl` in `Lightbox.astro` to filter dangerous protocols.

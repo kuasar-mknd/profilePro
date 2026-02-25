@@ -94,4 +94,30 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("lightbox should sanitize malicious URLs", async ({ page }) => {
+    // Navigate to a project page with a gallery
+    await page.goto("/project/48h-geneve-2024");
+
+    // Wait for gallery
+    const galleryImage = page.locator("[data-gallery-image]").first();
+    await expect(galleryImage).toBeVisible();
+
+    // Inject malicious URL
+    await galleryImage.evaluate((el: HTMLElement) => {
+      el.dataset.lightboxSrc = "javascript:alert('XSS')";
+    });
+
+    // Click to open lightbox
+    await galleryImage.click();
+
+    // Wait for lightbox
+    const lightbox = page.locator("#lightbox");
+    await expect(lightbox).toHaveAttribute("aria-hidden", "false");
+
+    // Check src
+    const img = lightbox.locator(".lightbox-image");
+    const src = await img.getAttribute("src");
+    expect(src).toBe(""); // sanitizeUrl returns empty string for invalid protocols
+  });
 });
