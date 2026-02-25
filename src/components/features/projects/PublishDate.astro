@@ -1,11 +1,14 @@
 ---
-import dateFormat from "dateformat";
 const { date } = Astro.props;
+const day = String(date.getDate()).padStart(2, "0");
+const month = String(date.getMonth() + 1).padStart(2, "0");
+const year = date.getFullYear();
+const formattedDate = `${day}-${month}-${year}`;
 ---
 
 <time
   datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
 >
-  {dateFormat(date, "dd-mm-yyyy")}
+  {formattedDate}
 </time>

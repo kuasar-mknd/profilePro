@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "Portfolio professionnel de Samuel Dulex - Sp\u00e9cialiste en cr\u00e9ation de contenu vid\u00e9o et captation d'\u00e9v\u00e9nements",
+  "description": "Portfolio professionnel de Samuel Dulex - Spécialiste en création de contenu vidéo et captation d'événements",
   "author": {
     "name": "Samuel Dulex",
     "url": "https://kuasar.xyz"
@@ -41,7 +41,7 @@
     "check": "bun run format:check && bun run lint && bun run typecheck",
     "typecheck": "astro check",
     "test:e2e": "playwright test",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
@@ -58,7 +58,6 @@
     "astro": "^5.16.8",
     "astro-embed": "^0.12.0",
     "astro-icon": "^1.1.5",
-    "dateformat": "^5.0.3",
     "glob": "^13.0.0",
     "iconify-icon": "^3.0.2",
     "plyr": "^3.8.4",
@@ -79,7 +78,6 @@
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.57.0",
     "@types/bun": "^1.3.6",
-    "@types/dateformat": "^5.0.3",
     "@types/sanitize-html": "^2.16.0",
     "@typescript-eslint/eslint-plugin": "^8.52.0",
     "@typescript-eslint/parser": "^8.47.0",
