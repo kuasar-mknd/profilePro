@@ -11,7 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
+    inlineStylesheets: "never", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
   },
   image: {
     domains: ["kuasar.xyz"],
@@ -42,17 +42,7 @@ export default defineConfig({
     }),
     sitemap(),
     icon(),
-    compress({
-      CSS: true,
-      HTML: {
-        "html-minifier-terser": {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false, // Sharp handles this
-      JavaScript: true,
-      SVG: true,
-    }),
+    compress({ CSS: true, HTML: { "html-minifier-terser": { removeAttributeQuotes: false } }, Image: false, JavaScript: true, SVG: true }),
   ],
   site: "https://portfolio.kuasar.xyz",
   prefetch: {

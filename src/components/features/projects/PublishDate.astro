@@ -1,11 +1,17 @@
 ---
-import dateFormat from "dateformat";
 const { date } = Astro.props;
+
+// ⚡ Bolt: Native Date formatting to avoid extra library overhead
+const formattedDate = date.toLocaleDateString("fr-FR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+}).replace(/\//g, "-");
 ---
 
 <time
   datetime={date.toISOString()}
   class="font-pacamara-space tracking-widest transition-all duration-300 text-[14px] text-inherit"
 >
-  {dateFormat(date, "dd-mm-yyyy")}
+  {formattedDate}
 </time>
