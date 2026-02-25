@@ -55,6 +55,9 @@ jobs:
       - name: Verify Code (Lint + Format + Types)
         run: bun run check
 
+      - name: Run Unit Tests
+        run: bun test src tests
+
       - name: Install Playwright Browsers
         run: bun x playwright install --with-deps
 

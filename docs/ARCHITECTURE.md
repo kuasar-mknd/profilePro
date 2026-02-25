@@ -43,6 +43,14 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 - **Format**: Converts source images to **AVIF** (Quality 68).
 - **Caching**: Implements a "Smart Cache" by comparing `mtime` of source vs. output files. Optimization is skipped if the source hasn't changed, significantly speeding up local dev and CI builds.
 - **Sizing**: Resizes images to a `maxWidth` (e.g., 1600px) to prevent serving unnecessarily large files.
+- **Aspect Ratio**: Enforces a 9:16 aspect ratio for images prefixed with `slide-` (e.g., for mobile stories), ensuring consistent presentation.
+
+### Progressive Web App (PWA)
+- **Plugin**: `vite-plugin-pwa` (via `astro.config.mjs`).
+- **Capabilities**:
+  - **Offline Support**: Caches assets and pages via Workbox service worker.
+  - **Installable**: Provides a web manifest for adding to home screen.
+  - **Auto Update**: Updates the service worker automatically on new deployments.
 
 ### Critical Rendering Path
 - **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.

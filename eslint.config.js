@@ -62,6 +62,7 @@ export default [
       "*.config.mjs",
       "*.config.cjs",
       "analyze_lighthouse.cjs",
+      "test_url.ts",
     ],
     rules: {
       "no-console": "off",

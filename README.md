@@ -76,6 +76,7 @@ Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de d
 ### 🚀 Performance & SEO
 
 - **SEO optimisé** avec metadata complète
+- **PWA Ready** (Installable & Offline)
 - **RSS Feed** pour les dernières publications
 - **Images optimisées** via Sharp
 - **Carbon Badge** avec calcul d'empreinte écologique
