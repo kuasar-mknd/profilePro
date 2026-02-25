@@ -12,13 +12,14 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   build: {
     inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
+    concurrency: 1,
   },
   image: {
     domains: ["kuasar.xyz"],
     service: {
       entrypoint: "astro/assets/services/sharp",
     },
-    formats: ["avif"],
+    formats: ["webp"],
   },
   integrations: [
     mdx({
