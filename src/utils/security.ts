@@ -164,6 +164,11 @@ export function sanitizeUrl(url: string): string {
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
+    // 🛡️ Sentinel: Prevent protocol-relative URLs (starting with //)
+    // as they can be used to bypass protocol restrictions or for open redirects.
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    }
     return trimmedUrl;
   }
 

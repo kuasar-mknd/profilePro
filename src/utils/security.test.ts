@@ -28,6 +28,11 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("path/to/page")).toBe("path/to/page");
     });
 
+    it("should block protocol-relative URLs (starting with //)", () => {
+      expect(sanitizeUrl("//malicious.com")).toBe("");
+      expect(sanitizeUrl("//google.com/search")).toBe("");
+    });
+
     it("should block malformed URLs with colons", () => {
       expect(sanitizeUrl("http://:8080")).toBe("");
       expect(sanitizeUrl("invalid:url")).toBe("");
