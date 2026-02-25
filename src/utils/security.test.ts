@@ -1,7 +1,34 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should allow http and https", () => {
+      expect(isValidUrl("http://example.com")).toBe(true);
+      expect(isValidUrl("https://example.com")).toBe(true);
+    });
+
+    it("should allow relative paths", () => {
+      expect(isValidUrl("/path")).toBe(true);
+      expect(isValidUrl("/path/to/resource")).toBe(true);
+    });
+
+    it("should block protocol-relative URLs (//)", () => {
+      expect(isValidUrl("//evil.com")).toBe(false);
+      expect(isValidUrl("//example.com/script.js")).toBe(false);
+    });
+
+    it("should allow mailto if option is set", () => {
+      expect(isValidUrl("mailto:test@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+    });
+
+    it("should block javascript:", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -26,6 +53,11 @@ describe("Security Utilities", () => {
     it("should allow relative paths without leading slash", () => {
       expect(sanitizeUrl("images/logo.png")).toBe("images/logo.png");
       expect(sanitizeUrl("path/to/page")).toBe("path/to/page");
+    });
+
+    it("should block protocol-relative URLs (open redirect risk)", () => {
+      expect(sanitizeUrl("//evil.com")).toBe("");
+      expect(sanitizeUrl("//google.com/search")).toBe("");
     });
 
     it("should block malformed URLs with colons", () => {
