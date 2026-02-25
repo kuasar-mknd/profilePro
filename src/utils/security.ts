@@ -63,7 +63,7 @@ export function sanitizeInput(str: string): string {
     "\\": "&#92;", // Prevent escaping attacks
   };
   // Regex matches all keys in the map
-  const reg = /[&<>"'\/`=(){}[\]%\\]/g;
+  const reg = /[&<>"'/`=(){}[\]%\\]/g;
 
   return cleanStr.replace(reg, (match) => map[match] || match);
 }
@@ -120,6 +120,10 @@ export const VIMEO_ID_REGEX =
  * Allows http, https, and relative paths (/).
  * Optionally allows mailto:.
  *
+ * 🛡️ Sentinel: Explicitly rejects:
+ * - javascript: schemes (XSS)
+ * - protocol-relative URLs like //example.com (open redirect)
+ *
  * @param url - The URL to validate
  * @param options - Validation options
  * @returns True if the URL is safe
@@ -133,10 +137,12 @@ export function isValidUrl(
   const { allowMailto = false } = options;
 
   if (allowMailto) {
-    return /^(https?:\/\/|mailto:|\/)/i.test(url);
+    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
   }
 
-  return /^(https?:\/\/|\/)/i.test(url);
+  // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+  return /^(https?:\/\/|\/(?!\/))/i.test(url);
 }
 
 /**

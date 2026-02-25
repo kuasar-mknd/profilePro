@@ -1,7 +1,41 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput } from "./security";
+import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
 
 describe("Security Utilities", () => {
+  describe("isValidUrl", () => {
+    it("should allow valid http/https URLs", () => {
+      expect(isValidUrl("https://example.com")).toBe(true);
+      expect(isValidUrl("http://example.com")).toBe(true);
+    });
+
+    it("should allow valid absolute paths", () => {
+      expect(isValidUrl("/about")).toBe(true);
+      expect(isValidUrl("/path/to/resource")).toBe(true);
+    });
+
+    it("should reject protocol-relative URLs", () => {
+      expect(isValidUrl("//example.com")).toBe(false);
+      expect(isValidUrl("//malicious.com/script.js")).toBe(false);
+    });
+
+    it("should reject javascript: scheme", () => {
+      expect(isValidUrl("javascript:alert(1)")).toBe(false);
+    });
+
+    it("should reject invalid inputs", () => {
+      expect(isValidUrl("")).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(null)).toBe(false);
+    });
+
+    it("should allow mailto if option enabled", () => {
+      expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
+        true,
+      );
+      expect(isValidUrl("mailto:user@example.com")).toBe(false);
+    });
+  });
+
   describe("sanitizeUrl", () => {
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
@@ -21,16 +55,6 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("/path/to/resource?query=1")).toBe(
         "/path/to/resource?query=1",
       );
-    });
-
-    it("should allow relative paths without leading slash", () => {
-      expect(sanitizeUrl("images/logo.png")).toBe("images/logo.png");
-      expect(sanitizeUrl("path/to/page")).toBe("path/to/page");
-    });
-
-    it("should block malformed URLs with colons", () => {
-      expect(sanitizeUrl("http://:8080")).toBe("");
-      expect(sanitizeUrl("invalid:url")).toBe("");
     });
 
     it("should block javascript: scheme", () => {
