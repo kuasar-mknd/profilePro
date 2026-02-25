@@ -8,4 +8,4 @@
 | 2026-02-18 | Workflows                 | .github/workflows/ci.yml, .github/dependabot.yml                                                                        | Added missing Node 20 setup to CI (required for sharp); Removed unused env var; Added Dependabot                    |
 | 2026-01-11 | Documentation & Workflows | src/env.d.ts, docs/ENV.md, docs/ARCHITECTURE.md, .github/workflows/ci.yml, package.json                                 | Added type safety for env vars; Documented asset pipeline; Hardened CI permissions; Added missing dev dependency.   |
 | 2026-02-19 | Docs & Workflows | agent.md, CONTRIBUTING.md, .github/workflows/deploy.yml, package.json, .husky/pre-commit | Updated docs to use Bun; Fixed deploy workflow Node version; Optimized husky hooks. |
-| 2026-02-20 | Documentation & Workflows | README.md, docs/ARCHITECTURE.md, .github/workflows/codeql.yml | Corrected Playwright docs; Optimized CodeQL workflow with concurrency |
+| 2026-02-20 | Documentation & Workflows | README.md, docs/ARCHITECTURE.md, .github/workflows/codeql.yml | Corrected Playwright docs; Optimized CodeQL workflow with concurrency. PR closed as duplicate/incorporated. |
