@@ -16,3 +16,6 @@
 - **Discovery:** `BackgroundAnimation.astro` used `mix-blend-overlay` on a continuously animating element.
 - **Impact:** Forces constant GPU compositing and repainting, which drains battery on mobile.
 - **Fix:** Replaced with opacity adjustment to achieve similar visual effect without the compositing cost.
+
+## Learnings
+- **PR Closure:** This batch of work was marked as duplicate/superseded by another PR. Acknowledged and stopped work.
