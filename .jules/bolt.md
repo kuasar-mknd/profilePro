@@ -71,3 +71,8 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
+
+## 2026-02-24 - Handling Superseded Work
+
+**Learning:** Work can be superseded by parallel branches merging first. Always check for recent merges or existing PRs before starting optimization work to avoid duplication.
+**Action:** Briefly check the project's recent commit history or open PRs for similar changes before beginning a task.
