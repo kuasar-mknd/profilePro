@@ -424,12 +424,10 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // ⚡ Bolt: Toggle .paused class to manage both animation-play-state AND will-change
-          // This allows the browser to release GPU layers when off-screen
           if (entry.isIntersecting) {
-            track.classList.remove("paused");
+            track.style.animationPlayState = "running";
           } else {
-            track.classList.add("paused");
+            track.style.animationPlayState = "paused";
           }
         });
       },
@@ -441,26 +439,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   initCarouselObserver();
   document.addEventListener("astro:page-load", initCarouselObserver);
-
-  /**
-   * ⚡ Bolt: Letter Animation Cleanup
-   * Removes 'will-change' property from animated letters after they have appeared.
-   * This releases ~20 GPU layers that are no longer needed for static text.
-   */
-  function cleanupHeroAnimations() {
-    const letters = document.querySelectorAll(".letter-animate");
-    if (letters.length === 0) return;
-
-    // Wait for max animation delay (0.55s) + duration (0.6s) + buffer = ~1.2s
-    // Using 2000ms to be safe and avoid cutting off the tail of the cubic-bezier
-    setTimeout(() => {
-      letters.forEach((letter) => {
-        (letter as HTMLElement).style.willChange = "auto";
-      });
-    }, 2000);
-  }
-
-  document.addEventListener("astro:page-load", cleanupHeroAnimations);
 
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
