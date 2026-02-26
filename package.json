@@ -28,7 +28,7 @@
   "scripts": {
     "images": "node scripts/optimize-images.js",
     "dev": "npm run images && astro dev",
-    "start": "npm run images && astro dev",
+    "start": "astro preview --host 0.0.0.0 --port $PORT",
     "build": "npm run images && astro build && node scripts/generate-csp.mjs",
     "preview": "npm run images && astro preview",
     "astro": "astro",
