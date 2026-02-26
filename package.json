@@ -23,7 +23,10 @@
     "samuel-dulex"
   ],
   "overrides": {
-    "@isaacs/brace-expansion": "5.0.1"
+    "@isaacs/brace-expansion": "5.0.1",
+    "parse5": {
+      "entities": "^6.0.0"
+    }
   },
   "scripts": {
     "images": "node scripts/optimize-images.js",
