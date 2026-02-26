@@ -35,3 +35,9 @@ Each entry should include:
 **Vulnerability:** The project used `bun run` in build scripts and relied on `devDependencies` for build tools. This caused deployments on standard Node.js environments (like Render) to fail because `bun` was missing and `devDependencies` were pruned in production mode.
 **Learning:** Deployment environments often differ from local dev environments. Standardizing on `npm run` and ensuring build tools are in `dependencies` (not `devDependencies`) ensures compatibility and reproducible builds.
 **Prevention:** Updated `package.json` to use `npm run`, moved critical build tools to `dependencies`, and generated `package-lock.json`.
+
+## 2026-02-26 - Bun to NPM Migration
+
+**Vulnerability:** The project's build system relied on `bun` specific features and types (`bun-types`), which caused deployment failures on platforms that default to Node.js/NPM environments like Render. This could lead to availability issues or incomplete deployments.
+**Learning:** For broad compatibility with standard Node.js hosting providers, sticking to `npm` and removing runtime-specific types from `devDependencies` ensures a smoother deployment pipeline.
+**Prevention:** Removed `bun-types`, deleted `bun.lock`, and fully standardized on `npm` and `package-lock.json`.
