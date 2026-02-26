@@ -166,7 +166,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           maxlength="5000"
           minlength="10"
           autocomplete="off"
-          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-all duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30"
+          class="form-input w-full pl-5 pr-12 py-4 rounded-xl bg-white dark:bg-pacamara-dark border-2 border-pacamara-secondary/10 focus:border-pacamara-accent focus:ring-4 focus:ring-pacamara-accent/10 outline-none transition-colors transition-shadow duration-300 dark:text-white text-base placeholder:text-pacamara-primary/40 dark:placeholder:text-white/30 resize-none overflow-hidden"
           placeholder="Parlez-moi de votre projet..."></textarea>
         <div
           class="input-glow absolute inset-0 rounded-xl opacity-0 pointer-events-none"
@@ -393,6 +393,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
 
+      // 🎨 Palette: Auto-resize textarea logic
+      const autoResizeTextarea = () => {
+        messageInput.style.height = "auto";
+        messageInput.style.height = `${messageInput.scrollHeight}px`;
+      };
+
       const updateCounter = () => {
         const currentLength = messageInput.value.length;
         const remaining = max - currentLength;
@@ -438,8 +444,13 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         }
       };
 
-      messageInput.addEventListener("input", updateCounter);
+      messageInput.addEventListener("input", () => {
+        updateCounter();
+        autoResizeTextarea();
+      });
       updateCounter();
+      // Initialize resize
+      autoResizeTextarea();
     }
 
     resetBtn?.addEventListener("click", () => {
