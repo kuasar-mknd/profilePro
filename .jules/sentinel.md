@@ -29,3 +29,9 @@ Each entry should include:
 **Vulnerability:** `sanitizeUrl` allowed protocol-relative URLs (`//example.com`) while `isValidUrl` explicitly blocked them. This created an inconsistency where a URL deemed invalid could still be returned by the sanitizer, potentially leading to open redirects or ambiguous protocol usage.
 **Learning:** Security utilities must be consistent in their policy enforcement. When one utility blocks a pattern, others should not silently allow it unless explicitly documented and justified.
 **Prevention:** Added a check in `sanitizeUrl` to reject strings starting with `//` before processing them as relative paths, aligning it with `isValidUrl`.
+
+## 2026-02-26 - Deployment Environment Mismatch
+
+**Vulnerability:** The project used `bun run` in build scripts and relied on `devDependencies` for build tools. This caused deployments on standard Node.js environments (like Render) to fail because `bun` was missing and `devDependencies` were pruned in production mode.
+**Learning:** Deployment environments often differ from local dev environments. Standardizing on `npm run` and ensuring build tools are in `dependencies` (not `devDependencies`) ensures compatibility and reproducible builds.
+**Prevention:** Updated `package.json` to use `npm run`, moved critical build tools to `dependencies`, and generated `package-lock.json`.
