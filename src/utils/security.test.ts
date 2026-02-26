@@ -57,6 +57,11 @@ describe("Security Utilities", () => {
       );
     });
 
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+      expect(sanitizeUrl("//malicious.com/script.js")).toBe("");
+    });
+
     it("should block javascript: scheme", () => {
       expect(sanitizeUrl("javascript:alert(1)")).toBe("");
       expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
