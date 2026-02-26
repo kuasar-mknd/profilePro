@@ -14,6 +14,7 @@ import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getCollection, getEntry } from "astro:content";
+import { getReadingTime } from "../../utils/readingTime";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -35,8 +36,7 @@ export async function getStaticPaths() {
 const { entry, prevPost, nextPost, allProjects } = Astro.props;
 
 // Calculate reading time
-const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(entry.body);
 
 const { Content, headings } = await entry.render();
 const author = await getEntry(entry.data.author);
