@@ -14,6 +14,9 @@
     "url": "https://github.com/kuasar-mknd/profilePro.git"
   },
   "homepage": "https://kuasar.xyz",
+  "engines": {
+    "node": ">=18.17.1"
+  },
   "keywords": [
     "portfolio",
     "astro",
@@ -34,14 +37,14 @@
     "astro": "astro",
     "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
     "format:check": "prettier --check \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
-    "lint": "bun run lint:eslint && bun run lint:stylelint",
+    "lint": "npm run lint:eslint && npm run lint:stylelint",
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
     "lint:eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
     "lint:stylelint": "stylelint \"src/**/*.{css,scss}\"",
     "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lighthouse": "lhci autorun",
     "analyze": "ANALYZE=true npm run build && open dist/stats.html",
-    "check": "bun run format:check && bun run lint && bun run typecheck",
+    "check": "npm run format:check && npm run lint && npm run typecheck",
     "typecheck": "astro check",
     "test:e2e": "playwright test",
     "prepare": "husky",
@@ -60,7 +63,6 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.18.0",
-    "astro-compress": "^2.3.9",
     "astro-embed": "^0.12.0",
     "astro-icon": "^1.1.5",
     "cheerio": "^1.2.0",

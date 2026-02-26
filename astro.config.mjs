@@ -3,7 +3,6 @@ import mdx from "@astrojs/mdx";
 import rehypeExternalLinks from "rehype-external-links";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
-import compress from "astro-compress";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
@@ -12,6 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   build: {
     inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
+    concurrency: 1, // ⚡ Bolt: Limit concurrency to prevent OOM on Render
   },
   image: {
     domains: ["kuasar.xyz"],
@@ -42,17 +42,6 @@ export default defineConfig({
     }),
     sitemap(),
     icon(),
-    compress({
-      CSS: true,
-      HTML: {
-        "html-minifier-terser": {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false, // Sharp handles this
-      JavaScript: true,
-      SVG: true,
-    }),
   ],
   site: "https://portfolio.kuasar.xyz",
   prefetch: {

@@ -76,3 +76,8 @@
 
 **Learning:** When using `isVisible` flag to start/stop an animation loop based on user input (mousemove), ensure the initialization logic (snapping to mouse position) only runs on the *first* activation or after a prolonged idle state (hidden). Otherwise, the element snaps to the mouse on every frame, defeating the easing logic.
 **Action:** Check `opacity` or a dedicated `hasInitialized` flag before snapping position in `onMouseMove`.
+
+## 2025-02-26 - Dependency Vulnerabilities
+
+**Learning:**  is a common source of outdated dependencies and build complexity. For static sites deployed to modern hosts (Render, Vercel, Netlify), platform-level compression (gzip/brotli) is often sufficient and safer.
+**Action:** Removed  to resolve OpenSSF Scorecard warnings and simplify the build pipeline.
