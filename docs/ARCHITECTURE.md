@@ -47,6 +47,7 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 ### Critical Rendering Path
 - **Inline Styles**: CSS is inlined (`inlineStylesheets: "always"`) to eliminate render-blocking network requests.
 - **Font Optimization**: Fonts (Inter, Outfit, Space Grotesk) are self-hosted via `@fontsource` to avoid Google Fonts layout shifts.
+- **OG Image Generation**: Dynamic Open Graph images are generated at build time for each project using `satori` (HTML-to-SVG) and `resvg` (SVG-to-PNG), ensuring high-quality social previews without runtime overhead.
 
 ---
 

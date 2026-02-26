@@ -52,3 +52,13 @@ Directives for search engine crawlers.
 - **Method:** `GET`
 - **Format:** Plain Text
 - **Usage:** SEO / Crawling Control.
+
+### 4. OG Images (Social Cards)
+
+Open Graph images generated for each project to enhance social sharing.
+
+- **URL:** `/og/[slug].png`
+- **Method:** `GET` (Static Asset)
+- **Format:** PNG
+- **Usage:** Social Media Previews (Twitter, LinkedIn, Facebook).
+- **Generation:** Built using `satori` and `resvg` at build time.
