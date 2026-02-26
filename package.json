@@ -28,9 +28,9 @@
   "scripts": {
     "images": "node scripts/optimize-images.js",
     "dev": "npm run images && astro dev",
-    "start": "npm run images && astro dev",
+    "start": "astro preview --host",
     "build": "npm run images && astro build && node scripts/generate-csp.mjs",
-    "preview": "npm run images && astro preview",
+    "preview": "astro preview --host",
     "astro": "astro",
     "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
     "format:check": "prettier --check \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
