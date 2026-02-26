@@ -27,28 +27,27 @@
   },
   "scripts": {
     "images": "node scripts/optimize-images.js",
-    "dev": "npm run images && astro dev",
-    "start": "npm run images && astro dev",
-    "build": "npm run images && astro build && node scripts/generate-csp.mjs",
-    "preview": "npm run images && astro preview",
+    "dev": "bun run images && astro dev",
+    "start": "bun run images && astro dev",
+    "build": "bun run images && astro build && node scripts/generate-csp.mjs",
+    "preview": "bun run images && astro preview",
     "astro": "astro",
     "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
     "format:check": "prettier --check \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
-    "lint": "npm run lint:eslint && npm run lint:stylelint",
+    "lint": "bun run lint:eslint && bun run lint:stylelint",
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
     "lint:eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
     "lint:stylelint": "stylelint \"src/**/*.{css,scss}\"",
     "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lighthouse": "lhci autorun",
-    "analyze": "ANALYZE=true npm run build && open dist/stats.html",
-    "check": "npm run format:check && npm run lint && npm run typecheck",
+    "analyze": "ANALYZE=true bun run build && open dist/stats.html",
+    "check": "bun run format:check && bun run lint && bun run typecheck",
     "typecheck": "astro check",
     "test:e2e": "playwright test",
     "prepare": "husky",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
@@ -73,12 +72,12 @@
     "satori": "^0.18.4",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3",
     "vite-plugin-pwa": "^1.2.0",
     "workbox-window": "^7.4.0",
     "@iconify-json/mdi": "^1.2.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.6",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.58.2",
     "@types/dateformat": "^5.0.3",
@@ -93,6 +92,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
+    "typescript": "^5.9.3",
     "wrangler": "^4.68.1"
   }
 }
