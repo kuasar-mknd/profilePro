@@ -164,11 +164,6 @@ export function sanitizeUrl(url: string): string {
     return "about:blank";
   }
 
-  // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
-  if (trimmedUrl.startsWith("//")) {
-    return "";
-  }
-
   // Allow relative URLs (starting with / or #)
   if (
     trimmedUrl.startsWith("/") ||
