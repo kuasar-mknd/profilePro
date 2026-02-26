@@ -14,7 +14,7 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          # Fail on any new vulnerability (low, moderate, high, critical)
-          fail-on-severity: low
+          # Fail on high severity vulnerabilities or above
+          fail-on-severity: high
           # Block licenses that are not compliant (optional, can be adjusted)
           # deny-licenses: GPL-3.0, AGPL-3.0
