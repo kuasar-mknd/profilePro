@@ -57,6 +57,11 @@ describe("Security Utilities", () => {
       );
     });
 
+    it("should reject protocol-relative URLs (open redirect risk)", () => {
+      expect(sanitizeUrl("//malicious.com")).toBe("");
+      expect(sanitizeUrl("//example.com/script.js")).toBe("");
+    });
+
     it("should block javascript: scheme", () => {
       expect(sanitizeUrl("javascript:alert(1)")).toBe("");
       expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
