@@ -81,3 +81,11 @@
 
 **Learning:**  is a common source of outdated dependencies and build complexity. For static sites deployed to modern hosts (Render, Vercel, Netlify), platform-level compression (gzip/brotli) is often sufficient and safer.
 **Action:** Removed  to resolve OpenSSF Scorecard warnings and simplify the build pipeline.
+
+## 2025-02-26 - Dependency Review Scorecards
+
+**Learning:** GitHub's dependency-review action can fail on "OpenSSF Scorecard < 3" even for standard, widely-used dependencies like `vite-plugin-pwa` (via `workbox-build`) and `@astrojs/check` (via `volar-service-emmet`).
+**Action:** These are essentially false positives for a static site project (dev/build tools). To "fix" them without forking the ecosystem:
+1. Ensure packages are updated.
+2. If warnings persist, they are upstream issues.
+3. For this task, we will try to update `vite-plugin-pwa` and `@astrojs/check` to see if newer versions drop these deps.
