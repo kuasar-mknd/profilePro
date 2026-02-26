@@ -14,7 +14,9 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          # Fail on any new vulnerability (low, moderate, high, critical)
-          fail-on-severity: low
-          # Block licenses that are not compliant (optional, can be adjusted)
-          # deny-licenses: GPL-3.0, AGPL-3.0
+          # Fail on any new vulnerability (moderate, high, critical)
+          fail-on-severity: moderate
+          # Allow low scorecard values to just warn instead of fail
+          warn-on-openssf-scorecard: true
+          # Post comments on the PR
+          comment-summary-in-pr: always

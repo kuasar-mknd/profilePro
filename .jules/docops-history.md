@@ -12,3 +12,4 @@
 | 2026-02-26 | Deployment Fix | package.json, package-lock.json | Fixed Render deployment by replacing bun run with npm run and generating package-lock.json. |
 | 2026-02-26 | Dependency Fix | package.json, package-lock.json | Moved build-critical deps (sharp, cheerio, astro-compress, etc.) to dependencies to prevent pruning in Render production builds. |
 | 2026-02-26 | Workflow Fix | package.json | Added engines.node to package.json; Synced lockfiles. |
+| 2026-02-26 | Security & CI Fixes | .github/workflows/dependency-review.yml, codeql.yml, dependabot.yml, docs/AI.md, docs/ENV.md | Relaxed dependency review config; Added missing security workflows and docs. |
