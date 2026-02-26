@@ -141,7 +141,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const devBadge = document.createElement("div");
         devBadge.className =
           "text-xs text-gray-400 border border-gray-200 px-2 py-1 rounded";
-        devBadge.textContent = "Carbon Badge (Dev)";
+        devBadge.textContent = "Badge Carbone (Dev)";
         wcb.appendChild(devBadge);
         return;
       }
@@ -172,10 +172,10 @@ import SocialIcon from "../ui/SocialIcon.astro";
         scoreSpan.className =
           "bg-white dark:bg-pacamara-dark px-3 py-2 text-sm font-medium text-pacamara-primary dark:text-white flex items-center";
 
-        const co2Text = document.createTextNode(data.c + "g of CO");
+        const co2Text = document.createTextNode(data.c + "g de CO");
         const sub = document.createElement("sub");
         sub.textContent = "2";
-        const viewText = document.createTextNode("/view");
+        const viewText = document.createTextNode("/vue");
 
         scoreSpan.appendChild(co2Text);
         scoreSpan.appendChild(sub);
@@ -202,7 +202,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         percentSpan.className =
           "text-xs text-pacamara-primary/60 dark:text-white/60 font-outfit";
         percentSpan.textContent =
-          "Cleaner than " + data.p + "% of pages tested";
+          "Plus propre que " + data.p + "% des pages testées";
 
         wrapper.appendChild(badgeContainer);
         wrapper.appendChild(percentSpan);
@@ -215,7 +215,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const loading = document.createElement("div");
         loading.className =
           "animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60";
-        loading.textContent = "Measuring CO";
+        loading.textContent = "Calcul du CO";
         const sub = document.createElement("sub");
         sub.textContent = "2";
         loading.appendChild(sub);
@@ -244,7 +244,7 @@ import SocialIcon from "../ui/SocialIcon.astro";
                 e instanceof Error ? e.message : "Unknown error",
               );
             }
-            wcb.textContent = "No Result";
+            wcb.textContent = "Pas de résultat";
             localStorage.removeItem(cacheKey);
           });
       };
