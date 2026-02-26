@@ -23,7 +23,9 @@
     "samuel-dulex"
   ],
   "overrides": {
-    "@isaacs/brace-expansion": "5.0.1"
+    "@isaacs/brace-expansion": "5.0.1",
+    "lodash": "^4.17.23",
+    "tmp": "^0.2.5"
   },
   "scripts": {
     "images": "node scripts/optimize-images.js",
