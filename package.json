@@ -23,28 +23,38 @@
     "samuel-dulex"
   ],
   "overrides": {
-    "@isaacs/brace-expansion": "5.0.1"
+    "@isaacs/brace-expansion": "5.0.1",
+    "htmlparser2": "^10.1.0",
+    "entities": "^7.0.1",
+    "lodash": "^4.17.23",
+    "tmp": "^0.2.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "lodash": "^4.17.23",
+      "tmp": "^0.2.4"
+    }
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
     "images": "node scripts/optimize-images.js",
-    "dev": "npm run images && astro dev",
-    "start": "npm run images && astro dev",
-    "build": "npm run images && astro build && node scripts/generate-csp.mjs",
-    "preview": "npm run images && astro preview",
+    "dev": "pnpm run images && astro dev",
+    "start": "pnpm run images && astro dev",
+    "build": "pnpm run images && astro build && node scripts/generate-csp.mjs",
+    "preview": "pnpm run images && astro preview",
     "astro": "astro",
     "format": "prettier --write \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
     "format:check": "prettier --check \"src/**/*.{astro,js,jsx,ts,tsx,md,mdx}\"",
-    "lint": "npm run lint:eslint && npm run lint:stylelint",
+    "lint": "pnpm run lint:eslint && pnpm run lint:stylelint",
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx,.astro",
     "lint:eslint:fix": "eslint . --ext .js,.jsx,.ts,.tsx,.astro --fix",
     "lint:stylelint": "stylelint \"src/**/*.{css,scss}\"",
     "lint:stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
     "lighthouse": "lhci autorun",
-    "analyze": "ANALYZE=true npm run build && open dist/stats.html",
-    "check": "npm run format:check && npm run lint && npm run typecheck",
+    "analyze": "ANALYZE=true pnpm run build && open dist/stats.html",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck",
     "typecheck": "astro check",
     "test:e2e": "playwright test",
     "prepare": "husky",
