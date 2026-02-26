@@ -10,3 +10,4 @@
 | 2026-02-19 | Docs & Workflows | agent.md, CONTRIBUTING.md, .github/workflows/deploy.yml, package.json, .husky/pre-commit | Updated docs to use Bun; Fixed deploy workflow Node version; Optimized husky hooks. |
 | 2026-02-26 | Documentation & Workflows | docs/API.md, docs/ARCHITECTURE.md, README.md, .github/workflows/ci.yml, .github/workflows/deploy.yml | Fixed setup-node version; Added Bun caching; Updated API/Arch docs with OG info; Validated existing docs/workflows. |
 | 2026-02-26 | Deployment Fix | package.json, package-lock.json | Fixed Render deployment by replacing bun run with npm run and generating package-lock.json. |
+| 2026-02-26 | Dependency Fix | package.json, package-lock.json | Moved build-critical deps (sharp, cheerio, astro-compress, etc.) to dependencies to prevent pruning in Render production builds. |
