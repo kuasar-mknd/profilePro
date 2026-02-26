@@ -10,3 +10,7 @@
 ## 2025-02-26 - Build-Critical Dependencies on Render
 **Learning:** Render prunes `devDependencies` when `NODE_ENV=production` is set. Any package imported in `astro.config.mjs` or used in post-build scripts (like `generate-csp.mjs`) must be in `dependencies` even if they seem like dev tools.
 **Action:** Move `sharp`, `cheerio`, `astro-compress`, `rollup-plugin-visualizer`, and `@iconify-json/mdi` to `dependencies` to ensure build stability on Render.
+
+## 2025-02-26 - Caution with Global Overrides
+**Learning:** Forcing a single version of a low-level dependency (like `entities`) via `overrides` can break packages that depend on older versions with different internal structures (e.g., deep imports like `entities/lib/decode.js`). This leads to `Package subpath not defined` errors.
+**Action:** Avoid global overrides for common utility libraries unless absolutely necessary; let the package manager resolve compatible versions for each dependency tree.
