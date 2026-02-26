@@ -11,7 +11,6 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://astro.build/config
 export default defineConfig({
   build: {
-    concurrency: 1, // ⚡ Bolt: Limit concurrency to prevent OOM on Render
     inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
   },
   image: {

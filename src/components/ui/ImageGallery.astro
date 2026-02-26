@@ -39,26 +39,42 @@ if (explicitImages && explicitImages.length > 0) {
     alt: `Photo ${index + 1}`,
   }));
 } else if (folder) {
-  // Load from folder
+  // ⚡ Bolt: Use eager: false to prevent loading ALL images in the project into memory at once
+  // This drastically reduces build-time memory usage (OOM prevention)
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: true },
+    { eager: false },
   );
 
-  galleryImages = Object.entries(allImages)
-    .filter(([path]) => {
-      const folderMatch = path.includes(`/${folder}/`);
-      if (!folderMatch) return false;
+  // Filter paths first, without loading modules
+  const filteredPaths = Object.keys(allImages).filter((path) => {
+    const folderMatch = path.includes(`/${folder}/`);
+    if (!folderMatch) return false;
 
-      const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
-      if (isInSubfolder) return false;
+    const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
+    if (isInSubfolder) return false;
 
-      for (const pattern of excludePatterns) {
-        if (path.includes(pattern)) return false;
-      }
-      return true;
-    })
-    .map(([path, module]) => ({
+    for (const pattern of excludePatterns) {
+      if (path.includes(pattern)) return false;
+    }
+    return true;
+  });
+
+  // Load only the matched images in parallel
+  // ⚡ Bolt: We load modules concurrently but since they are just metadata, it's fast and low-memory
+  const loadedModules = await Promise.all(
+    filteredPaths.map(async (path) => {
+      const loader = allImages[path];
+      const module = await loader();
+      return {
+        path,
+        module,
+      };
+    }),
+  );
+
+  galleryImages = loadedModules
+    .map(({ path, module }) => ({
       src: module.default,
       filename: path.split("/").pop() || "",
       alt: `Photo - ${folder}`,

@@ -47,26 +47,21 @@ const {
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
-      // ⚡ Bolt: Cache layout metrics (document-relative)
-      let width = 0;
-      let height = 0;
-      let left = 0;
-      let top = 0;
+      let bounds: DOMRect | null = null;
       let frameId: number | null = null;
       let targetX = 0;
       let targetY = 0;
 
       function update() {
-        if (width === 0 || height === 0) return;
+        if (!bounds) return;
 
-        // ⚡ Pre-calculate center coordinates using cached dimensions
-        const centerX = width * 0.5;
-        const centerY = height * 0.5;
+        // ⚡ Pre-calculate center coordinates using cached bounds
+        const centerX = bounds.width * 0.5;
+        const centerY = bounds.height * 0.5;
 
-        // ⚡ Calculate relative position using document-relative coordinates
-        // This avoids layout thrashing from getBoundingClientRect() and fixes scroll drift
-        const relativeX = targetX - left - centerX;
-        const relativeY = targetY - top - centerY;
+        // ⚡ Calculate relative position
+        const relativeX = targetX - bounds.left - centerX;
+        const relativeY = targetY - bounds.top - centerY;
 
         // ⚡ Calculate rotation with division by center values
         const rotateX = (relativeY / centerY) * -maxTilt;
@@ -80,12 +75,10 @@ const {
       }
 
       function onMouseMove(e: MouseEvent) {
-        if (width === 0 || height === 0) return;
+        if (!bounds) return;
 
-        // ⚡ Use pageX/Y to get document-relative coordinates
-        // This is robust against scrolling and avoids layout reads
-        targetX = e.pageX;
-        targetY = e.pageY;
+        targetX = e.clientX;
+        targetY = e.clientY;
 
         // ⚡ Use requestAnimationFrame to throttle visual updates
         if (!frameId) {
@@ -109,9 +102,7 @@ const {
         // ⚡ Bolt: Remove layer promotion to save GPU memory
         cardStyle.willChange = "auto";
 
-        // Reset metrics
-        width = 0;
-        height = 0;
+        bounds = null;
 
         // ⚡ Bolt: Cleanup high-frequency listeners when not needed
         card.removeEventListener("mousemove", onMouseMove);
@@ -123,12 +114,7 @@ const {
         cardStyle.willChange = "transform";
 
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
-        const rect = el.getBoundingClientRect();
-        width = rect.width;
-        height = rect.height;
-        // ⚡ Calculate absolute document position to handle scrolling correctly
-        left = rect.left + window.scrollX;
-        top = rect.top + window.scrollY;
+        bounds = el.getBoundingClientRect();
 
         // ⚡ Bolt: Hint browser to promote layer only during interaction
         cardStyle.setProperty("will-change", "transform");
