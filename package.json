@@ -93,7 +93,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
-    "stylelint": "^16.26.1",
+    "stylelint": "^17.4.0",
     "stylelint-config-standard": "^39.0.1",
     "wrangler": "^4.69.0"
   }
