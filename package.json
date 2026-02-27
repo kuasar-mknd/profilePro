@@ -95,6 +95,6 @@
     "prettier-plugin-astro": "^0.14.1",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "wrangler": "^4.68.1"
+    "wrangler": "^4.69.0"
   }
 }
