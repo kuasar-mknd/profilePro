@@ -74,7 +74,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
+    "vite": "^6.0.0",
     "vite-plugin-pwa": "^1.2.0",
     "workbox-window": "^7.4.0"
   },
@@ -94,8 +94,8 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
-    "stylelint": "^17.4.0",
-    "stylelint-config-standard": "^39.0.1",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard": "^36.0.0",
     "wrangler": "^4.69.0"
   }
 }
