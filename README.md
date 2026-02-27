@@ -10,8 +10,8 @@
 
 <!-- Tech Stack -->
 
-[![Built with Astro](https://img.shields.io/badge/Astro-5.16-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Built with Astro](https://img.shields.io/badge/Astro-5.18-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
@@ -37,7 +37,7 @@
 Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    - Assurez-vous d'utiliser **Node.js 20+** (requis pour `sharp` précompilé et la compatibilité Astro).
     - Si l'erreur persiste :
       ```bash
       rm -rf node_modules bun.lockb
@@ -95,7 +95,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
+- Node.js 20+ (Requis pour l'optimisation des images via `sharp`)
 - Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
