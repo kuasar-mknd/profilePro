@@ -35,3 +35,9 @@ Each entry should include:
 **Vulnerability:** `isValidUrl` relied on a loose regex that only checked for the presence of a protocol, allowing malformed URLs with dangerous characters (e.g., `https://example.com" onclick="alert(1)`) to pass validation. This could lead to XSS if the validated URL was subsequently used in an unquoted or improperly quoted HTML attribute.
 **Learning:** Regex-based URL validation is often insufficient and prone to bypasses. The `URL` constructor provides a robust, spec-compliant parser that validates structure. Additionally, explicitly rejecting dangerous characters (quotes, angle brackets, control chars) is a necessary defense-in-depth measure.
 **Prevention:** Hardened `isValidUrl` and `sanitizeUrl` in `src/utils/security.ts` to use `new URL()` for parsing and explicitly reject dangerous characters. Updated tests to cover these attack vectors.
+
+## 2026-02-27 - ReDoS in `minimatch` (Dependency Override)
+
+**Vulnerability:** Regular Expression Denial of Service (ReDoS) in `minimatch` versions < 3.0.5, present in nested dependencies (`rimraf`, `workbox-build`, `filelist`).
+**Learning:** Deeply nested dependencies can harbor vulnerabilities that top-level updates miss. `npm overrides` allow for surgical fixes without waiting for upstream packages to update their dependencies.
+**Prevention:** Added specific `overrides` in `package.json` to force secure versions of `minimatch` (`^3.1.2`, `^5.1.9`, `^10.2.4`) for affected packages.
