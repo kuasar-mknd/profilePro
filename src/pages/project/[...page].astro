@@ -27,16 +27,17 @@ export async function getStaticPaths({
 
   return paginate(projectEntries, {
     pageSize: config.postsPerPage,
-    props: { allTags: uniqueTags },
+    props: { allTags: uniqueTags, allProjects: projectEntries },
   });
 }
 
 interface Props {
   page: Page<CollectionEntry<"project">>;
   allTags: string[];
+  allProjects: CollectionEntry<"project">[];
 }
 
-const { page, allTags } = Astro.props;
+const { page, allTags, allProjects } = Astro.props;
 ---
 
 <Base>
@@ -55,7 +56,7 @@ const { page, allTags } = Astro.props;
       >
         Une collection de mes projets récents en vidéo, photo et développement.
       </p>
-      <ProjectFilter tags={allTags} />
+      <ProjectFilter tags={allTags} allProjects={allProjects} />
     </ScrollReveal>
     {
       /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
