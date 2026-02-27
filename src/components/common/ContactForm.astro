@@ -502,31 +502,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     }
 
-    // ⚡ Bolt: Cache validation icons to avoid DOM query on every keystroke
-    // Uses WeakMap to prevent memory leaks when elements are removed from DOM
-    const validationIcons = new WeakMap<HTMLElement, HTMLElement>();
-
     function updateValidationIcon(
       input: HTMLInputElement | HTMLTextAreaElement,
       isValid: boolean,
     ) {
-      let iconWrapper = validationIcons.get(input);
-
-      if (!iconWrapper) {
-        iconWrapper = input.parentNode?.querySelector(
-          ".validation-icon",
-        ) as HTMLElement;
-        if (iconWrapper) {
-          validationIcons.set(input, iconWrapper);
-        }
-      }
-
-      // ⚡ Bolt: Only update DOM if state actually changed
+      const iconWrapper = input.parentNode?.querySelector(
+        ".validation-icon",
+      ) as HTMLElement;
       if (iconWrapper) {
-        const newState = isValid ? "true" : "false";
-        if (iconWrapper.dataset.visible !== newState) {
-          iconWrapper.dataset.visible = newState;
-        }
+        iconWrapper.dataset.visible = isValid ? "true" : "false";
       }
     }
 
