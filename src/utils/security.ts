@@ -184,9 +184,7 @@ export function sanitizeUrl(url: string): string {
     const protocol = parsed.protocol.toLowerCase();
 
     // Whitelist of safe protocols
-    if (
-      ["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)
-    ) {
+    if (["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)) {
       return trimmedUrl;
     }
 
