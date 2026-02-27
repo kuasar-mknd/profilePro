@@ -23,17 +23,13 @@ export async function getStaticPaths() {
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return {
       params: { tag },
-      props: {
-        projects: filteredProjects,
-        allTags: uniqueTags,
-        allProjects: allProjects,
-      },
+      props: { projects: filteredProjects, allTags: uniqueTags },
     };
   });
 }
 
 const { tag } = Astro.params;
-const { projects, allTags, allProjects } = Astro.props;
+const { projects, allTags } = Astro.props;
 ---
 
 <Base>
@@ -52,7 +48,7 @@ const { projects, allTags, allProjects } = Astro.props;
         <span class="capitalize">{tag}</span>
         <span class="text-shimmer">Projects</span>
       </h1>
-      <ProjectFilter tags={allTags} activeTag={tag} allProjects={allProjects} />
+      <ProjectFilter tags={allTags} activeTag={tag} />
     </ScrollReveal>
 
     {
