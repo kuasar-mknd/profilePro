@@ -74,18 +74,24 @@
 
 ## 2025-02-24 - Mouse Follower Animation Logic
 
-**Learning:** When using `isVisible` flag to start/stop an animation loop based on user input (mousemove), ensure the initialization logic (snapping to mouse position) only runs on the *first* activation or after a prolonged idle state (hidden). Otherwise, the element snaps to the mouse on every frame, defeating the easing logic.
+**Learning:** When using `isVisible` flag to start/stop an animation loop based on user input (mousemove), ensure the initialization logic (snapping to mouse position) only runs on the _first_ activation or after a prolonged idle state (hidden). Otherwise, the element snaps to the mouse on every frame, defeating the easing logic.
 **Action:** Check `opacity` or a dedicated `hasInitialized` flag before snapping position in `onMouseMove`.
 
 ## 2025-02-26 - Dependency Vulnerabilities
 
-**Learning:**  is a common source of outdated dependencies and build complexity. For static sites deployed to modern hosts (Render, Vercel, Netlify), platform-level compression (gzip/brotli) is often sufficient and safer.
-**Action:** Removed  to resolve OpenSSF Scorecard warnings and simplify the build pipeline.
+**Learning:** is a common source of outdated dependencies and build complexity. For static sites deployed to modern hosts (Render, Vercel, Netlify), platform-level compression (gzip/brotli) is often sufficient and safer.
+**Action:** Removed to resolve OpenSSF Scorecard warnings and simplify the build pipeline.
 
 ## 2025-02-26 - Dependency Review Scorecards
 
 **Learning:** GitHub's dependency-review action can fail on "OpenSSF Scorecard < 3" even for standard, widely-used dependencies like `vite-plugin-pwa` (via `workbox-build`) and `@astrojs/check` (via `volar-service-emmet`).
 **Action:** These are essentially false positives for a static site project (dev/build tools). To "fix" them without forking the ecosystem:
+
 1. Ensure packages are updated.
 2. If warnings persist, they are upstream issues.
 3. For this task, we will try to update `vite-plugin-pwa` and `@astrojs/check` to see if newer versions drop these deps.
+
+## 2026-10-24 - O(N\*M) Filtering in Astro Frontmatter
+
+**Learning:** When aggregating data for specific categories (like tag counts), using `Array.reduce` with nested `Array.filter` iterations over all items scales poorly (O(N\*M)) where N is items and M is categories. This causes unnecessary CPU strain during Astro build (SSG).
+**Action:** Replace nested `.filter()` iterations with a single-pass O(N) traversal. Initialize a hash map of categories, loop through the dataset exactly once, and increment the respective category counts.
