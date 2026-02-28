@@ -47,7 +47,12 @@ const {
       // ⚡ Cache the style object reference to avoid repeated lookups
       const cardStyle = el.style;
 
-      let bounds: DOMRect | null = null;
+      let bounds: {
+        width: number;
+        height: number;
+        left: number;
+        top: number;
+      } | null = null;
       let frameId: number | null = null;
       let targetX = 0;
       let targetY = 0;
@@ -59,7 +64,7 @@ const {
         const centerX = bounds.width * 0.5;
         const centerY = bounds.height * 0.5;
 
-        // ⚡ Calculate relative position
+        // ⚡ Calculate relative position (using document coordinates)
         const relativeX = targetX - bounds.left - centerX;
         const relativeY = targetY - bounds.top - centerY;
 
@@ -77,8 +82,9 @@ const {
       function onMouseMove(e: MouseEvent) {
         if (!bounds) return;
 
-        targetX = e.clientX;
-        targetY = e.clientY;
+        // ⚡ Bolt: Use page coordinates to handle scrolling correctly
+        targetX = e.pageX;
+        targetY = e.pageY;
 
         // ⚡ Use requestAnimationFrame to throttle visual updates
         if (!frameId) {
@@ -96,8 +102,6 @@ const {
         // ⚡ Reset styles
         cardStyle.setProperty("--rotate-x", "0deg");
         cardStyle.setProperty("--rotate-y", "0deg");
-        // ⚡ Bolt: Remove will-change to save GPU memory when not interacting
-        cardStyle.removeProperty("will-change");
 
         // ⚡ Bolt: Remove layer promotion to save GPU memory
         cardStyle.willChange = "auto";
@@ -114,10 +118,14 @@ const {
         cardStyle.willChange = "transform";
 
         // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
-        bounds = el.getBoundingClientRect();
-
-        // ⚡ Bolt: Hint browser to promote layer only during interaction
-        cardStyle.setProperty("will-change", "transform");
+        // ⚡ Bolt: Convert to document coordinates to support scrolling while hovering
+        const rect = el.getBoundingClientRect();
+        bounds = {
+          width: rect.width,
+          height: rect.height,
+          left: rect.left + window.scrollX,
+          top: rect.top + window.scrollY,
+        };
 
         // ⚡ Bolt: Lazy attach listeners only when interacting
         card.addEventListener("mousemove", onMouseMove);
