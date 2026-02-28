@@ -14,13 +14,7 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          # ⚡ Bolt: Adjusted severity to moderate to avoid blocking on low-risk issues
-          fail-on-severity: moderate
-          # ⚡ Bolt: Restrict scope to runtime dependencies
-          fail-on-scopes: runtime
-          # ⚡ Bolt: Allow permissive licenses
-          allow-licenses: MIT, Apache-2.0, ISC, BSD-2-Clause, BSD-3-Clause, CC0-1.0, Unlicense
-          # ⚡ Bolt: Disable Scorecard checks (set to 0) to prevent blocking on low-score dependencies
-          # Many valid npm packages have low scores due to automation/maintenance patterns
-          # We rely on 'fail-on-severity' for security.
-          warn-on-openssf-scorecard-level: 0
+          # Fail on any new vulnerability (low, moderate, high, critical)
+          fail-on-severity: low
+          # Block licenses that are not compliant (optional, can be adjusted)
+          # deny-licenses: GPL-3.0, AGPL-3.0
