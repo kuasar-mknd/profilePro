@@ -118,7 +118,7 @@ export const VIMEO_ID_REGEX =
 /**
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
- * Optionally allows mailto:.
+ * Optionally allows mailto:, tel:, and sms:.
  *
  * 🛡️ Sentinel: Explicitly rejects:
  * - javascript: schemes (XSS)
@@ -130,24 +130,66 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: {
+    allowMailto?: boolean;
+    allowTel?: boolean;
+    allowSms?: boolean;
+  } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
-  const { allowMailto = false } = options;
-
-  if (allowMailto) {
-    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
-    return /^(https?:\/\/|mailto:|\/(?!\/))/i.test(url);
+  // 🛡️ Sentinel: Check ORIGINAL string for control characters or dangerous patterns
+  // BEFORE trimming. Trimming hides trailing/leading control chars that might be malicious
+  // or indicative of a malformed input.
+  if (/[<>"'`\r\n\t]/.test(url)) {
+    return false;
   }
 
+  const trimmedUrl = url.trim();
+
   // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
-  return /^(https?:\/\/|\/(?!\/))/i.test(url);
+  if (trimmedUrl.startsWith("//")) {
+    return false;
+  }
+
+  const { allowMailto = false, allowTel = false, allowSms = false } = options;
+
+  try {
+    // Try parsing as absolute URL
+    const parsed = new URL(trimmedUrl);
+    const protocol = parsed.protocol.toLowerCase();
+
+    // Whitelist of safe protocols
+    const allowedProtocols = ["http:", "https:"];
+    if (allowMailto) {
+      allowedProtocols.push("mailto:");
+    }
+    if (allowTel) {
+      allowedProtocols.push("tel:");
+    }
+    if (allowSms) {
+      allowedProtocols.push("sms:");
+    }
+
+    return allowedProtocols.includes(protocol);
+  } catch {
+    // If parsing fails, check if it's a valid relative path
+    // Must start with / (but not //), #, or ?
+    if (
+      trimmedUrl.startsWith("/") ||
+      trimmedUrl.startsWith("#") ||
+      trimmedUrl.startsWith("?")
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 /**
  * Sanitizes a URL to ensure it uses a safe protocol.
- * Allowed protocols: http, https, mailto, tel.
+ * Allowed protocols: http, https, mailto, tel, sms.
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
  *
  * @param url - The URL to sanitize
@@ -183,7 +225,7 @@ export function sanitizeUrl(url: string): string {
     const protocol = parsed.protocol.toLowerCase();
 
     // Whitelist of safe protocols
-    if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
+    if (["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)) {
       return trimmedUrl;
     }
 

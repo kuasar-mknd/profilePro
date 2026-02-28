@@ -1,5 +1,11 @@
 import { describe, it, expect } from "bun:test";
-import { sanitizeUrl, sanitizeInput, isValidUrl } from "./security";
+import {
+  sanitizeUrl,
+  sanitizeInput,
+  isValidUrl,
+  VIMEO_ID_REGEX,
+  YOUTUBE_ID_REGEX,
+} from "./security";
 
 describe("Security Utilities", () => {
   describe("isValidUrl", () => {
@@ -34,6 +40,32 @@ describe("Security Utilities", () => {
       );
       expect(isValidUrl("mailto:user@example.com")).toBe(false);
     });
+
+    it("should allow tel if option enabled", () => {
+      expect(isValidUrl("tel:+1234567890", { allowTel: true })).toBe(true);
+      expect(isValidUrl("tel:+1234567890")).toBe(false);
+    });
+
+    it("should allow sms if option enabled", () => {
+      expect(isValidUrl("sms:+1234567890", { allowSms: true })).toBe(true);
+      expect(isValidUrl("sms:+1234567890")).toBe(false);
+    });
+
+    it("should reject URLs with dangerous characters (XSS vectors)", () => {
+      expect(isValidUrl("https://example.com<script>")).toBe(false);
+      expect(isValidUrl('https://example.com" onclick="alert(1)')).toBe(false);
+      expect(isValidUrl("https://example.com' onmouseover='alert(1)")).toBe(
+        false,
+      );
+      expect(isValidUrl("https://example.com`")).toBe(false);
+    });
+
+    it("should reject URLs with control characters (Header Injection)", () => {
+      // Note: "https://example.com\nHeader: Injection"
+      expect(isValidUrl("https://example.com\nHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\rHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\t")).toBe(false);
+    });
   });
 
   describe("sanitizeUrl", () => {
@@ -42,11 +74,12 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("http://example.com")).toBe("http://example.com");
     });
 
-    it("should allow mailto and tel schemes", () => {
+    it("should allow mailto, tel and sms schemes", () => {
       expect(sanitizeUrl("mailto:user@example.com")).toBe(
         "mailto:user@example.com",
       );
       expect(sanitizeUrl("tel:+1234567890")).toBe("tel:+1234567890");
+      expect(sanitizeUrl("sms:+1234567890")).toBe("sms:+1234567890");
     });
 
     it("should allow relative paths and anchors", () => {
@@ -96,6 +129,91 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("VIMEO_ID_REGEX", () => {
+    it("should match valid Vimeo URLs and extract ID", () => {
+      const urls = [
+        "https://vimeo.com/123456789",
+        "http://vimeo.com/123456789",
+        "vimeo.com/123456789",
+        "https://www.vimeo.com/123456789",
+      ];
+      urls.forEach((url) => {
+        const match = url.match(VIMEO_ID_REGEX);
+        expect(match).not.toBeNull();
+        expect(match![1]).toBe("123456789");
+        expect(match![2]).toBeUndefined();
+      });
+    });
+
+    it("should match valid Vimeo URLs with hash", () => {
+      const url = "https://vimeo.com/123456789/abcdef0123";
+      const match = url.match(VIMEO_ID_REGEX);
+      expect(match).not.toBeNull();
+      expect(match![1]).toBe("123456789");
+      expect(match![2]).toBe("abcdef0123");
+    });
+
+    it("should not match invalid Vimeo URLs", () => {
+      const invalidUrls = [
+        "https://notvimeo.com/123456789",
+        "https://vimeo.com/abc",
+        "https://vimeo.com/123456789/abc/def",
+      ];
+      invalidUrls.forEach((url) => {
+        expect(url.match(VIMEO_ID_REGEX)).toBeNull();
+      });
+    });
+  });
+
+  describe("YOUTUBE_ID_REGEX", () => {
+    it("should extract 11-character ID from various YouTube formats", () => {
+      const cases = [
+        {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          id: "dQw4w9WgXcQ",
+        },
+        { url: "https://youtu.be/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+        { url: "https://www.youtube.com/embed/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+        { url: "https://www.youtube.com/v/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+        {
+          url: "https://www.youtube.com/watch?feature=player_embedded&v=dQw4w9WgXcQ",
+          id: "dQw4w9WgXcQ",
+        },
+        { url: "https://www.youtube.com/u/x/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+      ];
+      cases.forEach(({ url, id }) => {
+        const match = url.match(YOUTUBE_ID_REGEX);
+        expect(match).not.toBeNull();
+        expect(match![1]).toBe(id);
+      });
+    });
+
+    it("should handle IDs with hyphens and underscores", () => {
+      const url = "https://youtu.be/a-B_3456789";
+      const match = url.match(YOUTUBE_ID_REGEX);
+      expect(match).not.toBeNull();
+      expect(match![1]).toBe("a-B_3456789");
+    });
+
+    it("should not match invalid YouTube IDs", () => {
+      const invalidUrls = [
+        "https://youtu.be/short",
+        "https://youtu.be/too-long-id-123",
+      ];
+      invalidUrls.forEach((url) => {
+        const match = url.match(YOUTUBE_ID_REGEX);
+        expect(match).toBeNull();
+      });
+    });
+
+    it("should match YouTube patterns even on non-youtube domains (current behavior)", () => {
+      const url = "https://notyoutube.com/watch?v=dQw4w9WgXcQ";
+      const match = url.match(YOUTUBE_ID_REGEX);
+      expect(match).not.toBeNull();
+      expect(match![1]).toBe("dQw4w9WgXcQ");
     });
   });
 });
