@@ -1,14 +1,17 @@
 ---
+import { sanitizeUrl } from "../../utils/security";
+
 const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
-const Element = href ? "a" : "span";
-const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
+const safeHref = href ? sanitizeUrl(href) : undefined;
+const Element = safeHref ? "a" : "span";
+const ariaLabel = safeHref ? `Voir les projets avec le tag ${tag}` : undefined;
 ---
 
 {
   tag && (
     <Element
-      href={href}
+      href={safeHref || undefined}
       aria-label={ariaLabel}
       title={ariaLabel}
       class:list={[
@@ -16,7 +19,7 @@ const ariaLabel = href ? `Voir les projets avec le tag ${tag}` : undefined;
         isDark
           ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
           : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
-        href &&
+        safeHref &&
           "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent transition-all duration-300 relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
       ]}
       style="contain: layout style;"
