@@ -49,8 +49,8 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
-    - Si `npm run test:e2e` échoue, lancez `npx playwright install --with-deps` pour installer les navigateurs.
-    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `npm run dev` dans un autre terminal avant les tests.
+    - Si `bun run test:e2e` échoue, lancez `bun x playwright install --with-deps` pour installer les navigateurs.
+    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `bun run dev` dans un autre terminal avant les tests.
 5.  **Build failed (assets)** :
     - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
@@ -95,9 +95,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- npm (Gestionnaire de paquets principal utilisé pour CI et déploiements)
-- Bun 1.0+ (Requis pour l'exécution rapide des scripts internes dans package.json)
+- Node.js 20+ (Requis pour l'optimisation des images via `sharp`)
+- Bun 1.0+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 
@@ -107,28 +106,28 @@ git clone https://github.com/kuasar-mknd/profilePro.git
 cd profilePro
 
 # Installer les dépendances
-npm install --legacy-peer-deps
+bun install
 
 # Configurer l'environnement
 cp .env.example .env
 
 # Installer les navigateurs pour les tests E2E
-npx playwright install --with-deps
+bun x playwright install --with-deps
 
 # Lancer le serveur de développement
-# Note: Cela lance d'abord l'optimisation des images ('npm run images' via le script dev)
-npm run dev
+# Note: Cela lance d'abord l'optimisation des images ('bun run images')
+bun run dev
 ```
 
 Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-- `npm run dev` : Optimise les images et lance le serveur de développement.
-- `npm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
-- `npm run check` : Vérifie le code (linting + formatage + types).
-- `npm run lighthouse` : Lance l'audit de performance.
-- `npm run test:e2e` : Lance les tests end-to-end avec Playwright.
+- `bun run dev` : Optimise les images et lance le serveur de développement.
+- `bun run build` : Génère le build de production (avec optimisation d'images et génération CSP).
+- `bun run check` : Vérifie le code (linting + formatage + types).
+- `bun run lighthouse` : Lance l'audit de performance.
+- `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
 
 ### API Access
 
