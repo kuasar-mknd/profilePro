@@ -44,6 +44,12 @@ Standard sitemap index for search engines.
 - **Format:** XML
 - **Usage:** SEO / Search Engine Crawlers.
 
+**Example Request:**
+
+```bash
+curl https://portfolio.kuasar.xyz/sitemap-index.xml
+```
+
 ### 3. Robots.txt
 
 Directives for search engine crawlers.
@@ -52,3 +58,9 @@ Directives for search engine crawlers.
 - **Method:** `GET`
 - **Format:** Plain Text
 - **Usage:** SEO / Crawling Control.
+
+**Example Request:**
+
+```bash
+curl https://portfolio.kuasar.xyz/robots.txt
+```
