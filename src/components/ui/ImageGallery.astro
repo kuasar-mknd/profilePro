@@ -39,15 +39,15 @@ if (explicitImages && explicitImages.length > 0) {
     alt: `Photo ${index + 1}`,
   }));
 } else if (folder) {
-  // ⚡ Bolt: Use eager: false to prevent loading ALL images in the project into memory at once
-  // This drastically reduces build-time memory usage (OOM prevention)
+  // Load from folder
+  // ⚡ Bolt: Use eager: false to prevent loading all images in the project
+  // We filter paths first, then load only the required modules
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
     { eager: false },
   );
 
-  // Filter paths first, without loading modules
-  const filteredPaths = Object.keys(allImages).filter((path) => {
+  const filteredImages = Object.entries(allImages).filter(([path]) => {
     const folderMatch = path.includes(`/${folder}/`);
     if (!folderMatch) return false;
 
@@ -60,26 +60,19 @@ if (explicitImages && explicitImages.length > 0) {
     return true;
   });
 
-  // Load only the matched images in parallel
-  // ⚡ Bolt: We load modules concurrently but since they are just metadata, it's fast and low-memory
-  const loadedModules = await Promise.all(
-    filteredPaths.map(async (path) => {
-      const loader = allImages[path];
+  // Load only filtered images
+  galleryImages = await Promise.all(
+    filteredImages.map(async ([path, loader]) => {
       const module = await loader();
       return {
-        path,
-        module,
+        src: module.default,
+        filename: path.split("/").pop() || "",
+        alt: `Photo - ${folder}`,
       };
     }),
   );
 
-  galleryImages = loadedModules
-    .map(({ path, module }) => ({
-      src: module.default,
-      filename: path.split("/").pop() || "",
-      alt: `Photo - ${folder}`,
-    }))
-    .sort((a, b) => a.filename.localeCompare(b.filename));
+  galleryImages.sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
