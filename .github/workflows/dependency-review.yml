@@ -23,4 +23,4 @@ jobs:
           # ⚡ Bolt: Disable Scorecard checks (set to 0) to prevent blocking on low-score dependencies
           # Many valid npm packages have low scores due to automation/maintenance patterns
           # We rely on 'fail-on-severity' for security.
-          min-score: 0
+          warn-on-openssf-scorecard-level: 0

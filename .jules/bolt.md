@@ -76,3 +76,8 @@
 
 **Learning:** When scripts in Astro components (e.g., `Lightbox.astro` in `Base.astro`) are re-executed during View Transitions (because they are in the swapped body), simply using `document.addEventListener('astro:page-load', ...)` accumulates duplicate listeners on every navigation. Each listener fires, causing redundant logic execution and potential memory leaks if closures hold onto stale references.
 **Action:** Implement a global guard (e.g., `window.__listenerAttached`) to ensure the `astro:page-load` listener is added exactly once per session, regardless of how many times the script is re-evaluated. Combine this with a global singleton instance (e.g., `window.__instance`) to persist state and ensure proper cleanup across navigations.
+
+## 2026-02-28 - Tag Frequency Calculation Optimization
+
+**Learning:** Calculating tag frequencies for a large number of projects (e.g., using `reduce` with a nested `filter`) results in an O(N*M) time complexity, where N is the number of tags and M is the number of projects. This can become a performance bottleneck during SSG builds as the number of projects scales.
+**Action:** Replaced the O(N*M) nested loop tag counting with a single-pass O(N) iteration using a hash map to accumulate counts.
