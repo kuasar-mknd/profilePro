@@ -9,21 +9,34 @@ import EmptyState from "../../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
-  const uniqueTags = [
-    ...new Set(allProjects.map((project) => project.data.tag).flat()),
-  ];
+
+  // ⚡ Bolt: Replace O(N*M) nested filter with O(N) hash map grouping for SSG performance
+  const tagProjectsMap = new Map<string, typeof allProjects>();
+
+  for (const project of allProjects) {
+    const projectTags = Array.isArray(project.data.tag)
+      ? project.data.tag
+      : [project.data.tag];
+
+    for (const tag of projectTags) {
+      if (!tagProjectsMap.has(tag)) {
+        tagProjectsMap.set(tag, []);
+      }
+      tagProjectsMap.get(tag)!.push(project);
+    }
+  }
+
+  const uniqueTags = Array.from(tagProjectsMap.keys());
 
   return uniqueTags.map((tag) => {
-    const filteredProjects = allProjects
-      .filter((project) =>
-        Array.isArray(project.data.tag)
-          ? project.data.tag.includes(tag)
-          : project.data.tag === tag,
-      )
-      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    const filteredProjects = tagProjectsMap.get(tag)!;
+    const sortedProjects = filteredProjects.sort(
+      (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    );
+
     return {
       params: { tag },
-      props: { projects: filteredProjects, allTags: uniqueTags },
+      props: { projects: sortedProjects, allTags: uniqueTags },
     };
   });
 }
