@@ -81,4 +81,25 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
       await expect(html).toHaveClass(/dark/);
     }
   });
+
+  test("textarea should auto-resize", async ({ page }) => {
+    await page.goto("/about");
+    const textarea = page.locator("#message");
+    await textarea.scrollIntoViewIfNeeded();
+
+    const initialHeight = await textarea.evaluate(
+      (el) => (el as HTMLElement).clientHeight,
+    );
+
+    // Fill with text containing many newlines to force resize
+    const longText =
+      "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8";
+    await textarea.fill(longText);
+
+    const newHeight = await textarea.evaluate(
+      (el) => (el as HTMLElement).clientHeight,
+    );
+
+    expect(newHeight).toBeGreaterThan(initialHeight);
+  });
 });
