@@ -502,31 +502,15 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     }
 
-    // ⚡ Bolt: Cache validation icon elements to prevent redundant DOM queries
-    const validationIconCache = new WeakMap<HTMLElement, HTMLElement>();
-
     function updateValidationIcon(
       input: HTMLInputElement | HTMLTextAreaElement,
       isValid: boolean,
     ) {
-      let iconWrapper = validationIconCache.get(input);
-
-      // Lazy load and cache the element
-      if (!iconWrapper) {
-        iconWrapper = input.parentNode?.querySelector(
-          ".validation-icon",
-        ) as HTMLElement;
-        if (iconWrapper) {
-          validationIconCache.set(input, iconWrapper);
-        }
-      }
-
+      const iconWrapper = input.parentNode?.querySelector(
+        ".validation-icon",
+      ) as HTMLElement;
       if (iconWrapper) {
-        const newState = isValid ? "true" : "false";
-        // ⚡ Bolt: Only update DOM if state actually changed (prevents layout thrashing on every keystroke)
-        if (iconWrapper.dataset.visible !== newState) {
-          iconWrapper.dataset.visible = newState;
-        }
+        iconWrapper.dataset.visible = isValid ? "true" : "false";
       }
     }
 
@@ -541,10 +525,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     emailInput?.addEventListener("input", () => {
-      const isValid = isValidEmail(emailInput.value);
-      updateValidationIcon(emailInput, isValid);
-
-      if (emailInput.hasAttribute("aria-invalid") && isValid) {
+      if (
+        emailInput.hasAttribute("aria-invalid") &&
+        isValidEmail(emailInput.value)
+      ) {
         emailInput.removeAttribute("aria-invalid");
         hideErrorIfFormIsValid();
       }
