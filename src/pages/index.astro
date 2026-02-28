@@ -37,8 +37,7 @@ const jsonLd = {
   <main>
     <Hero projects={allProjects} />
     <ServicesPreview />
-    {/* ⚡ Bolt: Lazy load latest posts to prioritize Hero LCP */}
-    <LatestPosts postLimit={7} allPosts={allProjects} lazyLoadImages={true} />
+    <LatestPosts postLimit={7} allPosts={allProjects} />
     <CTASection />
   </main>
 </Base>
