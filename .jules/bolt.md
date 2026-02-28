@@ -72,25 +72,22 @@
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
 
-<<<<<<< HEAD
-
 ## 2026-02-23 - Duplicate Listeners in Re-executed Scripts
 
-=======
+**Learning:** When scripts in Astro components (e.g., `Lightbox.astro` in `Base.astro`) are re-executed during View Transitions (because they are in the swapped body), simply using `document.addEventListener('astro:page-load', ...)` accumulates duplicate listeners on every navigation. Each listener fires, causing redundant logic execution and potential memory leaks if closures hold onto stale references.
+**Action:** Implement a global guard (e.g., `window.__listenerAttached`) to ensure the `astro:page-load` listener is added exactly once per session, regardless of how many times the script is re-evaluated. Combine this with a global singleton instance (e.g., `window.__instance`) to persist state and ensure proper cleanup across navigations.
 
 ## 2024-05-24 - DOM Query Specificity in SPAs
 
 **Learning:** In applications using Astro View Transitions (or any SPA framework), DOM nodes often persist across navigations. Running generic queries like `document.querySelectorAll('a[target="_blank"]')` on every navigation event means redundantly processing nodes that have already been modified.
 **Action:** Use specific CSS pseudo-classes like `:not([attribute])` or `:not(.class)` in `querySelectorAll` to let the native browser engine pre-filter elements, preventing redundant JS execution and string manipulation on the main thread.
 
-## 2026-10-24 - O(N\*M) Filtering in Astro Frontmatter
-
-> > > > > > > master
-
-**Learning:** When scripts in Astro components (e.g., `Lightbox.astro` in `Base.astro`) are re-executed during View Transitions (because they are in the swapped body), simply using `document.addEventListener('astro:page-load', ...)` accumulates duplicate listeners on every navigation. Each listener fires, causing redundant logic execution and potential memory leaks if closures hold onto stale references.
-**Action:** Implement a global guard (e.g., `window.__listenerAttached`) to ensure the `astro:page-load` listener is added exactly once per session, regardless of how many times the script is re-evaluated. Combine this with a global singleton instance (e.g., `window.__instance`) to persist state and ensure proper cleanup across navigations.
-
 ## 2026-02-28 - Tag Frequency Calculation Optimization
 
 **Learning:** Calculating tag frequencies for a large number of projects (e.g., using `reduce` with a nested `filter`) results in an O(N*M) time complexity, where N is the number of tags and M is the number of projects. This can become a performance bottleneck during SSG builds as the number of projects scales.
 **Action:** Replaced the O(N*M) nested loop tag counting with a single-pass O(N) iteration using a hash map to accumulate counts.
+
+## 2026-03-01 - Global Animation Observer Centralization
+
+**Learning:** Multiple components (like Hero carousels and backgrounds) were instantiating separate `IntersectionObserver` instances to pause infinite CSS animations when off-screen. This fragments performance optimizations and creates redundant memory overhead.
+**Action:** Centralized visibility tracking into a single global `animationObserver` in `Base.astro`. Appended selectors like `.infinite-scroll` and `.hero-gradient-vibrant` to the `querySelectorAll` block, allowing one observer (with a uniform `rootMargin: "200px"`) to orchestrate memory recovery for all infinite animations site-wide.
