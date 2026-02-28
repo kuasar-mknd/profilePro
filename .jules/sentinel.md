@@ -5,6 +5,7 @@ This file tracks security improvements made by the Sentinel agent to the profile
 ## Format
 
 Each entry should include:
+
 - Date of fix
 - Vulnerability type
 - Description of the issue
