@@ -71,8 +71,3 @@
 
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
-
-## 2026-02-28 - Tag Frequency Calculation Optimization
-
-**Learning:** Calculating tag frequencies for a large number of projects (e.g., using `reduce` with a nested `filter`) results in an O(N*M) time complexity, where N is the number of tags and M is the number of projects. This can become a performance bottleneck during SSG builds as the number of projects scales.
-**Action:** Replaced the O(N*M) nested loop tag counting with a single-pass O(N) iteration using a hash map to accumulate counts.
