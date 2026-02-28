@@ -73,5 +73,11 @@
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
 
 ## 2024-05-24 - DOM Query Specificity in SPAs
+
 **Learning:** In applications using Astro View Transitions (or any SPA framework), DOM nodes often persist across navigations. Running generic queries like `document.querySelectorAll('a[target="_blank"]')` on every navigation event means redundantly processing nodes that have already been modified.
 **Action:** Use specific CSS pseudo-classes like `:not([attribute])` or `:not(.class)` in `querySelectorAll` to let the native browser engine pre-filter elements, preventing redundant JS execution and string manipulation on the main thread.
+
+## 2026-02-28 - Tag Frequency Calculation Optimization
+
+**Learning:** Calculating tag frequencies for a large number of projects (e.g., using `reduce` with a nested `filter`) results in an O(N*M) time complexity, where N is the number of tags and M is the number of projects. This can become a performance bottleneck during SSG builds as the number of projects scales.
+**Action:** Replaced the O(N*M) nested loop tag counting with a single-pass O(N) iteration using a hash map to accumulate counts.
