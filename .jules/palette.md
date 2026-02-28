@@ -8,10 +8,10 @@
 **Learning:** For toggle controls (like a theme switcher), the visible text label should describe the state the control will transition _to_, not its current state. This aligns the button's affordance with its action, making the UI more intuitive. For example, a theme switcher in light mode should display "Switch to Dark" (or an icon/label representing dark mode).
 **Action:** When implementing toggle buttons, ensure all user-facing labels (aria-label, title, and visible text) are predictive of the resulting state.
 
-## 2025-02-18 - Visual Inconsistency & Positive Feedback
+## 2025-02-20 - Skip Link Transitions
 
-**Learning:** Inconsistencies in real-time feedback (like having validation icons for some fields but not others) can confuse users and make the interface feel unpolished. Providing immediate positive reinforcement across all fields improves the sense of progress and confidence during form completion.
-**Action:** Always ensure real-time feedback mechanisms (icons, counters, etc.) are applied consistently across similar UI elements within a component.
+**Learning:** Screen reader and keyboard users benefit from skip links that transition smoothly into view rather than abruptly popping into existence via `sr-only` removal. The abrupt layout/visual change can be disorienting.
+**Action:** Use CSS transforms (`-translate-y-[150%] focus-visible:translate-y-0`) instead of `sr-only focus:not-sr-only` for skip links to provide spatial context and a smoother experience.
 
 ## 2025-10-24 - Accessible Skip-to-Content Links
 
