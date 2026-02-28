@@ -161,11 +161,17 @@ describe("Security Utilities", () => {
   describe("YOUTUBE_ID_REGEX", () => {
     it("should extract 11-character ID from various YouTube formats", () => {
       const cases = [
-        { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+        {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          id: "dQw4w9WgXcQ",
+        },
         { url: "https://youtu.be/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
         { url: "https://www.youtube.com/embed/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
         { url: "https://www.youtube.com/v/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
-        { url: "https://www.youtube.com/watch?feature=player_embedded&v=dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
+        {
+          url: "https://www.youtube.com/watch?feature=player_embedded&v=dQw4w9WgXcQ",
+          id: "dQw4w9WgXcQ",
+        },
         { url: "https://www.youtube.com/u/x/dQw4w9WgXcQ", id: "dQw4w9WgXcQ" },
       ];
       cases.forEach(({ url, id }) => {
