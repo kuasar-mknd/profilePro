@@ -14,6 +14,7 @@ import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getCollection, getEntry } from "astro:content";
+import { getReadingTime } from "../../utils/readingTime";
 
 export async function getStaticPaths() {
   const allProjects = await getCollection("project");
@@ -35,8 +36,7 @@ export async function getStaticPaths() {
 const { entry, prevPost, nextPost, allProjects } = Astro.props;
 
 // Calculate reading time
-const wordCount = entry.body ? entry.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(entry.body);
 
 const { Content, headings } = await entry.render();
 const author = await getEntry(entry.data.author);
@@ -195,7 +195,10 @@ if (entry.data.type === "video" && entry.data.image) {
         items={[
           { label: "Accueil", href: "/" },
           { label: "Projets", href: "/project" },
-          { label: entry.data.tag, href: `/project/tag/${entry.data.tag}` },
+          {
+            label: entry.data.tag,
+            href: `/project/tag/${encodeURIComponent(entry.data.tag)}`,
+          },
           { label: entry.data.title },
         ]}
       />
@@ -211,7 +214,7 @@ if (entry.data.type === "video" && entry.data.image) {
         -->
         <button
           id="share-btn"
-          class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+          class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer"
           aria-label="Partager ce projet"
         >
           <div
@@ -445,9 +448,13 @@ if (entry.data.type === "video" && entry.data.image) {
                   }
                 }, 2000);
               } catch (err) {
+                // 🛡️ Sentinel: Dev-only logging
                 if (import.meta.env.DEV) {
                   // eslint-disable-next-line no-console
-                  console.error("Failed to copy code", err);
+                  console.error(
+                    "Failed to copy code",
+                    err instanceof Error ? err.message : "Unknown error",
+                  );
                 }
               }
             });
