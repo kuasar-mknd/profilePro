@@ -491,7 +491,11 @@ if (postData?.data?.image) {
         // Links are now secured only on initial load and navigation (astro:page-load),
         // effectively reducing main-thread CPU usage during general interaction.
         // Dynamic components (Footer, etc.) handle their own link security.
-        document.querySelectorAll('a[target="_blank"]').forEach(secureLink);
+        // ⚡ Bolt: Optimized query by filtering out already-secured links using CSS :not()
+        // This significantly reduces redundant JS execution and main-thread work on View Transitions.
+        document
+          .querySelectorAll('a[target="_blank"]:not([rel~="noopener"])')
+          .forEach(secureLink);
       }
 
       // ⚡ Bolt: Singleton Listener Pattern for Base Scripts
