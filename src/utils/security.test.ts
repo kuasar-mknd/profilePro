@@ -34,6 +34,22 @@ describe("Security Utilities", () => {
       );
       expect(isValidUrl("mailto:user@example.com")).toBe(false);
     });
+
+    it("should reject URLs with dangerous characters (XSS vectors)", () => {
+      expect(isValidUrl("https://example.com<script>")).toBe(false);
+      expect(isValidUrl('https://example.com" onclick="alert(1)')).toBe(false);
+      expect(isValidUrl("https://example.com' onmouseover='alert(1)")).toBe(
+        false,
+      );
+      expect(isValidUrl("https://example.com`")).toBe(false);
+    });
+
+    it("should reject URLs with control characters (Header Injection)", () => {
+      // Note: "https://example.com\nHeader: Injection"
+      expect(isValidUrl("https://example.com\nHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\rHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\t")).toBe(false);
+    });
   });
 
   describe("sanitizeUrl", () => {
@@ -88,6 +104,11 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+    });
+
+    it("should return empty string for URLs with dangerous characters", () => {
+      expect(sanitizeUrl("https://example.com<script>")).toBe("");
+      expect(sanitizeUrl('https://example.com" onclick="alert(1)')).toBe("");
     });
   });
 

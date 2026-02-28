@@ -233,16 +233,19 @@ import SocialIcon from "../ui/SocialIcon.astro";
             localStorage.setItem(cacheKey, JSON.stringify(data));
           })
           .catch((e) => {
-            if (
-              ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
-                window.location.hostname,
-              )
-            ) {
-              // eslint-disable-next-line no-console
-              console.error(
-                "Carbon Badge update failed:",
-                e instanceof Error ? e.message : "Unknown error",
-              );
+            // 🛡️ Sentinel: Dev-only logging
+            if (import.meta.env.DEV) {
+              if (
+                ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+                  window.location.hostname,
+                )
+              ) {
+                // eslint-disable-next-line no-console
+                console.error(
+                  "Carbon Badge update failed:",
+                  e instanceof Error ? e.message : "Unknown error",
+                );
+              }
             }
             wcb.textContent = "No Result";
             localStorage.removeItem(cacheKey);

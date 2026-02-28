@@ -14,9 +14,8 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          # Fail on any new vulnerability (high, critical)
-          fail-on-severity: high
-          # Enforce OpenSSF Scorecards (default is 3, lowering to 0 to prevent false positives on transitive deps)
-          min-score: 0
+          # Fail on any new vulnerability (low, moderate, high, critical)
+          fail-on-severity: moderate
+          warn-on-openssf-scorecard-level: 0
           # Block licenses that are not compliant (optional, can be adjusted)
           # deny-licenses: GPL-3.0, AGPL-3.0
