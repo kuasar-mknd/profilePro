@@ -10,3 +10,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  __lightboxInstance?: { destroy: () => void };
+  __lightboxListenerAttached?: boolean;
+}

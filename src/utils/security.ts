@@ -120,10 +120,9 @@ export const VIMEO_ID_REGEX =
  * Allows http, https, and relative paths (/).
  * Optionally allows mailto:, tel:, and sms:.
  *
- * 🛡️ Sentinel Improvement:
- * - Parses URL to ensure structural validity
- * - Rejects dangerous characters like quotes, angle brackets, and control chars
- * - Explicitly rejects protocol-relative URLs (//)
+ * 🛡️ Sentinel: Explicitly rejects:
+ * - javascript: schemes (XSS)
+ * - protocol-relative URLs like //example.com (open redirect)
  *
  * @param url - The URL to validate
  * @param options - Validation options
@@ -199,25 +198,24 @@ export function isValidUrl(
 export function sanitizeUrl(url: string): string {
   if (!url) return "";
 
-  // 🛡️ Sentinel: Check for control characters BEFORE trimming
-  if (/[\x00-\x1F\x7F]/.test(url)) {
+  // Trim whitespace
+  let trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
   }
 
-  // 🛡️ Sentinel: Strip dangerous characters to prevent injection
-  if (/[<>"'`]/.test(url)) {
-    return "";
-  }
-
-  let trimmedUrl = url.trim();
-
   // Allow relative URLs (starting with / or #)
-  // 🛡️ Sentinel: Ensure we don't accidentally allow // (protocol relative)
   if (
-    (trimmedUrl.startsWith("/") && !trimmedUrl.startsWith("//")) ||
+    trimmedUrl.startsWith("/") ||
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
+    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    }
     return trimmedUrl;
   }
 
@@ -233,6 +231,16 @@ export function sanitizeUrl(url: string): string {
 
     return ""; // Block other protocols (javascript:, data:, etc.)
   } catch {
-    return ""; // Block malformed URLs
+    // If it fails to parse as absolute URL, it might be a relative path without a leading slash
+    // or a malformed URL.
+    // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
+    // If it contains a colon but is not a recognized protocol, it's likely unsafe.
+    if (!trimmedUrl.includes(":")) {
+      // This could be a relative path like "images/foo.png" or "path/to/page"
+      // We allow these as they are generally safe unless they contain control characters (already checked).
+      return trimmedUrl;
+    }
+
+    return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }

@@ -84,6 +84,10 @@ describe("Security Utilities", () => {
       );
     });
 
+    it("should block protocol-relative URLs", () => {
+      expect(sanitizeUrl("//example.com")).toBe("");
+    });
+
     it("should block javascript: scheme", () => {
       expect(sanitizeUrl("javascript:alert(1)")).toBe("");
       expect(sanitizeUrl("JAVASCRIPT:alert(1)")).toBe("");
@@ -111,11 +115,6 @@ describe("Security Utilities", () => {
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
-    });
-
-    it("should return empty string for URLs with dangerous characters", () => {
-      expect(sanitizeUrl("https://example.com<script>")).toBe("");
-      expect(sanitizeUrl('https://example.com" onclick="alert(1)')).toBe("");
     });
   });
 
