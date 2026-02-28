@@ -679,19 +679,20 @@
    * Ensures the Lightbox instance is tied to the current DOM elements
    * and previous listeners are removed before creating a new one.
    */
-  let lightboxInstance: Lightbox | null = null;
-
   function initLightbox() {
     // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
-    if (lightboxInstance) {
-      lightboxInstance.destroy();
+    // Using window global to persist across View Transitions script re-executions
+    if (window.__lightboxInstance) {
+      window.__lightboxInstance.destroy();
     }
 
     // Create fresh instance for the new page content
-    lightboxInstance = new Lightbox();
+    window.__lightboxInstance = new Lightbox();
   }
 
-  // ⚡ Bolt: Removed redundant DOMContentLoaded listener
-  // astro:page-load handles both initial load and subsequent navigations
-  document.addEventListener("astro:page-load", initLightbox);
+  // ⚡ Bolt: Prevent duplicate listener accumulation
+  if (!window.__lightboxListenerAttached) {
+    document.addEventListener("astro:page-load", initLightbox);
+    window.__lightboxListenerAttached = true;
+  }
 </script>
