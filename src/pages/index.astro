@@ -7,7 +7,9 @@ import LatestPosts from "../components/features/projects/LatestPosts.astro";
 import CTASection from "../components/common/CTASection.astro";
 import config from "../config.mjs";
 
-const allProjects = await getCollection("project");
+const allProjects = (await getCollection("project")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 
 const jsonLd = {
   "@context": "https://schema.org",
