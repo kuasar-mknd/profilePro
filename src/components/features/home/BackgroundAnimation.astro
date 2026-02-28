@@ -21,7 +21,7 @@
   <!-- Mouse Follower Blob (Subtle) -->
   <div
     id="mouse-blob"
-    class="absolute w-[250px] h-[250px] bg-white/10 dark:bg-white/5 rounded-full blur-[60px] mix-blend-overlay opacity-0"
+    class="absolute w-[250px] h-[250px] bg-white/10 dark:bg-white/5 rounded-full blur-[60px] mix-blend-overlay opacity-0 translate-z-0"
     style="transform: translate(-50%, -50%);"
   >
   </div>
@@ -112,6 +112,10 @@
 
         blobStyle.opacity = "1";
         // ⚡ Bolt: Hint browser for upcoming transform changes
+        // Initialize position to prevent jump
+        blobX = mouseX;
+        blobY = mouseY;
+        // ⚡ Bolt: Optimize layer creation - only promote to layer when animating
         blobStyle.willChange = "transform";
         animate();
       }
@@ -137,6 +141,7 @@
         isVisible = false;
         animationFrameId = null;
         // ⚡ Bolt: Remove hint to save memory when idle
+        // ⚡ Bolt: Release layer memory when idle
         blobStyle.willChange = "auto";
         return;
       }
@@ -159,6 +164,7 @@
           isVisible = false;
           blobStyle.opacity = "0"; // Fade out when off-screen
           // ⚡ Bolt: Remove hint to save memory when off-screen
+          // ⚡ Bolt: Reset will-change to save memory when off-screen
           blobStyle.willChange = "auto";
           if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);

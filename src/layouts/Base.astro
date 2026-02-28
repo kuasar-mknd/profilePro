@@ -525,6 +525,7 @@ if (postData?.data?.image) {
        * ⚡ Bolt: Global Background Animation Optimizer
        * Pauses infinite CSS animations (.floating, .floating-slow) when elements
        * are off-screen to save GPU memory and CPU cycles.
+       * ⚡ Bolt: Centralized .infinite-scroll (carousel) and .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
        */
       let animationObserver: IntersectionObserver | null = null;
 
@@ -537,7 +538,7 @@ if (postData?.data?.image) {
 
         // Select all floating elements
         const animatedElements = document.querySelectorAll(
-          ".floating, .floating-slow, .floating-delayed",
+          ".floating, .floating-slow, .floating-delayed, .infinite-scroll, .hero-gradient-vibrant",
         );
 
         if (animatedElements.length === 0) return;

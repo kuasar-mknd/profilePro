@@ -12,11 +12,19 @@ import { isValidUrl } from "../../utils/security";
 const { icon, url, label } = Astro.props;
 
 // 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
-// Allow http, https, mailto, and relative paths (/)
-const safeUrl = isValidUrl(url, { allowMailto: true }) ? url : "#";
+// Allow http, https, mailto, tel, sms, and relative paths (/)
+const safeUrl = isValidUrl(url, {
+  allowMailto: true,
+  allowTel: true,
+  allowSms: true,
+})
+  ? url
+  : "#";
 
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
+// Note: tel: and mailto: links might open in a new app/tab depending on browser behavior, so we keep the warning or adjust?
+// For consistency, we keep the warning as they navigate "away" from the current context.
 const suffix = " (ouvre un nouvel onglet)";
 const baseLabel = label || "Lien social";
 const a11yLabel = baseLabel.includes(suffix) ? baseLabel : baseLabel + suffix;
