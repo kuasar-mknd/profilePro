@@ -31,7 +31,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       </p>
       <button
         type="button"
-        class="reset-form-btn mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="reset-form-btn mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer"
       >
         Envoyer un autre message
       </button>
@@ -50,7 +50,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
 
-  <!-- Optional: Honeypot -->
   <!-- 🛡️ Sentinel: Hardened honeypot to prevent autofill and screen reader access -->
   <input
     type="checkbox"
@@ -198,7 +197,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     <!-- Submit Button -->
     <button
       type="submit"
-      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 focus-visible:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+      class="submit-btn w-full py-4 px-6 bg-pacamara-accent hover:bg-pacamara-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-glow-accent hover:-translate-y-1 focus-visible:-translate-y-1 flex items-center justify-center gap-3 text-lg relative overflow-hidden group focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer"
       aria-live="polite"
     >
       <span class="btn-text relative z-10">Envoyer le message</span>
@@ -255,7 +254,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       <button
         type="button"
         id="reset-error-btn"
-        class="mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+        class="mt-4 px-4 py-2 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 cursor-pointer"
       >
         Réessayer
       </button>
@@ -278,24 +277,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 </form>
 
 <style>
-  /* ⚡ Bolt: Performance Optimization */
-  /* Define box-shadow statically so it's not recalculated on focus */
   .input-glow {
     box-shadow: 0 0 20px rgba(190, 18, 60, 0.15);
   }
 
-  /* Only transition opacity (compositor thread) */
   .form-input:focus ~ .input-glow {
     opacity: 1;
   }
 
-  .input-glow {
-    /* ⚡ Bolt: Removed permanent will-change to save GPU memory.
-       Browser heuristics are sufficient for simple opacity transitions on focus. */
-    /* will-change: opacity; */
-  }
-
-  /* Button states */
   .submit-btn.loading .btn-text,
   .submit-btn.loading svg:not(.animate-spin) {
     display: none;
@@ -315,7 +304,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     display: flex;
   }
 
-  /* Ripple effect */
   @keyframes ripple {
     to {
       transform: scale(4);
@@ -329,23 +317,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     background: rgba(255, 255, 255, 0.3);
     transform: scale(0);
     animation: ripple 0.6s linear;
-    animation: ripple 0.6s linear;
     pointer-events: none;
   }
 
-  /* Focus Visible Enhancement */
   .form-input:focus-visible {
     outline: 2px solid var(--color-pacamara-accent);
     outline-offset: 2px;
   }
 
-  /* Invalid Input Styling */
   [aria-invalid="true"] {
-    border-color: #ef4444; /* red-500 */
+    border-color: #ef4444;
     box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
   }
 
-  /* 🎨 Palette: Success Message Entrance */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -365,22 +349,14 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 <script>
   import { sanitizeInput, isValidEmail } from "../../utils/security";
 
-  /**
-   * ⚡ Bolt: ContactForm Performance Optimization
-   * Uses early return pattern and initialization guard to prevent duplicate bindings.
-   */
   function initContactForm() {
     const form = document.getElementById("contact-form") as HTMLFormElement;
 
-    // ⚡ Early return if form doesn't exist or already initialized
     if (!form || form.dataset.initialized === "true") return;
     form.dataset.initialized = "true";
 
-    // 🛡️ Sentinel: Progressive Enhancement - Disable native validation only when JS is active
-    // This ensures browser-native validation serves as a fallback if JS fails.
     form.setAttribute("novalidate", "true");
 
-    // 🛡️ Sentinel: Set timestamp for spam trap
     const timestampInput = form.querySelector(
       "#form-load-timestamp",
     ) as HTMLInputElement;
@@ -413,7 +389,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       "#message-counter-sr",
     ) as HTMLElement;
 
-    // 🎨 Palette: Character counter logic
     if (messageInput && messageCounter) {
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
@@ -423,7 +398,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         const remaining = max - currentLength;
         messageCounter.textContent = `${currentLength} / ${max}`;
 
-        // Visual feedback at 90% and 100%
         if (currentLength >= max) {
           messageCounter.classList.add("text-red-500", "dark:text-red-400");
           messageCounter.classList.remove(
@@ -446,7 +420,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-pacamara-primary/60",
             "dark:text-white/60",
           );
-          // Announce when nearing limit (every 10 chars or so naturally, but let's be explicit)
           if (messageCounterSr && remaining % 20 === 0) {
             messageCounterSr.textContent = `Attention, plus que ${remaining} caractères.`;
           }
@@ -461,23 +434,19 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
             "text-orange-600",
             "dark:text-orange-400",
           );
-          // Clear announcer when safe to avoid noise
           if (messageCounterSr) messageCounterSr.textContent = "";
         }
       };
 
       messageInput.addEventListener("input", updateCounter);
-      // Initialize
       updateCounter();
     }
 
-    // Reset form from success message
     resetBtn?.addEventListener("click", () => {
       const successMessage = form.querySelector("#form-success-message");
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
       form.reset();
-      // Reset counter
       if (messageCounter && messageInput) {
         messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
         messageCounter.classList.remove(
@@ -491,7 +460,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "dark:text-white/60",
         );
       }
-      // 🎨 Palette: Reset validation icons
       form.querySelectorAll(".validation-icon").forEach((el) => {
         (el as HTMLElement).dataset.visible = "false";
       });
@@ -503,7 +471,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       (form.querySelector("input") as HTMLInputElement)?.focus();
     });
 
-    // Reset form from error message
     errorResetBtn?.addEventListener("click", () => {
       errorMessage?.classList.add("hidden");
       if (submitButton) {
@@ -512,7 +479,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       submitButton?.focus();
     });
 
-    // Ripple effect
     submitButton?.addEventListener("click", (e) => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const rect = submitButton.getBoundingClientRect();
@@ -526,7 +492,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       setTimeout(() => ripple.remove(), 600);
     });
 
-    // 🎨 Palette: Live validation on input to remove error state
     function hideErrorIfFormIsValid() {
       if (
         nameInput?.value.trim().length >= 2 &&
@@ -537,12 +502,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     }
 
-    // 🎨 Palette: Helper to update validation icon state
     function updateValidationIcon(
       input: HTMLInputElement | HTMLTextAreaElement,
       isValid: boolean,
     ) {
-      // Find the sibling icon wrapper
       const iconWrapper = input.parentNode?.querySelector(
         ".validation-icon",
       ) as HTMLElement;
@@ -581,12 +544,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
     });
 
-    // Helper to display errors
     function showError(message: string, fieldToFocus?: HTMLElement) {
       if (errorMessage && errorText) {
         errorText.textContent = message;
         errorMessage.classList.remove("hidden");
-        // Focus the field if provided, otherwise the error message container
         if (fieldToFocus) {
           fieldToFocus.focus();
         } else {
@@ -598,13 +559,11 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Clear previous validation state before re-validating
       form
         .querySelectorAll("[aria-invalid]")
         .forEach((el) => el.removeAttribute("aria-invalid"));
       errorMessage?.classList.add("hidden");
 
-      // 🎨 Palette: Add validation for required fields
       if (nameInput && nameInput.value.trim().length < 2) {
         nameInput.setAttribute("aria-invalid", "true");
         nameInput.setAttribute("aria-describedby", "form-error-message");
@@ -632,11 +591,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         return;
       }
 
-      // 🛡️ Sentinel: Timestamp trap validation
       const loadTimestamp = parseInt(timestampInput.value, 10);
       const submitTimestamp = Date.now();
       if (submitTimestamp - loadTimestamp < 2000) {
-        // 2 seconds threshold
         showError(
           "Le formulaire a été soumis trop rapidement. Veuillez réessayer.",
         );
@@ -662,7 +619,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       }
 
       try {
-        // 🛡️ Sentinel: Hardened fields allowlist and sanitization logic
         const formData = new FormData(form);
         const data: Record<string, string> = {};
         const allowedFields = new Set([
@@ -678,12 +634,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         formData.forEach((value, key) => {
           if (allowedFields.has(key) && typeof value === "string") {
             if (key === "email") {
-              // 🛡️ Sentinel: Email is strictly validated by regex above which disallows dangerous chars like < >
-              // We skip sanitizeInput here because it escapes '%' which is valid in emails.
               data[key] = value;
             } else {
-              // 🛡️ Sentinel: Sanitize ALL other fields (name, message, subject) AND hidden fields (botcheck, access_key, timestamp)
-              // This prevents XSS attacks via hidden field manipulation if the backend echoes these values.
               data[key] = sanitizeInput(value);
             }
           }
@@ -709,7 +661,6 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           if (successMessage) {
             successMessage.classList.remove("hidden");
             successMessage.classList.add("flex");
-            // 🎨 Palette: Shift focus to success message for screen readers
             setTimeout(() => successMessage.focus(), 100);
           }
           localStorage.setItem(
@@ -721,8 +672,8 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           throw new Error(result.message || "Submission failed");
         }
       } catch (error) {
-        // 🛡️ Sentinel: Prevent sensitive error details from leaking in production
         if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
           console.error("Form submission failed:", error);
         }
 

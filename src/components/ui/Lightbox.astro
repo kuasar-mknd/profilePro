@@ -28,7 +28,7 @@
 
   <button
     type="button"
-    class="lightbox-close group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    class="lightbox-close group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer"
     aria-label="Fermer la galerie"
     aria-description="Ferme la fenêtre modale"
     title="Fermer (Esc)"
@@ -56,7 +56,7 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-prev group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    class="lightbox-nav lightbox-prev group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer"
     aria-label="Image précédente"
     aria-description="Affiche l'image précédente"
     title="Image précédente (←)"
@@ -96,7 +96,7 @@
 
   <button
     type="button"
-    class="lightbox-nav lightbox-next group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    class="lightbox-nav lightbox-next group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black cursor-pointer"
     aria-label="Image suivante"
     aria-description="Affiche l'image suivante"
     title="Image suivante (→)"
@@ -389,9 +389,6 @@
         .querySelector(".lightbox-next")
         ?.addEventListener("click", () => this.next());
 
-      // Keyboard
-      document.addEventListener("keydown", this.boundKeyHandler);
-
       // Touch events for swipe
       this.lightbox.addEventListener(
         "touchstart",
@@ -404,14 +401,18 @@
         { passive: true },
       );
 
-      // ⚡ Bolt: Event Delegation for Gallery Images
-      // Listens on document instead of attaching listeners to every image
-      document.addEventListener("click", this.boundClickHandler);
-      // ⚡ Bolt: Accessibility - Handle keyboard activation for images
-      document.addEventListener("keydown", this.boundDelegatedKeyHandler);
-
       // ⚡ Bolt: Cache gallery elements once on init
       this.collectImages();
+
+      // ⚡ Bolt: Only attach global listeners if images exist
+      // Prevents unnecessary event listener overhead on pages without gallery images
+      if (this.galleryElements.length > 0) {
+        // ⚡ Bolt: Event Delegation for Gallery Images
+        // Listens on document instead of attaching listeners to every image
+        document.addEventListener("click", this.boundClickHandler);
+        // ⚡ Bolt: Accessibility - Handle keyboard activation for images
+        document.addEventListener("keydown", this.boundDelegatedKeyHandler);
+      }
     }
 
     /**
@@ -474,6 +475,9 @@
       this.lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
 
+      // ⚡ Bolt: Attach keyboard listener only when open to save resources
+      document.addEventListener("keydown", this.boundKeyHandler);
+
       // 🎨 Palette: Trap focus and context using inert
       this.toggleInert(true);
 
@@ -489,6 +493,9 @@
     public close() {
       this.lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+
+      // ⚡ Bolt: Detach keyboard listener when closed
+      document.removeEventListener("keydown", this.boundKeyHandler);
 
       // 🎨 Palette: Restore access to main content
       this.toggleInert(false);
@@ -656,6 +663,7 @@
     }
 
     public destroy() {
+      // ⚡ Bolt: Unconditionally remove listeners to prevent memory leaks
       document.removeEventListener("keydown", this.boundKeyHandler);
       document.removeEventListener("click", this.boundClickHandler);
       document.removeEventListener("keydown", this.boundDelegatedKeyHandler);

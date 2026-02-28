@@ -3,6 +3,7 @@ import { Picture } from "astro:assets";
 import { Icon } from "astro-icon/components";
 
 import Base from "../layouts/Base.astro";
+import { getReadingTime } from "../utils/readingTime";
 
 import { getCollection } from "astro:content";
 
@@ -19,8 +20,7 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 // Calculate Reading Time
-const wordCount = entry.body.split(/\s+/g).length;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(entry.body);
 ---
 
 <Base postData={entry}>
@@ -40,7 +40,7 @@ const readingTime = Math.ceil(wordCount / 200);
         <!-- 🎨 Palette: Enhanced Share Button -->
         <button
           id="share-btn"
-          class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3"
+          class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3 cursor-pointer"
           aria-label="Partager cet article"
           title="Partager cet article"
         >
@@ -64,6 +64,8 @@ const readingTime = Math.ceil(wordCount / 200);
         </button>
         <!-- Screen reader announcer -->
         <div id="share-announcer" class="sr-only" aria-live="polite"></div>
+        <!-- 🎨 Palette: Global announcer for code copy feedback -->
+        <div id="code-copy-announcer" class="sr-only" aria-live="polite"></div>
       </div>
     </div>
     {
@@ -120,6 +122,7 @@ const readingTime = Math.ceil(wordCount / 200);
         } catch (err) {
           // 🛡️ Sentinel: Dev-only logging
           if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
             console.error(
               "Error sharing:",
               err instanceof Error ? err.message : "Unknown error",
@@ -152,6 +155,7 @@ const readingTime = Math.ceil(wordCount / 200);
         } catch (err) {
           // 🛡️ Sentinel: Dev-only logging
           if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
             console.error(
               "Failed to copy:",
               err instanceof Error ? err.message : "Unknown error",
@@ -161,4 +165,110 @@ const readingTime = Math.ceil(wordCount / 200);
       }
     });
   }
+
+  /**
+   * 🎨 Palette: Add copy button to code blocks
+   * Wraps code blocks and adds a copy button for better developer experience
+   */
+  function addCopyButtons() {
+    const announcer = document.getElementById("code-copy-announcer");
+    document.querySelectorAll(".prose pre").forEach((node) => {
+      const pre = node as HTMLElement;
+      if (pre.parentElement?.classList.contains("code-wrapper")) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-wrapper relative group mb-6";
+      pre.parentNode?.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      const btn = document.createElement("button");
+      btn.className =
+        "absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 text-white/70 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20 hover:text-white focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-pacamara-accent backdrop-blur-sm";
+      btn.ariaLabel = "Copier le code";
+
+      // 🛡️ Sentinel: Safe DOM construction to prevent innerHTML usage
+      const createIcon = (isCheck = false) => {
+        const svg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg",
+        );
+        svg.setAttribute("width", "18");
+        svg.setAttribute("height", "18");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", "currentColor");
+        svg.setAttribute("stroke-width", "2");
+        svg.setAttribute("stroke-linecap", "round");
+        svg.setAttribute("stroke-linejoin", "round");
+
+        if (isCheck) {
+          svg.setAttribute("class", "text-green-400");
+          const polyline = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "polyline",
+          );
+          polyline.setAttribute("points", "20 6 9 17 4 12");
+          svg.appendChild(polyline);
+        } else {
+          const rect = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect",
+          );
+          rect.setAttribute("x", "9");
+          rect.setAttribute("y", "9");
+          rect.setAttribute("width", "13");
+          rect.setAttribute("height", "13");
+          rect.setAttribute("rx", "2");
+          rect.setAttribute("ry", "2");
+          svg.appendChild(rect);
+
+          const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path",
+          );
+          path.setAttribute(
+            "d",
+            "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
+          );
+          svg.appendChild(path);
+        }
+        return svg;
+      };
+
+      btn.appendChild(createIcon(false));
+
+      btn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pre.textContent || pre.innerText);
+          btn.replaceChildren(createIcon(true));
+
+          // 🎨 Palette: Announce success to screen readers
+          if (announcer) {
+            announcer.textContent = "Code copié dans le presse-papiers";
+          }
+
+          setTimeout(() => {
+            btn.replaceChildren(createIcon(false));
+            if (announcer) {
+              announcer.textContent = "";
+            }
+          }, 2000);
+        } catch (err) {
+          // 🛡️ Sentinel: Dev-only logging
+          if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.error(
+              "Failed to copy code",
+              err instanceof Error ? err.message : "Unknown error",
+            );
+          }
+        }
+      });
+      wrapper.appendChild(btn);
+    });
+  }
+
+  addCopyButtons();
+  // Re-run on navigation
+  document.addEventListener("astro:after-swap", addCopyButtons);
 </script>

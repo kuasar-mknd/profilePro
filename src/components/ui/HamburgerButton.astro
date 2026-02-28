@@ -1,6 +1,6 @@
 <button
   id="menu_toggle"
-  class="block md:hidden text-white group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg p-1"
+  class="block md:hidden text-white group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg p-1 cursor-pointer"
   type="button"
   aria-controls="navigation_wrapper"
   aria-expanded="false"
@@ -31,9 +31,15 @@
    * ⚡ Bolt: HamburgerButton Performance Optimization
    * Added initialization guard to prevent duplicate observers and handlers
    */
-  let menuObserver: MutationObserver | null = null;
+  let cleanupMenu: (() => void) | null = null;
 
-  function menuToggle() {
+  function initMenu() {
+    // ⚡ Bolt: Cleanup previous listeners to prevent memory leaks on navigation
+    if (cleanupMenu) {
+      cleanupMenu();
+      cleanupMenu = null;
+    }
+
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
 
@@ -101,64 +107,51 @@
     });
 
     // 🎨 Palette: Close menu on Escape key for accessibility
-    // Users expect Escape to close overlays/modals
-    document.addEventListener("keydown", (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (
         e.key === "Escape" &&
         button.getAttribute("aria-expanded") === "true"
       ) {
         closeMenu();
-        // Return focus to the toggle button
         (button as HTMLElement).focus();
       }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    const menuObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const isMenuOpen =
+            document.documentElement.classList.contains("overflow-hidden");
+
+          if (button.getAttribute("aria-expanded") !== String(isMenuOpen)) {
+            button.setAttribute("aria-expanded", String(isMenuOpen));
+          }
+
+          if (isMenuOpen) {
+            nav.classList.remove("invisible");
+            nav.classList.remove("translate-x-full");
+            nav.classList.add("translate-x-0");
+          } else {
+            nav.classList.add("translate-x-full");
+            nav.classList.remove("translate-x-0");
+          }
+        }
+      });
     });
 
-    // ⚡ Reuse observer if already created
-    if (!menuObserver) {
-      menuObserver = new MutationObserver((mutations) => {
-        const btn = document.querySelector("#menu_toggle");
-        const navEl = document.querySelector("#navigation_wrapper");
-        if (!btn || !navEl) return;
-
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            const isMenuOpen =
-              document.documentElement.classList.contains("overflow-hidden");
-            btn.setAttribute("aria-expanded", String(isMenuOpen));
-
-            if (isMenuOpen) {
-              // ⚡ Bolt: Handle external triggers (like resizing or other scripts)
-              navEl.classList.remove("invisible");
-              navEl.classList.remove("translate-x-full");
-              navEl.classList.add("translate-x-0");
-            } else {
-              navEl.classList.add("translate-x-full");
-              navEl.classList.remove("translate-x-0");
-              // ⚡ Bolt: We can't guarantee a transition here easily, so we rely on the click handlers usually.
-              // But if closed externally, ensure hidden eventually.
-              // For safety in this observer pattern, we leave it visible during transition if needed, or hide if we know it's abrupt.
-              // Since this observer watches the *result*, if it's already closed, hide it.
-              if (
-                navEl.classList.contains("translate-x-full") &&
-                !navEl.classList.contains("transitioning")
-              ) {
-                // navEl.classList.add("invisible"); // Might cut off animation if triggered during anim.
-              }
-            }
-          }
-        });
-      });
-    }
-
-    // ⚡ Always ensure observer is connected to current documentElement
-    menuObserver.disconnect(); // Safety disconnect before reconnect
     menuObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
+
+    // ⚡ Register cleanup
+    cleanupMenu = () => {
+      document.removeEventListener("keydown", handleEscape);
+      menuObserver.disconnect();
+    };
   }
 
-  menuToggle();
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", menuToggle);
+  document.addEventListener("astro:page-load", initMenu);
 </script>

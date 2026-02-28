@@ -2,6 +2,7 @@
 import { getImage } from "astro:assets";
 import { getCollection, type CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
+import { limitConcurrency } from "../../../utils/async";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
 interface Props {
@@ -27,29 +28,29 @@ function shuffle(array: any[]) {
 }
 
 const slides = shuffle([...projectImages]).slice(0, 15);
+
 // ⚡ Bolt: Optimize carousel images
 // Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
 // the performance benefits of a single <img> tag.
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
-const optimizedSlides = await Promise.all(
-  slides.map(async (slide) => {
-    // Generate candidates for srcset matching the original Picture configuration
-    const [w224, w288, w448, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
-    ]);
+// ⚡ Bolt: Limit concurrency to 5 slides (20 concurrent image ops) to prevent build OOM
+const optimizedSlides = await limitConcurrency(slides, 5, async (slide) => {
+  // Generate candidates for srcset matching the original Picture configuration
+  const [w224, w288, w448, w576] = await Promise.all([
+    getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
+  ]);
 
-    return {
-      alt: slide.alt,
-      src: w288.src, // Default src
-      srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 224px, 288px",
-    };
-  }),
-);
+  return {
+    alt: slide.alt,
+    src: w288.src, // Default src
+    srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
+    sizes: "(max-width: 768px) 224px, 288px",
+  };
+});
 
 // ⚡ Bolt: Duplicate slides for seamless infinite scroll
 // Limited to 15 unique items (30 total) to cap DOM nodes and memory usage

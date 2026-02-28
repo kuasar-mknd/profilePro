@@ -113,13 +113,21 @@ import SocialIcon from "../ui/SocialIcon.astro";
     </div>
   </div>
 
-  <script is:inline>
+  <script>
     /**
      * ⚡ Bolt: Custom Website Carbon Badge Implementation
      * Re-implemented locally to avoid global scope pollution issues with external script
      * during View Transitions (SPAs).
      */
+    let carbonObserver: IntersectionObserver | null = null;
+
     function initCarbonBadge() {
+      // ⚡ Bolt: Clean up previous observer to prevent memory leaks
+      if (carbonObserver) {
+        carbonObserver.disconnect();
+        carbonObserver = null;
+      }
+
       const isProduction =
         !["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
           window.location.hostname,
@@ -141,10 +149,15 @@ import SocialIcon from "../ui/SocialIcon.astro";
       const wcU = encodeURIComponent(window.location.href);
       const cacheKey = "wcb_" + wcU;
 
-      // Render function
-      const render = (data) => {
+      interface CarbonData {
+        c: number | string;
+        p: number | string;
+        t?: number;
+      }
+
+      const render = (data: CarbonData) => {
         if (!wcb) return;
-        wcb.replaceChildren(); // Clear loading state
+        wcb.replaceChildren();
 
         const wrapper = document.createElement("div");
         wrapper.id = "wcb_p";
@@ -159,7 +172,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
         scoreSpan.className =
           "bg-white dark:bg-pacamara-dark px-3 py-2 text-sm font-medium text-pacamara-primary dark:text-white flex items-center";
 
-        // Safe text content construction
         const co2Text = document.createTextNode(data.c + "g of CO");
         const sub = document.createElement("sub");
         sub.textContent = "2";
@@ -172,7 +184,6 @@ import SocialIcon from "../ui/SocialIcon.astro";
         const link = document.createElement("a");
         link.id = "wcb_a";
         link.target = "_blank";
-        // ⚡ Bolt: Security & Accessibility
         link.rel = "noopener noreferrer";
         link.href = "https://websitecarbon.com";
         link.className =
@@ -199,19 +210,14 @@ import SocialIcon from "../ui/SocialIcon.astro";
         wcb.appendChild(wrapper);
       };
 
-      // Fetch logic
       const fetchData = () => {
         wcb.textContent = "";
         const loading = document.createElement("div");
         loading.className =
           "animate-pulse text-xs text-pacamara-primary/60 dark:text-white/60";
-        loading.textContent = "Measuring CO2...";
-        // Use sub for the '2'
+        loading.textContent = "Measuring CO";
         const sub = document.createElement("sub");
         sub.textContent = "2";
-        // To reconstruct "CO<sub>2</sub>...", we need to append nodes manually or use a different structure.
-        // Let's just use "Measuring CO2..." as text for simplicity and security, or append correctly.
-        loading.textContent = "Measuring CO";
         loading.appendChild(sub);
         loading.append("...");
         wcb.appendChild(loading);
@@ -228,61 +234,56 @@ import SocialIcon from "../ui/SocialIcon.astro";
           })
           .catch((e) => {
             // 🛡️ Sentinel: Dev-only logging
-            if (
-              ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
-                window.location.hostname,
-              )
-            ) {
-              console.error(
-                "Carbon Badge update failed:",
-                e instanceof Error ? e.message : "Unknown error",
-              );
+            if (import.meta.env.DEV) {
+              if (
+                ["localhost", "127.0.0.1", "0.0.0.0", "::1"].includes(
+                  window.location.hostname,
+                )
+              ) {
+                // eslint-disable-next-line no-console
+                console.error(
+                  "Carbon Badge update failed:",
+                  e instanceof Error ? e.message : "Unknown error",
+                );
+              }
             }
             wcb.textContent = "No Result";
             localStorage.removeItem(cacheKey);
           });
       };
 
-      // Cache Check
       const cached = localStorage.getItem(cacheKey);
       let isValidCache = false;
 
       if (cached) {
         const data = JSON.parse(cached);
         const now = new Date().getTime();
-        // Cache validity: 1 day (86400000 ms)
         if (now - data.t < 86400000) {
           render(data);
           isValidCache = true;
         }
       }
 
-      // ⚡ Bolt: Lazy load if not cached or expired to save initial bandwidth
       if (!isValidCache) {
-        const observer = new IntersectionObserver(
+        carbonObserver = new IntersectionObserver(
           (entries) => {
             if (entries[0].isIntersecting) {
               fetchData();
-              observer.disconnect();
+              if (carbonObserver) {
+                carbonObserver.disconnect();
+                carbonObserver = null;
+              }
             }
           },
           { rootMargin: "200px" },
         );
-        observer.observe(wcb);
+        carbonObserver.observe(wcb);
       }
     }
 
-    // Initialize on initial load and every view transition
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initCarbonBadge);
-    } else {
-      // Small timeout to ensure DOM is fully ready and painted
-      setTimeout(initCarbonBadge, 0);
-    }
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>
-    /* Custom styles for the badge to match theme */
     #wcb_g {
       color: var(--color-pacamara-primary);
     }
