@@ -39,15 +39,15 @@ if (explicitImages && explicitImages.length > 0) {
     alt: `Photo ${index + 1}`,
   }));
 } else if (folder) {
-  // ⚡ Bolt: Efficient Image Loading
-  // Using eager: false to avoid importing all 700+ assets for every gallery.
-  // We filter the keys first, then only load the modules we actually need.
+  // Load from folder
+  // ⚡ Bolt: Use eager: false to prevent loading all images in the project
+  // We filter paths first, then load only the required modules
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
     { eager: false },
   );
 
-  const filteredPaths = Object.keys(allImages).filter((path) => {
+  const filteredImages = Object.entries(allImages).filter(([path]) => {
     const folderMatch = path.includes(`/${folder}/`);
     if (!folderMatch) return false;
 
@@ -60,10 +60,10 @@ if (explicitImages && explicitImages.length > 0) {
     return true;
   });
 
-  // Load only the matched images concurrently
-  const loadedImages = await Promise.all(
-    filteredPaths.map(async (path) => {
-      const module = (await allImages[path]()) as { default: ImageMetadata };
+  // Load only filtered images
+  galleryImages = await Promise.all(
+    filteredImages.map(async ([path, loader]) => {
+      const module = await loader();
       return {
         src: module.default,
         filename: path.split("/").pop() || "",
@@ -72,16 +72,15 @@ if (explicitImages && explicitImages.length > 0) {
     }),
   );
 
-  galleryImages = loadedImages.sort((a, b) =>
-    a.filename.localeCompare(b.filename),
-  );
+  galleryImages.sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
-// Serves 1600px WebP (Q80) instead of massive original uploads
-// 🚀 Optimization: Added limitConcurrency to prevent build timeouts/OOM
+// Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
+// ⚡ Bolt: Limit concurrency to 5 images to prevent build OOM
 const optimizedImages = await limitConcurrency(
   galleryImages,
+  5,
   async (img) => {
     const optimized = await getImage({
       src: img.src,
@@ -94,7 +93,6 @@ const optimizedImages = await limitConcurrency(
       lightboxSrc: optimized.src,
     };
   },
-  3, // Processing 3 images at a time is safer for memory
 );
 
 // Column class mapping

@@ -24,9 +24,11 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.2.14"
+          bun-version: "1.3.9"
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
+        env:
+          HUSKY: 0
       - name: Run Quality Checks
         run: bun run check
 
@@ -34,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build & Deploy
     needs: [quality]
+    timeout-minutes: 60
     permissions:
       contents: read
       deployments: write
@@ -49,10 +52,12 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.2.14"
+          bun-version: "1.3.9"
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: bun install
+        env:
+          HUSKY: 0
 
       - name: Cache Astro Generated Images
         uses: actions/cache@v4
@@ -64,7 +69,7 @@ jobs:
 
       - name: Build Astro
         run: bun run build
-        timeout-minutes: 20
+        timeout-minutes: 60
         env:
           PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}

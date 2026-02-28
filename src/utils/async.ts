@@ -1,29 +1,41 @@
 /**
- * Limits the number of concurrent asynchronous operations.
+ * ⚡ Bolt: Async Utilities
+ * Helper functions for managing asynchronous operations efficiently.
+ */
+
+/**
+ * Limits the concurrency of asynchronous operations.
+ * Use this to process a large array of items without overwhelming system resources (e.g., image optimization).
  *
- * @param items Array of items to process
- * @param fn Asynchronous function to apply to each item
- * @param limit Maximum number of concurrent operations
- * @returns Array of results
+ * @param items - Array of items to process
+ * @param limit - Maximum number of concurrent operations
+ * @param fn - Async function to run for each item
+ * @returns Promise that resolves with an array of results in the same order as items
  */
 export async function limitConcurrency<T, R>(
   items: T[],
+  limit: number,
   fn: (item: T) => Promise<R>,
-  limit: number = 3,
 ): Promise<R[]> {
-  const results: R[] = new Array(items.length);
-  const queue = items.map((item, index) => ({ item, index }));
-  let current = 0;
+  const executing: Promise<void>[] = [];
+  const resultPromises: Promise<R>[] = [];
 
-  async function worker() {
-    while (current < queue.length) {
-      const { item, index } = queue[current++];
-      results[index] = await fn(item);
+  for (const item of items) {
+    // Create a promise that runs the function
+    const p = Promise.resolve().then(() => fn(item));
+    resultPromises.push(p);
+
+    // If we have more items than the limit, we need to manage concurrency
+    if (limit <= items.length) {
+      const e: Promise<void> = p.then(() => {
+        executing.splice(executing.indexOf(e), 1);
+      });
+      executing.push(e);
+      if (executing.length >= limit) {
+        await Promise.race(executing);
+      }
     }
   }
 
-  const workers = Array.from({ length: Math.min(limit, items.length) }, worker);
-  await Promise.all(workers);
-
-  return results;
+  return Promise.all(resultPromises);
 }

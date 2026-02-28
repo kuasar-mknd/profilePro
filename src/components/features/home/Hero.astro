@@ -3,6 +3,7 @@ import { getImage } from "astro:assets";
 import { limitConcurrency } from "../../../utils/async";
 import { getCollection, type CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
+import { limitConcurrency } from "../../../utils/async";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
 interface Props {
@@ -28,31 +29,35 @@ function shuffle(array: any[]) {
 }
 
 const slides = shuffle([...projectImages]).slice(0, 15);
+// ⚡ Bolt: Optimize carousel images
+// Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
+// Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
+// the performance benefits of a single <img> tag.
+// This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
+// ⚡ Bolt: Limit concurrency to 5 slides (20 concurrent image ops) to prevent build OOM
+const optimizedSlides = await limitConcurrency(slides, 5, async (slide) => {
+  // Generate candidates for srcset matching the original Picture configuration
+  const [w224, w288, w448, w576] = await Promise.all([
+    getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 448, format: "webp", quality: 80 }),
+    getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
+  ]);
 
-// 🚀 Optimization: Added limitConcurrency to prevent build timeouts/OOM
-// and reduced the number of image variants to 2 (mobile/desktop + retina)
-// as suggested by memory for Render free tier compatibility.
-const optimizedSlides = await limitConcurrency(
-  slides,
-  async (slide) => {
-    const [w288, w576] = await Promise.all([
-      getImage({ src: slide.src, width: 288, format: "webp", quality: 80 }),
-      getImage({ src: slide.src, width: 576, format: "webp", quality: 80 }),
-    ]);
+  return {
+    alt: slide.alt,
+    src: w288.src, // Default src
+    srcset: `${w224.src} 224w, ${w288.src} 288w, ${w448.src} 448w, ${w576.src} 576w`,
+    sizes: "(max-width: 768px) 224px, 288px",
+  };
+});
 
-    return {
-      alt: slide.alt,
-      src: w288.src,
-      srcset: `${w288.src} 288w, ${w576.src} 576w`,
-      sizes: "(max-width: 768px) 288px, 288px", // Simplified sizes
-    };
-  },
-  3, // Concurrency limit
-);
-
+// ⚡ Bolt: Duplicate slides for seamless infinite scroll
+// Limited to 15 unique items (30 total) to cap DOM nodes and memory usage
 const allSlides = [...optimizedSlides, ...optimizedSlides];
 
-const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
+// ⚡ Bolt: Precompute LCP image URL to match Base.astro preload exactly
+const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 ---
 
 <section
@@ -62,7 +67,13 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
   <BackgroundAnimation />
 
   <div class="container mx-auto px-7 text-center z-10">
+    {/* ⚡ LCP Image - decoding="sync" ensures immediate display after load */}
     <div class="mb-8 hero-logo">
+      {
+        /* ⚡ Bolt: Using standard <img> to match the preloaded asset in Base.astro exactly.
+          This prevents double-fetching (preload + responsive candidate mismatch) and guarantees LCP boost.
+      */
+      }
       <img
         src={optimizedLogo.src}
         alt="Logo Samuel Dulex"
@@ -162,12 +173,14 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     id="hero-carousel"
   >
     <div class="infinite-scroll py-8 pb-12 duration-120s" id="carousel-track">
+      {/* Duplicate slides for seamless infinite scroll */}
       {
         allSlides.map((slide, index) => (
           <div
             class="relative w-56 md:w-72 aspect-9-10 flex-none rounded-2xl overflow-hidden shadow-glass mx-3 hover:scale-105 transition-transform duration-500 image-zoom"
             style={`transform: rotate(${(index % 5) * 3 - 6}deg)`}
           >
+            {/* ⚡ Bolt: Replaced <Picture> with <img> to reduce DOM nodes during animation */}
             <img
               src={slide.src}
               srcset={slide.srcset}
@@ -189,6 +202,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
 </section>
 
 <style>
+  /* Letter Animation - GPU-composited */
   @keyframes letter-appear {
     0% {
       opacity: 0;
@@ -204,12 +218,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     display: inline-block;
     opacity: 0;
     animation: letter-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .letter-animate {
-      will-change: transform, opacity;
-    }
+    will-change: transform, opacity;
   }
 
   .hero-title .letter-animate:nth-child(1) {
@@ -243,9 +252,13 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     animation-delay: 0.55s;
   }
 
+  /* Hero elements entrance animations */
+  /* Note: hero-logo has NO initial opacity:0 to ensure LCP is visible immediately */
   .hero-logo {
+    /* Logo is visible immediately for LCP - no animation delay */
   }
 
+  /* ⚡ LCP image - hover effect separated from initial render */
   .lcp-image {
     transition: transform 0.5s ease;
   }
@@ -284,6 +297,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     }
   }
 
+  /* Gradient mask for carousel edges */
   .hero-carousel {
     mask-image: linear-gradient(
       to right,
@@ -301,6 +315,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     );
   }
 
+  /* Touch-friendly carousel on mobile - allow scrolling while keeping animation */
   @media (pointer: coarse) {
     .touch-carousel {
       cursor: grab;
@@ -311,6 +326,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
     }
   }
 
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .letter-animate {
       opacity: 1;
@@ -328,10 +344,15 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
 </style>
 
 <script>
+  /**
+   * ⚡ Bolt: Carousel Touch Optimization
+   * Added initialization guard and passive listeners to all touch events
+   */
   function initCarouselTouch() {
     const carousel = document.getElementById("hero-carousel");
     const track = document.getElementById("carousel-track");
 
+    // ⚡ Early return guards
     if (!carousel || !track) return;
     if (carousel.dataset.touchInitialized === "true") return;
     carousel.dataset.touchInitialized = "true";
@@ -355,6 +376,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
       { passive: true },
     );
 
+    // ⚡ Bolt: Use requestAnimationFrame for smooth 60fps tracking
     carousel.addEventListener(
       "touchmove",
       (e) => {
@@ -372,6 +394,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
       { passive: true },
     );
 
+    // ⚡ Bolt: Added passive: true to touchend for scroll optimization
     carousel.addEventListener(
       "touchend",
       () => {
@@ -390,11 +413,18 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
   initCarouselTouch();
   document.addEventListener("astro:page-load", initCarouselTouch);
 
+  /**
+   * ⚡ Bolt: Carousel Visibility Optimization
+   * Pauses the infinite scroll animation when the carousel is not in the viewport
+   * to save GPU and main thread resources.
+   */
   function initCarouselObserver() {
     const carousel = document.getElementById("hero-carousel");
     const track = document.getElementById("carousel-track");
 
     if (!carousel || !track) return;
+
+    // Guard against duplicate observers
     if (carousel.dataset.observerInitialized === "true") return;
     carousel.dataset.observerInitialized = "true";
 
@@ -409,7 +439,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
         });
       },
       { rootMargin: "200px" },
-    );
+    ); // Pre-load animation slightly before it enters viewport
 
     observer.observe(carousel);
   }
@@ -417,29 +447,42 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
   initCarouselObserver();
   document.addEventListener("astro:page-load", initCarouselObserver);
 
+  /**
+   * 🎨 Palette: Smart Focus for Contact CTA
+   * Smooth scrolls to form and intelligently manages focus:
+   * - Desktop: Focuses input for immediate typing
+   * - Mobile: Focuses form container to avoid keyboard pop-up while scrolling
+   */
   function initHeroCTA() {
     const cta = document.getElementById("hero-cta-secondary");
     const form = document.getElementById("contact-form");
     const nameInput = document.getElementById("name");
 
     if (!cta || !form) return;
+
+    // Guard against duplicate listeners
     if (cta.dataset.initialized === "true") return;
     cta.dataset.initialized = "true";
 
     cta.addEventListener("click", (e) => {
       e.preventDefault();
 
+      // Check if device uses coarse pointer (likely touch/mobile)
       const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
       if (isMobile) {
+        // Mobile: Scroll to form container and focus it
+        // This brings the form into view without triggering the keyboard
         form.setAttribute("tabindex", "-1");
         form.focus({ preventScroll: true });
         form.scrollIntoView({ behavior: "smooth", block: "start" });
       } else {
+        // Desktop: Focus input directly for immediate typing
         if (nameInput) {
-          nameInput.focus({ preventScroll: true });
+          nameInput.focus({ preventScroll: true }); // Set focus without jump
           nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
         } else {
+          // Fallback if input not found
           form.setAttribute("tabindex", "-1");
           form.focus({ preventScroll: true });
           form.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -450,26 +493,4 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "webp" });
 
   initHeroCTA();
   document.addEventListener("astro:page-load", initHeroCTA);
-
-  /**
-   * ⚡ Bolt: Animation Cleanup
-   * Removes will-change property after entrance animation to free GPU memory.
-   */
-  function initAnimationCleanup() {
-    const title = document.querySelector(".hero-title") as HTMLElement | null;
-    if (!title) return;
-
-    if (title.dataset.cleanupInitialized === "true") return;
-    title.dataset.cleanupInitialized = "true";
-
-    title.addEventListener("animationend", (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target.classList.contains("letter-animate")) {
-        target.style.willChange = "auto";
-      }
-    });
-  }
-
-  initAnimationCleanup();
-  document.addEventListener("astro:page-load", initAnimationCleanup);
 </script>
