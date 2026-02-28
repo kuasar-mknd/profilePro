@@ -12,7 +12,7 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   build: {
     inlineStylesheets: "always", // ⚡ Bolt: Always inline CSS for critical path optimization (FCP/LCP)
-    concurrency: 1, // ⚡ Bolt: Limit concurrency to avoid OOM on Render
+    concurrency: 1, // ⚡ Bolt: Limit concurrency to prevent OOM on Render
   },
   image: {
     domains: ["kuasar.xyz"],
