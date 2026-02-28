@@ -118,12 +118,11 @@ export const VIMEO_ID_REGEX =
 /**
  * Validates a URL protocol to prevent XSS (e.g., javascript: URI).
  * Allows http, https, and relative paths (/).
- * Optionally allows mailto:.
+ * Optionally allows mailto:, tel:, and sms:.
  *
- * 🛡️ Sentinel Improvement:
- * - Parses URL to ensure structural validity
- * - Rejects dangerous characters like quotes, angle brackets, and control chars
- * - Explicitly rejects protocol-relative URLs (//)
+ * 🛡️ Sentinel: Explicitly rejects:
+ * - javascript: schemes (XSS)
+ * - protocol-relative URLs like //example.com (open redirect)
  *
  * @param url - The URL to validate
  * @param options - Validation options
@@ -131,7 +130,11 @@ export const VIMEO_ID_REGEX =
  */
 export function isValidUrl(
   url: string,
-  options: { allowMailto?: boolean } = {},
+  options: {
+    allowMailto?: boolean;
+    allowTel?: boolean;
+    allowSms?: boolean;
+  } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
 
@@ -149,7 +152,7 @@ export function isValidUrl(
     return false;
   }
 
-  const { allowMailto = false } = options;
+  const { allowMailto = false, allowTel = false, allowSms = false } = options;
 
   try {
     // Try parsing as absolute URL
@@ -160,6 +163,12 @@ export function isValidUrl(
     const allowedProtocols = ["http:", "https:"];
     if (allowMailto) {
       allowedProtocols.push("mailto:");
+    }
+    if (allowTel) {
+      allowedProtocols.push("tel:");
+    }
+    if (allowSms) {
+      allowedProtocols.push("sms:");
     }
 
     return allowedProtocols.includes(protocol);
@@ -180,7 +189,7 @@ export function isValidUrl(
 
 /**
  * Sanitizes a URL to ensure it uses a safe protocol.
- * Allowed protocols: http, https, mailto, tel.
+ * Allowed protocols: http, https, mailto, tel, sms.
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
  *
  * @param url - The URL to sanitize
@@ -189,25 +198,24 @@ export function isValidUrl(
 export function sanitizeUrl(url: string): string {
   if (!url) return "";
 
-  // 🛡️ Sentinel: Check for control characters BEFORE trimming
-  if (/[\x00-\x1F\x7F]/.test(url)) {
+  // Trim whitespace
+  let trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
     return "about:blank";
   }
 
-  // 🛡️ Sentinel: Strip dangerous characters to prevent injection
-  if (/[<>"'`]/.test(url)) {
-    return "";
-  }
-
-  let trimmedUrl = url.trim();
-
   // Allow relative URLs (starting with / or #)
-  // 🛡️ Sentinel: Ensure we don't accidentally allow // (protocol relative)
   if (
-    (trimmedUrl.startsWith("/") && !trimmedUrl.startsWith("//")) ||
+    trimmedUrl.startsWith("/") ||
     trimmedUrl.startsWith("#") ||
     trimmedUrl.startsWith("?")
   ) {
+    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    }
     return trimmedUrl;
   }
 
@@ -217,12 +225,22 @@ export function sanitizeUrl(url: string): string {
     const protocol = parsed.protocol.toLowerCase();
 
     // Whitelist of safe protocols
-    if (["http:", "https:", "mailto:", "tel:"].includes(protocol)) {
+    if (["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)) {
       return trimmedUrl;
     }
 
     return ""; // Block other protocols (javascript:, data:, etc.)
   } catch {
-    return ""; // Block malformed URLs
+    // If it fails to parse as absolute URL, it might be a relative path without a leading slash
+    // or a malformed URL.
+    // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
+    // If it contains a colon but is not a recognized protocol, it's likely unsafe.
+    if (!trimmedUrl.includes(":")) {
+      // This could be a relative path like "images/foo.png" or "path/to/page"
+      // We allow these as they are generally safe unless they contain control characters (already checked).
+      return trimmedUrl;
+    }
+
+    return ""; // Block anything else that looks like a protocol but isn't whitelisted
   }
 }

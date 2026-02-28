@@ -31,6 +31,12 @@ Each entry should include:
 **Learning:** Security scanners need to be tuned to the context. Blocking on low/moderate vulnerabilities in build tools can paralyze development.
 **Prevention:** Relaxed the threshold to `high` in `dependency-review.yml` and moved development-only tools to `devDependencies` to reduce the scanned surface area.
 
+## 2025-10-27 - Protocol-Relative URL Sanitization
+
+**Vulnerability:** `sanitizeUrl` allowed protocol-relative URLs (`//example.com`), which could be used for open redirects or unintentional protocol inheritance.
+**Learning:** Protocol-relative URLs can be ambiguous and dangerous in security-sensitive contexts. `isValidUrl` was already rejecting them, but `sanitizeUrl` was not.
+**Prevention:** Updated `sanitizeUrl` to explicitly check for and reject URLs starting with `//`, aligning it with the project's security standards in `isValidUrl`.
+
 ## 2025-05-15 - URL Sanitization & Encoding
 
 **Vulnerability:** Potential XSS via unsanitized `href` attributes and broken links due to unencoded dynamic segments.

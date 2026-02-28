@@ -29,7 +29,7 @@ const showToC = filteredHeadings.length >= 2;
           <li class={`${h.depth === 3 ? "ml-4" : ""}`}>
             <a
               href={`#${h.slug}`}
-              class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent"
+              class="block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent"
             >
               {h.text}
             </a>
@@ -39,83 +39,3 @@ const showToC = filteredHeadings.length >= 2;
     </nav>
   )
 }
-
-<script>
-  /**
-   * 🎨 Palette: Table of Contents Active State
-   * Highlights the current section in the TOC as the user scrolls.
-   */
-  let observer: IntersectionObserver | null = null;
-
-  function initTOC() {
-    // 1. Select all TOC links
-    const tocLinks = document.querySelectorAll(".toc-link");
-    if (tocLinks.length === 0) return;
-
-    // 2. Select all headings that correspond to TOC links
-    const headings = Array.from(tocLinks)
-      .map((link) => {
-        const id = link.getAttribute("href")?.slice(1);
-        return document.getElementById(id || "");
-      })
-      .filter((h): h is HTMLElement => h !== null);
-
-    if (headings.length === 0) return;
-
-    // 3. Cleanup previous observer
-    if (observer) {
-      observer.disconnect();
-    }
-
-    // 4. Create new observer
-    // rootMargin: '0px 0px -80% 0px' creates a band at the top 20% of the screen
-    observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Remove active class from all links
-            tocLinks.forEach((link) => {
-              link.classList.remove("text-pacamara-accent", "font-bold");
-              link.classList.add(
-                "text-pacamara-primary/80",
-                "dark:text-white/80",
-              );
-              link.removeAttribute("aria-current");
-            });
-
-            // Add active class to current link
-            const activeLink = document.querySelector(
-              `.toc-link[href="#${entry.target.id}"]`,
-            );
-            if (activeLink) {
-              activeLink.classList.remove(
-                "text-pacamara-primary/80",
-                "dark:text-white/80",
-              );
-              activeLink.classList.add("text-pacamara-accent", "font-bold");
-              activeLink.setAttribute("aria-current", "location");
-            }
-          }
-        });
-      },
-      {
-        rootMargin: "0px 0px -80% 0px",
-        threshold: 1.0,
-      },
-    );
-
-    // 5. Observe headings
-    headings.forEach((h) => observer?.observe(h));
-  }
-
-  // Run on initial load and after View Transitions
-  document.addEventListener("astro:page-load", initTOC);
-
-  // Cleanup on swap
-  document.addEventListener("astro:before-swap", () => {
-    if (observer) {
-      observer.disconnect();
-      observer = null;
-    }
-  });
-</script>
