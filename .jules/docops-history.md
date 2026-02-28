@@ -13,3 +13,4 @@
 | 2026-02-26 | Dependency Fix | package.json, package-lock.json | Moved build-critical deps (sharp, cheerio, astro-compress, etc.) to dependencies to prevent pruning in Render production builds. |
 | 2026-02-26 | Workflow Fix | package.json | Added engines.node to package.json; Synced lockfiles. |
 | 2026-02-26 | Security & CI Fixes | .github/workflows/dependency-review.yml, codeql.yml, dependabot.yml, docs/AI.md, docs/ENV.md | Relaxed dependency review config; Added missing security workflows and docs. |
+| 2026-02-28 | Documentation & Workflows | docs/*, README.md, .github/workflows/* | Updated documentation to match implementation; transitioned CI to npm per memory |

@@ -44,6 +44,12 @@ Standard sitemap index for search engines.
 - **Format:** XML
 - **Usage:** SEO / Search Engine Crawlers.
 
+**Example Request:**
+
+```bash
+curl https://portfolio.kuasar.xyz/sitemap-index.xml
+```
+
 ### 3. Robots.txt
 
 Directives for search engine crawlers.
@@ -62,3 +68,9 @@ Open Graph images generated for each project to enhance social sharing.
 - **Format:** PNG
 - **Usage:** Social Media Previews (Twitter, LinkedIn, Facebook).
 - **Generation:** Built using `satori` and `resvg` at build time.
+
+**Example Request:**
+
+```bash
+curl https://portfolio.kuasar.xyz/robots.txt
+```

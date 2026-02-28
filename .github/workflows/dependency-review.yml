@@ -14,9 +14,8 @@ jobs:
       - name: "Dependency Review"
         uses: actions/dependency-review-action@v4
         with:
-          # Fail on any new vulnerability (moderate, high, critical)
+          # Fail on any new vulnerability (low, moderate, high, critical)
           fail-on-severity: moderate
-          # Allow low scorecard values to just warn instead of fail
-          warn-on-openssf-scorecard: true
+          warn-on-openssf-scorecard-level: 0
           # Post comments on the PR
           comment-summary-in-pr: always
