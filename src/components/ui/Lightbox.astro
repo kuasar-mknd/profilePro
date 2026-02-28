@@ -681,16 +681,18 @@
    */
   function initLightbox() {
     // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
-    // Using window global to persist across View Transitions script re-executions
     if (window.__lightboxInstance) {
       window.__lightboxInstance.destroy();
     }
 
     // Create fresh instance for the new page content
+    // Store on window to persist across module re-executions
     window.__lightboxInstance = new Lightbox();
   }
 
-  // ⚡ Bolt: Prevent duplicate listener accumulation
+  // ⚡ Bolt: Removed redundant DOMContentLoaded listener
+  // astro:page-load handles both initial load and subsequent navigations
+  // ⚡ Bolt: Guard against duplicate listeners if script re-executes
   if (!window.__lightboxListenerAttached) {
     document.addEventListener("astro:page-load", initLightbox);
     window.__lightboxListenerAttached = true;
