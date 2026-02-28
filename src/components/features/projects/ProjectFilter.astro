@@ -6,20 +6,23 @@ const { tags, activeTag } = Astro.props;
 // 🎨 Palette: Fetch all projects to calculate counts for each tag
 const allProjects = await getCollection("project");
 
-// ⚡ Bolt: Replace O(N*M) nested filter with O(N) hash map accumulation
-// Calculate counts for each tag
+// ⚡ Bolt: O(N) single-pass tag counting instead of O(N*M) nested loops
 const tagCounts: Record<string, number> = {};
 for (const tag of tags) {
   tagCounts[tag] = 0;
 }
-for (const project of allProjects) {
-  const projectTags = Array.isArray(project.data.tag)
-    ? project.data.tag
-    : [project.data.tag];
-  for (const tag of projectTags) {
-    if (tagCounts[tag] !== undefined) {
-      tagCounts[tag]++;
+
+for (let i = 0; i < allProjects.length; i++) {
+  const projectTags = allProjects[i].data.tag;
+  if (Array.isArray(projectTags)) {
+    for (let j = 0; j < projectTags.length; j++) {
+      const tag = projectTags[j];
+      if (tagCounts[tag] !== undefined) {
+        tagCounts[tag]++;
+      }
     }
+  } else if (tagCounts[projectTags as string] !== undefined) {
+    tagCounts[projectTags as string]++;
   }
 }
 
