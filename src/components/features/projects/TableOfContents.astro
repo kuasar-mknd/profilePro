@@ -29,7 +29,7 @@ const showToC = filteredHeadings.length >= 2;
           <li class={`${h.depth === 3 ? "ml-4" : ""}`}>
             <a
               href={`#${h.slug}`}
-              class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-medium"
+              class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-bold"
             >
               {h.text}
             </a>
@@ -43,15 +43,32 @@ const showToC = filteredHeadings.length >= 2;
 <script>
   /**
    * 🎨 Palette: Table of Contents Active State
-   * Highlights the current section in the ToC as the user scrolls.
+   * Highlights the current section in the TOC as the user scrolls.
    */
-  function initTableOfContents() {
+  let observer: IntersectionObserver | null = null;
+
+  function initTOC() {
+    // 1. Select all TOC links
     const tocLinks = document.querySelectorAll(".toc-link");
-    const headings = document.querySelectorAll("article h2, article h3");
+    if (tocLinks.length === 0) return;
 
-    if (headings.length === 0 || tocLinks.length === 0) return;
+    // 2. Select all headings that correspond to TOC links
+    const headings = Array.from(tocLinks)
+      .map((link) => {
+        const id = link.getAttribute("href")?.slice(1);
+        return document.getElementById(id || "");
+      })
+      .filter((h): h is HTMLElement => h !== null);
 
-    const observer = new IntersectionObserver(
+    if (headings.length === 0) return;
+
+    // 3. Cleanup previous observer
+    if (observer) {
+      observer.disconnect();
+    }
+
+    // 4. Create new observer
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -60,7 +77,6 @@ const showToC = filteredHeadings.length >= 2;
             tocLinks.forEach((link) => {
               if (link.getAttribute("href") === `#${id}`) {
                 link.setAttribute("data-active", "true");
-                // 🎨 Palette: Accessibility improvement for screen readers
                 link.setAttribute("aria-current", "location");
               } else {
                 link.removeAttribute("data-active");
@@ -76,8 +92,18 @@ const showToC = filteredHeadings.length >= 2;
       },
     );
 
-    headings.forEach((heading) => observer.observe(heading));
+    // 5. Observe headings
+    headings.forEach((h) => observer?.observe(h));
   }
 
-  document.addEventListener("astro:page-load", initTableOfContents);
+  // Run on initial load and after View Transitions
+  document.addEventListener("astro:page-load", initTOC);
+
+  // Cleanup on swap
+  document.addEventListener("astro:before-swap", () => {
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+  });
 </script>
