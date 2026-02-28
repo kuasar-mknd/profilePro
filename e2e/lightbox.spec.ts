@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Lightbox E2E Tests", () => {
-  test("should open lightbox when clicking an image in gallery", async ({ page }) => {
+  test("should open lightbox when clicking an image in gallery", async ({
+    page,
+  }) => {
     // Navigate to a project page with a gallery
     await page.goto("/project/larev");
 

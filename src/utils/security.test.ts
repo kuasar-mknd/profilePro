@@ -34,6 +34,32 @@ describe("Security Utilities", () => {
       );
       expect(isValidUrl("mailto:user@example.com")).toBe(false);
     });
+
+    it("should allow tel if option enabled", () => {
+      expect(isValidUrl("tel:+1234567890", { allowTel: true })).toBe(true);
+      expect(isValidUrl("tel:+1234567890")).toBe(false);
+    });
+
+    it("should allow sms if option enabled", () => {
+      expect(isValidUrl("sms:+1234567890", { allowSms: true })).toBe(true);
+      expect(isValidUrl("sms:+1234567890")).toBe(false);
+    });
+
+    it("should reject URLs with dangerous characters (XSS vectors)", () => {
+      expect(isValidUrl("https://example.com<script>")).toBe(false);
+      expect(isValidUrl('https://example.com" onclick="alert(1)')).toBe(false);
+      expect(isValidUrl("https://example.com' onmouseover='alert(1)")).toBe(
+        false,
+      );
+      expect(isValidUrl("https://example.com`")).toBe(false);
+    });
+
+    it("should reject URLs with control characters (Header Injection)", () => {
+      // Note: "https://example.com\nHeader: Injection"
+      expect(isValidUrl("https://example.com\nHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\rHeader: Injection")).toBe(false);
+      expect(isValidUrl("https://example.com\t")).toBe(false);
+    });
   });
 
   describe("sanitizeUrl", () => {
@@ -42,11 +68,12 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("http://example.com")).toBe("http://example.com");
     });
 
-    it("should allow mailto and tel schemes", () => {
+    it("should allow mailto, tel and sms schemes", () => {
       expect(sanitizeUrl("mailto:user@example.com")).toBe(
         "mailto:user@example.com",
       );
       expect(sanitizeUrl("tel:+1234567890")).toBe("tel:+1234567890");
+      expect(sanitizeUrl("sms:+1234567890")).toBe("sms:+1234567890");
     });
 
     it("should allow relative paths and anchors", () => {
