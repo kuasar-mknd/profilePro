@@ -40,30 +40,39 @@ if (explicitImages && explicitImages.length > 0) {
   }));
 } else if (folder) {
   // Load from folder
+  // ⚡ Bolt: Use eager: false to prevent loading all images in the project
+  // We filter paths first, then load only the required modules
   const allImages = import.meta.glob<{ default: ImageMetadata }>(
     "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: true },
+    { eager: false },
   );
 
-  galleryImages = Object.entries(allImages)
-    .filter(([path]) => {
-      const folderMatch = path.includes(`/${folder}/`);
-      if (!folderMatch) return false;
+  const filteredImages = Object.entries(allImages).filter(([path]) => {
+    const folderMatch = path.includes(`/${folder}/`);
+    if (!folderMatch) return false;
 
-      const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
-      if (isInSubfolder) return false;
+    const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
+    if (isInSubfolder) return false;
 
-      for (const pattern of excludePatterns) {
-        if (path.includes(pattern)) return false;
-      }
-      return true;
-    })
-    .map(([path, module]) => ({
-      src: module.default,
-      filename: path.split("/").pop() || "",
-      alt: `Photo - ${folder}`,
-    }))
-    .sort((a, b) => a.filename.localeCompare(b.filename));
+    for (const pattern of excludePatterns) {
+      if (path.includes(pattern)) return false;
+    }
+    return true;
+  });
+
+  // Load only filtered images
+  galleryImages = await Promise.all(
+    filteredImages.map(async ([path, loader]) => {
+      const module = await loader();
+      return {
+        src: module.default,
+        filename: path.split("/").pop() || "",
+        alt: `Photo - ${folder}`,
+      };
+    }),
+  );
+
+  galleryImages.sort((a, b) => a.filename.localeCompare(b.filename));
 }
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
