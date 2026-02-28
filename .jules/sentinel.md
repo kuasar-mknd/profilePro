@@ -29,3 +29,15 @@ Each entry should include:
 **Vulnerability:** The `dependency-review` workflow was configured with `fail-on-severity: low`. This caused CI failures due to moderate vulnerabilities in development dependencies (e.g., `@lhci/cli` dependencies) that do not affect the production runtime. These failures blocked critical deployment fixes.
 **Learning:** Security scanners need to be tuned to the context. Blocking on low/moderate vulnerabilities in build tools can paralyze development.
 **Prevention:** Relaxed the threshold to `high` in `dependency-review.yml` and moved development-only tools to `devDependencies` to reduce the scanned surface area.
+
+## 2025-05-15 - URL Sanitization & Encoding
+
+**Vulnerability:** Potential XSS via unsanitized `href` attributes and broken links due to unencoded dynamic segments.
+**Learning:** User-controlled inputs or content collection fields (like tags) used in URLs must be sanitized to prevent `javascript:` injection and properly encoded to handle special characters.
+**Prevention:** Applied `sanitizeUrl` to `href` props in `Tag.astro` and `Breadcrumbs.astro`. Applied `encodeURIComponent` to dynamic path segments in `ProjectFilter.astro`, `Post.astro`, and `src/pages/project/[slug].astro`.
+
+## 2025-05-20 - Strict URL Validation
+
+**Vulnerability:** `isValidUrl` relied on a loose regex that only checked for the presence of a protocol, allowing malformed URLs with dangerous characters (e.g., `https://example.com" onclick="alert(1)`) to pass validation. This could lead to XSS if the validated URL was subsequently used in an unquoted or improperly quoted HTML attribute.
+**Learning:** Regex-based URL validation is often insufficient and prone to bypasses. The `URL` constructor provides a robust, spec-compliant parser that validates structure. Additionally, explicitly rejecting dangerous characters (quotes, angle brackets, control chars) is a necessary defense-in-depth measure.
+**Prevention:** Hardened `isValidUrl` and `sanitizeUrl` in `src/utils/security.ts` to use `new URL()` for parsing and explicitly reject dangerous characters. Updated tests to cover these attack vectors.

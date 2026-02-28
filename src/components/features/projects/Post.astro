@@ -3,13 +3,14 @@ const { postData, bentoSize = "", priority = false } = Astro.props;
 import { Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
+import Skeleton from "../../ui/Skeleton.astro";
+import { getReadingTime } from "../../../utils/readingTime";
 
 const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
-const wordCount = postData.body ? postData.body.split(/\s+/g).length : 0;
-const readingTime = Math.ceil(wordCount / 200);
+const readingTime = getReadingTime(postData.body);
 ---
 
 <article
@@ -33,6 +34,11 @@ const readingTime = Math.ceil(wordCount / 200);
   <div
     class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none group-hover:will-change-transform"
   >
+    <Skeleton
+      class="absolute inset-0 z-10 transition-opacity duration-500"
+      width="100%"
+      height="100%"
+    />
     {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
     <Picture
       src={postData.data.image}
@@ -78,7 +84,7 @@ const readingTime = Math.ceil(wordCount / 200);
         <Tag
           tag={postData.data.tag}
           variant="dark"
-          href={`/project/tag/${postData.data.tag}`}
+          href={`/project/tag/${encodeURIComponent(postData.data.tag)}`}
         />
       </div>
 
@@ -144,3 +150,39 @@ const readingTime = Math.ceil(wordCount / 200);
   >
   </div>
 </article>
+
+<script>
+  /**
+   * 🎨 Palette: Skeleton Loader for Project Cards
+   * Fades out skeleton once the image is loaded.
+   */
+  function initProjectCards() {
+    const cards = document.querySelectorAll("article .image-zoom");
+
+    cards.forEach((card) => {
+      // ⚡ Bolt: Check if already initialized to prevent duplicate listeners
+      if ((card as HTMLElement).dataset.skeletonInitialized === "true") return;
+      (card as HTMLElement).dataset.skeletonInitialized = "true";
+
+      const img = card.querySelector("img");
+      const skeleton = card.querySelector(".skeleton");
+
+      if (!img || !skeleton) return;
+
+      const removeSkeleton = () => {
+        skeleton.classList.add("opacity-0");
+        // Remove from DOM after fade transition
+        setTimeout(() => skeleton.remove(), 500);
+      };
+
+      if (img.complete) {
+        removeSkeleton();
+      } else {
+        img.addEventListener("load", removeSkeleton, { once: true });
+      }
+    });
+  }
+
+  // Initialize on load and after View Transitions
+  document.addEventListener("astro:page-load", initProjectCards);
+</script>

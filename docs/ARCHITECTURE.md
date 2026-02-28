@@ -95,11 +95,11 @@ Workflows are defined in `.github/workflows/`:
 
 1.  **CI (`ci.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
-    - Installs dependencies.
-    - Runs `bun run check` (Lint + Types + Format).
-    - Runs `bun run test:e2e` (Playwright).
-    - Builds the site `bun run build`.
+    - Sets up Node 20.
+    - Installs dependencies via `npm ci`.
+    - Runs `npm run check` (Lint + Types + Format).
+    - Runs `npm run test:e2e` (Playwright).
+    - Builds the site `npm run build`.
 
 2.  **Security**:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
