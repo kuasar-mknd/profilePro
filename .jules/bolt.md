@@ -72,6 +72,11 @@
 **Learning:** Initializing off-screen elements with `visibility: hidden` (e.g., via `invisible` class) directly in HTML prevents initial paint/compositing costs more effectively than applying it via JavaScript on load. This reduces the browser's workload during critical initial render (FCP/LCP) and eliminates potential layout shifts or flashes if JS is delayed.
 **Action:** Apply `invisible` class to off-screen interactive elements (like mobile menus) in the HTML markup, and use JavaScript only to toggle it during interaction.
 
+## 2024-05-24 - DOM Query Specificity in SPAs
+
+**Learning:** In applications using Astro View Transitions (or any SPA framework), DOM nodes often persist across navigations. Running generic queries like `document.querySelectorAll('a[target="_blank"]')` on every navigation event means redundantly processing nodes that have already been modified.
+**Action:** Use specific CSS pseudo-classes like `:not([attribute])` or `:not(.class)` in `querySelectorAll` to let the native browser engine pre-filter elements, preventing redundant JS execution and string manipulation on the main thread.
+
 ## 2026-10-24 - O(N\*M) Filtering in Astro Frontmatter
 
 **Learning:** When aggregating data for specific categories (like tag counts), using `Array.reduce` with nested `Array.filter` iterations over all items scales poorly (O(N\*M)) where N is items and M is categories. This causes unnecessary CPU strain during Astro build (SSG).
