@@ -37,11 +37,21 @@ const a11yLabel = baseLabel.includes(suffix) ? baseLabel : baseLabel + suffix;
   class="group relative flex h-10 w-10 items-center justify-center rounded-full bg-pacamara-primary/5 transition-all duration-300 hover:scale-110 focus-visible:scale-110 hover:bg-pacamara-accent focus-visible:bg-pacamara-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:hover:bg-pacamara-accent"
   style="contain: layout style;"
   aria-label={a11yLabel}
-  title={a11yLabel}
 >
   <Icon
     name={icon}
     class="h-5 w-5 text-pacamara-primary transition-colors duration-300 group-hover:text-white dark:text-pacamara-white"
   />
   <span class="sr-only">{a11yLabel}</span>
+
+  <!-- 🎨 Palette: Custom Visual Tooltip -->
+  <span
+    class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-pacamara-dark text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap dark:bg-white dark:text-pacamara-dark shadow-md transform translate-y-2 group-hover:translate-y-0 group-focus-visible:translate-y-0 flex flex-col items-center"
+    aria-hidden="true"
+  >
+    {baseLabel}
+    <span
+      class="absolute top-full w-0 h-0 border-x-4 border-x-transparent border-t-[5px] border-t-pacamara-dark dark:border-t-white"
+    ></span>
+  </span>
 </a>
