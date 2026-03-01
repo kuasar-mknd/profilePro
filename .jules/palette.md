@@ -25,3 +25,6 @@
 ## 2025-03-01 - Custom Tooltips for Icon-only Buttons
 **Learning:** Native browser `title` attributes on icon-only buttons often suffer from unpredictable delay, lack of styling, and inconsistency across OS/browsers, leading to a subpar UX for sighted keyboard and mouse users.
 **Action:** Replace `title` attributes with custom CSS-based tooltips (using opacity and transform transitions on hover/focus) for icon-only buttons. Ensure `title` is removed to prevent double tooltips, while maintaining full accessibility via `aria-label` and `sr-only` text.
+## 2024-05-24 - Consistent Button Interaction Cues
+**Learning:** Default CSS resets in frameworks like Tailwind strip the `cursor: pointer` style from `<button>` elements. While touch interfaces don't require this, desktop users heavily rely on pointer changes to identify interactive elements that lack other strong visual affordances.
+**Action:** Ensure all clickable elements, especially `<button>` tags (like `theme-toggle-btn`, `menu_toggle`, `submit-btn`, etc.), explicitly include the `cursor-pointer` utility class to guarantee consistent visual feedback across the interface.
