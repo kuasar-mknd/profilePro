@@ -3,7 +3,6 @@ import mdx from "@astrojs/mdx";
 import rehypeExternalLinks from "rehype-external-links";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
-import compress from "astro-compress";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
@@ -19,7 +18,7 @@ export default defineConfig({
     service: {
       entrypoint: "astro/assets/services/sharp",
     },
-    formats: ["avif"],
+    formats: ["webp"],
   },
   integrations: [
     mdx({
@@ -43,17 +42,6 @@ export default defineConfig({
     }),
     sitemap(),
     icon(),
-    compress({
-      CSS: true,
-      HTML: {
-        "html-minifier-terser": {
-          removeAttributeQuotes: false,
-        },
-      },
-      Image: false, // Sharp handles this
-      JavaScript: true,
-      SVG: true,
-    }),
   ],
   site: "https://portfolio.kuasar.xyz",
   prefetch: {

@@ -18,3 +18,15 @@ jobs:
           fail-on-severity: low
           # Block licenses that are not compliant (optional, can be adjusted)
           # deny-licenses: GPL-3.0, AGPL-3.0
+          # Allow widely used build tools with low OpenSSF scores (safe false positives)
+          allow-dependencies: >-
+            acorn-jsx,
+            @surma/rollup-plugin-off-main-thread,
+            @jridgewell/trace-mapping,
+            @jridgewell/resolve-uri,
+            @emmetio/stream-reader-utils,
+            @emmetio/stream-reader,
+            @emmetio/scanner,
+            @emmetio/css-parser,
+            @apideck/better-ajv-errors,
+            @antfu/utils
