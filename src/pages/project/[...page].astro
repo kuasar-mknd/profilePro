@@ -21,22 +21,41 @@ export async function getStaticPaths({
     ...new Set(allProjects.map((project) => project.data.tag).flat()),
   ];
 
+  // ⚡ Bolt: Calculate tagCounts once here and pass it down as a prop
+  // This avoids O(P*N) redundant calculations per paginated page
+  const tagCounts: Record<string, number> = {};
+  for (const tag of uniqueTags) tagCounts[tag] = 0;
+
+  for (let i = 0; i < allProjects.length; i++) {
+    const projectTags = allProjects[i].data.tag;
+    if (Array.isArray(projectTags)) {
+      for (let j = 0; j < projectTags.length; j++) {
+        const tag = projectTags[j];
+        if (tagCounts[tag] !== undefined) tagCounts[tag]++;
+      }
+    } else if (tagCounts[projectTags as string] !== undefined) {
+      tagCounts[projectTags as string]++;
+    }
+  }
+
   const projectEntries = allProjects.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 
   return paginate(projectEntries, {
     pageSize: config.postsPerPage,
-    props: { allTags: uniqueTags },
+    props: { allTags: uniqueTags, tagCounts, totalCount: allProjects.length },
   });
 }
 
 interface Props {
   page: Page<CollectionEntry<"project">>;
   allTags: string[];
+  tagCounts: Record<string, number>;
+  totalCount: number;
 }
 
-const { page, allTags } = Astro.props;
+const { page, allTags, tagCounts, totalCount } = Astro.props;
 ---
 
 <Base>
@@ -55,7 +74,11 @@ const { page, allTags } = Astro.props;
       >
         Une collection de mes projets récents en vidéo, photo et développement.
       </p>
-      <ProjectFilter tags={allTags} />
+      <ProjectFilter
+        tags={allTags}
+        tagCounts={tagCounts}
+        totalCount={totalCount}
+      />
     </ScrollReveal>
     {
       /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */

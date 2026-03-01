@@ -13,6 +13,24 @@ export async function getStaticPaths() {
     ...new Set(allProjects.map((project) => project.data.tag).flat()),
   ];
 
+  // ⚡ Bolt: Calculate tagCounts once here and pass it down as a prop
+  // This avoids O(P*N) redundant calculations per tag page
+  const tagCounts: Record<string, number> = {};
+  for (const tag of uniqueTags) tagCounts[tag] = 0;
+
+  for (let i = 0; i < allProjects.length; i++) {
+    const projectTags = allProjects[i].data.tag;
+    if (Array.isArray(projectTags)) {
+      for (let j = 0; j < projectTags.length; j++) {
+        const tag = projectTags[j];
+        if (tagCounts[tag] !== undefined) tagCounts[tag]++;
+      }
+    } else if (tagCounts[projectTags as string] !== undefined) {
+      tagCounts[projectTags as string]++;
+    }
+  }
+  const totalCount = allProjects.length;
+
   return uniqueTags.map((tag) => {
     const filteredProjects = allProjects
       .filter((project) =>
@@ -23,13 +41,18 @@ export async function getStaticPaths() {
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
     return {
       params: { tag },
-      props: { projects: filteredProjects, allTags: uniqueTags },
+      props: {
+        projects: filteredProjects,
+        allTags: uniqueTags,
+        tagCounts,
+        totalCount,
+      },
     };
   });
 }
 
 const { tag } = Astro.params;
-const { projects, allTags } = Astro.props;
+const { projects, allTags, tagCounts, totalCount } = Astro.props;
 ---
 
 <Base>
@@ -48,7 +71,12 @@ const { projects, allTags } = Astro.props;
         <span class="text-shimmer">Projets</span>
         <span class="capitalize">{tag}</span>
       </h1>
-      <ProjectFilter tags={allTags} activeTag={tag} />
+      <ProjectFilter
+        tags={allTags}
+        activeTag={tag}
+        tagCounts={tagCounts}
+        totalCount={totalCount}
+      />
     </ScrollReveal>
 
     {

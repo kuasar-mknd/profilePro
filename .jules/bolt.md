@@ -91,3 +91,8 @@
 
 **Learning:** Multiple components (like Hero carousels and backgrounds) were instantiating separate `IntersectionObserver` instances to pause infinite CSS animations when off-screen. This fragments performance optimizations and creates redundant memory overhead.
 **Action:** Centralized visibility tracking into a single global `animationObserver` in `Base.astro`. Appended selectors like `.infinite-scroll` and `.hero-gradient-vibrant` to the `querySelectorAll` block, allowing one observer (with a uniform `rootMargin: "200px"`) to orchestrate memory recovery for all infinite animations site-wide.
+
+## 2026-03-01 - Avoid internal getCollection calls in repeated components
+
+**Learning:** Calling `getCollection('project')` internally inside a component like `ProjectFilter.astro` that is rendered multiple times (e.g., on every paginated page or tag page) causes redundant data processing and nested loops during the SSG build. If P is the number of static pages and N is the number of projects, this results in an O(P*N) complexity.
+**Action:** Lift the data fetching and heavy computations (like calculating tag frequencies) up to the page route's `getStaticPaths` function. Compute it exactly once, and pass the results down as props to the presentational component, effectively reducing the complexity to O(N).
