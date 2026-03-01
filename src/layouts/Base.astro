@@ -15,8 +15,10 @@ import { getImage } from "astro:assets";
 import { safeJson } from "../utils/security";
 import logo from "../assets/logo.avif";
 
-// Precompute LCP image URL for preloading
-const heroLogo = await getImage({ src: logo, width: 360, format: "webp" });
+// ⚡ Bolt: Precompute LCP image URL for preloading (Hero Logo)
+// Changed format from "webp" to "avif" to exactly match the <img> tag in Hero.astro.
+// This prevents the browser from downloading two separate image files for the LCP element.
+const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
 const {
   postData,
@@ -111,12 +113,20 @@ if (postData?.data?.image) {
 
     <!-- ⚡ Bolt: LCP Image Preload (Project/Post Hero) -->
     {
+      /*
+      ⚡ Bolt: Fixed MIME type declaration for LCP Image preload.
+      lcpImage is explicitly generated with format: "webp" in the frontmatter logic above.
+      The type attribute must be "image/webp" (not "image/avif") so the browser correctly
+      matches the preloaded resource with the subsequent <img> tag request, avoiding a double-fetch.
+    */
+    }
+    {
       lcpImage && (
         <link
           rel="preload"
           href={lcpImage.src}
           as="image"
-          type="image/avif"
+          type="image/webp"
           fetchpriority="high"
         />
       )
