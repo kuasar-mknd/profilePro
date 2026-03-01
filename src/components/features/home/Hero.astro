@@ -33,8 +33,8 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
 // the performance benefits of a single <img> tag.
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
-// ⚡ Bolt: Limit concurrency to 5 slides (20 concurrent image ops) to prevent build OOM
-const optimizedSlides = await limitConcurrency(slides, 5, async (slide) => {
+// ⚡ Bolt: Limit concurrency to 2 slides to prevent build OOM on Render
+const optimizedSlides = await limitConcurrency(slides, 2, async (slide) => {
   // Generate candidates for srcset matching the original Picture configuration
   const [w224, w288, w448, w576] = await Promise.all([
     getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
@@ -409,8 +409,36 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     );
   }
 
-  initCarouselTouch();
-  document.addEventListener("astro:page-load", initCarouselTouch);
+  /**
+   * ⚡ Bolt: Carousel Visibility Optimization
+   * Pauses the infinite scroll animation when the carousel is not in the viewport
+   * to save GPU and main thread resources.
+   */
+  function initCarouselObserver() {
+    const carousel = document.getElementById("hero-carousel");
+    const track = document.getElementById("carousel-track");
+
+    if (!carousel || !track) return;
+
+    // Guard against duplicate observers
+    if (carousel.dataset.observerInitialized === "true") return;
+    carousel.dataset.observerInitialized = "true";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            track.style.animationPlayState = "running";
+          } else {
+            track.style.animationPlayState = "paused";
+          }
+        });
+      },
+      { rootMargin: "200px" },
+    ); // Pre-load animation slightly before it enters viewport
+
+    observer.observe(carousel);
+  }
 
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
@@ -456,6 +484,28 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     });
   }
 
-  initHeroCTA();
-  document.addEventListener("astro:page-load", initHeroCTA);
+  // ⚡ Bolt: Singleton Listener Pattern
+  // Consolidates initialization logic and prevents listener accumulation
+  function setupHeroListeners() {
+    const initAll = () => {
+      initCarouselTouch();
+      initCarouselObserver();
+      initHeroCTA();
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__heroInitHandler) {
+      document.removeEventListener("astro:page-load", win.__heroInitHandler);
+    }
+
+    win.__heroInitHandler = initAll;
+    document.addEventListener("astro:page-load", initAll);
+
+    // Run immediately for current execution
+    initAll();
+  }
+
+  setupHeroListeners();
 </script>

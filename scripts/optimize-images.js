@@ -23,7 +23,7 @@ const CONFIG = {
   effort: 4,
 
   // Concurrency limit for parallel processing
-  concurrency: 4
+  concurrency: 4,
 };
 
 async function processImage(file) {
@@ -93,7 +93,11 @@ async function processImage(file) {
     }
 
     const end = Date.now();
-    return { skipped: false, path: relativePath, duration: (end - start) / 1000 };
+    return {
+      skipped: false,
+      path: relativePath,
+      duration: (end - start) / 1000,
+    };
   } catch (error) {
     console.error(`❌ Erreur sur ${relativePath}:`, error);
     return { error: true, path: relativePath };
@@ -102,7 +106,9 @@ async function processImage(file) {
 
 async function processImages() {
   console.log(`🔥 OPTIMISATION IMAGES : START`);
-  console.log(`🎯 Cible: ${CONFIG.maxWidth}px max @ Q${CONFIG.quality} (AVIF, Effort ${CONFIG.effort})`);
+  console.log(
+    `🎯 Cible: ${CONFIG.maxWidth}px max @ Q${CONFIG.quality} (AVIF, Effort ${CONFIG.effort})`,
+  );
   console.log(`⚡ Parallélisation: ${CONFIG.concurrency} images simultanées`);
 
   // Récupère toutes les images
@@ -126,12 +132,17 @@ async function processImages() {
       const result = await processImage(file);
       processed++;
       if (!result.skipped && !result.error) {
-        console.log(`   ✅ ${result.path} (${result.duration.toFixed(1)}s) [${processed}/${total}]`);
+        console.log(
+          `   ✅ ${result.path} (${result.duration.toFixed(1)}s) [${processed}/${total}]`,
+        );
       }
     }
   }
 
-  const workers = Array.from({ length: Math.min(CONFIG.concurrency, files.length) }, worker);
+  const workers = Array.from(
+    { length: Math.min(CONFIG.concurrency, files.length) },
+    worker,
+  );
   await Promise.all(workers);
 
   console.log("🏁 Terminé ! Vos assets sont prêts.");

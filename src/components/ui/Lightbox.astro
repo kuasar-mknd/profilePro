@@ -680,21 +680,37 @@
    * and previous listeners are removed before creating a new one.
    */
   function initLightbox() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
     // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
-    if (window.__lightboxInstance) {
-      window.__lightboxInstance.destroy();
+    if (win.__lightboxInstance) {
+      win.__lightboxInstance.destroy();
+      win.__lightboxInstance = null;
     }
 
     // Create fresh instance for the new page content
-    // Store on window to persist across module re-executions
-    window.__lightboxInstance = new Lightbox();
+    win.__lightboxInstance = new Lightbox();
   }
 
-  // ⚡ Bolt: Removed redundant DOMContentLoaded listener
-  // astro:page-load handles both initial load and subsequent navigations
-  // ⚡ Bolt: Guard against duplicate listeners if script re-executes
-  if (!window.__lightboxListenerAttached) {
+  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
+  function setupLightboxListeners() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__lightboxInitHandler) {
+      document.removeEventListener(
+        "astro:page-load",
+        win.__lightboxInitHandler,
+      );
+    }
+
+    win.__lightboxInitHandler = initLightbox;
     document.addEventListener("astro:page-load", initLightbox);
-    window.__lightboxListenerAttached = true;
+
+    // Run immediately for current execution
+    initLightbox();
   }
+
+  setupLightboxListeners();
 </script>

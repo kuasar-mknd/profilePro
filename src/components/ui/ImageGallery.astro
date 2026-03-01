@@ -77,10 +77,10 @@ if (explicitImages && explicitImages.length > 0) {
 
 // ⚡ Bolt: Pre-generate optimized full-size images for Lightbox
 // Serves 1600px WebP (Q80) instead of massive original uploads (often 5MB+) or tiny thumbnails
-// ⚡ Bolt: Limit concurrency to 5 images to prevent build OOM
+// ⚡ Bolt: Limit concurrency to 2 images to prevent build OOM on Render
 const optimizedImages = await limitConcurrency(
   galleryImages,
-  5,
+  2,
   async (img) => {
     const optimized = await getImage({
       src: img.src,
@@ -288,6 +288,21 @@ const columnClasses = {
     });
   }
 
-  // Initialize only via event listener to avoid double execution on initial load
-  document.addEventListener("astro:page-load", initGallery);
+  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
+  function setupGalleryListeners() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__galleryInitHandler) {
+      document.removeEventListener("astro:page-load", win.__galleryInitHandler);
+    }
+
+    win.__galleryInitHandler = initGallery;
+    document.addEventListener("astro:page-load", initGallery);
+
+    // Run immediately for current execution
+    initGallery();
+  }
+
+  setupGalleryListeners();
 </script>

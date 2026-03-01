@@ -289,15 +289,14 @@ if (postData?.data?.image) {
        * - Caches layout metrics to avoid layout thrashing in scroll handler
        * - Throttles scroll updates using requestAnimationFrame
        */
-      let backToTopObserver: IntersectionObserver | null = null;
-      let cleanupScroll: (() => void) | null = null;
-      let cleanupBackToTop: (() => void) | null = null;
-
       function initBackToTop() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
+
         // ⚡ Cleanup previous listeners before initializing new ones
-        if (cleanupBackToTop) {
-          cleanupBackToTop();
-          cleanupBackToTop = null;
+        if (win.__cleanupBackToTop) {
+          win.__cleanupBackToTop();
+          win.__cleanupBackToTop = null;
         }
 
         const backToTopBtn = document.getElementById("back-to-top");
@@ -315,11 +314,7 @@ if (postData?.data?.image) {
         let cachedDocHeight = 0;
         let resizeObserver: ResizeObserver | null = null;
 
-        // ⚡ Clean up previous listeners to prevent stacking on navigation
-        if (cleanupScroll) {
-          cleanupScroll();
-          cleanupScroll = null;
-        }
+        let backToTopObserver: IntersectionObserver | null = null;
 
         // ⚡ Bolt: RAF throttling state
         let ticking = false;
@@ -364,46 +359,37 @@ if (postData?.data?.image) {
         updateDimensions();
         updateVisuals();
 
-        // Register cleanup
-        cleanupScroll = () => {
-          window.removeEventListener("scroll", onScroll);
-          if (resizeObserver) resizeObserver.disconnect();
-        };
-
         // ⚡ Early return if already initialized
         if (backToTopBtn.dataset.initialized === "true") return;
         backToTopBtn.dataset.initialized = "true";
 
-        // ⚡ Reuse observer if already created
-        if (!backToTopObserver) {
-          backToTopObserver = new IntersectionObserver(
-            (entries) => {
-              const entry = entries[0];
-              const btn = document.getElementById("back-to-top");
-              if (!btn) return;
+        backToTopObserver = new IntersectionObserver(
+          (entries) => {
+            const entry = entries[0];
+            const btn = document.getElementById("back-to-top");
+            if (!btn) return;
 
-              // If sentinel is NOT intersecting (scrolled past), show button
-              if (!entry.isIntersecting) {
-                btn.classList.remove("opacity-0", "invisible", "translate-y-4");
-                btn.classList.add("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "0");
-                // ⚡ Bolt: Only listen to scroll when button is visible to save resources
-                window.addEventListener("scroll", onScroll, { passive: true });
-                onScroll(); // Update visuals immediately
-              } else {
-                btn.classList.add("opacity-0", "invisible", "translate-y-4");
-                btn.classList.remove("visible", "translate-y-0");
-                btn.setAttribute("tabindex", "-1");
-                // ⚡ Bolt: Detach listener when button is hidden to save main thread
-                window.removeEventListener("scroll", onScroll);
-              }
-            },
-            {
-              root: null, // viewport
-              threshold: 0,
-            },
-          );
-        }
+            // If sentinel is NOT intersecting (scrolled past), show button
+            if (!entry.isIntersecting) {
+              btn.classList.remove("opacity-0", "invisible", "translate-y-4");
+              btn.classList.add("visible", "translate-y-0");
+              btn.setAttribute("tabindex", "0");
+              // ⚡ Bolt: Only listen to scroll when button is visible to save resources
+              window.addEventListener("scroll", onScroll, { passive: true });
+              onScroll(); // Update visuals immediately
+            } else {
+              btn.classList.add("opacity-0", "invisible", "translate-y-4");
+              btn.classList.remove("visible", "translate-y-0");
+              btn.setAttribute("tabindex", "-1");
+              // ⚡ Bolt: Detach listener when button is hidden to save main thread
+              window.removeEventListener("scroll", onScroll);
+            }
+          },
+          {
+            root: null, // viewport
+            threshold: 0,
+          },
+        );
 
         backToTopObserver.observe(sentinel);
 
@@ -421,20 +407,17 @@ if (postData?.data?.image) {
         backToTopBtn.addEventListener("click", onClick);
 
         // ⚡ Register cleanup
-        cleanupBackToTop = () => {
+        win.__cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
           if (resizeObserver) resizeObserver.disconnect();
           if (backToTopObserver) {
             backToTopObserver.disconnect();
-            backToTopObserver = null; // ⚡ Bolt: Ensure fresh observer with correct closure scope
+            backToTopObserver = null;
           }
           backToTopBtn.removeEventListener("click", onClick);
           if (rafId) cancelAnimationFrame(rafId);
         };
       }
-
-      // Initialize on load and after view transitions
-      document.addEventListener("astro:page-load", initBackToTop);
 
       // Update theme-color meta tag based on current theme
       function updateThemeColor() {
@@ -446,13 +429,12 @@ if (postData?.data?.image) {
       }
 
       // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
-      // Moved to module scope to prevent memory leaks from stacking observers
-      let themeObserver: MutationObserver | null = null;
-
       function initThemeObserver() {
-        if (themeObserver) return; // Already initialized
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
+        if (win.__themeObserver) return; // Already initialized global observer
 
-        themeObserver = new MutationObserver((mutations) => {
+        win.__themeObserver = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
               updateThemeColor();
@@ -460,11 +442,10 @@ if (postData?.data?.image) {
           });
         });
 
-        themeObserver.observe(document.documentElement, { attributes: true });
+        win.__themeObserver.observe(document.documentElement, {
+          attributes: true,
+        });
       }
-
-      // Initialize on load
-      document.addEventListener("astro:page-load", initThemeObserver);
 
       // 🛡️ Sentinel: Prevent Reverse Tabnabbing & 🎨 Palette: Accessibility
       // Ensures all external links opening in a new tab have rel="noopener noreferrer"
@@ -517,8 +498,32 @@ if (postData?.data?.image) {
           .forEach(secureLink);
       }
 
-      // Run on load and after view transitions
-      document.addEventListener("astro:page-load", secureLinks);
+      // ⚡ Bolt: Singleton Listener Pattern for Base Scripts
+      function setupBaseListeners() {
+        const initAll = () => {
+          initBackToTop();
+          secureLinks();
+          initThemeObserver();
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
+
+        if (win.__baseInitHandler) {
+          document.removeEventListener(
+            "astro:page-load",
+            win.__baseInitHandler,
+          );
+        }
+
+        win.__baseInitHandler = initAll;
+        document.addEventListener("astro:page-load", initAll);
+
+        // Run immediately
+        initAll();
+      }
+
+      setupBaseListeners();
     </script>
     <script>
       /**
@@ -527,13 +532,14 @@ if (postData?.data?.image) {
        * are off-screen to save GPU memory and CPU cycles.
        * ⚡ Bolt: Centralized .infinite-scroll (carousel) and .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
        */
-      let animationObserver: IntersectionObserver | null = null;
-
       function initAnimationOptimizer() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
+
         // Disconnect previous observer
-        if (animationObserver) {
-          animationObserver.disconnect();
-          animationObserver = null;
+        if (win.__animationObserver) {
+          win.__animationObserver.disconnect();
+          win.__animationObserver = null;
         }
 
         // Select all floating elements
@@ -543,7 +549,7 @@ if (postData?.data?.image) {
 
         if (animatedElements.length === 0) return;
 
-        animationObserver = new IntersectionObserver(
+        win.__animationObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (!entry.isIntersecting) {
@@ -556,12 +562,31 @@ if (postData?.data?.image) {
           { rootMargin: "200px" }, // Pre-load slightly before viewport
         );
 
-        animatedElements.forEach((el) => animationObserver?.observe(el));
+        animatedElements.forEach((el: Element) =>
+          win.__animationObserver?.observe(el),
+        );
       }
 
-      // Initialize on load and after swaps
-      initAnimationOptimizer();
-      document.addEventListener("astro:after-swap", initAnimationOptimizer);
+      // ⚡ Bolt: Singleton Listener Pattern for Animation Optimizer
+      function setupAnimationListeners() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
+
+        if (win.__animInitHandler) {
+          document.removeEventListener(
+            "astro:after-swap",
+            win.__animInitHandler,
+          );
+        }
+
+        win.__animInitHandler = initAnimationOptimizer;
+        document.addEventListener("astro:after-swap", initAnimationOptimizer);
+
+        // Run immediately
+        initAnimationOptimizer();
+      }
+
+      setupAnimationListeners();
     </script>
     <script>
       import { registerSW } from "virtual:pwa-register";
