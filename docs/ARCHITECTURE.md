@@ -6,15 +6,13 @@
 
 The project follows the "Islands Architecture" (Astro) combined with a component-based structure. It emphasizes **performance**, **accessibility**, and **SEO**.
 
-### 1. Layers
+### 1. Layers (Clean Architecture Concepts)
 
-- **Presentation Layer (Pages)**: Located in `src/pages/`. Files are `.astro` or `.mdx`. They determine routes using file-based routing.
-- **Component Layer (UI)**: Located in `src/components/`.
-  - `common/`: Global components (Header, Footer, SEO).
-  - `ui/`: Reusable primitives (Buttons, Cards, Lightbox).
-  - `features/`: Domain-specific logic (Projects, VideoPlayer).
-- **Content Layer (Data)**: Located in `src/content/`. Uses Astro Content Collections for type-safe Markdown/MDX handling.
-- **Core Layer (Config)**: `src/config.mjs`, `src/utils/`, `src/layouts/`.
+To maintain a scalable and testable codebase, the project structure maps to Clean Architecture concepts within the context of an Astro SSG:
+
+- **Domain/Content Layer**: Located in `src/content/`. Acts as the core data domain, defining schemas and content collections for projects.
+- **Application/Pages Layer**: Located in `src/pages/` and `src/layouts/`. Handles routing and page-level composition (analogous to Use Cases).
+- **Infrastructure/Astro-Core**: Located in `src/components/`, `src/utils/`, and config files. Implements the UI components, integrations, and external tools.
 
 ### 2. Data Flow & State Management
 
@@ -28,7 +26,8 @@ The project follows the "Islands Architecture" (Astro) combined with a component
 
 - **Astro 5**: Core framework.
 - **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **Bun**: Runtime & Package Manager.
+- **npm**: Package Manager.
+- **Node.js**: Runtime.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
 
@@ -98,11 +97,11 @@ Workflows are defined in `.github/workflows/`:
 
 1.  **CI (`ci.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20 & Bun.
-    - Installs dependencies.
-    - Runs `bun run check` (Lint + Types + Format).
-    - Runs `bun run test:e2e` (Playwright).
-    - Builds the site `bun run build`.
+    - Sets up Node 20.
+    - Installs dependencies (`npm ci --legacy-peer-deps`).
+    - Runs `npm run check` (Lint + Types + Format).
+    - Runs `npm run test:e2e` (Playwright).
+    - Builds the site `npm run build`.
 
 2.  **Security**:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
