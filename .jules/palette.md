@@ -17,3 +17,7 @@
 
 **Learning:** Using `sr-only` classes that abruptly toggle visibility on focus can cause jarring layout shifts or visual pops for keyboard users.
 **Action:** Use CSS transforms (like `absolute -translate-y-[250%] focus-visible:translate-y-0 transition-transform`) to slide skip links smoothly into view when focused, providing a much smoother and intentional UX for keyboard navigation.
+
+## 2025-05-20 - Category Item Counts
+**Learning:** Providing immediate feedback on category volume (e.g., "Clip Musical (6)") helps users understand content density before navigating, reducing uncertainty and improving the "scent of information".
+**Action:** When implementing filters or categories, include item counts and ensure they are reflected in accessibility attributes (aria-label, title) with proper pluralization (e.g., "1 projet" vs "2 projets" in French).
