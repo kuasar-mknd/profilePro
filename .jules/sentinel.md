@@ -54,3 +54,7 @@ Each entry should include:
 **Vulnerability:** Regular Expression Denial of Service (ReDoS) in `minimatch` versions < 3.0.5, present in nested dependencies (`rimraf`, `workbox-build`, `filelist`).
 **Learning:** Deeply nested dependencies can harbor vulnerabilities that top-level updates miss. `npm overrides` allow for surgical fixes without waiting for upstream packages to update their dependencies.
 **Prevention:** Added specific `overrides` in `package.json` to force secure versions of `minimatch` (`^3.1.2`, `^5.1.9`, `^10.2.4`) for affected packages.
+## 2023-10-25 - JSON Serialization and Social Link sanitization Enhancement
+**Vulnerability:** Missing escaping of single quotes in `safeJson` and reliance on validation (`isValidUrl`) over sanitization (`sanitizeUrl`) in `SocialIcon.astro`.
+**Learning:** `JSON.stringify` does not escape `'`, risking HTML attribute breakout if JSON is embedded into single-quoted elements. Furthermore, validation checks may allow syntactically allowed structural quirks but actual string mutation via `sanitizeUrl` provides stronger defense-in-depth against malicious schemes.
+**Prevention:** Always serialize `'` in JSON destined for DOM inclusion and prefer sanitizing over merely validating URLs to ensure sanitized values are used.

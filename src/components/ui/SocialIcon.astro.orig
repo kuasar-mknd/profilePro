@@ -7,13 +7,19 @@ interface Props {
   label: string;
 }
 
-import { sanitizeUrl } from "../../utils/security";
+import { isValidUrl } from "../../utils/security";
 
 const { icon, url, label } = Astro.props;
 
-// 🛡️ Sentinel: Sanitize URL to prevent XSS (javascript: URI)
+// 🛡️ Sentinel: Validate URL protocol to prevent XSS (javascript: URI)
 // Allow http, https, mailto, tel, sms, and relative paths (/)
-const safeUrl = sanitizeUrl(url) || "#";
+const safeUrl = isValidUrl(url, {
+  allowMailto: true,
+  allowTel: true,
+  allowSms: true,
+})
+  ? url
+  : "#";
 
 // Palette: Accessibility enhancement
 // Append warning for external links (which open in new tab)
