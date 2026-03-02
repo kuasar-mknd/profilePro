@@ -1,10 +1,10 @@
 import rss from "@astrojs/rss";
 import config from "../config.mjs";
-import { getCollection } from "astro:content";
+import { getSortedProjects } from "../utils/projects";
 import sanitizeHtml from "sanitize-html";
 
 export async function get(_context) {
-  const project = await getCollection("project");
+  const project = await getSortedProjects();
   return rss({
     title: config.title + config.titleSuffix,
     description: config.description,

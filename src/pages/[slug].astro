@@ -4,11 +4,10 @@ import { Icon } from "astro-icon/components";
 
 import Base from "../layouts/Base.astro";
 import { getReadingTime } from "../utils/readingTime";
-
-import { getCollection } from "astro:content";
+import { getSortedProjects } from "../utils/projects";
 
 export async function getStaticPaths() {
-  const projectEntries = await getCollection("project");
+  const projectEntries = await getSortedProjects();
 
   return projectEntries.map((entry) => ({
     params: { slug: entry.slug },

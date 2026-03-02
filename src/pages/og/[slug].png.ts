@@ -1,10 +1,10 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
+import { getSortedProjects } from "../../utils/projects";
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("project");
+  const projects = await getSortedProjects();
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: { project },
