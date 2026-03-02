@@ -13,14 +13,13 @@ import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
-import { getCollection, getEntry } from "astro:content";
+import { getEntry } from "astro:content";
 import { getReadingTime } from "../../utils/readingTime";
+import { getSortedProjects } from "../../utils/projects";
 
 export async function getStaticPaths() {
-  const allProjects = await getCollection("project");
-  const projectEntries = allProjects.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+  const allProjects = await getSortedProjects();
+  const projectEntries = allProjects;
 
   return projectEntries.map((entry, index) => ({
     params: { slug: entry.slug },

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getSortedProjects } from "../../../utils/projects";
 import Base from "../../../layouts/Base.astro";
 import Post from "../../../components/features/projects/Post.astro";
 import ProjectFilter from "../../../components/features/projects/ProjectFilter.astro";
@@ -8,7 +8,7 @@ import Breadcrumbs from "../../../components/ui/Breadcrumbs.astro";
 import EmptyState from "../../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths() {
-  const allProjects = await getCollection("project");
+  const allProjects = await getSortedProjects();
   const uniqueTags = [
     ...new Set(allProjects.map((project) => project.data.tag).flat()),
   ];
@@ -32,13 +32,11 @@ export async function getStaticPaths() {
   const totalCount = allProjects.length;
 
   return uniqueTags.map((tag) => {
-    const filteredProjects = allProjects
-      .filter((project) =>
-        Array.isArray(project.data.tag)
-          ? project.data.tag.includes(tag)
-          : project.data.tag === tag,
-      )
-      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    const filteredProjects = allProjects.filter((project) =>
+      Array.isArray(project.data.tag)
+        ? project.data.tag.includes(tag)
+        : project.data.tag === tag,
+    );
     return {
       params: { tag },
       props: {

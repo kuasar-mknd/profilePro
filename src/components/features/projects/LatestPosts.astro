@@ -1,5 +1,6 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getSortedProjects } from "../../../utils/projects";
 import Post from "./Post.astro";
 import config from "../../../config.mjs";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
@@ -29,11 +30,10 @@ const {
 // Handle potential string input for postLimit
 const limit = postLimitString ? parseInt(postLimitString, 10) : postLimit;
 
-const allPosts = initialAllPosts || (await getCollection("project"));
+const allPosts = initialAllPosts || (await getSortedProjects());
 
 const posts = allPosts
   .filter((post) => post.data.title !== skipPost)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, limit);
 
 // Determine bento grid sizes based on index

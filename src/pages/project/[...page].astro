@@ -1,8 +1,8 @@
 ---
 import type { Page, PaginateFunction } from "astro";
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
 import config from "../../config.mjs";
+import { getSortedProjects } from "../../utils/projects";
 
 import Base from "../../layouts/Base.astro";
 import Post from "../../components/features/projects/Post.astro";
@@ -16,7 +16,7 @@ export async function getStaticPaths({
 }: {
   paginate: PaginateFunction;
 }) {
-  const allProjects = await getCollection("project");
+  const allProjects = await getSortedProjects();
   const uniqueTags = [
     ...new Set(allProjects.map((project) => project.data.tag).flat()),
   ];
@@ -38,9 +38,7 @@ export async function getStaticPaths({
     }
   }
 
-  const projectEntries = allProjects.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+  const projectEntries = allProjects;
 
   return paginate(projectEntries, {
     pageSize: config.postsPerPage,

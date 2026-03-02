@@ -1,8 +1,9 @@
 ---
 import { getImage } from "astro:assets";
-import { getCollection, type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import logo from "../../../assets/logo.avif";
 import { limitConcurrency } from "../../../utils/async";
+import { getSortedProjects } from "../../../utils/projects";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
 interface Props {
@@ -12,7 +13,7 @@ interface Props {
 const { projects: initialProjects } = Astro.props;
 
 // Fetch all project images
-const projects = initialProjects || (await getCollection("project"));
+const projects = initialProjects || (await getSortedProjects());
 const projectImages = projects.map((p) => ({
   src: p.data.image,
   alt: p.data.title,
