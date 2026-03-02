@@ -28,3 +28,8 @@
 ## 2024-05-24 - Consistent Button Interaction Cues
 **Learning:** Default CSS resets in frameworks like Tailwind strip the `cursor: pointer` style from `<button>` elements. While touch interfaces don't require this, desktop users heavily rely on pointer changes to identify interactive elements that lack other strong visual affordances.
 **Action:** Ensure all clickable elements, especially `<button>` tags (like `theme-toggle-btn`, `menu_toggle`, `submit-btn`, etc.), explicitly include the `cursor-pointer` utility class to guarantee consistent visual feedback across the interface.
+
+## 2026-05-20 - Mobile Navigation Touch Targets
+
+**Learning:** In full-screen mobile menus, standard desktop-sized navigation links (e.g., 14px) are too small and cramped for optimal touch interaction. Increasing font size and vertical spacing significantly improves the user's ability to navigate accurately and comfortably.
+**Action:** For mobile-specific full-screen menus, use larger font sizes (e.g., `text-2xl`) and increased vertical spacing (e.g., `gap-8`) to provide generous tap targets.
