@@ -96,3 +96,8 @@
 
 **Learning:** Calling `getCollection('project')` internally inside a component like `ProjectFilter.astro` that is rendered multiple times (e.g., on every paginated page or tag page) causes redundant data processing and nested loops during the SSG build. If P is the number of static pages and N is the number of projects, this results in an O(P*N) complexity.
 **Action:** Lift the data fetching and heavy computations (like calculating tag frequencies) up to the page route's `getStaticPaths` function. Compute it exactly once, and pass the results down as props to the presentational component, effectively reducing the complexity to O(N).
+
+## 2026-03-02 - Redundant O(N) String Parsing for Reading Time
+
+**Learning:** `getReadingTime` performs an O(N) loop over the characters of a given text, typically a large blog post or project body. Without memoization, if multiple components (like `Post.astro`, `[slug].astro`) call `getReadingTime` for the same content during a page build (or on the client side), the exact same O(N) parsing is redundantly repeated.
+**Action:** Implemented a simple cache using `Map<string, number>` within `src/utils/readingTime.ts` to memoize previously computed reading times based on the text. Capped the cache size at 1000 items to prevent unbounded memory growth during continuous SSG dev server runs.
