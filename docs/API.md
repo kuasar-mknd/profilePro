@@ -57,7 +57,7 @@ Directives for search engine crawlers.
 
 **No authentication is required.**
 
-Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only.
+**Auth expectations:** No authentication is required or expected (even if not implemented yet) for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only.
 
 ## ❌ Error Format
 
