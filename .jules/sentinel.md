@@ -58,3 +58,8 @@ Each entry should include:
 **Vulnerability:** Missing escaping of single quotes in `safeJson` and reliance on validation (`isValidUrl`) over sanitization (`sanitizeUrl`) in `SocialIcon.astro`.
 **Learning:** `JSON.stringify` does not escape `'`, risking HTML attribute breakout if JSON is embedded into single-quoted elements. Furthermore, validation checks may allow syntactically allowed structural quirks but actual string mutation via `sanitizeUrl` provides stronger defense-in-depth against malicious schemes.
 **Prevention:** Always serialize `'` in JSON destined for DOM inclusion and prefer sanitizing over merely validating URLs to ensure sanitized values are used.
+
+## 2023-10-25 - Preventing Stack Trace Leaks ("The Silencer")
+**Vulnerability:** Stack Trace Leaks.
+**Learning:** Error handlers logging full `error` or `err` objects via `console.error` can leak sensitive stack traces and internal application details to the browser console. Even when wrapped in `import.meta.env.DEV`, this pattern is unsafe and can lead to accidental leaks if environment variables are misconfigured or if code is copied to production contexts.
+**Prevention:** Replaced direct logging of error objects with explicit property access: `error instanceof Error ? error.message : "Unknown error"`. This ensures that only the relevant error message string is logged, completely eliminating the risk of stack trace leaks. Applied to `ContactForm.astro` and `[slug].astro`.
