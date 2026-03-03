@@ -6,7 +6,7 @@ export default {
   location: "Lausanne, Suisse romande",
   catchmentArea: ["Lausanne", "Vaud", "Suisse romande", "Genève", "Fribourg"],
   defaultOgImage: "./defaultog.jpg",
-  latestPosts: 20,
+  latestPosts: 5,
   postsPerPage: 20,
   url: "https://kuasar.xyz",
   social: {
