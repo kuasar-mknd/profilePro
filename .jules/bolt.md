@@ -86,3 +86,7 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 
 **Learning:** In list and card components (like `Tag.astro`), the `sanitizeUrl` function is called hundreds of times during static site generation. Repeatedly parsing the exact same URLs using `new URL()` and evaluating strict regex expressions inside these loops becomes an unnecessary CPU bottleneck.
 **Action:** Introduced an LRU-style Map cache inside `src/utils/security.ts` to memoize previously sanitized URLs. This ensures `new URL()` is only ever executed once per unique link across the entire build, eliminating redundant parsing overhead without sacrificing security.
+
+## 2026-03-03 - Added attributeFilter to MutationObserver for Theme Color Sync
+**Learning:** `MutationObserver` on the `<html>` root node without an `attributeFilter` fires indiscriminately on any attribute change, causing unnecessary main-thread overhead. While relying on existing application-level custom events is ideal, when a `MutationObserver` is necessary to catch changes from multiple sources (like inline scripts and user toggles), it must be scoped.
+**Action:** Added `attributeFilter: ["class"]` to the global `MutationObserver` in `Base.astro` and added an explicit `updateThemeColor()` call on load to prevent missing initial state syncs. This prevents the observer from firing on non-class attribute changes, improving main-thread performance.

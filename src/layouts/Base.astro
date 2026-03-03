@@ -447,6 +447,9 @@ if (postData?.data?.image) {
         const win = window as any;
         if (win.__themeObserver) return; // Already initialized global observer
 
+        // Initial sync of theme color on load
+        updateThemeColor();
+
         win.__themeObserver = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
@@ -457,6 +460,7 @@ if (postData?.data?.image) {
 
         win.__themeObserver.observe(document.documentElement, {
           attributes: true,
+          attributeFilter: ["class"],
         });
       }
 
