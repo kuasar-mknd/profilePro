@@ -33,3 +33,7 @@
 
 **Learning:** In full-screen mobile menus, standard desktop-sized navigation links (e.g., 14px) are too small and cramped for optimal touch interaction. Increasing font size and vertical spacing significantly improves the user's ability to navigate accurately and comfortably.
 **Action:** For mobile-specific full-screen menus, use larger font sizes (e.g., `text-2xl`) and increased vertical spacing (e.g., `gap-8`) to provide generous tap targets.
+
+## 2025-05-21 - Accessible & Stable Pagination
+**Learning:** Pagination requires both semantic structure and visual stability. Hiding "Previous/Next" links when inactive causes layout shifts, while generic labels lack context for screen readers.
+**Action:** Wrap pagination in a `<nav>` with an `aria-label`, include a "Page X of Y" status indicator for orientation, and use styled "disabled" states (e.g., `opacity-50 pointer-events-none`) for inactive links to maintain UI layout consistency.

@@ -46,7 +46,7 @@ export async function getStaticPaths({
   });
 }
 
-interface Props {
+export interface Props {
   page: Page<CollectionEntry<"project">>;
   allTags: string[];
   tagCounts: Record<string, number>;
@@ -102,29 +102,63 @@ const { page, allTags, tagCounts, totalCount } = Astro.props;
         )
       }
     </div>
-    <div class="flex flex-row justify-center gap-7">
-      {
-        page.url.prev ? (
-          <a
-            href={page.url.prev}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-            aria-label="Page précédente"
+    {
+      page.lastPage > 1 && (
+        <nav
+          class="flex flex-col md:flex-row items-center justify-center gap-6 mt-8"
+          aria-label="Pagination des projets"
+        >
+          <div class="flex items-center gap-4">
+            {page.url.prev ? (
+              <a
+                href={page.url.prev}
+                class="cursor-pointer text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+                aria-label={`Aller à la page précédente (page ${page.currentPage - 1})`}
+              >
+                &larr; Précédent
+              </a>
+            ) : (
+              <span
+                class="text-base bg-transparent border border-pacamara-secondary/30 leading-none rounded-full py-3 px-6 text-pacamara-secondary/30 font-pacamara-space font-bold cursor-not-allowed select-none"
+                aria-hidden="true"
+              >
+                &larr; Précédent
+              </span>
+            )}
+
+            {page.url.next ? (
+              <a
+                href={page.url.next}
+                class="cursor-pointer text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+                aria-label={`Aller à la page suivante (page ${page.currentPage + 1})`}
+              >
+                Suivant &rarr;
+              </a>
+            ) : (
+              <span
+                class="text-base bg-transparent border border-pacamara-secondary/30 leading-none rounded-full py-3 px-6 text-pacamara-secondary/30 font-pacamara-space font-bold cursor-not-allowed select-none"
+                aria-hidden="true"
+              >
+                Suivant &rarr;
+              </span>
+            )}
+          </div>
+
+          <div
+            class="text-sm font-outfit text-pacamara-primary/60 dark:text-white/60 bg-pacamara-primary/5 dark:bg-white/5 px-4 py-2 rounded-full border border-pacamara-primary/10 dark:border-white/10"
+            aria-live="polite"
           >
-            &larr; Précédent
-          </a>
-        ) : null
-      }
-      {
-        page.url.next ? (
-          <a
-            href={page.url.next}
-            class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-            aria-label="Page suivante"
-          >
-            Suivant &rarr;
-          </a>
-        ) : null
-      }
-    </div>
+            Page{" "}
+            <span class="font-bold text-pacamara-accent">
+              {page.currentPage}
+            </span>{" "}
+            sur{" "}
+            <span class="font-medium text-pacamara-primary dark:text-white">
+              {page.lastPage}
+            </span>
+          </div>
+        </nav>
+      )
+    }
   </section>
 </Base>

@@ -22,7 +22,7 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
 >
   <a
     href="/project"
-    class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
+    class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer
         ${!activeTag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
     aria-current={!activeTag ? "page" : undefined}
     aria-label={!activeTag
@@ -37,7 +37,7 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
       return (
         <a
           href={`/project/tag/${encodeURIComponent(tag)}`}
-          class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
+          class={`px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer
             ${activeTag === tag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
           aria-current={activeTag === tag ? "page" : undefined}
           aria-label={
