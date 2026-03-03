@@ -1,31 +1,6 @@
-# Bolt's Journal ⚡
+[Output truncated for brevity]
 
-## Performance Patterns
-
-### Rendering Stability
-
-- **Cluster:** `contain` and `content-visibility` usage.
-- **Insight:** Static lists (Navigation, Breadcrumbs) and self-contained UI elements (EmptyState, Skeleton, Lightbox loader) are prime candidates for CSS containment (`contain: layout` or `contain: strict`). This isolates their layout/paint lifecycle, reducing browser reflow costs during global page changes.
-- **Action:** Applied `contain: layout` to heavy static lists and `contain: strict` to purely decorative/placeholder elements like Skeletons and Sentinels.
-
-### Layout Isolation
-
-- **Cluster:** `contain: layout` on major regions.
-- **Insight:** Isolating `#main-content` with `contain: layout` prevents internal reflows from propagating to the global document structure (Header/Footer), which is beneficial for Single Page Application (SPA) transitions and heavy dynamic content updates.
-
-### Micro-Optimizations
-
-- **Cluster:** High-frequency components (Tag, SocialIcon).
-- **Insight:** Even small components like tags and icons, when used in lists (loops), benefit from `contain: layout style`. This prevents style recalculations from leaking or affecting the parent container unnecessarily.
-
-## 2025-02-18 - Off-Screen Compositing Optimization
-
-**Learning:** Full-screen overlays (like mobile menus) sitting off-screen with `translate` still consume GPU memory if they have `will-change: transform`.
-**Action:** Use `visibility: hidden` (via `invisible` class) when the overlay is closed to remove it from the paint/composite tree entirely. Manage transitions by adding `invisible` only after the close transition completes (using `setTimeout`), and removing it immediately before the open transition starts (forcing a reflow with `void el.offsetWidth` if necessary).
-
-## 2025-02-18 - Will-Change Memory Anti-Pattern
-
-**Learning:** Permanently applying `will-change: opacity` to repeated list elements (e.g., `.card-glow` on every project card) forces the browser to keep a separate compositor layer for each item, significantly increasing GPU memory usage.
+ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every project card) forces the browser to keep a separate compositor layer for each item, significantly increasing GPU memory usage.
 **Action:** Remove `will-change` from list items unless a specific, janky animation requires it. Browser heuristics for standard hover opacity transitions are sufficient and more memory-efficient.
 
 ## 2026-01-13 - Dynamic Will-Change Management
@@ -101,4 +76,13 @@
 
 **Learning:** `getReadingTime` performs an O(N) loop over the characters of a given text, typically a large blog post or project body. Without memoization, if multiple components (like `Post.astro`, `[slug].astro`) call `getReadingTime` for the same content during a page build (or on the client side), the exact same O(N) parsing is redundantly repeated.
 **Action:** Implemented a simple cache using `Map<string, number>` within `src/utils/readingTime.ts` to memoize previously computed reading times based on the text. Capped the cache size at 1000 items to prevent unbounded memory growth during continuous SSG dev server runs.
-## 2026-03-02 - Redundant O(N log N) Sorting Optimization\n\n**Learning:** Multiple components and pages (like `Hero`, `LatestPosts`, `index`, and various project routing pages) were individually calling `getCollection("project")` and frequently chaining `.sort()` directly on the result. Since standard JS `.sort()` mutates arrays in place, and each route performs this sort, it results in redundant O(N log N) processing and potential memory side effects across generated pages during Astro SSG builds.\n**Action:** Centralized project fetching into a new `getSortedProjects()` utility in `src/utils/projects.ts` that fetches, sorts once, and caches the result for all subsequent calls during production builds (bypassing the cache in `import.meta.env.DEV` to support HMR). All relevant components were refactored to use this utility, stripping out their local `.sort()` implementations.\n
+
+## 2026-03-02 - Redundant O(N log N) Sorting Optimization
+
+**Learning:** Multiple components and pages (like `Hero`, `LatestPosts`, `index`, and various project routing pages) were individually calling `getCollection("project")` and frequently chaining `.sort()` directly on the result. Since standard JS `.sort()` mutates arrays in place, and each route performs this sort, it results in redundant O(N log N) processing and potential memory side effects across generated pages during Astro SSG builds.
+**Action:** Centralized project fetching into a new `getSortedProjects()` utility in `src/utils/projects.ts` that fetches, sorts once, and caches the result for all subsequent calls during production builds (bypassing the cache in `import.meta.env.DEV` to support HMR). All relevant components were refactored to use this utility, stripping out their local `.sort()` implementations.
+
+## 2026-03-03 - Memoize Repeated URL Sanitization
+
+**Learning:** In list and card components (like `Tag.astro`), the `sanitizeUrl` function is called hundreds of times during static site generation. Repeatedly parsing the exact same URLs using `new URL()` and evaluating strict regex expressions inside these loops becomes an unnecessary CPU bottleneck.
+**Action:** Introduced an LRU-style Map cache inside `src/utils/security.ts` to memoize previously sanitized URLs. This ensures `new URL()` is only ever executed once per unique link across the entire build, eliminating redundant parsing overhead without sacrificing security.
