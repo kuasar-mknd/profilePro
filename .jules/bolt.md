@@ -90,3 +90,13 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 ## 2026-03-03 - Added attributeFilter to MutationObserver for Theme Color Sync
 **Learning:** `MutationObserver` on the `<html>` root node without an `attributeFilter` fires indiscriminately on any attribute change, causing unnecessary main-thread overhead. While relying on existing application-level custom events is ideal, when a `MutationObserver` is necessary to catch changes from multiple sources (like inline scripts and user toggles), it must be scoped.
 **Action:** Added `attributeFilter: ["class"]` to the global `MutationObserver` in `Base.astro` and added an explicit `updateThemeColor()` call on load to prevent missing initial state syncs. This prevents the observer from firing on non-class attribute changes, improving main-thread performance.
+
+## 2026-03-03 - Reverting <Picture> to <img> Regression
+
+**Learning:** Replacing Astro's `<Picture>` components with `getImage()` and native `<img>` tags across the application to "reduce DOM nodes" is a massive anti-pattern for responsive design. While it removes a `<picture>` wrapper, it strips out all `widths` and `sizes` properties, forcing mobile devices to download high-resolution desktop images, completely destroying LCP performance on low-end devices.
+**Action:** Never replace responsive `<Picture>` components with single `<img>` tags unless the image strictly has a fixed, small dimension (like an icon).
+
+## 2026-03-03 - DOM Query Pre-filtering with View Transitions
+
+**Learning:** In Astro with View Transitions, scripts that attach to elements often re-execute to handle newly swapped DOM nodes. Queries like `document.querySelectorAll(".prose pre")` and applying checks in a loop cause redundant JS execution over nodes that have already been handled.
+**Action:** Shift the filtering logic to the browser's native C++ engine by using specific CSS pseudo-classes in the query itself, such as `document.querySelectorAll(".prose pre:not(.code-wrapper pre)")`. This is significantly faster and makes the JavaScript simpler.
