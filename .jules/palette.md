@@ -37,3 +37,7 @@
 ## 2025-05-21 - Accessible & Stable Pagination
 **Learning:** Pagination requires both semantic structure and visual stability. Hiding "Previous/Next" links when inactive causes layout shifts, while generic labels lack context for screen readers.
 **Action:** Wrap pagination in a `<nav>` with an `aria-label`, include a "Page X of Y" status indicator for orientation, and use styled "disabled" states (e.g., `opacity-50 pointer-events-none`) for inactive links to maintain UI layout consistency.
+
+## 2025-03-03 - Form Submit Button Accessibility During Async Loading
+**Learning:** Native `disabled` attributes on submit buttons during async loading states remove the button from the tab order and can cause screen readers to lose focus context, potentially missing `aria-live` announcements.
+**Action:** Use `aria-disabled="true"` and `aria-busy="true"` managed via JavaScript (along with visual styling classes like `aria-disabled:opacity-70 aria-disabled:cursor-not-allowed`) instead of `disabled`. This prevents the element from losing keyboard focus during submission states.
