@@ -41,3 +41,8 @@
 ## 2025-03-03 - Form Submit Button Accessibility During Async Loading
 **Learning:** Native `disabled` attributes on submit buttons during async loading states remove the button from the tab order and can cause screen readers to lose focus context, potentially missing `aria-live` announcements.
 **Action:** Use `aria-disabled="true"` and `aria-busy="true"` managed via JavaScript (along with visual styling classes like `aria-disabled:opacity-70 aria-disabled:cursor-not-allowed`) instead of `disabled`. This prevents the element from losing keyboard focus during submission states.
+
+## 2025-03-03 - Visualizing Keyboard Shortcuts
+
+**Learning:** Keyboard accessibility involves not just behavior but also visual discovery. Keyboard-only users (who aren't using screen readers) might not know a shortcut exists if it's hidden in ARIA attributes.
+**Action:** Expose keyboard shortcuts visually (e.g., using `<kbd>` tags) in tooltips or expanding labels so sighted keyboard users can discover and learn them easily.

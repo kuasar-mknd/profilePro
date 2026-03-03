@@ -5,7 +5,7 @@ import { Icon } from "astro-icon/components";
 <button
   type="button"
   style="contain: layout;"
-  class="theme-toggle-btn cursor-pointer group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-28 hover:bg-pacamara-accent hover:text-white focus-visible:w-28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
+  class="theme-toggle-btn cursor-pointer group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-40 hover:bg-pacamara-accent hover:text-white focus-visible:w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
   aria-label="Activer le mode sombre"
   aria-keyshortcuts="Shift+T"
 >
@@ -24,13 +24,13 @@ import { Icon } from "astro-icon/components";
     </div>
     <span
       aria-hidden="true"
-      class="hidden text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:inline-block"
-      >Soleil</span
+      class="hidden text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:inline-block whitespace-nowrap"
+      >Soleil <kbd class="font-sans ml-1 opacity-70">(Shift+T)</kbd></span
     >
     <span
       aria-hidden="true"
-      class="text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:hidden"
-      >Lune</span
+      class="text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:hidden whitespace-nowrap"
+      >Lune <kbd class="font-sans ml-1 opacity-70">(Shift+T)</kbd></span
     >
   </div>
   <span class="sr-only">Activer le mode sombre</span>
