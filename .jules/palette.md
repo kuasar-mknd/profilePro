@@ -58,3 +58,6 @@
 ## 2025-03-04 - Desktop Interaction Expectations for Carousels
 **Learning:** Infinite scroll or touch carousels that only support touch-drag events (`touchstart`, `touchmove`) frustrate desktop users who instinctively try to click-and-drag horizontally. Providing visual cues (`cursor: grab`) without supporting mouse drag events creates a broken affordance.
 **Action:** Ensure all draggable carousels universally support both touch and mouse drag events (`mousedown`, `mousemove`, `mouseup`, `mouseleave`) and remove `@media (pointer: coarse)` constraints on grab cursors.
+## 2026-03-04 - Add missing cursor-pointer to clickable elements
+**Learning:** Missing cursor cues are common on custom buttons like <button id="share-btn"> or custom Lightbox control buttons where standard styling isn't applied automatically. These require explicit cursor-pointer classes for better UX.
+**Action:** Added cursor-pointer to 5 distinct <button> tags missing the visual cue.
