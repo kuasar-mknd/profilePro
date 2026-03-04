@@ -46,3 +46,11 @@
 
 **Learning:** Keyboard accessibility involves not just behavior but also visual discovery. Keyboard-only users (who aren't using screen readers) might not know a shortcut exists if it's hidden in ARIA attributes.
 **Action:** Expose keyboard shortcuts visually (e.g., using `<kbd>` tags) in tooltips or expanding labels so sighted keyboard users can discover and learn them easily.
+
+## 2025-03-03 - Scoped Staggered Animations
+**Learning:** When implementing staggered entrance animations across components in Astro, use the `:global()` selector in the parent stylesheet to target child component classes. Ensure initial hidden states (`opacity: 0`) are strictly scoped to the mobile-only parent state to prevent regressions where navigation becomes invisible on desktop.
+**Action:** Use `:global(.item)` in parent components and scope defaults to specific parent classes (e.g., `.parent-open :global(.item)`).
+
+## 2025-03-03 - Perceptible Haptic Feedback
+**Learning:** Mobile haptic feedback via `navigator.vibrate()` requires a minimum duration to be physically registered by most hardware. While 10ms might seem sufficient in code, it is often imperceptible. A 50ms pulse provides a reliable and satisfying tactile confirmation for toggles and buttons.
+**Action:** Use `navigator.vibrate(50)` for consistent haptic feedback on interactive elements.

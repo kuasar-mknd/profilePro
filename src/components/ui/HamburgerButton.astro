@@ -97,6 +97,11 @@
         openMenu();
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
       }
+
+      // 🎨 Palette: Provide subtle haptic feedback for mobile users
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
     });
 
     nav.querySelectorAll("a").forEach((link) => {
