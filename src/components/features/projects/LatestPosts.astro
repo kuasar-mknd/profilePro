@@ -32,9 +32,18 @@ const limit = postLimitString ? parseInt(postLimitString, 10) : postLimit;
 
 const allPosts = initialAllPosts || (await getSortedProjects());
 
-const posts = allPosts
-  .filter((post) => post.data.title !== skipPost)
-  .slice(0, limit);
+// ⚡ Bolt: Replace O(N) filter and slice with O(limit) early exit loop
+// This prevents iterating over all projects unnecessarily, especially during
+// SSG where LatestPosts is called for every single project page.
+const posts: typeof allPosts = [];
+if (limit > 0) {
+  for (let i = 0; i < allPosts.length; i++) {
+    if (allPosts[i].data.title !== skipPost) {
+      posts.push(allPosts[i]);
+      if (posts.length >= limit) break;
+    }
+  }
+}
 
 // Determine bento grid sizes based on index
 const getBentoClass = (index: number) => {
