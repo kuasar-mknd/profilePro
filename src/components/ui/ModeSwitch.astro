@@ -54,6 +54,11 @@ import { Icon } from "astro-icon/components";
     const isDarkNow = element.classList.contains("dark");
     localStorage.setItem("theme", isDarkNow ? "dark" : "light");
 
+    // 🎨 Palette: Provide subtle haptic feedback for mobile users
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+
     window.dispatchEvent(
       new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
     );
