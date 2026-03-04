@@ -100,3 +100,8 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 
 **Learning:** In Astro with View Transitions, scripts that attach to elements often re-execute to handle newly swapped DOM nodes. Queries like `document.querySelectorAll(".prose pre")` and applying checks in a loop cause redundant JS execution over nodes that have already been handled.
 **Action:** Shift the filtering logic to the browser's native C++ engine by using specific CSS pseudo-classes in the query itself, such as `document.querySelectorAll(".prose pre:not(.code-wrapper pre)")`. This is significantly faster and makes the JavaScript simpler.
+
+## 2026-03-03 - O(N) Array Filter vs O(limit) Early Exit
+
+**Learning:** When generating multiple static pages during SSG (e.g., `LatestPosts` rendered on every project page), chaining `.filter(post => post.title !== skip).slice(0, limit)` iterates over the entire collection creating new array instances every time. For N projects, this is an O(N) operation per page, compounding to O(N²) across the build, creating unnecessary CPU cycles and memory garbage.
+**Action:** Replace `Array.prototype.filter().slice()` chains with a basic `for` loop that pushes to an array and `break`s as soon as the limit is reached. This drops the complexity from O(N) to O(limit) locally, turning the global build impact from O(N²) to O(N * limit).
