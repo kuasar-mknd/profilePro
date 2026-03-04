@@ -114,3 +114,8 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 ## 2025-02-14 - Optimize Tag Pages SSG Generation
 **Learning:** During Astro Static Site Generation (SSG), dynamic routes that depend on grouped data (like `/project/tag/[tag]`) can suffer from O(T * N) performance if they map over a set of unique tags and filter the entire content collection for each tag. For repositories with many items and tags, this causes massive redundant array allocations.
 **Action:** Replace `uniqueTags.map(tag => allItems.filter(...))` patterns in `getStaticPaths` with a single O(N) pass over `allItems` that groups items into a `Map<string, Item[]>` and computes associated counts simultaneously.
+
+## 2026-03-04 - Event Delegation for SPA Navigations
+
+**Learning:** In Astro with View Transitions, querying DOM elements like `document.querySelectorAll('[data-slide-transition]')` on initial load fails to attach event listeners to newly injected elements after a page transition unless explicitly re-initialized on `astro:page-load`. Additionally, looping over these elements creates an O(N) performance overhead.
+**Action:** Use a single event delegation listener attached to `document` for `click` events. This completely avoids DOM queries, reduces memory usage (from N listeners to 1), and automatically handles dynamically injected elements with zero re-initialization overhead.
