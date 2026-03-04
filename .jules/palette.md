@@ -54,3 +54,7 @@
 ## 2025-03-03 - Perceptible Haptic Feedback
 **Learning:** Mobile haptic feedback via `navigator.vibrate()` requires a minimum duration to be physically registered by most hardware. While 10ms might seem sufficient in code, it is often imperceptible. A 50ms pulse provides a reliable and satisfying tactile confirmation for toggles and buttons.
 **Action:** Use `navigator.vibrate(50)` for consistent haptic feedback on interactive elements.
+
+## 2025-03-04 - Desktop Interaction Expectations for Carousels
+**Learning:** Infinite scroll or touch carousels that only support touch-drag events (`touchstart`, `touchmove`) frustrate desktop users who instinctively try to click-and-drag horizontally. Providing visual cues (`cursor: grab`) without supporting mouse drag events creates a broken affordance.
+**Action:** Ensure all draggable carousels universally support both touch and mouse drag events (`mousedown`, `mousemove`, `mouseup`, `mouseleave`) and remove `@media (pointer: coarse)` constraints on grab cursors.

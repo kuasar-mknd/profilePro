@@ -315,15 +315,16 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     );
   }
 
-  /* Touch-friendly carousel on mobile - allow scrolling while keeping animation */
-  @media (pointer: coarse) {
-    .touch-carousel {
-      cursor: grab;
-    }
+  /* Draggable carousel for both touch and mouse */
+  .touch-carousel {
+    cursor: grab;
+    /* Prevent text selection while dragging */
+    user-select: none;
+    -webkit-user-select: none;
+  }
 
-    .touch-carousel:active {
-      cursor: grabbing;
-    }
+  .touch-carousel:active {
+    cursor: grabbing;
   }
 
   /* Reduced motion */
@@ -358,56 +359,90 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     carousel.dataset.touchInitialized = "true";
 
     let isDragging = false;
+    let hasDragged = false;
     let startX = 0;
     let currentTranslate = 0;
     let rafId: number | null = null;
-    let lastTouchX = 0;
+    let lastX = 0;
 
+    const handleDragStart = (clientX: number) => {
+      isDragging = true;
+      hasDragged = false;
+      startX = clientX;
+      track.style.animationPlayState = "paused";
+      const computedStyle = getComputedStyle(track);
+      const matrix = new DOMMatrix(computedStyle.transform);
+      currentTranslate = matrix.m41;
+    };
+
+    const handleDragMove = (clientX: number) => {
+      if (!isDragging) return;
+      lastX = clientX;
+      const diff = lastX - startX;
+
+      // Only consider it a drag if moved more than 5px
+      if (Math.abs(diff) > 5) {
+        hasDragged = true;
+      }
+
+      if (!rafId && hasDragged) {
+        rafId = requestAnimationFrame(() => {
+          track.style.transform = `translateX(${currentTranslate + diff}px)`;
+          rafId = null;
+        });
+      }
+    };
+
+    const handleDragEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      track.style.transform = "";
+      track.style.animationPlayState = "running";
+    };
+
+    // Prevent click events from firing if we actually dragged
+    carousel.addEventListener(
+      "click",
+      (e) => {
+        if (hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          hasDragged = false;
+        }
+      },
+      { capture: true },
+    );
+
+    // Touch Events
     carousel.addEventListener(
       "touchstart",
-      (e) => {
-        isDragging = true;
-        startX = e.touches[0].clientX;
-        track.style.animationPlayState = "paused";
-        const computedStyle = getComputedStyle(track);
-        const matrix = new DOMMatrix(computedStyle.transform);
-        currentTranslate = matrix.m41;
-      },
+      (e) => handleDragStart(e.touches[0].clientX),
       { passive: true },
     );
-
-    // ⚡ Bolt: Use requestAnimationFrame for smooth 60fps tracking
     carousel.addEventListener(
       "touchmove",
-      (e) => {
-        if (!isDragging) return;
-        lastTouchX = e.touches[0].clientX;
-
-        if (!rafId) {
-          rafId = requestAnimationFrame(() => {
-            const diff = lastTouchX - startX;
-            track.style.transform = `translateX(${currentTranslate + diff}px)`;
-            rafId = null;
-          });
-        }
-      },
+      (e) => handleDragMove(e.touches[0].clientX),
       { passive: true },
     );
+    carousel.addEventListener("touchend", handleDragEnd, { passive: true });
+    carousel.addEventListener("touchcancel", handleDragEnd, { passive: true });
 
-    // ⚡ Bolt: Added passive: true to touchend for scroll optimization
-    carousel.addEventListener(
-      "touchend",
-      () => {
-        isDragging = false;
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-        track.style.transform = "";
-        track.style.animationPlayState = "running";
-      },
-      { passive: true },
-    );
+    // Mouse Events
+    carousel.addEventListener("mousedown", (e) => {
+      handleDragStart(e.clientX);
+    });
+    carousel.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        e.preventDefault(); // Prevent text selection ONLY when actively dragging
+        handleDragMove(e.clientX);
+      }
+    });
+    carousel.addEventListener("mouseup", handleDragEnd);
+    carousel.addEventListener("mouseleave", handleDragEnd);
   }
 
   /**
