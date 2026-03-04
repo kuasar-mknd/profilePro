@@ -17,25 +17,23 @@ export async function limitConcurrency<T, R>(
   limit: number,
   fn: (item: T) => Promise<R>,
 ): Promise<R[]> {
-  const executing: Promise<void>[] = [];
-  const resultPromises: Promise<R>[] = [];
+  const results: R[] = new Array(items.length);
+  let currentIndex = 0;
 
-  for (const item of items) {
-    // Create a promise that runs the function
-    const p = Promise.resolve().then(() => fn(item));
-    resultPromises.push(p);
-
-    // If we have more items than the limit, we need to manage concurrency
-    if (limit <= items.length) {
-      const e: Promise<void> = p.then(() => {
-        executing.splice(executing.indexOf(e), 1);
-      });
-      executing.push(e);
-      if (executing.length >= limit) {
-        await Promise.race(executing);
-      }
+  // Worker function that continually grabs the next item
+  const worker = async () => {
+    while (currentIndex < items.length) {
+      const i = currentIndex++;
+      results[i] = await fn(items[i]);
     }
-  }
+  };
 
-  return Promise.all(resultPromises);
+  // ⚡ Bolt: Create at most `limit` workers
+  const activeWorkers = Math.min(limit, items.length);
+  const workers = Array.from({ length: activeWorkers }, () => worker());
+
+  // Wait for all workers to finish
+  await Promise.all(workers);
+
+  return results;
 }

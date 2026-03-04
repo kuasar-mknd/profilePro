@@ -105,3 +105,8 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 
 **Learning:** When generating multiple static pages during SSG (e.g., `LatestPosts` rendered on every project page), chaining `.filter(post => post.title !== skip).slice(0, limit)` iterates over the entire collection creating new array instances every time. For N projects, this is an O(N) operation per page, compounding to O(N²) across the build, creating unnecessary CPU cycles and memory garbage.
 **Action:** Replace `Array.prototype.filter().slice()` chains with a basic `for` loop that pushes to an array and `break`s as soon as the limit is reached. This drops the complexity from O(N) to O(limit) locally, turning the global build impact from O(N²) to O(N * limit).
+
+## 2026-03-04 - O(N²) Array Splice in Promise Loops
+
+**Learning:** Managing concurrent promises in a loop by storing them in an array and using `executing.splice(executing.indexOf(e), 1)` upon completion creates an O(N²) time complexity bottleneck. Finding the index and splicing the array shifts elements repeatedly on the main thread, causing significant CPU lag when processing thousands of items (e.g., image optimization during SSG).
+**Action:** Replace `Promise.race` and `Array.splice` concurrency management with a worker-pool pattern. Creating a fixed number of async "worker" functions that pull from a shared `currentIndex` iterator processes tasks with O(1) overhead per task, completely eliminating array mutations.
