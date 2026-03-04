@@ -9,38 +9,40 @@ import EmptyState from "../../../components/ui/EmptyState.astro";
 
 export async function getStaticPaths() {
   const allProjects = await getSortedProjects();
-  const uniqueTags = [
-    ...new Set(allProjects.map((project) => project.data.tag).flat()),
-  ];
 
-  // ⚡ Bolt: Calculate tagCounts once here and pass it down as a prop
-  // This avoids O(P*N) redundant calculations per tag page
+  // ⚡ Bolt: Replace O(T * N) map/filter loop with a single O(N) grouping pass
+  // This calculates unique tags, tag counts, and pre-filters projects simultaneously,
+  // preventing redundant array allocations and drastically speeding up SSG build times.
+  const projectsByTag = new Map<string, typeof allProjects>();
   const tagCounts: Record<string, number> = {};
-  for (const tag of uniqueTags) tagCounts[tag] = 0;
 
   for (let i = 0; i < allProjects.length; i++) {
-    const projectTags = allProjects[i].data.tag;
-    if (Array.isArray(projectTags)) {
-      for (let j = 0; j < projectTags.length; j++) {
-        const tag = projectTags[j];
-        if (tagCounts[tag] !== undefined) tagCounts[tag]++;
+    const project = allProjects[i];
+    const projectTags = Array.isArray(project.data.tag)
+      ? project.data.tag
+      : [project.data.tag];
+
+    for (let j = 0; j < projectTags.length; j++) {
+      const tag = projectTags[j];
+
+      if (!projectsByTag.has(tag)) {
+        projectsByTag.set(tag, []);
+        tagCounts[tag] = 0;
       }
-    } else if (tagCounts[projectTags as string] !== undefined) {
-      tagCounts[projectTags as string]++;
+
+      projectsByTag.get(tag)!.push(project);
+      tagCounts[tag]++;
     }
   }
+
+  const uniqueTags = Array.from(projectsByTag.keys());
   const totalCount = allProjects.length;
 
   return uniqueTags.map((tag) => {
-    const filteredProjects = allProjects.filter((project) =>
-      Array.isArray(project.data.tag)
-        ? project.data.tag.includes(tag)
-        : project.data.tag === tag,
-    );
     return {
       params: { tag },
       props: {
-        projects: filteredProjects,
+        projects: projectsByTag.get(tag) || [],
         allTags: uniqueTags,
         tagCounts,
         totalCount,

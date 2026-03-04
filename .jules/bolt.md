@@ -110,3 +110,7 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 
 **Learning:** Managing concurrent promises in a loop by storing them in an array and using `executing.splice(executing.indexOf(e), 1)` upon completion creates an O(N²) time complexity bottleneck. Finding the index and splicing the array shifts elements repeatedly on the main thread, causing significant CPU lag when processing thousands of items (e.g., image optimization during SSG).
 **Action:** Replace `Promise.race` and `Array.splice` concurrency management with a worker-pool pattern. Creating a fixed number of async "worker" functions that pull from a shared `currentIndex` iterator processes tasks with O(1) overhead per task, completely eliminating array mutations.
+
+## 2025-02-14 - Optimize Tag Pages SSG Generation
+**Learning:** During Astro Static Site Generation (SSG), dynamic routes that depend on grouped data (like `/project/tag/[tag]`) can suffer from O(T * N) performance if they map over a set of unique tags and filter the entire content collection for each tag. For repositories with many items and tags, this causes massive redundant array allocations.
+**Action:** Replace `uniqueTags.map(tag => allItems.filter(...))` patterns in `getStaticPaths` with a single O(N) pass over `allItems` that groups items into a `Map<string, Item[]>` and computes associated counts simultaneously.
