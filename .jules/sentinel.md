@@ -63,3 +63,9 @@ Each entry should include:
 **Vulnerability:** Stack Trace Leaks.
 **Learning:** Error handlers logging full `error` or `err` objects via `console.error` can leak sensitive stack traces and internal application details to the browser console. Even when wrapped in `import.meta.env.DEV`, this pattern is unsafe and can lead to accidental leaks if environment variables are misconfigured or if code is copied to production contexts.
 **Prevention:** Replaced direct logging of error objects with explicit property access: `error instanceof Error ? error.message : "Unknown error"`. This ensures that only the relevant error message string is logged, completely eliminating the risk of stack trace leaks. Applied to `ContactForm.astro` and `[slug].astro`.
+
+## 2026-11-20 - Unhandled JSON.parse in localStorage retrieval
+
+**Vulnerability:** Use of `JSON.parse` without a `try-catch` block when retrieving cached data from `localStorage`.
+**Learning:** If the data in `localStorage` is malformed, corrupted, or tampered with by an external script, `JSON.parse` throws a synchronous exception. This can cause the script to fail, disrupting UI components or tracking functionalities unexpectedly.
+**Prevention:** Wrap `JSON.parse` calls in a `try...catch` block, especially when reading from client-side storage mechanisms like `localStorage` or `sessionStorage`. If an error occurs, clear the corrupted cache to recover gracefully.

@@ -255,11 +255,19 @@ import SocialIcon from "../ui/SocialIcon.astro";
       let isValidCache = false;
 
       if (cached) {
-        const data = JSON.parse(cached);
-        const now = new Date().getTime();
-        if (now - data.t < 86400000) {
-          render(data);
-          isValidCache = true;
+        try {
+          const data = JSON.parse(cached);
+          const now = new Date().getTime();
+          if (data && data.t && now - data.t < 86400000) {
+            render(data);
+            isValidCache = true;
+          } else {
+            // Data is expired or malformed
+            localStorage.removeItem(cacheKey);
+          }
+        } catch {
+          // 🛡️ Sentinel: Handle corrupted JSON in localStorage to prevent unhandled exceptions
+          localStorage.removeItem(cacheKey);
         }
       }
 
