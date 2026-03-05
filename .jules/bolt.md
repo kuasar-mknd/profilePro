@@ -119,3 +119,9 @@ ill-change: opacity` to repeated list elements (e.g., `.card-glow` on every proj
 
 **Learning:** In Astro with View Transitions, querying DOM elements like `document.querySelectorAll('[data-slide-transition]')` on initial load fails to attach event listeners to newly injected elements after a page transition unless explicitly re-initialized on `astro:page-load`. Additionally, looping over these elements creates an O(N) performance overhead.
 **Action:** Use a single event delegation listener attached to `document` for `click` events. This completely avoids DOM queries, reduces memory usage (from N listeners to 1), and automatically handles dynamically injected elements with zero re-initialization overhead.
+
+## 2026-03-04 - Optimize Carousel Array Allocation
+
+**Learning:** When randomly picking a small subset of items (e.g., 15 items) from a large array (like a collection of `projectImages` in `Hero.astro`), performing a full array clone (`[...array]`) and then executing an O(N) shuffle function allocates unnecessary memory and burns CPU cycles during the SSG build. As the content repository grows, this $O(N)$ operation worsens.
+
+**Action:** Replace the full array clone and O(N) shuffle with an O(K) partial Fisher-Yates algorithm. By iterating only up to the limit (K=15) and randomly picking/swapping indices from a tracking array, you can extract the exact number of unique random items directly in $O(K)$ time, effectively capping memory and CPU usage regardless of total content size.

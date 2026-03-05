@@ -19,16 +19,20 @@ const projectImages = projects.map((p) => ({
   alt: p.data.title,
 }));
 
-// Shuffle images function
-function shuffle(array: any[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+// ⚡ Bolt: Replace full array clone and O(N) shuffle with O(K) partial Fisher-Yates
+// This prevents allocating a full copy of the project array (which grows unbounded)
+// and stops processing as soon as 15 random unique items are selected.
+const limit = Math.min(15, projectImages.length);
+const slides: typeof projectImages = [];
+const indices = Array.from({ length: projectImages.length }, (_, i) => i);
+
+for (let i = 0; i < limit; i++) {
+  const randomIndex = i + Math.floor(Math.random() * (indices.length - i));
+  // Swap the picked index to the current position 'i'
+  [indices[i], indices[randomIndex]] = [indices[randomIndex], indices[i]];
+  slides.push(projectImages[indices[i]]);
 }
 
-const slides = shuffle([...projectImages]).slice(0, 15);
 // ⚡ Bolt: Optimize carousel images
 // Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
 // Use WebP (98% support) instead of AVIF (93%) to ensure compatibility while maintaining
@@ -36,6 +40,8 @@ const slides = shuffle([...projectImages]).slice(0, 15);
 // This reduces DOM nodes in the carousel by ~66% (from ~90 to ~30 nodes).
 // ⚡ Bolt: Limit concurrency to 2 slides to prevent build OOM on Render
 const optimizedSlides = await limitConcurrency(slides, 2, async (slide) => {
+  if (!slide.src) return null; // Safe guard for optional image
+
   // Generate candidates for srcset matching the original Picture configuration
   const [w224, w288, w448, w576] = await Promise.all([
     getImage({ src: slide.src, width: 224, format: "webp", quality: 80 }),
@@ -52,9 +58,11 @@ const optimizedSlides = await limitConcurrency(slides, 2, async (slide) => {
   };
 });
 
+const validOptimizedSlides = optimizedSlides.filter((s) => s !== null);
+
 // ⚡ Bolt: Duplicate slides for seamless infinite scroll
 // Limited to 15 unique items (30 total) to cap DOM nodes and memory usage
-const allSlides = [...optimizedSlides, ...optimizedSlides];
+const allSlides = [...validOptimizedSlides, ...validOptimizedSlides];
 
 // ⚡ Bolt: Precompute LCP image URL to match Base.astro preload exactly
 const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
