@@ -14,7 +14,13 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function safeJson(value: any): string {
-  return JSON.stringify(value)
+  const serialized = JSON.stringify(value);
+
+  // 🛡️ Sentinel: JSON.stringify returns undefined for functions, symbols, and undefined itself.
+  // We must return a valid JSON string (like "null") to prevent TypeError during .replace()
+  if (serialized === undefined) return "null";
+
+  return serialized
     .replace(/</g, "\\u003c")
     .replace(/>/g, "\\u003e")
     .replace(/&/g, "\\u0026")
