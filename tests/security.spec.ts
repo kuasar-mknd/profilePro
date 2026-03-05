@@ -1,6 +1,15 @@
 import { expect, test } from "bun:test";
 import { safeJson, sanitizeInput } from "../src/utils/security";
 
+test("safeJson handles undefined or function inputs safely", () => {
+  // JSON.stringify returns undefined for functions and undefined itself
+  const undefinedOutput = safeJson(undefined);
+  const functionOutput = safeJson(() => {});
+
+  expect(undefinedOutput).toBe("null");
+  expect(functionOutput).toBe("null");
+});
+
 test("safeJson escapes dangerous characters", () => {
   const input = {
     script: "<script>alert(1)</script>",
