@@ -393,10 +393,17 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       const maxLength = messageInput.getAttribute("maxlength") || "5000";
       const max = parseInt(maxLength, 10);
 
-      // 🎨 Palette: Auto-resize textarea logic
+      // ⚡ Bolt: Auto-resize textarea logic optimized to prevent layout thrashing.
+      // We debounce the synchronous `scrollHeight` read and style update using requestAnimationFrame.
+      // This prevents blocking the main thread during rapid typing on the input event.
+      let resizeRaf: number | null = null;
       const autoResizeTextarea = () => {
-        messageInput.style.height = "auto";
-        messageInput.style.height = `${messageInput.scrollHeight}px`;
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          messageInput.style.height = "auto";
+          messageInput.style.height = `${messageInput.scrollHeight}px`;
+          resizeRaf = null;
+        });
       };
 
       const updateCounter = () => {

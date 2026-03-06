@@ -1,11 +1,11 @@
-import { expect, test, describe, beforeEach } from "bun:test";
+import { expect, test, describe } from "bun:test";
 import { getReadingTime } from "../src/utils/readingTime";
 
 describe("getReadingTime", () => {
   test("returns 0 for empty text", () => {
     expect(getReadingTime("")).toBe(0);
-    expect(getReadingTime(null as any)).toBe(0);
-    expect(getReadingTime(undefined as any)).toBe(0);
+    expect(getReadingTime(null as unknown as string)).toBe(0);
+    expect(getReadingTime(undefined as unknown as string)).toBe(0);
   });
 
   test("calculates time for short text", () => {
