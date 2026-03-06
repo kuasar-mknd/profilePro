@@ -5,18 +5,22 @@ interface Props {
   message?: string;
   icon?: string;
   class?: string;
+  actionUrl?: string;
+  actionText?: string;
 }
 
 const {
   message = "Aucun élément trouvé.",
   icon = "mdi:alert-circle-outline",
   class: className = "",
+  actionUrl,
+  actionText = "Retour",
 } = Astro.props;
 ---
 
 <div
   class:list={[
-    "col-span-full py-12 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm flex flex-col items-center justify-center",
+    "col-span-full py-12 px-6 text-center bg-white/50 dark:bg-white/5 rounded-2xl border border-dashed border-pacamara-secondary/20 dark:border-white/10 backdrop-blur-sm flex flex-col items-center justify-center",
     className,
   ]}
   style="contain: content;"
@@ -28,8 +32,18 @@ const {
     class="w-12 h-12 text-pacamara-secondary/50 dark:text-white/50 mb-4"
     aria-hidden="true"
   />
-  <p class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit">
+  <p class="text-lg text-pacamara-primary/70 dark:text-white/70 font-outfit mb-6">
     {message}
   </p>
+  {
+    actionUrl && (
+      <a
+        href={actionUrl}
+        class="inline-flex items-center justify-center px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 cursor-pointer shadow-sm hover:shadow-md"
+      >
+        {actionText}
+      </a>
+    )
+  }
   <slot />
 </div>

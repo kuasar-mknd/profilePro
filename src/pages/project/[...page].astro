@@ -87,7 +87,11 @@ const { page, allTags, tagCounts, totalCount } = Astro.props;
     >
       {
         page.data.length === 0 ? (
-          <EmptyState message="Aucun projet trouvé pour le moment." />
+          <EmptyState
+            message="Aucun projet trouvé pour le moment."
+            actionUrl="/"
+            actionText="Retour à l'accueil"
+          />
         ) : (
           page.data.map((post, index) => {
             return (

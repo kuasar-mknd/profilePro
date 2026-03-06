@@ -86,7 +86,11 @@ const remainingCount = allPosts.length - limit;
   >
     {
       posts.length === 0 && (
-        <EmptyState message="Aucun projet ne correspond à ces critères pour le moment." />
+        <EmptyState
+          message="Aucun projet ne correspond à ces critères pour le moment."
+          actionUrl="/project"
+          actionText="Voir tous les projets"
+        />
       )
     }
 
