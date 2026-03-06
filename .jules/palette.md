@@ -61,3 +61,7 @@
 ## 2026-03-04 - Add missing cursor-pointer to clickable elements
 **Learning:** Missing cursor cues are common on custom buttons like <button id="share-btn"> or custom Lightbox control buttons where standard styling isn't applied automatically. These require explicit cursor-pointer classes for better UX.
 **Action:** Added cursor-pointer to 5 distinct <button> tags missing the visual cue.
+
+## 2026-03-06 - Enhanced Focus Contrast in Dark Mode
+**Learning:** Default focus outlines using brand colors (like Indigo) often lack sufficient contrast (WCAG 2.1) when rendered against dark backgrounds. Using the primary accent color (e.g., Rose/Red) specifically for dark mode focus states significantly improves accessibility for keyboard users without compromising the light mode aesthetic.
+**Action:** Explicitly override `:focus-visible` ring colors in dark mode using `.dark :focus-visible { outline-color: var(--color-pacamara-accent); }`.
