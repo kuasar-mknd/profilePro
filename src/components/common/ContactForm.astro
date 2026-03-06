@@ -396,7 +396,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       // ⚡ Bolt: Auto-resize textarea logic optimized to prevent layout thrashing.
       // We debounce the synchronous `scrollHeight` read and style update using requestAnimationFrame.
       // This prevents blocking the main thread during rapid typing on the input event.
-      let resizeRaf = null;
+      let resizeRaf: number | null = null;
       const autoResizeTextarea = () => {
         if (resizeRaf) cancelAnimationFrame(resizeRaf);
         resizeRaf = requestAnimationFrame(() => {
