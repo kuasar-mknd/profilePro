@@ -251,8 +251,13 @@ if (postData?.data?.image) {
     >
       <span
         class="absolute right-full mr-4 px-2 py-1 bg-pacamara-dark/90 dark:bg-white/90 text-white dark:text-pacamara-dark text-xs rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
-        aria-hidden="true">Retour en haut</span
+        aria-hidden="true"
       >
+        Retour en haut
+        <span
+          class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-[5px] border-l-pacamara-dark/90 dark:border-l-white/90"
+        ></span>
+      </span>
       <!-- 🎨 Palette: Circular Progress Indicator -->
       <svg
         class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none p-0.5"
@@ -408,6 +413,10 @@ if (postData?.data?.image) {
 
         // Scroll to top action
         const onClick = () => {
+          // 🎨 Palette: Provide subtle haptic feedback for mobile users
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
           window.scrollTo({ top: 0, behavior: "smooth" });
           const main = document.getElementById("main-content");
           if (main) {
