@@ -519,11 +519,19 @@
     }
 
     public next() {
+      // 🎨 Palette: Provide subtle haptic feedback for mobile users
+      if (navigator.vibrate && this.galleryElements.length > 1) {
+        navigator.vibrate(50);
+      }
       this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
       this.updateImage();
     }
 
     public prev() {
+      // 🎨 Palette: Provide subtle haptic feedback for mobile users
+      if (navigator.vibrate && this.galleryElements.length > 1) {
+        navigator.vibrate(50);
+      }
       this.currentIndex =
         (this.currentIndex - 1 + this.galleryElements.length) %
         this.galleryElements.length;
