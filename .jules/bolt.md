@@ -80,3 +80,7 @@ edundantly processing nodes that have already been modified.
 
 **Learning:** Running `document.querySelectorAll()` or `element.querySelectorAll()` inside frequently triggered event handlers like `keydown` (especially for common keys like Tab in a focus trap) executes redundantly on the main thread. Since the structure of a modal or menu rarely changes while it is open, querying the DOM on every keystroke burns CPU cycles unnecessarily.
 **Action:** When setting up a focus trap or similar keyboard interaction, cache the focusable elements (or specifically the first and last elements) during the initialization phase (e.g., when the menu opens). Use these cached references inside the `keydown` handler instead of executing a new DOM query.
+
+## 2026-03-05 - Event Delegation over node iteration for interactions
+**Learning:** Using `querySelectorAll("a").forEach(link => link.addEventListener("click", ...))` inside component initialization scripts creates O(N) event listeners and executes a redundant DOM query for interactive menus. This increases main thread execution time.
+**Action:** Replace `querySelectorAll` loops with event delegation by attaching a single listener to the parent container (`nav.addEventListener("click", ...)`) and using `e.target.closest("a")` to detect interactions.
