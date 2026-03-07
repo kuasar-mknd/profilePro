@@ -76,3 +76,7 @@ edundantly processing nodes that have already been modified.
 
 **Learning:** Setting an element's style (e.g., `textarea.style.height = "auto"`) and immediately reading a layout property (e.g., `textarea.scrollHeight`) within the same synchronous event handler (like `input`) forces the browser to recalculate the layout synchronously on the main thread. This causes layout thrashing and jank during rapid typing.
 **Action:** Wrap the height recalculation logic inside `requestAnimationFrame`. This debounces the layout read/write operations and syncs them with the browser's render cycle, preventing the main thread from blocking.
+## 2026-03-05 - Avoid DOM queries in keydown handlers
+
+**Learning:** Running `document.querySelectorAll()` or `element.querySelectorAll()` inside frequently triggered event handlers like `keydown` (especially for common keys like Tab in a focus trap) executes redundantly on the main thread. Since the structure of a modal or menu rarely changes while it is open, querying the DOM on every keystroke burns CPU cycles unnecessarily.
+**Action:** When setting up a focus trap or similar keyboard interaction, cache the focusable elements (or specifically the first and last elements) during the initialization phase (e.g., when the menu opens). Use these cached references inside the `keydown` handler instead of executing a new DOM query.
