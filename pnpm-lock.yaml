@@ -130,7 +130,7 @@ importers:
         specifier: ^1.3.10
         version: 1.3.10
       eslint:
-        specifier: ^10.0.2
+        specifier: ^10.0.3
         version: 10.0.3(jiti@2.6.1)
       eslint-plugin-astro:
         specifier: ^1.6.0
