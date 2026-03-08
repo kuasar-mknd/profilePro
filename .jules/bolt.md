@@ -84,3 +84,7 @@ edundantly processing nodes that have already been modified.
 ## 2026-03-05 - Event Delegation over node iteration for interactions
 **Learning:** Using `querySelectorAll("a").forEach(link => link.addEventListener("click", ...))` inside component initialization scripts creates O(N) event listeners and executes a redundant DOM query for interactive menus. This increases main thread execution time.
 **Action:** Replace `querySelectorAll` loops with event delegation by attaching a single listener to the parent container (`nav.addEventListener("click", ...)`) and using `e.target.closest("a")` to detect interactions.
+
+## 2026-03-05 - Event Delegation over node iteration for interactions
+**Learning:** Using `querySelectorAll(".tilt-card:not(.tilt-initialized)")` inside component initialization scripts creates O(N) DOM queries and attaches an event listener to each matching element. This increases main thread execution time, particularly in lists with many items, and increases memory usage.
+**Action:** Replace `querySelectorAll` loops with event delegation by attaching a single listener to the document (`document.addEventListener("mouseover", ...)`) and using `e.target.closest(".tilt-card")` to detect interactions and initialize elements dynamically only when needed.
