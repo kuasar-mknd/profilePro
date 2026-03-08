@@ -170,6 +170,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
     if (wrapper.dataset.playing === "true") return;
     wrapper.dataset.playing = "true";
 
+    // 🎨 Palette: Tactile feedback for play button
+    if (navigator.vibrate) navigator.vibrate(50);
+
     const poster = wrapper.querySelector("[id^='poster-']");
     const playerDiv = wrapper.querySelector("[id^='player-']");
 

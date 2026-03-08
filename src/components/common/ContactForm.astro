@@ -461,6 +461,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     }
 
     resetBtn?.addEventListener("click", () => {
+      // 🎨 Palette: Subtle tactile feedback
+      if (navigator.vibrate) navigator.vibrate(30);
+
       const successMessage = form.querySelector("#form-success-message");
       successMessage?.classList.add("hidden");
       successMessage?.classList.remove("flex");
@@ -491,6 +494,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     errorResetBtn?.addEventListener("click", () => {
+      // 🎨 Palette: Subtle tactile feedback
+      if (navigator.vibrate) navigator.vibrate(30);
+
       errorMessage?.classList.add("hidden");
       if (submitButton) {
         submitButton.removeAttribute("aria-disabled");
@@ -501,6 +507,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
     submitButton?.addEventListener("click", (e) => {
       if (submitButton.getAttribute("aria-disabled") === "true") return;
+
+      // 🎨 Palette: Tactile feedback for primary action
+      if (navigator.vibrate) navigator.vibrate(50);
+
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const rect = submitButton.getBoundingClientRect();
       const ripple = document.createElement("span");
@@ -566,6 +576,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
     });
 
     function showError(message: string, fieldToFocus?: HTMLElement) {
+      // 🎨 Palette: Distinct tactile pattern for errors
+      if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+
       if (errorMessage && errorText) {
         errorText.textContent = message;
         errorMessage.classList.remove("hidden");
@@ -682,6 +695,9 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         const result = await response.json();
 
         if (result.success) {
+          // 🎨 Palette: Tactile feedback for success
+          if (navigator.vibrate) navigator.vibrate(50);
+
           errorMessage?.classList.add("hidden");
           form.removeAttribute("aria-describedby");
           const successMessage = form.querySelector(
