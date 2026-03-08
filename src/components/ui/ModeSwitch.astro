@@ -64,6 +64,15 @@ import { Icon } from "astro-icon/components";
     );
   };
 
+  const handleDelegatedThemeToggle = (e: Event) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest(".theme-toggle-btn");
+    if (btn) {
+      e.preventDefault();
+      handleThemeToggle(e);
+    }
+  };
+
   const handleGlobalKeydown = (e: KeyboardEvent) => {
     if (e.shiftKey && (e.key === "T" || e.key === "t")) {
       const target = e.target as HTMLElement;
@@ -118,12 +127,10 @@ import { Icon } from "astro-icon/components";
       updateLabels(detail.isDark, true);
     }
 
-    buttons.forEach((btn) => {
-      if ((btn as HTMLElement).dataset.initialized === "true") return;
-
-      btn.addEventListener("click", handleThemeToggle);
-      (btn as HTMLElement).dataset.initialized = "true";
-    });
+    // ⚡ Bolt: Event Delegation for Theme Switcher
+    // Reduces listener count from N to 1
+    document.removeEventListener("click", handleDelegatedThemeToggle);
+    document.addEventListener("click", handleDelegatedThemeToggle);
   }
 
   initThemeToggle();
