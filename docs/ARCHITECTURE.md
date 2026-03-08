@@ -15,7 +15,7 @@ To maintain a scalable and testable codebase, the project structure maps to Clea
 - **Infrastructure/Astro-Core**: Located in `src/components/`, `src/utils/`, and config files. Implements the UI components, integrations, and external tools.
 
 **Where to add new endpoints/use-cases:**
-To add a new endpoint or use-case, define the routing in the Application/Pages Layer (`src/pages/`) and implement the business logic or data schema in the Domain/Content Layer (`src/content/`).
+To add a new endpoint or use-case, define the routing in the Application/Pages Layer (`src/pages/`) and implement the business logic or data schema in the Domain/Content Layer (`src/content/`). As this is an SSG, there is no dynamic backend routing.
 
 ### 2. Data Flow & State Management
 
