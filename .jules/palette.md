@@ -12,3 +12,11 @@
 ## 2024-03-07 - Visually expose aria-keyshortcuts
 **Learning:** While `aria-keyshortcuts` provides essential information to assistive technologies, sighted keyboard power users often miss out on discovering these shortcuts if they aren't visually indicated in the UI.
 **Action:** Always wrap keyboard shortcut text in `<kbd>` tags within custom tooltips or labels for controls that have `aria-keyshortcuts` defined, bridging the gap between ARIA attributes and visual accessibility.
+
+## 2024-03-08 - Haptic Feedback Patterns
+**Learning:** Visual feedback on mobile devices can sometimes go unnoticed if the user's thumb is obscuring the interaction point. Tactile (haptic) confirmation provides a more physical sense of responsiveness, especially for primary actions and state transitions.
+**Action:** Standardize haptic feedback patterns across the app:
+- Primary Actions (CTA, Submit, Play): `navigator.vibrate(50)`
+- Success States: `navigator.vibrate(50)`
+- Errors/Validation Failures: `navigator.vibrate([50, 50, 50])`
+- Subtle Resets/Toggles: `navigator.vibrate(30)`

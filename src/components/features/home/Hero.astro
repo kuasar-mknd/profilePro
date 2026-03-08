@@ -491,18 +491,30 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
    * - Mobile: Focuses form container to avoid keyboard pop-up while scrolling
    */
   function initHeroCTA() {
-    const cta = document.getElementById("hero-cta-secondary");
+    const primaryCta = document.getElementById("hero-cta-primary");
+    const secondaryCta = document.getElementById("hero-cta-secondary");
     const form = document.getElementById("contact-form");
     const nameInput = document.getElementById("name");
 
-    if (!cta || !form) return;
+    if (primaryCta && primaryCta.dataset.initialized !== "true") {
+      primaryCta.dataset.initialized = "true";
+      primaryCta.addEventListener("click", () => {
+        // 🎨 Palette: Tactile feedback for primary action
+        if (navigator.vibrate) navigator.vibrate(50);
+      });
+    }
+
+    if (!secondaryCta || !form) return;
 
     // Guard against duplicate listeners
-    if (cta.dataset.initialized === "true") return;
-    cta.dataset.initialized = "true";
+    if (secondaryCta.dataset.initialized === "true") return;
+    secondaryCta.dataset.initialized = "true";
 
-    cta.addEventListener("click", (e) => {
+    secondaryCta.addEventListener("click", (e) => {
       e.preventDefault();
+
+      // 🎨 Palette: Tactile feedback for primary action
+      if (navigator.vibrate) navigator.vibrate(50);
 
       // Check if device uses coarse pointer (likely touch/mobile)
       const isMobile = window.matchMedia("(pointer: coarse)").matches;
