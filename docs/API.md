@@ -57,9 +57,11 @@ Directives for search engine crawlers.
 
 **No authentication is required.**
 
-**Auth expectations:** No authentication is required or expected (even if not implemented yet) for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only.
+**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only.
 
 ## ❌ Error Format
+
+**Error format:** The standard error format simply falls back to standard HTTP error pages served by the host (Cloudflare Pages), rather than custom JSON payloads.
 
 As this is a static site, API errors are primarily HTTP-level responses served by the hosting provider (Cloudflare Pages).
 

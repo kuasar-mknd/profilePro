@@ -63,6 +63,8 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 
 Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de détails techniques.
 
+*(Note: This project is implemented purely as a static Astro SSG architecture without dynamic backend frameworks).*
+
 ## ✨ Fonctionnalités
 
 ### 🎨 Design & Expérience

@@ -25,6 +25,8 @@ If AI integration is added, the expected JSON schema for a project summary might
 }
 ```
 
+*(Note: This project currently has no active AI or adapter implementation. The schema above is strictly aspirational and serves as a placeholder for future iterations.)*
+
 ## 🫰 Cost & Limits
 
 - **Strategy**: Static Generation (SSG).

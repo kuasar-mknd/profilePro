@@ -21,3 +21,6 @@
 | 2026-03-05 | Audit & Verification | None | Verified documentation is accurate, complete, and perfectly mirrors the codebase capabilities and constraints. Checked CI/CD scripts. No changes needed. |
 | 2026-03-06 | Audit & Verification | None | Verified documentation is accurate, complete, and perfectly mirrors the codebase capabilities and constraints. Checked CI/CD scripts. No changes needed. |
 | 2026-03-07 | Audit & Verification | None | Verified documentation is accurate, complete, and perfectly mirrors the codebase capabilities and constraints. Checked CI/CD scripts. No changes needed. |
+| 2026-03-08 | Audit & Verification | None | Verified documentation is accurate, complete, and perfectly mirrors the codebase capabilities and constraints. Checked CI/CD scripts. No changes needed. |
+| 2026-03-08 | Documentation Audit | README.md, docs/ARCHITECTURE.md, docs/ENV.md | Added explicit notes confirming that no dynamic database (Prisma) or backend framework (Hono) is implemented since this is a static Astro SSG portfolio. Confirmed workflows. |
+| 2026-03-08 | Documentation Audit | docs/AI.md, docs/API.md, .github/workflows/codeql.yml | Fixed CodeQL v4 parity mismatch; Added explicit sections mapping to the requested Auth expectations, schemas, and Error formats, properly caveating that the project is statically generated. |
