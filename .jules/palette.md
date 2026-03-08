@@ -20,3 +20,7 @@
 - Success States: `navigator.vibrate(50)`
 - Errors/Validation Failures: `navigator.vibrate([50, 50, 50])`
 - Subtle Resets/Toggles: `navigator.vibrate(30)`
+
+## 2026-03-08 - Empty State Contextual Recovery
+**Learning:** For empty states dynamically rendered in components (like an empty image gallery), users may not always know where to go next if no images are present, particularly if the empty state lacks context.
+**Action:** Always provide contextual CTA buttons in `EmptyState` component invocations (e.g., passing `actionUrl="/project"` and `actionText="Voir d'autres projets"`) so the user does not hit a dead-end and is prompted to continue browsing.
