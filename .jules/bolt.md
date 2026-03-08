@@ -88,3 +88,7 @@ edundantly processing nodes that have already been modified.
 ## 2026-03-05 - Event Delegation over node iteration for interactions
 **Learning:** Using `querySelectorAll(".tilt-card:not(.tilt-initialized)")` inside component initialization scripts creates O(N) DOM queries and attaches an event listener to each matching element. This increases main thread execution time, particularly in lists with many items, and increases memory usage.
 **Action:** Replace `querySelectorAll` loops with event delegation by attaching a single listener to the document (`document.addEventListener("mouseover", ...)`) and using `e.target.closest(".tilt-card")` to detect interactions and initialize elements dynamically only when needed.
+
+## 2025-02-19 - The "Delegator" Batch (Event Delegation)
+**Learning:** Found multiple instances where event listeners were being redundantly attached inside `querySelectorAll` loops for UI components (ModeSwitch) and dynamically generated elements (code copy buttons). This creates O(N) memory overhead and requires complex cleanup logic for Astro view transitions.
+**Action:** Replaced O(N) `.forEach(btn => btn.addEventListener('click', ...))` bindings with O(1) `document.addEventListener('click', ...)` delegation using `e.target.closest()`. Applied this fix to `src/components/ui/ModeSwitch.astro`, `src/pages/[slug].astro`, and `src/pages/project/[slug].astro`, significantly reducing listener count and improving memory efficiency.
