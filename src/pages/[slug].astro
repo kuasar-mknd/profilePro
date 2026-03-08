@@ -169,13 +169,9 @@ const readingTime = getReadingTime(entry.body);
    * Wraps code blocks and adds a copy button for better developer experience
    */
 
-
   // 🛡️ Sentinel: Safe DOM construction to prevent innerHTML usage
   const createIcon = (isCheck = false) => {
-    const svg = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg",
-    );
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "18");
     svg.setAttribute("height", "18");
     svg.setAttribute("viewBox", "0 0 24 24");
