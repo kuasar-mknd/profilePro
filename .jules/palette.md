@@ -24,3 +24,7 @@
 ## 2026-03-08 - Empty State Contextual Recovery
 **Learning:** For empty states dynamically rendered in components (like an empty image gallery), users may not always know where to go next if no images are present, particularly if the empty state lacks context.
 **Action:** Always provide contextual CTA buttons in `EmptyState` component invocations (e.g., passing `actionUrl="/project"` and `actionText="Voir d'autres projets"`) so the user does not hit a dead-end and is prompted to continue browsing.
+
+## 2026-03-09 - WCAG 2.5.3 Label in Name for Action Links
+**Learning:** Using descriptive `aria-label` attributes on links and buttons (like "Aller à la page précédente" or "Filtre actif : Tous") that completely replace or bury the element's visible text ("Précédent", "Tous") causes a WCAG 2.5.3 (Label in Name) violation. This breaks voice control software (like Dragon NaturallySpeaking) because the user speaks the visible text, but the programmatic name doesn't match or start with it.
+**Action:** Always ensure the `aria-label` starts with the exact visible text, followed by the contextual description in parentheses (e.g., `aria-label="Précédent (page 1)"` or `aria-label="Samuel Dulex (Retour à l'accueil)"`).
