@@ -93,7 +93,7 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
 
     // Fill with text containing many newlines to force resize
     const longText =
-      "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8";
+      "Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10\nLine 11\nLine 12";
     await textarea.fill(longText);
 
     const newHeight = await textarea.evaluate(
