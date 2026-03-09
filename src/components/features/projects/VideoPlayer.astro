@@ -243,16 +243,20 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 
   // ⚡ Bolt: Prefetch Plyr resources on hover/focus to improve perceived performance
   // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
-  function initVideoPrefetch() {
-    const wrappers = document.querySelectorAll(".video-player-wrapper");
-    if (wrappers.length === 0) return;
+  function setupVideoPrefetchDelegation() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__videoPrefetchDelegationInitialized) return;
+    win.__videoPrefetchDelegationInitialized = true;
 
     // Prefetch logic - idempotent
-    const prefetch = () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((window as any)._plyrPrefetched) return;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any)._plyrPrefetched = true;
+    const prefetch = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".video-player-wrapper")) return;
+
+      if (win._plyrPrefetched) return;
+      win._plyrPrefetched = true;
 
       // Start fetching chunks in background
       // The browser dedupes these requests automatically
@@ -264,42 +268,31 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
       } catch {
         // Silent failure is acceptable for prefetch
       }
+
+      // Cleanup delegation after successful prefetch
+      document.removeEventListener("mouseover", prefetch);
+      document.removeEventListener("touchstart", prefetch);
+      document.removeEventListener("focusin", prefetch);
     };
 
-    // Attach passive listeners to all video wrappers
-    // We attach these every time because elements are new on navigation
-    wrappers.forEach((wrapper) => {
-      // Remove old listeners if any (though likely new elements)
-      wrapper.removeEventListener("mouseenter", prefetch);
-      wrapper.removeEventListener("touchstart", prefetch);
-      wrapper.removeEventListener("focusin", prefetch);
-
-      wrapper.addEventListener("mouseenter", prefetch, {
-        passive: true,
-        once: true,
-      });
-      wrapper.addEventListener("touchstart", prefetch, {
-        passive: true,
-        once: true,
-      });
-      wrapper.addEventListener("focusin", prefetch, {
-        passive: true,
-        once: true,
-      });
-    });
+    // Use event delegation on document
+    document.addEventListener("mouseover", prefetch, { passive: true });
+    document.addEventListener("touchstart", prefetch, { passive: true });
+    document.addEventListener("focusin", prefetch, { passive: true });
   }
 
   // ⚡ Bolt: Initialize Skeletons and Prefetch
   function initVideoPlayer() {
-    initVideoPrefetch();
+    setupVideoPrefetchDelegation();
 
-    const wrappers = document.querySelectorAll(".video-player-wrapper");
+    // ⚡ Bolt: Pre-filter initialized wrappers to save redundant processing
+    const wrappers = document.querySelectorAll(
+      ".video-player-wrapper:not([data-skeleton-init])",
+    );
     wrappers.forEach((wrapper) => {
       const posterImg = wrapper.querySelector("img");
       const skeleton = wrapper.querySelector(".skeleton");
       if (posterImg && skeleton) {
-        // Skip if already initialized (though unlikely on new DOM)
-        if (wrapper.hasAttribute("data-skeleton-init")) return;
         wrapper.setAttribute("data-skeleton-init", "true");
 
         const removeSkeleton = () => {
