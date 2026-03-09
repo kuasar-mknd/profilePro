@@ -105,16 +105,19 @@ import { Icon } from "astro-icon/components";
       const label = isDark
         ? "Soleil (Activer le mode clair)"
         : "Lune (Activer le mode sombre)";
-      buttons.forEach((btn) => {
-        btn.setAttribute("aria-label", label);
-        const span = btn.querySelector(".sr-only");
+
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].setAttribute("aria-label", label);
+        const span = buttons[i].querySelector(".sr-only");
         if (span) span.textContent = label;
-      });
+      }
 
       if (announce && liveRegions.length > 0) {
-        liveRegions.forEach((reg) => {
-          reg.textContent = isDark ? "Mode sombre activé" : "Mode clair activé";
-        });
+        for (let i = 0; i < liveRegions.length; i++) {
+          liveRegions[i].textContent = isDark
+            ? "Mode sombre activé"
+            : "Mode clair activé";
+        }
       }
     };
 

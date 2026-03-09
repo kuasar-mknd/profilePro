@@ -249,7 +249,8 @@ const columnClasses = {
       "[data-gallery-container]:not(.gallery-initialized)",
     );
 
-    galleries.forEach((gallery) => {
+    for (let i = 0; i < galleries.length; i++) {
+      const gallery = galleries[i];
       // ⚡ Bolt: Initialize Skeleton loaders using event delegation (capture phase)
       // This reduces listener count from N (images) to 1 (container)
       const removeSkeleton = (img: HTMLImageElement) => {
@@ -266,11 +267,11 @@ const columnClasses = {
         "img[data-gallery-image]",
       ) as NodeListOf<HTMLImageElement>;
 
-      images.forEach((img) => {
-        if (img.complete) {
-          removeSkeleton(img);
+      for (let j = 0; j < images.length; j++) {
+        if (images[j].complete) {
+          removeSkeleton(images[j]);
         }
-      });
+      }
 
       // Capture 'load' events for lazy-loaded images
       // Note: 'load' does not bubble, but it DOES capture.
@@ -286,7 +287,7 @@ const columnClasses = {
       );
 
       gallery.classList.add("gallery-initialized");
-    });
+    }
   }
 
   // ⚡ Bolt: Singleton Listener Pattern for View Transitions

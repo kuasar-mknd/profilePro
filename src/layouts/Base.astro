@@ -519,9 +519,13 @@ if (postData?.data?.image) {
         // Dynamic components (Footer, etc.) handle their own link security.
         // ⚡ Bolt: Optimized query by filtering out already-secured links using CSS :not()
         // This significantly reduces redundant JS execution and main-thread work on View Transitions.
-        document
-          .querySelectorAll('a[target="_blank"]:not([rel~="noopener"])')
-          .forEach(secureLink);
+        // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+        const links = document.querySelectorAll(
+          'a[target="_blank"]:not([rel~="noopener"])',
+        );
+        for (let i = 0; i < links.length; i++) {
+          secureLink(links[i]);
+        }
       }
 
       // ⚡ Bolt: Singleton Listener Pattern for Base Scripts
@@ -577,20 +581,20 @@ if (postData?.data?.image) {
 
         win.__animationObserver = new IntersectionObserver(
           (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) {
-                entry.target.classList.add("paused");
+            for (let i = 0; i < entries.length; i++) {
+              if (!entries[i].isIntersecting) {
+                entries[i].target.classList.add("paused");
               } else {
-                entry.target.classList.remove("paused");
+                entries[i].target.classList.remove("paused");
               }
-            });
+            }
           },
           { rootMargin: "200px" }, // Pre-load slightly before viewport
         );
 
-        animatedElements.forEach((el: Element) =>
-          win.__animationObserver?.observe(el),
-        );
+        for (let i = 0; i < animatedElements.length; i++) {
+          win.__animationObserver?.observe(animatedElements[i]);
+        }
       }
 
       // ⚡ Bolt: Singleton Listener Pattern for Animation Optimizer

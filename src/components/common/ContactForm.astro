@@ -481,9 +481,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
           "dark:text-white/60",
         );
       }
-      form.querySelectorAll(".validation-icon").forEach((el) => {
-        (el as HTMLElement).dataset.visible = "false";
-      });
+      const icons = form.querySelectorAll(".validation-icon");
+      for (let i = 0; i < icons.length; i++) {
+        (icons[i] as HTMLElement).dataset.visible = "false";
+      }
 
       if (submitButton) {
         submitButton.removeAttribute("aria-disabled");
@@ -600,9 +601,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
         return;
       }
 
-      form
-        .querySelectorAll("[aria-invalid]")
-        .forEach((el) => el.removeAttribute("aria-invalid"));
+      const invalidEls = form.querySelectorAll("[aria-invalid]");
+      for (let i = 0; i < invalidEls.length; i++) {
+        invalidEls[i].removeAttribute("aria-invalid");
+      }
       errorMessage?.classList.add("hidden");
 
       if (nameInput && nameInput.value.trim().length < 2) {
