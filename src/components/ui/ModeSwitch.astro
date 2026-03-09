@@ -6,7 +6,7 @@ import { Icon } from "astro-icon/components";
   type="button"
   style="contain: layout;"
   class="theme-toggle-btn cursor-pointer group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-40 hover:bg-pacamara-accent hover:text-white focus-visible:w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
-  aria-label="Activer le mode sombre"
+  aria-label="Lune (Activer le mode sombre)"
   aria-keyshortcuts="Shift+T"
 >
   <div
@@ -33,7 +33,7 @@ import { Icon } from "astro-icon/components";
       >Lune <kbd class="font-sans ml-1 opacity-70">(Shift+T)</kbd></span
     >
   </div>
-  <span class="sr-only">Activer le mode sombre</span>
+  <span class="sr-only">Lune (Activer le mode sombre)</span>
   <span class="sr-only theme-live-region" aria-live="polite"></span>
 </button>
 
@@ -102,7 +102,9 @@ import { Icon } from "astro-icon/components";
     const liveRegions = document.querySelectorAll(".theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
-      const label = isDark ? "Activer le mode clair" : "Activer le mode sombre";
+      const label = isDark
+        ? "Soleil (Activer le mode clair)"
+        : "Lune (Activer le mode sombre)";
       buttons.forEach((btn) => {
         btn.setAttribute("aria-label", label);
         const span = btn.querySelector(".sr-only");
