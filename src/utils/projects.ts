@@ -1,7 +1,10 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 
-// ⚡ Bolt: Cache sorted projects during SSG to prevent redundant O(N log N) sorting
-let cachedProjects: CollectionEntry<"project">[] | null = null;
+// ⚡ Bolt: Cache the Promise of sorted projects to prevent redundant fetching and sorting
+// during parallel SSG builds. By caching the Promise instead of the resolved array,
+// concurrent calls before the first fetch completes will simply await the existing Promise,
+// reducing memory allocation and redundant O(N log N) operations.
+let projectsPromise: Promise<CollectionEntry<"project">[]> | null = null;
 
 /**
  * Fetches the 'project' collection, sorts it by pubDate descending, and caches the result.
@@ -10,18 +13,23 @@ let cachedProjects: CollectionEntry<"project">[] | null = null;
 export async function getSortedProjects(): Promise<
   CollectionEntry<"project">[]
 > {
-  if (cachedProjects && !import.meta.env.DEV) {
-    return cachedProjects;
+  if (projectsPromise && !import.meta.env.DEV) {
+    return projectsPromise;
   }
 
-  const allProjects = await getCollection("project");
-  const sorted = allProjects.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+  const fetchAndSort = async () => {
+    const allProjects = await getCollection("project");
+    return allProjects.sort(
+      (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    );
+  };
 
-  if (!import.meta.env.DEV) {
-    cachedProjects = sorted;
+  // In DEV mode, skip the cache entirely to ensure HMR continues to work
+  if (import.meta.env.DEV) {
+    return fetchAndSort();
   }
 
-  return sorted;
+  projectsPromise = fetchAndSort();
+
+  return projectsPromise;
 }
