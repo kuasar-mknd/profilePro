@@ -21,6 +21,14 @@
 - Errors/Validation Failures: `navigator.vibrate([50, 50, 50])`
 - Subtle Resets/Toggles: `navigator.vibrate(30)`
 
+## 2024-03-10 - Theme Switcher Icon Alignment
+**Learning:** In theme switchers that use action-oriented labels (e.g., "Activer le mode sombre"), showing the icon of the *current* state (e.g., Sun icon in Light Mode) creates cognitive dissonance. The visual affordance (icon) should match the target state or the action described by the label.
+**Action:** Always display the icon representing the *target* theme state (Moon in Light mode, Sun in Dark mode) so it aligns with the "Switch to..." intent and text label.
+
+## 2024-03-10 - Persistent Context for Truncated Text
+**Learning:** Responsive truncation (e.g., breadcrumbs on mobile) effectively manages space but hides critical information. Screen readers might read the truncated text if not careful, and sighted users lose context.
+**Action:** For elements prone to truncation on small screens, include a `title` attribute containing the full, untruncated text. This provides a native fallback for hover states and ensures the full content remains accessible without requiring complex UI expansions.
+
 ## 2026-03-08 - Empty State Contextual Recovery
 **Learning:** For empty states dynamically rendered in components (like an empty image gallery), users may not always know where to go next if no images are present, particularly if the empty state lacks context.
 **Action:** Always provide contextual CTA buttons in `EmptyState` component invocations (e.g., passing `actionUrl="/project"` and `actionText="Voir d'autres projets"`) so the user does not hit a dead-end and is prompted to continue browsing.
