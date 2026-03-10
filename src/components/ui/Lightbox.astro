@@ -468,6 +468,12 @@
 
     public open(index: number, trigger?: HTMLElement) {
       if (trigger) this.triggerElement = trigger;
+
+      // 🎨 Palette: Provide subtle haptic feedback for mobile users
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+
       this.currentIndex = index;
       this.updateImage();
       this.lightbox.setAttribute("aria-hidden", "false");
