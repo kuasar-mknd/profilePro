@@ -40,3 +40,7 @@
 ## 2026-03-09 - Avoid redundant cursor-pointer classes
 **Learning:** Browsers automatically apply `cursor: pointer` to standard `<a>` tags with `href` attributes. Adding the `cursor-pointer` utility class to these elements is redundant and clutters the markup.
 **Action:** Only apply `cursor-pointer` to interactive custom elements (like `div` or `img` tags with `role="button"`) or elements that don't natively receive pointer styling. Do not apply it to standard `<a>` tags.
+
+## 2025-03-10 - Lightbox Backdrop Accessibility
+**Learning:** Adding `role="button"` and `tabindex="0"` to a full-screen visual backdrop creates a redundant and confusing focus stop that can obscure or skip the actual modal content for keyboard and screen reader users.
+**Action:** When a modal already has an explicit Close button, ensure the decorative backdrop only handles pointer events (click) and is hidden from assistive tech with `aria-hidden="true"` and no `tabindex`.
