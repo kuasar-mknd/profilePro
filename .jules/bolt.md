@@ -100,3 +100,7 @@ edundantly processing nodes that have already been modified.
 ## 2026-03-05 - Lazy evaluation of Image Galleries
 **Learning:** Eagerly querying all `[data-gallery-image]` elements on page load using `querySelectorAll` in the Lightbox component wastes CPU cycles and memory. Furthermore, caching them globally breaks the expected isolated behavior when multiple `ImageGallery` components are rendered on the same page.
 **Action:** Replace eager global queries on `init()` with lazy, scoped queries `closest('[data-gallery-container]').querySelectorAll(...)` triggered only when the user actually clicks an image.
+
+## 2025-03-11 - Single O(N) pass for Array/Set extraction and metrics computation
+**Learning:** Using chained operations like `.map().flat()` and `new Set()` in Astro's `getStaticPaths` or paginated routes (e.g., `src/pages/project/[...page].astro`) generates a ton of intermediate array allocations that burn memory and CPU cycles during the SSG build. Subsequent passes to count those same extracted tags cause $O(P*N)$ redundant calculations.
+**Action:** Replace functional array method chains used for extraction, grouping, and metrics counting with a single O(N) `for` loop that iterates over the data once, updating unique sets and accumulating count tracking synchronously.
