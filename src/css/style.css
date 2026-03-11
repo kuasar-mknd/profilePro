@@ -518,11 +518,10 @@
 .tilt-card .tilt-shine {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgb(255 255 255 / 0%) 0%,
-    rgb(255 255 255 / 10%) 50%,
-    rgb(255 255 255 / 0%) 100%
+  background: radial-gradient(
+    circle at var(--shine-x, 50%) var(--shine-y, 50%),
+    rgb(255 255 255 / 15%) 0%,
+    transparent 70%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
