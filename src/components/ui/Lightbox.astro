@@ -387,12 +387,11 @@
         { passive: true },
       );
 
-      // ⚡ Bolt: Cache gallery elements once on init
-      this.collectImages();
-
-      // ⚡ Bolt: Only attach global listeners if images exist
-      // Prevents unnecessary event listener overhead on pages without gallery images
-      if (this.galleryElements.length > 0) {
+      // ⚡ Bolt: Lazy Gallery Initialization
+      // We no longer eagerly query all `[data-gallery-image]` elements on the page via `collectImages()`.
+      // Instead, we simply check if ANY gallery image exists in the DOM to attach the delegated listeners.
+      // This prevents unnecessary O(N) array allocation overhead during Astro view transitions (page load).
+      if (document.querySelector("[data-gallery-image]")) {
         // ⚡ Bolt: Event Delegation for Gallery Images
         // Listens on document instead of attaching listeners to every image
         document.addEventListener("click", this.boundClickHandler);
@@ -436,7 +435,15 @@
     }
 
     private activateImage(galleryImage: HTMLElement) {
-      // ⚡ Bolt: Use cached elements for O(1) lookup
+      // ⚡ Bolt: Lazy Scoped Gallery Population
+      // Only query and cache gallery elements when an image is actually clicked.
+      // We scope the query to the closest `[data-gallery-container]` so the lightbox
+      // perfectly isolates separate ImageGalleries on the same page instead of merging them.
+      const container =
+        galleryImage.closest("[data-gallery-container]") || document;
+      const elements = container.querySelectorAll("[data-gallery-image]");
+      this.galleryElements = Array.from(elements) as HTMLImageElement[];
+
       const index = this.galleryElements.indexOf(
         galleryImage as HTMLImageElement,
       );
@@ -444,12 +451,6 @@
       if (index !== -1) {
         this.open(index, galleryImage);
       }
-    }
-
-    private collectImages() {
-      // ⚡ Bolt: Cache DOM elements once at init
-      const elements = document.querySelectorAll("[data-gallery-image]");
-      this.galleryElements = Array.from(elements) as HTMLImageElement[];
     }
 
     private triggerElement: HTMLElement | null = null;

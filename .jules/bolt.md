@@ -96,3 +96,7 @@ edundantly processing nodes that have already been modified.
 ## 2026-03-05 - Event Delegation over node iteration for resource prefetching
 **Learning:** Using `querySelectorAll(".video-player-wrapper").forEach(wrapper => wrapper.addEventListener("mouseenter", ...))` inside component initialization scripts creates O(N) event listeners and executes a redundant DOM query for resource prefetching. This increases main thread execution time, particularly when dealing with multiple video elements on a single page, and increases memory usage.
 **Action:** Replace `querySelectorAll` loops with event delegation by attaching a single listener to the document (`document.addEventListener("mouseover", ...)`) and using `e.target.closest(".video-player-wrapper")` to detect interactions and initiate resource prefetching dynamically only when needed. Added an initialization guard and cleanup logic to remove the global listeners once prefetching is complete.
+
+## 2026-03-05 - Lazy evaluation of Image Galleries
+**Learning:** Eagerly querying all `[data-gallery-image]` elements on page load using `querySelectorAll` in the Lightbox component wastes CPU cycles and memory. Furthermore, caching them globally breaks the expected isolated behavior when multiple `ImageGallery` components are rendered on the same page.
+**Action:** Replace eager global queries on `init()` with lazy, scoped queries `closest('[data-gallery-container]').querySelectorAll(...)` triggered only when the user actually clicks an image.
