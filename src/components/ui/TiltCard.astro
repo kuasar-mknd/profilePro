@@ -74,6 +74,12 @@ const {
       cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
       cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
 
+      // 🎨 Palette: Update shine position
+      const shineX = ((targetX - bounds.left) / bounds.width) * 100;
+      const shineY = ((targetY - bounds.top) / bounds.height) * 100;
+      cardStyle.setProperty("--shine-x", `${shineX}%`);
+      cardStyle.setProperty("--shine-y", `${shineY}%`);
+
       frameId = null;
     }
 
