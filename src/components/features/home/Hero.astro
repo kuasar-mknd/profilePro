@@ -14,23 +14,23 @@ const { projects: initialProjects } = Astro.props;
 
 // Fetch all project images
 const projects = initialProjects || (await getSortedProjects());
-const projectImages = projects.map((p) => ({
-  src: p.data.image,
-  alt: p.data.title,
-}));
 
-// ⚡ Bolt: Replace full array clone and O(N) shuffle with O(K) partial Fisher-Yates
-// This prevents allocating a full copy of the project array (which grows unbounded)
-// and stops processing as soon as 15 random unique items are selected.
-const limit = Math.min(15, projectImages.length);
-const slides: typeof projectImages = [];
-const indices = Array.from({ length: projectImages.length }, (_, i) => i);
+// ⚡ Bolt: Eliminate O(N) array allocation from .map() and O(N) shuffle
+// We extract only the required fields directly into the slides array during the O(K) loop.
+// This prevents creating N intermediate objects and drastically reduces memory overhead during build.
+const limit = Math.min(15, projects.length);
+const slides: { src: any; alt: string }[] = [];
+const indices = Array.from({ length: projects.length }, (_, i) => i);
 
 for (let i = 0; i < limit; i++) {
   const randomIndex = i + Math.floor(Math.random() * (indices.length - i));
   // Swap the picked index to the current position 'i'
   [indices[i], indices[randomIndex]] = [indices[randomIndex], indices[i]];
-  slides.push(projectImages[indices[i]]);
+  const selectedProject = projects[indices[i]];
+  slides.push({
+    src: selectedProject.data.image,
+    alt: selectedProject.data.title,
+  });
 }
 
 // ⚡ Bolt: Optimize carousel images

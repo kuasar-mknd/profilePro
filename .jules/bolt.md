@@ -104,3 +104,8 @@ edundantly processing nodes that have already been modified.
 ## 2025-03-11 - Single O(N) pass for Array/Set extraction and metrics computation
 **Learning:** Using chained operations like `.map().flat()` and `new Set()` in Astro's `getStaticPaths` or paginated routes (e.g., `src/pages/project/[...page].astro`) generates a ton of intermediate array allocations that burn memory and CPU cycles during the SSG build. Subsequent passes to count those same extracted tags cause $O(P*N)$ redundant calculations.
 **Action:** Replace functional array method chains used for extraction, grouping, and metrics counting with a single O(N) `for` loop that iterates over the data once, updating unique sets and accumulating count tracking synchronously.
+## 2026-03-11 - Optimize Carousel Array Allocation
+
+**Learning:** When randomly picking a small subset of items (e.g., 15 items) from a large array (like a collection of `projects` in `Hero.astro`), performing an initial full O(N) `.map()` to extract specific properties creates an unnecessary intermediate array and wastes memory. If the array is large, this O(N) allocation becomes a bottleneck during the SSG build.
+
+**Action:** Eliminate the O(N) `.map()` step entirely. Directly apply the O(K) partial Fisher-Yates algorithm on the original array's indices and only extract the necessary properties inline for the randomly selected items. This caps memory allocation to the chosen limit (O(K)) regardless of total content size.
