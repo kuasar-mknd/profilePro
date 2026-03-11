@@ -17,27 +17,28 @@ export async function getStaticPaths({
   paginate: PaginateFunction;
 }) {
   const allProjects = await getSortedProjects();
-  const uniqueTags = [
-    ...new Set(allProjects.map((project) => project.data.tag).flat()),
-  ];
 
-  // ⚡ Bolt: Calculate tagCounts once here and pass it down as a prop
-  // This avoids O(P*N) redundant calculations per paginated page
+  // ⚡ Bolt: Calculate unique tags and tag counts in a single O(N) pass
+  // This avoids redundant array allocations from .map().flat() and O(P*N) calculations
   const tagCounts: Record<string, number> = {};
-  for (const tag of uniqueTags) tagCounts[tag] = 0;
+  const uniqueTagsSet = new Set<string>();
 
   for (let i = 0; i < allProjects.length; i++) {
     const projectTags = allProjects[i].data.tag;
     if (Array.isArray(projectTags)) {
       for (let j = 0; j < projectTags.length; j++) {
         const tag = projectTags[j];
-        if (tagCounts[tag] !== undefined) tagCounts[tag]++;
+        uniqueTagsSet.add(tag);
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
       }
-    } else if (tagCounts[projectTags as string] !== undefined) {
-      tagCounts[projectTags as string]++;
+    } else {
+      const tag = projectTags as string;
+      uniqueTagsSet.add(tag);
+      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
     }
   }
 
+  const uniqueTags = Array.from(uniqueTagsSet);
   const projectEntries = allProjects;
 
   return paginate(projectEntries, {
