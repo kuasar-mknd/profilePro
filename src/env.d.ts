@@ -15,3 +15,6 @@ interface Window {
   __lightboxInstance?: { destroy: () => void };
   __lightboxListenerAttached?: boolean;
 }
+
+// Global variable augmentation for Node/Bun SSG environment
+declare var __publishDateFormatter: Intl.DateTimeFormat | undefined;
