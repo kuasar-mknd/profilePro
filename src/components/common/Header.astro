@@ -231,6 +231,15 @@ const logo2x = await getImage({
       document.addEventListener("keydown", handleEscape);
       navWrapper.addEventListener("keydown", handleTab);
 
+      // 🎨 Palette: Make background content inert to prevent screen reader escape
+      const bgElements = document.querySelectorAll(
+        "#main-content, #main-footer",
+      );
+      for (let i = 0; i < bgElements.length; i++) {
+        bgElements[i].setAttribute("inert", "");
+        bgElements[i].setAttribute("aria-hidden", "true");
+      }
+
       // Focus first element
       if (firstFocusableElement) {
         setTimeout(() => firstFocusableElement?.focus(), 100);
@@ -243,6 +252,16 @@ const logo2x = await getImage({
     function removeFocusTrap() {
       document.removeEventListener("keydown", handleEscape);
       navWrapper?.removeEventListener("keydown", handleTab);
+
+      // 🎨 Palette: Restore background content
+      const bgElements = document.querySelectorAll(
+        "#main-content, #main-footer",
+      );
+      for (let i = 0; i < bgElements.length; i++) {
+        bgElements[i].removeAttribute("inert");
+        bgElements[i].removeAttribute("aria-hidden");
+      }
+
       cleanupTrap = null;
     }
   }

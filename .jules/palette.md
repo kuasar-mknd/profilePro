@@ -47,3 +47,7 @@
 ## 2024-03-24 - Unified ARIA Label for Complex CTA Cards
 **Learning:** Screen readers announce all nested text nodes within a complex interactive element sequentially (e.g., heading + icon text + subtitle), creating a disjointed and noisy user experience.
 **Action:** Provide a unified, concise `aria-label` on the wrapper interactive element (e.g., `<a>` or `<button>`) and apply `aria-hidden="true"` to the internal container wrapping the visual elements to ensure a single, clean announcement.
+
+## 2026-03-12 - Mobile Menu Background Inertia
+**Learning:** When a full-screen mobile menu traps focus, virtual cursor navigation (like VoiceOver's swipe) can still escape the trap and explore visually hidden background content if `inert` is not applied to the background elements.
+**Action:** Always apply `inert` and `aria-hidden="true"` to `#main-content`, `footer`, and other root siblings when a full-screen mobile menu or modal is open to ensure a truly isolated experience for assistive technologies.
