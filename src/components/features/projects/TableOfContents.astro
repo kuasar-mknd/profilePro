@@ -52,39 +52,62 @@ const showToC = filteredHeadings.length >= 2;
     const tocLinks = document.querySelectorAll(".toc-link");
     if (tocLinks.length === 0) return;
 
-    // 2. Select all headings that correspond to TOC links
-    const headings = Array.from(tocLinks)
-      .map((link) => {
-        const id = link.getAttribute("href")?.slice(1);
-        return document.getElementById(id || "");
-      })
-      .filter((h): h is HTMLElement => h !== null);
+    // ⚡ Bolt: Replace O(N) Array methods (.map, .filter) and O(N) observer loop with O(1) Map lookups
+    // This creates the headings array and the DOM-element-to-link mapping in a single pass
+    const headings: HTMLElement[] = [];
+    const linkMap = new Map<string, Element[]>();
+    let activeLinks: Element[] = [];
+
+    // Ensure initial state is clean
+    for (let i = 0; i < tocLinks.length; i++) {
+      tocLinks[i].removeAttribute("data-active");
+      tocLinks[i].removeAttribute("aria-current");
+
+      const link = tocLinks[i];
+      const id = link.getAttribute("href")?.slice(1);
+      if (id) {
+        if (!linkMap.has(id)) {
+          linkMap.set(id, []);
+          const headingElement = document.getElementById(id);
+          if (headingElement) {
+            headings.push(headingElement);
+          }
+        }
+        linkMap.get(id)!.push(link);
+      }
+    }
 
     if (headings.length === 0) return;
 
-    // 3. Cleanup previous observer
+    // 2. Cleanup previous observer
     if (observer) {
       observer.disconnect();
     }
 
-    // 4. Create new observer
+    // 3. Create new observer
     observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
           if (entry.isIntersecting) {
             const id = entry.target.id;
+            const nextLinks = linkMap.get(id);
 
-            tocLinks.forEach((link) => {
-              if (link.getAttribute("href") === `#${id}`) {
-                link.setAttribute("data-active", "true");
-                link.setAttribute("aria-current", "location");
-              } else {
-                link.removeAttribute("data-active");
-                link.removeAttribute("aria-current");
+            // ⚡ Bolt: O(1) link update instead of iterating through all links
+            if (nextLinks && nextLinks !== activeLinks) {
+              for (let j = 0; j < activeLinks.length; j++) {
+                activeLinks[j].removeAttribute("data-active");
+                activeLinks[j].removeAttribute("aria-current");
               }
-            });
+
+              for (let j = 0; j < nextLinks.length; j++) {
+                nextLinks[j].setAttribute("data-active", "true");
+                nextLinks[j].setAttribute("aria-current", "location");
+              }
+              activeLinks = nextLinks;
+            }
           }
-        });
+        }
       },
       {
         rootMargin: "-100px 0px -66% 0px",
@@ -92,8 +115,10 @@ const showToC = filteredHeadings.length >= 2;
       },
     );
 
-    // 5. Observe headings
-    headings.forEach((h) => observer?.observe(h));
+    // 4. Observe headings
+    for (let i = 0; i < headings.length; i++) {
+      observer.observe(headings[i]);
+    }
   }
 
   // Run on initial load and after View Transitions
