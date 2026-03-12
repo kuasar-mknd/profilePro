@@ -2,10 +2,18 @@
 import dateFormat from "dateformat";
 const { date } = Astro.props;
 
+// ⚡ Bolt: Cache Intl.DateTimeFormat instance to avoid expensive instantiation
+// Creating new Intl.DateTimeFormat instances is computationally expensive and
+// slows down SSG builds significantly when used inside repeated components like Post cards.
+const formatter =
+  globalThis.__publishDateFormatter ||
+  new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" });
+if (!globalThis.__publishDateFormatter) {
+  globalThis.__publishDateFormatter = formatter;
+}
+
 // 🎨 Palette: Generate accessible label in French
-const fullDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(
-  date,
-);
+const fullDate = formatter.format(date);
 const label = `Publié le ${fullDate}`;
 ---
 
