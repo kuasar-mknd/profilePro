@@ -101,6 +101,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 - Node.js 20 (Requis pour l'optimisation des images via `sharp`)
 - pnpm 8+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
+*(Note: There is no active database (DB) or Prisma ORM in this repository as it is fully static).*
+
 ### Installation
 
 ```bash
@@ -129,6 +131,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run dev` : Optimise les images et lance le serveur de développement.
 - `pnpm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
 - `pnpm run check` : Vérifie le code (linting + formatage + types).
+- `bun test tests/` : Lance les tests unitaires.
 - `pnpm run lighthouse` : Lance l'audit de performance.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
 

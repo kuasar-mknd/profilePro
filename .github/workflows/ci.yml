@@ -50,6 +50,9 @@ jobs:
       - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
 
+      - name: Run Unit Tests
+        run: bun test tests/
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
