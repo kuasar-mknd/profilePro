@@ -44,3 +44,6 @@
 ## 2025-03-10 - Lightbox Backdrop Accessibility
 **Learning:** Adding `role="button"` and `tabindex="0"` to a full-screen visual backdrop creates a redundant and confusing focus stop that can obscure or skip the actual modal content for keyboard and screen reader users.
 **Action:** When a modal already has an explicit Close button, ensure the decorative backdrop only handles pointer events (click) and is hidden from assistive tech with `aria-hidden="true"` and no `tabindex`.
+## 2024-03-24 - Unified ARIA Label for Complex CTA Cards
+**Learning:** Screen readers announce all nested text nodes within a complex interactive element sequentially (e.g., heading + icon text + subtitle), creating a disjointed and noisy user experience.
+**Action:** Provide a unified, concise `aria-label` on the wrapper interactive element (e.g., `<a>` or `<button>`) and apply `aria-hidden="true"` to the internal container wrapping the visual elements to ensure a single, clean announcement.
