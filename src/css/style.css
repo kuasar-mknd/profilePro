@@ -167,11 +167,6 @@
     padding-top: 0 !important;
   }
 
-  a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-  }
-
   p,
   h1,
   h2,

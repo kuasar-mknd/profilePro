@@ -1,0 +1,91 @@
+fr:
+  personal:
+    name: "Samuel Dulex"
+    title: "Spécialiste en stratégie numérique & créateur de contenu"
+    badge: "☑ Admissible au permis jeunes professionnels (EIC Canada-Suisse)"
+    location: "Suisse (mobile à l'international)"
+    email: "samuel@edulex.ch"
+    linkedin: "linkedin.com/in/samuel-dulex"
+    linkedinUrl: "https://linkedin.com/in/samuel-dulex"
+    portfolio: "portfolio.kuasar.xyz"
+    portfolioUrl: "https://portfolio.kuasar.xyz"
+  profile:
+    title: "Profil"
+    content: "Créateur digital hybride passionné par la fusion entre technologie et créativité. Expertise transversale combinant la production audiovisuelle, le marketing digital et le développement technique (UX/UI, web). Habitué à coordonner des équipes et à livrer des projets multimédias à fort impact, je suis prêt à m'investir au sein d'une agence de communication canadienne."
+  experience:
+    title: "Expériences professionnelles"
+  education:
+    title: "Formation"
+  skills:
+    title: "Compétences & outils"
+    items:
+      - category: "Audiovisuel & création"
+        description: "Réalisation, direction de la photographie, montage, post-production."
+      - category: "Stratégie & marketing"
+        description: "Création omnicanal, storytelling visuel, performance analytics (KPI/SEO)."
+      - category: "Technologie & design"
+        description: "UX/UI Design, Suites Adobe CC, Web (Laravel, Vue.js)."
+      - category: "Gestion de projet"
+        description: "Leadership d'équipes créatives, méthodes agiles, structuration de budgets."
+  awards:
+    title: "Distinctions & langues"
+    items:
+      - "<strong>Finaliste</strong>, Prix jeune entrepreneur (2024)"
+      - "<strong>Prix du mérite</strong> (perf. exceptionnelle), HEIG-VD (2024)"
+      - "<strong>Prix du public</strong>, Hackdays (2023)"
+      - "<strong>Prix du jury</strong>, Startup HEIG-VD (2023)"
+      - "<strong>Certification</strong>, Inbound Sales, HubSpot (2022)"
+      - "<strong>Certification</strong>, Social Media Marketing, HubSpot (2022)"
+  languages:
+    - name: "Français"
+      level: "maternelle"
+    - name: "Anglais"
+      level: "avancé (C1)"
+    - name: "Allemand"
+      level: "avancé (C1)"
+
+en:
+  personal:
+    name: "Samuel Dulex"
+    title: "Digital Strategy Specialist & Content Creator"
+    badge: "☑ Eligible for Young Professionals Work Permit (IEC Canada-Switzerland)"
+    location: "Switzerland (Mobile internationally)"
+    email: "samuel@edulex.ch"
+    linkedin: "linkedin.com/in/samuel-dulex"
+    linkedinUrl: "https://linkedin.com/in/samuel-dulex"
+    portfolio: "portfolio.kuasar.xyz"
+    portfolioUrl: "https://portfolio.kuasar.xyz"
+  profile:
+    title: "Profile"
+    content: "Hybrid digital creator passionate about fusing technology and creativity. Cross-functional expertise combining audiovisual production, digital marketing, and technical development (UX/UI, web). Experienced in coordinating teams and delivering high-impact multimedia projects, I am ready to invest myself in a Canadian communication agency."
+  experience:
+    title: "Professional Experience"
+  education:
+    title: "Education"
+  skills:
+    title: "Skills & Tools"
+    items:
+      - category: "Audiovisual & Creation"
+        description: "Directing, cinematography, editing, post-production."
+      - category: "Strategy & Marketing"
+        description: "Omnichannel creation, visual storytelling, performance analytics (KPI/SEO)."
+      - category: "Technology & Design"
+        description: "UX/UI Design, Adobe CC Suite, Web (Laravel, Vue.js)."
+      - category: "Project Management"
+        description: "Creative team leadership, agile methodologies, budget structuring."
+  awards:
+    title: "Awards & Languages"
+    items:
+      - "<strong>Finalist</strong>, Young Entrepreneur Award (2024)"
+      - "<strong>Merit Award</strong> (outstanding performance), HEIG-VD (2024)"
+      - "<strong>Public Choice Award</strong>, Hackdays (2023)"
+      - "<strong>Jury Prize</strong>, Startup HEIG-VD (2023)"
+      - "<strong>Certification</strong>, Inbound Sales, HubSpot (2022)"
+      - "<strong>Certification</strong>, Social Media Marketing, HubSpot (2022)"
+  languages:
+    - name: "French"
+      level: "Native"
+    - name: "English"
+      level: "Advanced (C1)"
+    - name: "German"
+      level: "Advanced (C1)"
