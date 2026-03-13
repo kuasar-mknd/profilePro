@@ -15,11 +15,6 @@ import { getImage } from "astro:assets";
 import { safeJson } from "../utils/security";
 import logo from "../assets/logo.avif";
 
-// ⚡ Bolt: Precompute LCP image URL for preloading (Hero Logo)
-// Changed format from "webp" to "avif" to exactly match the <img> tag in Hero.astro.
-// This prevents the browser from downloading two separate image files for the LCP element.
-const heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
-
 const {
   postData,
   jsonLd,
@@ -27,6 +22,15 @@ const {
   lang = "fr",
   noindex = false,
 } = Astro.props;
+
+// ⚡ Bolt: Precompute LCP image URL for preloading (Hero Logo)
+// Changed format from "webp" to "avif" to exactly match the <img> tag in Hero.astro.
+// This prevents the browser from downloading two separate image files for the LCP element.
+// We only generate this on the homepage to save processing time on subpages.
+let heroLogo: Awaited<ReturnType<typeof getImage>> | null = null;
+if (Astro.url.pathname === "/") {
+  heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
+}
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
 // ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
@@ -100,7 +104,7 @@ if (postData?.data?.image) {
     />
     <!-- LCP Image Preload (Hero Logo) - Only on Homepage -->
     {
-      Astro.url.pathname === "/" && (
+      heroLogo && (
         <link
           rel="preload"
           href={heroLogo.src}
