@@ -70,7 +70,7 @@
     "@astrojs/check": "^0.9.7",
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/rss": "^4.0.17",
-    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/sitemap": "^3.7.1",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
