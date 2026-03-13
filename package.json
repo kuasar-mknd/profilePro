@@ -87,7 +87,7 @@
     "glob": "^13.0.6",
     "husky": "^9.1.7",
     "iconify-icon": "^3.0.2",
-    "lint-staged": "^16.3.2",
+    "lint-staged": "^16.3.3",
     "plyr": "^3.8.4",
     "rehype-external-links": "^3.0.0",
     "rollup-plugin-visualizer": "^7.0.1",
