@@ -1,58 +1,108 @@
-name: Deploy
+name: Pipeline
 
 on:
   push:
-    branches:
-      - master
+    branches: ["master"]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENSE"
+  pull_request:
+    branches: ["master"]
     paths-ignore:
       - "**.md"
       - ".gitignore"
       - ".editorconfig"
       - "LICENSE"
 
-# Cancel in-progress deploys if a new one is triggered
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  deployments: write
+
 jobs:
-  quality:
-    name: Quality Checks
+  test:
+    name: Test & Verify
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install
         env:
           HUSKY: 0
-      - name: Run Quality Checks
+
+      - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
 
+      - name: Get Playwright version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm list --depth 0 @playwright/test --json | jq -r '.[0].devDependencies["@playwright/test"].version')
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+
+      - name: Run E2E Tests
+        run: pnpm run test:e2e
+
+      - name: Build Check (Dry Run)
+        run: pnpm run build
+        env:
+          PUBLIC_WEB3FORMS_ACCESS_KEY: "dry_run"
+          PUBLIC_CF_ANALYTICS_TOKEN: "dry_run"
+
+      - name: Upload Playwright Report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5
+
   deploy:
-    runs-on: ubuntu-latest
     name: Build & Deploy
-    needs: [quality]
-    timeout-minutes: 60
-    permissions:
-      contents: read
-      deployments: write
+    needs: [test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -74,7 +124,6 @@ jobs:
 
       - name: Build Astro
         run: pnpm run build
-        timeout-minutes: 60
         env:
           PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
