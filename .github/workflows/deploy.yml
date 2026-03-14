@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENSE"
 
 # Cancel in-progress deploys if a new one is triggered
 concurrency:

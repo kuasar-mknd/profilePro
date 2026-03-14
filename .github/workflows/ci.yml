@@ -3,8 +3,18 @@ name: CI
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENSE"
   pull_request:
     branches: ["master"]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENSE"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -50,7 +60,23 @@ jobs:
       - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
 
+      - name: Get Playwright version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm list --depth 0 @playwright/test --json | jq -r '.[0].devDependencies["@playwright/test"].version')
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
       - name: Run E2E Tests
