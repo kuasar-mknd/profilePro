@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { sanitizeUrl } from "../../utils/security";
 
 interface Props {
   message?: string;
@@ -16,6 +17,8 @@ const {
   actionUrl,
   actionText = "Retour",
 } = Astro.props;
+
+const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
 ---
 
 <div
@@ -38,9 +41,9 @@ const {
     {message}
   </p>
   {
-    actionUrl && (
+    safeActionUrl && (
       <a
-        href={actionUrl}
+        href={safeActionUrl}
         class="inline-flex items-center justify-center px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 shadow-sm hover:shadow-md"
       >
         {actionText}

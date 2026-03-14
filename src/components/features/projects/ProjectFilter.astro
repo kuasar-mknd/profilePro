@@ -11,6 +11,8 @@ interface Props {
 
 const { tags, activeTag, tagCounts, totalCount } = Astro.props;
 
+import { sanitizeUrl } from "../../../utils/security";
+
 // Helper for pluralization
 const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
 ---
@@ -37,7 +39,7 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
       const count = tagCounts[tag] || 0;
       return (
         <a
-          href={`/project/tag/${encodeURIComponent(tag)}`}
+          href={sanitizeUrl(`/project/tag/${encodeURIComponent(tag)}`)}
           class={`project-filter-link px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
             ${activeTag === tag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
           aria-current={activeTag === tag ? "page" : undefined}

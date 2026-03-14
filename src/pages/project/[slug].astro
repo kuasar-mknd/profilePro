@@ -6,6 +6,7 @@ import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
 import LatestPosts from "../../components/features/projects/LatestPosts.astro";
 import PublishDate from "../../components/features/projects/PublishDate.astro";
 import Tag from "../../components/ui/Tag.astro";
+import { sanitizeUrl } from "../../utils/security";
 import TableOfContents from "../../components/features/projects/TableOfContents.astro";
 
 import { Icon } from "astro-icon/components";
@@ -495,7 +496,7 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         nextPost ? (
           <a
-            href={`/project/${nextPost.slug}`}
+            href={sanitizeUrl(`/project/${nextPost.slug}`)}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet précédent : ${nextPost.data.title}`}
           >
@@ -521,7 +522,7 @@ if (entry.data.type === "video" && entry.data.image) {
       {
         prevPost ? (
           <a
-            href={`/project/${prevPost.slug}`}
+            href={sanitizeUrl(`/project/${prevPost.slug}`)}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             aria-label={`Projet suivant : ${prevPost.data.title}`}
           >

@@ -4,6 +4,7 @@ import { Picture } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
 import { getReadingTime } from "../../../utils/readingTime";
+import { sanitizeUrl } from "../../../utils/security";
 
 const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
@@ -22,7 +23,7 @@ const readingTime = getReadingTime(postData.body);
 >
   <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
-    href={`/project/${postData.slug}`}
+    href={sanitizeUrl(`/project/${postData.slug}`)}
     aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Lecture estimée ${readingTime} minutes.)`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
   >
@@ -77,7 +78,9 @@ const readingTime = getReadingTime(postData.body);
         <Tag
           tag={postData.data.tag}
           variant="dark"
-          href={`/project/tag/${encodeURIComponent(postData.data.tag)}`}
+          href={sanitizeUrl(
+            `/project/tag/${encodeURIComponent(postData.data.tag)}`,
+          )}
         />
       </div>
 
