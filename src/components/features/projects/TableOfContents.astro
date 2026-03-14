@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { sanitizeUrl } from "../../../utils/security";
 
 interface Props {
   headings: { depth: number; slug: string; text: string }[];
@@ -28,7 +29,7 @@ const showToC = filteredHeadings.length >= 2;
         {filteredHeadings.map((h) => (
           <li class={`${h.depth === 3 ? "ml-4" : ""}`}>
             <a
-              href={`#${h.slug}`}
+              href={sanitizeUrl(`#${h.slug}`)}
               class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-bold"
             >
               {h.text}
