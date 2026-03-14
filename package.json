@@ -33,7 +33,8 @@
       "tmp": "^0.2.4",
       "flatted": "^3.4.0",
       "undici": "^7.24.0",
-      "minimatch": "^5.1.9"
+      "minimatch": "^5.1.9",
+      "yauzl": "^3.2.1"
     }
   },
   "scripts": {
