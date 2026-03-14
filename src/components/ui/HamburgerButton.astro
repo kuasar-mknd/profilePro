@@ -56,6 +56,18 @@
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
 
+      // 🎨 Palette: Remove inert and aria-hidden from background content
+      const mainContent = document.getElementById("main-content");
+      const mainFooter = document.getElementById("main-footer");
+      if (mainContent) {
+        mainContent.removeAttribute("inert");
+        mainContent.removeAttribute("aria-hidden");
+      }
+      if (mainFooter) {
+        mainFooter.removeAttribute("inert");
+        mainFooter.removeAttribute("aria-hidden");
+      }
+
       // ⚡ Bolt: Wait for transition to finish before hiding (approx 300ms)
       setTimeout(() => {
         if (button.getAttribute("aria-expanded") === "false") {
@@ -82,6 +94,18 @@
       button.setAttribute("aria-keyshortcuts", "Escape");
       nav.classList.remove("translate-x-full");
       nav.classList.add("translate-x-0");
+
+      // 🎨 Palette: Apply inert and aria-hidden to background content
+      const mainContent = document.getElementById("main-content");
+      const mainFooter = document.getElementById("main-footer");
+      if (mainContent) {
+        mainContent.setAttribute("inert", "");
+        mainContent.setAttribute("aria-hidden", "true");
+      }
+      if (mainFooter) {
+        mainFooter.setAttribute("inert", "");
+        mainFooter.setAttribute("aria-hidden", "true");
+      }
     };
 
     button.addEventListener("click", function () {
@@ -104,8 +128,12 @@
       }
     });
 
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", closeMenu);
+    // ⚡ Bolt: Use event delegation instead of attaching N listeners via querySelectorAll
+    nav.addEventListener("click", (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a")) {
+        closeMenu();
+      }
     });
 
     // 🎨 Palette: Close menu on Escape key for accessibility

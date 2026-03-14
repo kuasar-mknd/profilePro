@@ -1,0 +1,424 @@
+---
+import Base from "../../layouts/Base.astro";
+import ScrollReveal from "../../components/ui/ScrollReveal.astro";
+import { Icon } from "astro-icon/components";
+import { getCollection } from "astro:content";
+import fs from "node:fs";
+import yaml from "js-yaml";
+import sanitizeHtml from "sanitize-html";
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: undefined } }, // -> /cv  (French default)
+    { params: { lang: "en" } }, // -> /cv/en (English)
+  ];
+}
+
+const langParam = Astro.params.lang;
+// Configuration de la langue affichée dynamiquement via l'URL
+const currentLang = langParam === "en" ? "en" : "fr";
+
+// Lire le fichier YAML manuellement au moment du build (SSR)
+const fileContents = fs.readFileSync("./src/data/cv-basics.yml", "utf8");
+
+interface CVData {
+  personal: {
+    name: string;
+    title: string;
+    badge: string;
+    location: string;
+    email: string;
+    linkedin: string;
+    linkedinUrl: string;
+    portfolio: string;
+    portfolioUrl: string;
+  };
+  profile: {
+    title: string;
+    content: string;
+  };
+  experience: {
+    title: string;
+  };
+  education: {
+    title: string;
+  };
+  skills: {
+    title: string;
+    items: Array<{
+      category: string;
+      description: string;
+    }>;
+  };
+  awards: {
+    title: string;
+    items: string[];
+  };
+  languages: Array<{
+    name: string;
+    level: string;
+  }>;
+}
+
+const cvBasics = yaml.load(fileContents) as Record<string, CVData>;
+
+// 1. Récupération des données statiques textuelles et globales (selon la langue)
+const data = cvBasics[currentLang];
+
+// 2. Récupération & Tri des expériences professionnelles (filtré par langue et non-brouillon)
+const allExperiences = await getCollection("cvExperience");
+const experiences = allExperiences
+  .filter((exp) => exp.data.lang === currentLang && !exp.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+// 3. Récupération & Tri des formations (filtré par langue et non-brouillon)
+const allEducations = await getCollection("cvEducation");
+const educations = allEducations
+  .filter((edu) => edu.data.lang === currentLang && !edu.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const title = "CV Samuel Dulex";
+const description = data.profile.content;
+---
+
+<Base postData={{ data: { title, description } }}>
+  <section
+    class="py-24 relative overflow-hidden print-section print:py-0 print:p-0"
+  >
+    <!-- Animated background elements (hidden in print) -->
+    <div class="absolute inset-0 -z-10 motion-reduce:hidden print:hidden">
+      <div
+        class="absolute top-20 right-1/4 w-64 h-64 bg-pacamara-secondary/20 rounded-full blur-3xl floating"
+      >
+      </div>
+      <div
+        class="absolute bottom-20 left-1/4 w-96 h-96 bg-pacamara-accent/20 rounded-full blur-3xl floating-slow floating-delayed"
+      >
+      </div>
+    </div>
+
+    <!-- Controls (hidden in print) -->
+    <div
+      class="container mx-auto px-7 mb-8 flex flex-wrap justify-end gap-4 print:hidden"
+    >
+      <a
+        href={currentLang === "fr" ? "/cv/en" : "/cv"}
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
+        aria-label="Changer de langue"
+      >
+        <Icon name="mdi:translate" class="w-5 h-5" />
+        {currentLang === "fr" ? "English Version" : "Version Française"}
+      </a>
+      <button
+        onclick="window.print()"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 cursor-pointer"
+        aria-label="Exporter le CV en PDF"
+      >
+        <Icon name="mdi:printer" class="w-5 h-5" />
+        {currentLang === "fr" ? "Exporter en PDF" : "Export to PDF"}
+      </button>
+    </div>
+
+    <!-- CV Page (A4 Paper emulation on desktop / Full width on mobile/print) -->
+    <div
+      class="container mx-auto px-4 sm:px-7 print:px-0 print:max-w-none print:w-full print:mx-0"
+    >
+      <div
+        class="cv-page max-w-[210mm] mx-auto bg-white dark:bg-pacamara-dark rounded-3xl shadow-xl dark:shadow-none dark:border dark:border-white/10 p-6 md:p-8 print:shadow-none print:border-none print:px-11 print:py-8 print:max-w-none print:w-full print:mx-0 print:bg-white"
+      >
+        <!-- Header -->
+        <ScrollReveal>
+          <div
+            class="border-b-2 border-pacamara-secondary pb-6 mb-8 print:pb-3 print:mb-4 print:border-b-gray-400"
+          >
+            <h1
+              class="font-pacamara-space font-bold text-4xl md:text-5xl uppercase tracking-wider text-pacamara-dark dark:text-white mb-2 print:text-[22pt] print:mb-1 print:text-black print:leading-none"
+            >
+              {data.personal.name}
+            </h1>
+            <div
+              class="text-xl font-bold text-pacamara-secondary dark:text-pacamara-accent mb-4 print:text-[12pt] print:mb-2 print:text-pacamara-secondary print:leading-snug"
+            >
+              {data.personal.title}
+            </div>
+            <div
+              class="inline-block bg-pacamara-secondary/10 dark:bg-pacamara-accent/10 text-pacamara-secondary dark:text-pacamara-accent px-4 py-2 rounded-lg text-sm font-bold mb-6 print:mb-3 print:px-2 print:py-1 print:text-[9pt] print:bg-[#f0f2ff] print:text-pacamara-secondary"
+            >
+              {data.personal.badge}
+            </div>
+
+            <div
+              class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-pacamara-primary/70 dark:text-white/70 print:gap-y-1.5 print:gap-x-4 print:text-[9pt] print:text-[#7f8c8d] print:font-medium"
+            >
+              <span class="flex items-center gap-1.5 print:gap-1.5 font-outfit">
+                <Icon
+                  name="mdi:map-marker"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                />
+                {data.personal.location}
+              </span>
+              <a
+                href={`mailto:${data.personal.email}`}
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+              >
+                <Icon name="mdi:email" class="w-4 h-4 print:w-4 print:h-4" />
+                {data.personal.email}
+              </a>
+              <a
+                href={data.personal.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+              >
+                <Icon name="mdi:linkedin" class="w-4 h-4 print:w-4 print:h-4" />
+                {data.personal.linkedin}
+              </a>
+              <a
+                href={data.personal.portfolioUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+              >
+                <Icon name="mdi:web" class="w-4 h-4 print:w-4 print:h-4" />
+                {data.personal.portfolio}
+              </a>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        <!-- Profil -->
+        <ScrollReveal delay={0.1}>
+          <section class="mb-8 print:mb-4">
+            <h2
+              class="font-pacamara-space text-xl md:text-2xl uppercase border-b border-gray-200 dark:border-white/10 pb-2 mb-4 text-pacamara-dark dark:text-white print:text-[12pt] print:font-bold print:pb-1 print:mb-2 print:text-pacamara-primary print:border-[#bdc3c7]"
+            >
+              {data.profile.title}
+            </h2>
+            <p
+              class="text-pacamara-primary/80 dark:text-white/80 font-outfit leading-relaxed print:text-[#333] print:text-[9.5pt] print:leading-tight"
+            >
+              {data.profile.content}
+            </p>
+          </section>
+        </ScrollReveal>
+
+        <!-- Expériences Professionnelles -->
+        <ScrollReveal delay={0.2}>
+          <section class="mb-8 print:mb-1.5">
+            <h2
+              class="font-pacamara-space text-xl md:text-2xl uppercase border-b border-gray-200 dark:border-white/10 pb-2 mb-6 text-pacamara-dark dark:text-white print:text-[11pt] print:font-bold print:pb-0 print:mb-1 print:text-pacamara-primary print:border-[#bdc3c7]"
+            >
+              {data.experience.title}
+            </h2>
+
+            <div class="space-y-6 print:space-y-0.5">
+              {
+                experiences.map(async (exp) => {
+                  const { Content } = await exp.render();
+                  return (
+                    <div class="item print:break-inside-avoid">
+                      <div class="flex justify-between items-baseline mb-1 print:mb-0">
+                        <div class="flex-1 min-w-0 pr-4 print:pr-2">
+                          <h3 class="inline font-bold text-lg text-pacamara-dark dark:text-white print:text-pacamara-primary print:text-[10pt] print:leading-tight">
+                            {exp.data.role}
+                          </h3>
+                          <span class="inline mx-2 print:mx-1 text-pacamara-primary/40 dark:text-white/40 print:text-[#bdc3c7]">
+                            |
+                          </span>
+                          <span class="inline italic text-sm text-pacamara-secondary dark:text-pacamara-accent print:text-pacamara-secondary print:text-[9pt]">
+                            {exp.data.company}
+                          </span>
+                        </div>
+                        <span class="text-sm font-bold text-pacamara-primary/60 dark:text-white/60 print:text-[#7f8c8d] print:text-[9pt] whitespace-nowrap shrink-0">
+                          {exp.data.period}
+                        </span>
+                      </div>
+                      {/* Le rendu du Markdown (.md) en HTML via Astro */}
+                      <div class="prose prose-sm dark:prose-invert prose-pacamara max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 mt-2 print:text-[#333] print:text-[9pt] print:mt-0 print:space-y-0 print:leading-tight print-prose">
+                        <Content />
+                      </div>
+                    </div>
+                  );
+                })
+              }
+            </div>
+          </section>
+        </ScrollReveal>
+
+        <!-- Formation -->
+        <ScrollReveal delay={0.3}>
+          <section class="mb-6 print:mb-1.5 print:break-inside-avoid">
+            <h2
+              class="font-pacamara-space text-xl md:text-2xl uppercase border-b border-gray-200 dark:border-white/10 pb-2 mb-6 text-pacamara-dark dark:text-white print:text-[11pt] print:font-bold print:pb-0 print:mb-1 print:text-pacamara-primary print:border-[#bdc3c7]"
+            >
+              {data.education.title}
+            </h2>
+
+            <div class="space-y-6 print:space-y-0.5">
+              {
+                educations.map(async (edu) => {
+                  const { Content } = await edu.render();
+                  return (
+                    <div class="item print:break-inside-avoid">
+                      <div class="flex justify-between items-baseline mb-1 print:mb-0">
+                        <div class="flex-1 min-w-0 pr-4 print:pr-2">
+                          <h3 class="inline font-bold text-lg text-pacamara-dark dark:text-white print:text-pacamara-primary print:text-[10pt] print:leading-tight">
+                            {edu.data.degree}
+                          </h3>
+                          <span class="inline mx-2 print:mx-1 text-pacamara-primary/40 dark:text-white/40 print:text-[#bdc3c7]">
+                            |
+                          </span>
+                          <span class="inline italic text-sm text-pacamara-secondary dark:text-pacamara-accent print:text-pacamara-secondary print:text-[9pt]">
+                            {edu.data.school}
+                          </span>
+                        </div>
+                        <span class="text-sm font-bold text-pacamara-primary/60 dark:text-white/60 print:text-[#7f8c8d] print:text-[9pt] whitespace-nowrap shrink-0">
+                          {edu.data.period}
+                        </span>
+                      </div>
+                      <div class="prose prose-sm dark:prose-invert prose-pacamara max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 mt-2 print:text-[#333] print:text-[9pt] print:mt-0 print:space-y-0 print:leading-tight print-prose">
+                        <Content />
+                      </div>
+                    </div>
+                  );
+                })
+              }
+            </div>
+          </section>
+        </ScrollReveal>
+
+        <!-- Compétences, Distinctions, Langues dans une grille 2 colonnes -->
+        <ScrollReveal delay={0.4}>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-8 print:grid-cols-2 print:break-inside-avoid print:gap-4 mt-6 print:mt-0"
+          >
+            <!-- Compétences & Outils -->
+            <section>
+              <h2
+                class="font-pacamara-space text-lg md:text-xl uppercase border-b border-gray-200 dark:border-white/10 pb-2 mb-4 text-pacamara-dark dark:text-white print:text-[11pt] print:font-bold print:pb-0 print:mb-1 print:text-pacamara-primary print:border-[#bdc3c7]"
+              >
+                {data.skills.title}
+              </h2>
+              <ul
+                class="space-y-3 pl-0 list-none text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm print:text-[#333] print:text-[9pt] print:space-y-0.5 print:leading-tight"
+              >
+                {
+                  data.skills.items.map(
+                    (skill: { category: string; description: string }) => (
+                      <li class="print:break-inside-avoid">
+                        <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary block mb-0.5 print:mb-0.5">
+                          {skill.category}
+                        </strong>
+                        {skill.description}
+                      </li>
+                    ),
+                  )
+                }
+              </ul>
+            </section>
+
+            <!-- Distinctions & Langues -->
+            <section>
+              <h2
+                class="font-pacamara-space text-lg md:text-xl uppercase border-b border-gray-200 dark:border-white/10 pb-2 mb-4 text-pacamara-dark dark:text-white print:text-[11pt] print:font-bold print:pb-0 print:mb-1 print:text-pacamara-primary print:border-[#bdc3c7]"
+              >
+                {data.awards.title}
+              </h2>
+              <div class="space-y-4 print:space-y-1">
+                <ul
+                  class="list-disc pl-5 text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm space-y-1.5 print:text-[#333] print:text-[9pt] print:space-y-0.5 print:leading-tight"
+                >
+                  {
+                    data.awards.items.map((award: string) => (
+                      <li
+                        set:html={sanitizeHtml(award, {
+                          allowedTags: ["strong"],
+                        })}
+                      />
+                    ))
+                  }
+                </ul>
+                <div
+                  class="border-t border-gray-200 dark:border-white/10 pt-4 mt-4 print:pt-1.5 print:mt-1.5 print:border-[#bdc3c7] flex flex-wrap gap-x-4 gap-y-2 print:gap-x-4 print:gap-y-1 text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm print:text-[#333] print:text-[9pt]"
+                >
+                  {
+                    data.languages.map(
+                      (lang: { name: string; level: string }) => (
+                        <span>
+                          <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary">
+                            {lang.name} :
+                          </strong>{" "}
+                          {lang.level}
+                        </span>
+                      ),
+                    )
+                  }
+                </div>
+              </div>
+            </section>
+          </div>
+        </ScrollReveal>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<!-- ⚡ Bolt: Styles specifiques d'impression -->
+<style is:global>
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    /* Forcer l'impression des couleurs d'arrière-plan */
+    body {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      background-color: white !important;
+      color: black !important;
+    }
+
+    /* Masquer le header global, le footer et le bouton back-to-top du site */
+    header.fixed,
+    footer,
+    #back-to-top,
+    #scroll-sentinel,
+    .print\:hidden {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* VERY IMPORTANT: S'assurer que les éléments ScrollReveal sont visibles à l'impression, 
+       même s'ils n'ont pas encore déclenché l'animation CSS (opacity 0) */
+    .reveal-on-scroll {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Enlever le margin/padding/shadow du block principal pour que l'A4 prenne tout l'espace */
+    .print-section {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    #main-content {
+      padding-top: 0 !important;
+    }
+
+    /* Animations disabled but just in case */
+    * {
+      transition: none !important;
+      animation: none !important;
+      transform: none !important;
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+  }
+</style>

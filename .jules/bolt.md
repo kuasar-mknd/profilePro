@@ -1,78 +1,9 @@
-[Output truncated for brevity]
+## 2026-03-12 - O(N) Array iteration in IntersectionObserver
 
-edundantly processing nodes that have already been modified.
-**Action:** Use specific CSS pseudo-classes like `:not([attribute])` or `:not(.class)` in `querySelectorAll` to let the native browser engine pre-filter elements, preventing redundant JS execution and string manipulation on the main thread.
+**Learning:** When using an `IntersectionObserver` to highlight active navigation items like a Table of Contents (`src/components/features/projects/TableOfContents.astro`), running an O(N) `querySelectorAll` or `Array.forEach` loop inside the callback to match `id`s to link elements creates an O(M * N) overhead on every scroll event where an element intersects. This can cause unnecessary layout thrashing and main thread delays on scroll.
+**Action:** Replace the O(N) loop with an O(1) Map lookup. Create a `Map<string, Element[]>` during component initialization linking heading IDs to their respective navigation link elements. Then, during the intersection callback, look up the target ID in the map and apply the active state directly in O(1) time. Keep track of the currently active elements to easily deactivate them on the next change.
 
-## 2026-02-28 - Tag Frequency Calculation Optimization
+## 2026-03-12 - Expensive Intl.DateTimeFormat instantiation in high-frequency components
 
-**Learning:** Calculating tag frequencies for a large number of projects (e.g., using `reduce` with a nested `filter`) results in an O(N*M) time complexity, where N is the number of tags and M is the number of projects. This can become a performance bottleneck during SSG builds as the number of projects scales.
-**Action:** Replaced the O(N*M) nested loop tag counting with a single-pass O(N) iteration using a hash map to accumulate counts.
-
-## 2026-03-01 - Global Animation Observer Centralization
-
-**Learning:** Multiple components (like Hero carousels and backgrounds) were instantiating separate `IntersectionObserver` instances to pause infinite CSS animations when off-screen. This fragments performance optimizations and creates redundant memory overhead.
-**Action:** Centralized visibility tracking into a single global `animationObserver` in `Base.astro`. Appended selectors like `.infinite-scroll` and `.hero-gradient-vibrant` to the `querySelectorAll` block, allowing one observer (with a uniform `rootMargin: "200px"`) to orchestrate memory recovery for all infinite animations site-wide.
-
-## 2026-03-01 - Avoid internal getCollection calls in repeated components
-
-**Learning:** Calling `getCollection('project')` internally inside a component like `ProjectFilter.astro` that is rendered multiple times (e.g., on every paginated page or tag page) causes redundant data processing and nested loops during the SSG build. If P is the number of static pages and N is the number of projects, this results in an O(P*N) complexity.
-**Action:** Lift the data fetching and heavy computations (like calculating tag frequencies) up to the page route's `getStaticPaths` function. Compute it exactly once, and pass the results down as props to the presentational component, effectively reducing the complexity to O(N).
-
-## 2026-03-02 - Redundant O(N) String Parsing for Reading Time
-
-**Learning:** `getReadingTime` performs an O(N) loop over the characters of a given text, typically a large blog post or project body. Without memoization, if multiple components (like `Post.astro`, `[slug].astro`) call `getReadingTime` for the same content during a page build (or on the client side), the exact same O(N) parsing is redundantly repeated.
-**Action:** Implemented a simple cache using `Map<string, number>` within `src/utils/readingTime.ts` to memoize previously computed reading times based on the text. Capped the cache size at 1000 items to prevent unbounded memory growth during continuous SSG dev server runs.
-
-## 2026-03-02 - Redundant O(N log N) Sorting Optimization
-
-**Learning:** Multiple components and pages (like `Hero`, `LatestPosts`, `index`, and various project routing pages) were individually calling `getCollection("project")` and frequently chaining `.sort()` directly on the result. Since standard JS `.sort()` mutates arrays in place, and each route performs this sort, it results in redundant O(N log N) processing and potential memory side effects across generated pages during Astro SSG builds.
-**Action:** Centralized project fetching into a new `getSortedProjects()` utility in `src/utils/projects.ts` that fetches, sorts once, and caches the result for all subsequent calls during production builds (bypassing the cache in `import.meta.env.DEV` to support HMR). All relevant components were refactored to use this utility, stripping out their local `.sort()` implementations.
-
-## 2026-03-03 - Memoize Repeated URL Sanitization
-
-**Learning:** In list and card components (like `Tag.astro`), the `sanitizeUrl` function is called hundreds of times during static site generation. Repeatedly parsing the exact same URLs using `new URL()` and evaluating strict regex expressions inside these loops becomes an unnecessary CPU bottleneck.
-**Action:** Introduced an LRU-style Map cache inside `src/utils/security.ts` to memoize previously sanitized URLs. This ensures `new URL()` is only ever executed once per unique link across the entire build, eliminating redundant parsing overhead without sacrificing security.
-
-## 2026-03-03 - Added attributeFilter to MutationObserver for Theme Color Sync
-**Learning:** `MutationObserver` on the `<html>` root node without an `attributeFilter` fires indiscriminately on any attribute change, causing unnecessary main-thread overhead. While relying on existing application-level custom events is ideal, when a `MutationObserver` is necessary to catch changes from multiple sources (like inline scripts and user toggles), it must be scoped.
-**Action:** Added `attributeFilter: ["class"]` to the global `MutationObserver` in `Base.astro` and added an explicit `updateThemeColor()` call on load to prevent missing initial state syncs. This prevents the observer from firing on non-class attribute changes, improving main-thread performance.
-
-## 2026-03-03 - Reverting <Picture> to <img> Regression
-
-**Learning:** Replacing Astro's `<Picture>` components with `getImage()` and native `<img>` tags across the application to "reduce DOM nodes" is a massive anti-pattern for responsive design. While it removes a `<picture>` wrapper, it strips out all `widths` and `sizes` properties, forcing mobile devices to download high-resolution desktop images, completely destroying LCP performance on low-end devices.
-**Action:** Never replace responsive `<Picture>` components with single `<img>` tags unless the image strictly has a fixed, small dimension (like an icon).
-
-## 2026-03-03 - DOM Query Pre-filtering with View Transitions
-
-**Learning:** In Astro with View Transitions, scripts that attach to elements often re-execute to handle newly swapped DOM nodes. Queries like `document.querySelectorAll(".prose pre")` and applying checks in a loop cause redundant JS execution over nodes that have already been handled.
-**Action:** Shift the filtering logic to the browser's native C++ engine by using specific CSS pseudo-classes in the query itself, such as `document.querySelectorAll(".prose pre:not(.code-wrapper pre)")`. This is significantly faster and makes the JavaScript simpler.
-
-## 2026-03-03 - O(N) Array Filter vs O(limit) Early Exit
-
-**Learning:** When generating multiple static pages during SSG (e.g., `LatestPosts` rendered on every project page), chaining `.filter(post => post.title !== skip).slice(0, limit)` iterates over the entire collection creating new array instances every time. For N projects, this is an O(N) operation per page, compounding to O(N²) across the build, creating unnecessary CPU cycles and memory garbage.
-**Action:** Replace `Array.prototype.filter().slice()` chains with a basic `for` loop that pushes to an array and `break`s as soon as the limit is reached. This drops the complexity from O(N) to O(limit) locally, turning the global build impact from O(N²) to O(N * limit).
-
-## 2026-03-04 - O(N²) Array Splice in Promise Loops
-
-**Learning:** Managing concurrent promises in a loop by storing them in an array and using `executing.splice(executing.indexOf(e), 1)` upon completion creates an O(N²) time complexity bottleneck. Finding the index and splicing the array shifts elements repeatedly on the main thread, causing significant CPU lag when processing thousands of items (e.g., image optimization during SSG).
-**Action:** Replace `Promise.race` and `Array.splice` concurrency management with a worker-pool pattern. Creating a fixed number of async "worker" functions that pull from a shared `currentIndex` iterator processes tasks with O(1) overhead per task, completely eliminating array mutations.
-
-## 2025-02-14 - Optimize Tag Pages SSG Generation
-**Learning:** During Astro Static Site Generation (SSG), dynamic routes that depend on grouped data (like `/project/tag/[tag]`) can suffer from O(T * N) performance if they map over a set of unique tags and filter the entire content collection for each tag. For repositories with many items and tags, this causes massive redundant array allocations.
-**Action:** Replace `uniqueTags.map(tag => allItems.filter(...))` patterns in `getStaticPaths` with a single O(N) pass over `allItems` that groups items into a `Map<string, Item[]>` and computes associated counts simultaneously.
-
-## 2026-03-04 - Event Delegation for SPA Navigations
-
-**Learning:** In Astro with View Transitions, querying DOM elements like `document.querySelectorAll('[data-slide-transition]')` on initial load fails to attach event listeners to newly injected elements after a page transition unless explicitly re-initialized on `astro:page-load`. Additionally, looping over these elements creates an O(N) performance overhead.
-**Action:** Use a single event delegation listener attached to `document` for `click` events. This completely avoids DOM queries, reduces memory usage (from N listeners to 1), and automatically handles dynamically injected elements with zero re-initialization overhead.
-
-## 2026-03-04 - Optimize Carousel Array Allocation
-
-**Learning:** When randomly picking a small subset of items (e.g., 15 items) from a large array (like a collection of `projectImages` in `Hero.astro`), performing a full array clone (`[...array]`) and then executing an O(N) shuffle function allocates unnecessary memory and burns CPU cycles during the SSG build. As the content repository grows, this $O(N)$ operation worsens.
-
-**Action:** Replace the full array clone and O(N) shuffle with an O(K) partial Fisher-Yates algorithm. By iterating only up to the limit (K=15) and randomly picking/swapping indices from a tracking array, you can extract the exact number of unique random items directly in $O(K)$ time, effectively capping memory and CPU usage regardless of total content size.
-
-## 2026-03-05 - Synchronous scrollHeight reads cause layout thrashing
-
-**Learning:** Setting an element's style (e.g., `textarea.style.height = "auto"`) and immediately reading a layout property (e.g., `textarea.scrollHeight`) within the same synchronous event handler (like `input`) forces the browser to recalculate the layout synchronously on the main thread. This causes layout thrashing and jank during rapid typing.
-**Action:** Wrap the height recalculation logic inside `requestAnimationFrame`. This debounces the layout read/write operations and syncs them with the browser's render cycle, preventing the main thread from blocking.
+**Learning:** When using `Intl.DateTimeFormat` inside a component that is rendered frequently (like a post/project card rendered for every item in a list or grid during SSG), creating a new instance on every render is computationally expensive and measurably slows down build times in Node/Bun environments.
+**Action:** Cache the `Intl.DateTimeFormat` instance globally (e.g., using `globalThis.__publishDateFormatter`) so it is only instantiated once and reused across all component renders. Ensure the global variable is typed in `src/env.d.ts` to prevent TypeScript errors.

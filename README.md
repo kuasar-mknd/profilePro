@@ -13,7 +13,7 @@
 [![Built with Astro](https://img.shields.io/badge/Astro-5.16-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![npm](https://img.shields.io/badge/npm-1.0%2B-000000?style=flat&logo=npm&logoColor=white)](https://npm.sh)
+[![npm](https://img.shields.io/badge/pnpm-8.0%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://npm.sh)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
 <!-- Code Quality -->
@@ -42,16 +42,16 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Si l'erreur persiste :
       ```bash
       rm -rf node_modules package-lock.json
-      npm install --legacy-peer-deps
+      pnpm install --legacy-peer-deps
       ```
-2.  **Erreur `npm run` introuvable** :
+2.  **Erreur `pnpm run` introuvable** :
     - Installez npm via Node.js installer.
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
-    - Si `npm run test:e2e` échoue, lancez `npx playwright install --with-deps` pour installer les navigateurs.
-    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `npm run dev` dans un autre terminal avant les tests.
+    - Si `pnpm run test:e2e` échoue, lancez `npx playwright install --with-deps` pour installer les navigateurs.
+    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `pnpm run dev` dans un autre terminal avant les tests.
 5.  **Build failed (assets)** :
     - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
@@ -62,6 +62,8 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 **Mission**: _Connecter, Communiquer, Captiver_ — transformer chaque événement en une histoire mémorable.
 
 Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de détails techniques.
+
+*(Note: This project is implemented purely as a static Astro SSG architecture without dynamic backend frameworks).*
 
 ## ✨ Fonctionnalités
 
@@ -97,7 +99,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 ### Prérequis
 
 - Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- npm 10+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
+- pnpm 8+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 
@@ -107,7 +109,7 @@ git clone https://github.com/kuasar-mknd/profilePro.git
 cd profilePro
 
 # Installer les dépendances
-npm install --legacy-peer-deps
+pnpm install --legacy-peer-deps
 
 # Configurer l'environnement
 cp .env.example .env
@@ -116,21 +118,21 @@ cp .env.example .env
 npx playwright install --with-deps
 
 # Lancer le serveur de développement
-# Note: Cela lance d'abord l'optimisation des images ('npm run images')
-npm run dev
+# Note: Cela lance d'abord l'optimisation des images ('pnpm run images')
+pnpm run dev
 ```
 
 Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-- `npm run dev` : Optimise les images et lance le serveur de développement.
-- `npm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
-- `npm run check` : Vérifie le code (linting + formatage + types).
-- `npm run lighthouse` : Lance l'audit de performance.
-- `npm run test:e2e` : Lance les tests end-to-end avec Playwright.
+- `pnpm run dev` : Optimise les images et lance le serveur de développement.
+- `pnpm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
+- `pnpm run check` : Vérifie le code (linting + formatage + types).
+- `pnpm run lighthouse` : Lance l'audit de performance.
+- `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
 
-### API Access
+### API Access (Main Endpoints)
 
 Le site est statique mais expose des données via des endpoints générés au build :
 
@@ -140,7 +142,12 @@ curl https://portfolio.kuasar.xyz/rss.xml
 
 # Récupérer le Sitemap (XML)
 curl https://portfolio.kuasar.xyz/sitemap-index.xml
+
+# Récupérer le fichier robots.txt (Directives crawlers)
+curl https://portfolio.kuasar.xyz/robots.txt
 ```
+
+*(Note: There are no dynamic backend routes or API POST endpoints as this is a fully static Astro application).*
 
 ## 📂 Structure du projet
 

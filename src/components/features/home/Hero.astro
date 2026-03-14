@@ -14,23 +14,23 @@ const { projects: initialProjects } = Astro.props;
 
 // Fetch all project images
 const projects = initialProjects || (await getSortedProjects());
-const projectImages = projects.map((p) => ({
-  src: p.data.image,
-  alt: p.data.title,
-}));
 
-// ⚡ Bolt: Replace full array clone and O(N) shuffle with O(K) partial Fisher-Yates
-// This prevents allocating a full copy of the project array (which grows unbounded)
-// and stops processing as soon as 15 random unique items are selected.
-const limit = Math.min(15, projectImages.length);
-const slides: typeof projectImages = [];
-const indices = Array.from({ length: projectImages.length }, (_, i) => i);
+// ⚡ Bolt: Eliminate O(N) array allocation from .map() and O(N) shuffle
+// We extract only the required fields directly into the slides array during the O(K) loop.
+// This prevents creating N intermediate objects and drastically reduces memory overhead during build.
+const limit = Math.min(15, projects.length);
+const slides: { src: any; alt: string }[] = [];
+const indices = Array.from({ length: projects.length }, (_, i) => i);
 
 for (let i = 0; i < limit; i++) {
   const randomIndex = i + Math.floor(Math.random() * (indices.length - i));
   // Swap the picked index to the current position 'i'
   [indices[i], indices[randomIndex]] = [indices[randomIndex], indices[i]];
-  slides.push(projectImages[indices[i]]);
+  const selectedProject = projects[indices[i]];
+  slides.push({
+    src: selectedProject.data.image,
+    alt: selectedProject.data.title,
+  });
 }
 
 // ⚡ Bolt: Optimize carousel images
@@ -155,7 +155,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     >
       <a
         href="/project"
-        class="group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent cursor-pointer"
+        class="group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-primary"
       >
         <span class="relative z-10">Voir mes projets</span>
@@ -167,7 +167,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
       <a
         href="#contact-form"
-        class="block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent cursor-pointer"
+        class="block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-secondary"
       >
         Me contacter
@@ -491,18 +491,30 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
    * - Mobile: Focuses form container to avoid keyboard pop-up while scrolling
    */
   function initHeroCTA() {
-    const cta = document.getElementById("hero-cta-secondary");
+    const primaryCta = document.getElementById("hero-cta-primary");
+    const secondaryCta = document.getElementById("hero-cta-secondary");
     const form = document.getElementById("contact-form");
     const nameInput = document.getElementById("name");
 
-    if (!cta || !form) return;
+    if (primaryCta && primaryCta.dataset.initialized !== "true") {
+      primaryCta.dataset.initialized = "true";
+      primaryCta.addEventListener("click", () => {
+        // 🎨 Palette: Tactile feedback for primary action
+        if (navigator.vibrate) navigator.vibrate(50);
+      });
+    }
+
+    if (!secondaryCta || !form) return;
 
     // Guard against duplicate listeners
-    if (cta.dataset.initialized === "true") return;
-    cta.dataset.initialized = "true";
+    if (secondaryCta.dataset.initialized === "true") return;
+    secondaryCta.dataset.initialized = "true";
 
-    cta.addEventListener("click", (e) => {
+    secondaryCta.addEventListener("click", (e) => {
       e.preventDefault();
+
+      // 🎨 Palette: Tactile feedback for primary action
+      if (navigator.vibrate) navigator.vibrate(50);
 
       // Check if device uses coarse pointer (likely touch/mobile)
       const isMobile = window.matchMedia("(pointer: coarse)").matches;

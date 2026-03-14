@@ -15,7 +15,8 @@ To maintain a scalable and testable codebase, the project structure maps to Clea
 - **Infrastructure/Astro-Core**: Located in `src/components/`, `src/utils/`, and config files. Implements the UI components, integrations, and external tools.
 
 **Where to add new endpoints/use-cases:**
-To add a new endpoint or use-case, define the routing in the Application/Pages Layer (`src/pages/`) and implement the business logic or data schema in the Domain/Content Layer (`src/content/`).
+As an Astro static site generator (SSG), there is no dynamic backend routing or Prisma database layer.
+To add a "new endpoint" (a new page route) or "use-case", you must define the routing in the **Application/Pages Layer** (`src/pages/`) by creating a new `.astro` file. The underlying business logic or data schema should be implemented in the **Domain/Content Layer** (`src/content/`) via Markdown/MDX content collections.
 
 ### 2. Data Flow & State Management
 

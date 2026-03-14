@@ -28,128 +28,135 @@ const {
 <script>
   /**
    * ⚡ Bolt: TiltCard performance optimization
-   * - Lazy listener attachment: 'mousemove' is only attached during interaction
-   * - Caches DOM references
+   * - Event delegation: 'mouseover' on document instead of attaching 'mouseenter' to every card
+   * - O(1) initialization vs O(N) querySelectorAll loops
    * - RAF throttling
    */
-  function initTiltCards() {
+  function setupTiltListeners() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const cards = document.querySelectorAll(
-      ".tilt-card:not(.tilt-initialized)",
-    );
-
-    cards.forEach((card) => {
-      const el = card as HTMLElement;
-      const maxTilt = Number(el.dataset.maxTilt) || 10;
-      card.classList.add("tilt-initialized");
-
-      // ⚡ Cache the style object reference to avoid repeated lookups
-      const cardStyle = el.style;
-
-      let bounds: {
-        width: number;
-        height: number;
-        left: number;
-        top: number;
-      } | null = null;
-      let frameId: number | null = null;
-      let targetX = 0;
-      let targetY = 0;
-
-      function update() {
-        if (!bounds) return;
-
-        // ⚡ Pre-calculate center coordinates using cached bounds
-        const centerX = bounds.width * 0.5;
-        const centerY = bounds.height * 0.5;
-
-        // ⚡ Calculate relative position (using document coordinates)
-        const relativeX = targetX - bounds.left - centerX;
-        const relativeY = targetY - bounds.top - centerY;
-
-        // ⚡ Calculate rotation with division by center values
-        const rotateX = (relativeY / centerY) * -maxTilt;
-        const rotateY = (relativeX / centerX) * maxTilt;
-
-        // ⚡ Set CSS custom properties using cached style reference
-        cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
-        cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
-
-        frameId = null;
-      }
-
-      function onMouseMove(e: MouseEvent) {
-        if (!bounds) return;
-
-        // ⚡ Bolt: Use page coordinates to handle scrolling correctly
-        targetX = e.pageX;
-        targetY = e.pageY;
-
-        // ⚡ Use requestAnimationFrame to throttle visual updates
-        if (!frameId) {
-          frameId = requestAnimationFrame(update);
-        }
-      }
-
-      function onMouseLeave() {
-        // ⚡ Cancel pending frame
-        if (frameId) {
-          cancelAnimationFrame(frameId);
-          frameId = null;
-        }
-
-        // ⚡ Reset styles
-        cardStyle.setProperty("--rotate-x", "0deg");
-        cardStyle.setProperty("--rotate-y", "0deg");
-
-        // ⚡ Bolt: Remove layer promotion to save GPU memory
-        cardStyle.willChange = "auto";
-
-        bounds = null;
-
-        // ⚡ Bolt: Cleanup high-frequency listeners when not needed
-        card.removeEventListener("mousemove", onMouseMove);
-        card.removeEventListener("mouseleave", onMouseLeave);
-      }
-
-      function onMouseEnter() {
-        // ⚡ Bolt: Promote to composite layer only on interaction
-        cardStyle.willChange = "transform";
-
-        // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
-        // ⚡ Bolt: Convert to document coordinates to support scrolling while hovering
-        const rect = el.getBoundingClientRect();
-        bounds = {
-          width: rect.width,
-          height: rect.height,
-          left: rect.left + window.scrollX,
-          top: rect.top + window.scrollY,
-        };
-
-        // ⚡ Bolt: Lazy attach listeners only when interacting
-        card.addEventListener("mousemove", onMouseMove);
-        card.addEventListener("mouseleave", onMouseLeave);
-      }
-
-      card.addEventListener("mouseenter", onMouseEnter);
-    });
-  }
-
-  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
-  function setupTiltListeners() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const win = window as any;
 
-    if (win.__tiltInitHandler) {
-      document.removeEventListener("astro:page-load", win.__tiltInitHandler);
+    if (win.__tiltDelegationInitialized) return;
+    win.__tiltDelegationInitialized = true;
+
+    let activeCard: HTMLElement | null = null;
+    let cardStyle: CSSStyleDeclaration | null = null;
+    let maxTilt = 10;
+
+    let bounds: {
+      width: number;
+      height: number;
+      left: number;
+      top: number;
+    } | null = null;
+    let frameId: number | null = null;
+    let targetX = 0;
+    let targetY = 0;
+
+    function update() {
+      if (!bounds || !cardStyle) return;
+
+      // ⚡ Pre-calculate center coordinates using cached bounds
+      const centerX = bounds.width * 0.5;
+      const centerY = bounds.height * 0.5;
+
+      // ⚡ Calculate relative position (using document coordinates)
+      const relativeX = targetX - bounds.left - centerX;
+      const relativeY = targetY - bounds.top - centerY;
+
+      // ⚡ Calculate rotation with division by center values
+      const rotateX = (relativeY / centerY) * -maxTilt;
+      const rotateY = (relativeX / centerX) * maxTilt;
+
+      // ⚡ Set CSS custom properties using cached style reference
+      cardStyle.setProperty("--rotate-x", `${rotateX}deg`);
+      cardStyle.setProperty("--rotate-y", `${rotateY}deg`);
+
+      // 🎨 Palette: Update shine position
+      const shineX = ((targetX - bounds.left) / bounds.width) * 100;
+      const shineY = ((targetY - bounds.top) / bounds.height) * 100;
+      cardStyle.setProperty("--shine-x", `${shineX}%`);
+      cardStyle.setProperty("--shine-y", `${shineY}%`);
+
+      frameId = null;
     }
 
-    win.__tiltInitHandler = initTiltCards;
-    document.addEventListener("astro:page-load", initTiltCards);
+    function onMouseMove(e: MouseEvent) {
+      if (!bounds) return;
 
-    // Run immediately
-    initTiltCards();
+      // ⚡ Bolt: Use page coordinates to handle scrolling correctly
+      targetX = e.pageX;
+      targetY = e.pageY;
+
+      // ⚡ Use requestAnimationFrame to throttle visual updates
+      if (!frameId) {
+        frameId = requestAnimationFrame(update);
+      }
+    }
+
+    function onMouseLeave() {
+      if (!activeCard || !cardStyle) return;
+
+      // ⚡ Cancel pending frame
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = null;
+      }
+
+      // ⚡ Reset styles
+      cardStyle.setProperty("--rotate-x", "0deg");
+      cardStyle.setProperty("--rotate-y", "0deg");
+
+      // ⚡ Bolt: Remove layer promotion to save GPU memory
+      cardStyle.willChange = "auto";
+
+      bounds = null;
+
+      // ⚡ Bolt: Cleanup high-frequency listeners when not needed
+      activeCard.removeEventListener("mousemove", onMouseMove);
+      activeCard.removeEventListener("mouseleave", onMouseLeave);
+
+      activeCard = null;
+      cardStyle = null;
+    }
+
+    function onMouseEnter(card: HTMLElement) {
+      if (activeCard) {
+        onMouseLeave(); // Clean up previous card if any
+      }
+
+      activeCard = card;
+      cardStyle = activeCard.style;
+      maxTilt = Number(activeCard.dataset.maxTilt) || 10;
+
+      // ⚡ Bolt: Promote to composite layer only on interaction
+      cardStyle.willChange = "transform";
+
+      // ⚡ Cache layout metrics on enter to avoid thrashing in mousemove
+      // ⚡ Bolt: Convert to document coordinates to support scrolling while hovering
+      const rect = activeCard.getBoundingClientRect();
+      bounds = {
+        width: rect.width,
+        height: rect.height,
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY,
+      };
+
+      // ⚡ Bolt: Lazy attach listeners only when interacting
+      activeCard.addEventListener("mousemove", onMouseMove);
+      activeCard.addEventListener("mouseleave", onMouseLeave);
+    }
+
+    document.addEventListener("mouseover", (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const card = target.closest(".tilt-card") as HTMLElement;
+
+      if (card && card !== activeCard) {
+        onMouseEnter(card);
+      }
+    });
   }
 
   setupTiltListeners();

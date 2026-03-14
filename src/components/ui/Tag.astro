@@ -5,7 +5,7 @@ const { tag, variant = "default", href } = Astro.props;
 const isDark = variant === "dark";
 const safeHref = href ? sanitizeUrl(href) : undefined;
 const Element = safeHref ? "a" : "span";
-const ariaLabel = safeHref ? `Voir les projets avec le tag ${tag}` : undefined;
+const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
 ---
 
 {
@@ -19,7 +19,7 @@ const ariaLabel = safeHref ? `Voir les projets avec le tag ${tag}` : undefined;
           ? "bg-white/20 border border-white/40 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
           : "bg-transparent border-pacamara-secondary border text-pacamara-secondary",
         safeHref &&
-          "hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent transition-all duration-300 relative z-20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
+          "interactive-tag hover:scale-105 focus-visible:scale-105 active:scale-95 hover:bg-pacamara-accent hover:text-white hover:border-pacamara-accent transition-all duration-300 relative z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2",
       ]}
       style="contain: layout style;"
     >
@@ -27,3 +27,26 @@ const ariaLabel = safeHref ? `Voir les projets avec le tag ${tag}` : undefined;
     </Element>
   )
 }
+
+<script>
+  function initTagHaptics() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__tagHapticsInitialized) return;
+    win.__tagHapticsInitialized = true;
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(".interactive-tag")) {
+        if (navigator.vibrate) {
+          navigator.vibrate(30);
+        }
+      }
+    });
+  }
+
+  // Support View Transitions
+  document.addEventListener("astro:page-load", initTagHaptics);
+  initTagHaptics();
+</script>

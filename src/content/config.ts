@@ -31,7 +31,33 @@ const projectCollection = defineCollection({
     }),
 });
 
+const cvExperienceCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    role: z.string().min(1).max(100),
+    company: z.string().min(1).max(100),
+    period: z.string().min(1).max(50),
+    lang: z.enum(["fr", "en"]).default("fr"),
+    draft: z.boolean().default(false),
+    order: z.number().default(0),
+  }),
+});
+
+const cvEducationCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    degree: z.string().min(1).max(100),
+    school: z.string().min(1).max(150),
+    period: z.string().min(1).max(50),
+    lang: z.enum(["fr", "en"]).default("fr"),
+    draft: z.boolean().default(false),
+    order: z.number().default(0),
+  }),
+});
+
 export const collections = {
   author: authorCollection,
   project: projectCollection,
+  cvExperience: cvExperienceCollection,
+  cvEducation: cvEducationCollection,
 };
