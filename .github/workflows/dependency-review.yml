@@ -1,3 +1,4 @@
+# Dependency review configuration for PRs
 name: "Dependency Review"
 
 on: [pull_request]

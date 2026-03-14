@@ -1,3 +1,4 @@
+# CodeQL static analysis configuration for JS/TS
 name: "CodeQL"
 
 on:
