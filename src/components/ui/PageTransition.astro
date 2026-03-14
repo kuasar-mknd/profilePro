@@ -10,6 +10,15 @@
   <div class="transition-slide"></div>
 </div>
 
+<!-- 🎨 Palette: Screen reader announcer for SPA navigation -->
+<div
+  id="page-transition-announcer"
+  class="sr-only"
+  aria-live="polite"
+  aria-atomic="true"
+>
+</div>
+
 <style is:global>
   /* Page Transition Overlay */
   .page-transition {
@@ -137,10 +146,14 @@
   // Handle page transitions
   document.addEventListener("astro:before-preparation", () => {
     document.body.classList.add("page-loading");
+    const announcer = document.getElementById("page-transition-announcer");
+    if (announcer) announcer.textContent = "Chargement de la page en cours...";
   });
 
   document.addEventListener("astro:after-preparation", () => {
     document.body.classList.remove("page-loading");
+    const announcer = document.getElementById("page-transition-announcer");
+    if (announcer) announcer.textContent = "Page chargée";
   });
 
   // ⚡ Bolt: Use event delegation for transition links
