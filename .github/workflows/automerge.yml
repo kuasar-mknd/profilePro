@@ -3,6 +3,11 @@ name: Auto-merge PRs
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENSE"
 
 permissions:
   pull-requests: write
