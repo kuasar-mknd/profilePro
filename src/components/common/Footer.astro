@@ -288,6 +288,13 @@ import SocialIcon from "../ui/SocialIcon.astro";
       }
     }
 
+    if (window.__carbonBadgeInitHandler) {
+      document.removeEventListener(
+        "astro:page-load",
+        window.__carbonBadgeInitHandler,
+      );
+    }
+    window.__carbonBadgeInitHandler = initCarbonBadge;
     document.addEventListener("astro:page-load", initCarbonBadge);
   </script>
   <style is:global>

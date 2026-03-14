@@ -739,5 +739,12 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   }
 
   initContactForm();
+  if (window.__contactInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__contactInitHandler,
+    );
+  }
+  window.__contactInitHandler = initContactForm;
   document.addEventListener("astro:page-load", initContactForm);
 </script>

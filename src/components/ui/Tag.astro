@@ -47,6 +47,13 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
   }
 
   // Support View Transitions
+  if (window.__tagHapticsInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__tagHapticsInitHandler,
+    );
+  }
+  window.__tagHapticsInitHandler = initTagHaptics;
   document.addEventListener("astro:page-load", initTagHaptics);
   initTagHaptics();
 </script>

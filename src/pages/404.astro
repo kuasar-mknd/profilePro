@@ -93,5 +93,12 @@ import { Icon } from "astro-icon/components";
 
   // Initialize on load and after navigation (View Transitions)
   initBackBtn();
+  if (window.__backBtnInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__backBtnInitHandler,
+    );
+  }
+  window.__backBtnInitHandler = initBackBtn;
   document.addEventListener("astro:page-load", initBackBtn);
 </script>
