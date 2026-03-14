@@ -6,6 +6,7 @@ import { getCollection } from "astro:content";
 import fs from "node:fs";
 import yaml from "js-yaml";
 import sanitizeHtml from "sanitize-html";
+import { sanitizeUrl } from "../../utils/security";
 
 export function getStaticPaths() {
   return [
@@ -165,7 +166,7 @@ const description = data.profile.content;
                 {data.personal.email}
               </a>
               <a
-                href={data.personal.linkedinUrl}
+                href={sanitizeUrl(data.personal.linkedinUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
@@ -174,7 +175,7 @@ const description = data.profile.content;
                 {data.personal.linkedin}
               </a>
               <a
-                href={data.personal.portfolioUrl}
+                href={sanitizeUrl(data.personal.portfolioUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"

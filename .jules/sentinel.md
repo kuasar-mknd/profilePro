@@ -69,3 +69,9 @@ Each entry should include:
 **Vulnerability:** Use of `JSON.parse` without a `try-catch` block when retrieving cached data from `localStorage`.
 **Learning:** If the data in `localStorage` is malformed, corrupted, or tampered with by an external script, `JSON.parse` throws a synchronous exception. This can cause the script to fail, disrupting UI components or tracking functionalities unexpectedly.
 **Prevention:** Wrap `JSON.parse` calls in a `try...catch` block, especially when reading from client-side storage mechanisms like `localStorage` or `sessionStorage`. If an error occurs, clear the corrupted cache to recover gracefully.
+
+## 2024-03-14 - External URL Sanitization in CV
+
+**Vulnerability:** Potential XSS via un-sanitized external URLs in `src/pages/cv/[...lang].astro`. The `linkedinUrl` and `portfolioUrl` properties from `cv-basics.yml` were passed directly to `href` attributes, which could allow a `javascript:` payload to execute when clicked.
+**Learning:** Even statically provided data (like YAML files) should be treated with suspicion when it comes to URL injection, as an attacker modifying the file or providing input could compromise the integrity of the rendered page.
+**Prevention:** Always use a utility like `sanitizeUrl` (which explicitly blocks `javascript:`, `vbscript:`, etc. and enforces safe protocols) on URLs before using them in `href` attributes.
