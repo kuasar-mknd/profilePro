@@ -183,5 +183,9 @@
     };
   }
 
+  if (window.__menuInitHandler) {
+    document.removeEventListener("astro:page-load", window.__menuInitHandler);
+  }
+  window.__menuInitHandler = initMenu;
   document.addEventListener("astro:page-load", initMenu);
 </script>

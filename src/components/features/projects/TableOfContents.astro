@@ -123,6 +123,10 @@ const showToC = filteredHeadings.length >= 2;
   }
 
   // Run on initial load and after View Transitions
+  if (window.__tocInitHandler) {
+    document.removeEventListener("astro:page-load", window.__tocInitHandler);
+  }
+  window.__tocInitHandler = initTOC;
   document.addEventListener("astro:page-load", initTOC);
 
   // Cleanup on swap

@@ -14,6 +14,16 @@ interface ImportMeta {
 interface Window {
   __lightboxInstance?: { destroy: () => void };
   __lightboxListenerAttached?: boolean;
+  __contactInitHandler?: () => void;
+  __mobileMenuInitHandler?: () => void;
+  __carbonBadgeInitHandler?: () => void;
+  __menuInitHandler?: () => void;
+  __scrollRevealInitHandler?: () => void;
+  __tagHapticsInitHandler?: () => void;
+  __mouseBlobInitHandler?: () => void;
+  __projectFiltersInitHandler?: () => void;
+  __tocInitHandler?: () => void;
+  __backBtnInitHandler?: () => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment

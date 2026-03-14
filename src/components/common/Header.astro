@@ -267,5 +267,12 @@ const logo2x = await getImage({
   }
 
   // Initialize only via event listener to avoid double execution on initial load
+  if (window.__mobileMenuInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__mobileMenuInitHandler,
+    );
+  }
+  window.__mobileMenuInitHandler = initMobileMenuAccessibility;
   document.addEventListener("astro:page-load", initMobileMenuAccessibility);
 </script>

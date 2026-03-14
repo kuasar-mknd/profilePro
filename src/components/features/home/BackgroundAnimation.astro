@@ -197,5 +197,12 @@
   }
 
   // Initialize only via event listener to avoid double execution on initial load
+  if (window.__mouseBlobInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__mouseBlobInitHandler,
+    );
+  }
+  window.__mouseBlobInitHandler = initMouseBlob;
   document.addEventListener("astro:page-load", initMouseBlob);
 </script>
