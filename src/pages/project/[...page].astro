@@ -120,14 +120,14 @@ const { page, allTags, tagCounts, totalCount } = Astro.props;
                 class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
                 aria-label={`Précédent (page ${page.currentPage - 1})`}
               >
-                &larr; Précédent
+                <span aria-hidden="true">&larr;</span> Précédent
               </a>
             ) : (
               <span
                 class="text-base bg-transparent border border-pacamara-secondary/30 leading-none rounded-full py-3 px-6 text-pacamara-secondary/30 font-pacamara-space font-bold cursor-not-allowed select-none"
                 aria-hidden="true"
               >
-                &larr; Précédent
+                <span aria-hidden="true">&larr;</span> Précédent
               </span>
             )}
 
@@ -137,14 +137,14 @@ const { page, allTags, tagCounts, totalCount } = Astro.props;
                 class="text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
                 aria-label={`Suivant (page ${page.currentPage + 1})`}
               >
-                Suivant &rarr;
+                Suivant <span aria-hidden="true">&rarr;</span>
               </a>
             ) : (
               <span
                 class="text-base bg-transparent border border-pacamara-secondary/30 leading-none rounded-full py-3 px-6 text-pacamara-secondary/30 font-pacamara-space font-bold cursor-not-allowed select-none"
                 aria-hidden="true"
               >
-                Suivant &rarr;
+                Suivant <span aria-hidden="true">&rarr;</span>
               </span>
             )}
           </div>
