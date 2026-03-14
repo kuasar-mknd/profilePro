@@ -132,7 +132,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run lighthouse` : Lance l'audit de performance.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
 
-### API Access
+### API Access (Main Endpoints)
 
 Le site est statique mais expose des données via des endpoints générés au build :
 
@@ -142,7 +142,12 @@ curl https://portfolio.kuasar.xyz/rss.xml
 
 # Récupérer le Sitemap (XML)
 curl https://portfolio.kuasar.xyz/sitemap-index.xml
+
+# Récupérer le fichier robots.txt (Directives crawlers)
+curl https://portfolio.kuasar.xyz/robots.txt
 ```
+
+*(Note: There are no dynamic backend routes or API POST endpoints as this is a fully static Astro application).*
 
 ## 📂 Structure du projet
 

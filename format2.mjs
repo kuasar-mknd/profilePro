@@ -1,5 +1,5 @@
-const fs = require("fs");
-const glob = require("glob");
+import fs from "fs";
+import { glob } from "glob";
 
 const files = glob
   .sync("src/content/cvExperience/*.md")
@@ -8,7 +8,7 @@ const files = glob
 files.forEach((file) => {
   let content = fs.readFileSync(file, "utf8");
 
-  content = content.replace(/role:\s*"([^"]+)"/, (match, roleStr) => {
+  content = content.replace(/role:\s*"([^"]+)"/, (_, roleStr) => {
     const str = roleStr.trim();
     const fixes = {
       "Head of Communication": "Head of communication",
@@ -27,7 +27,7 @@ files.forEach((file) => {
     return `role: "${fixes[str] || str}"`;
   });
 
-  content = content.replace(/company:\s*"([^"]+)"/, (match, companyStr) => {
+  content = content.replace(/company:\s*"([^"]+)"/, (_, companyStr) => {
     const str = companyStr.trim();
     const fixes = {
       "Personal Projects, Canada": "Personal projects, Canada",

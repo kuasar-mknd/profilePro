@@ -3,7 +3,7 @@ import config from "../config.mjs";
 import { getSortedProjects } from "../utils/projects";
 import sanitizeHtml from "sanitize-html";
 
-export async function get(_context) {
+export async function GET(_context) {
   const project = await getSortedProjects();
   return rss({
     title: config.title + config.titleSuffix,

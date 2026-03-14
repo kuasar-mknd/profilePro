@@ -5,6 +5,7 @@ import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import fs from "node:fs";
 import yaml from "js-yaml";
+import sanitizeHtml from "sanitize-html";
 
 export function getStaticPaths() {
   return [
@@ -19,7 +20,47 @@ const currentLang = langParam === "en" ? "en" : "fr";
 
 // Lire le fichier YAML manuellement au moment du build (SSR)
 const fileContents = fs.readFileSync("./src/data/cv-basics.yml", "utf8");
-const cvBasics = yaml.load(fileContents) as any;
+
+interface CVData {
+  personal: {
+    name: string;
+    title: string;
+    badge: string;
+    location: string;
+    email: string;
+    linkedin: string;
+    linkedinUrl: string;
+    portfolio: string;
+    portfolioUrl: string;
+  };
+  profile: {
+    title: string;
+    content: string;
+  };
+  experience: {
+    title: string;
+  };
+  education: {
+    title: string;
+  };
+  skills: {
+    title: string;
+    items: Array<{
+      category: string;
+      description: string;
+    }>;
+  };
+  awards: {
+    title: string;
+    items: string[];
+  };
+  languages: Array<{
+    name: string;
+    level: string;
+  }>;
+}
+
+const cvBasics = yaml.load(fileContents) as Record<string, CVData>;
 
 // 1. Récupération des données statiques textuelles et globales (selon la langue)
 const data = cvBasics[currentLang];
@@ -227,10 +268,9 @@ const description = data.profile.content;
                           <span class="inline mx-2 print:mx-1 text-pacamara-primary/40 dark:text-white/40 print:text-[#bdc3c7]">
                             |
                           </span>
-                          <span
-                            class="inline italic text-sm text-pacamara-secondary dark:text-pacamara-accent print:text-pacamara-secondary print:text-[9pt]"
-                            set:html={edu.data.school}
-                          />
+                          <span class="inline italic text-sm text-pacamara-secondary dark:text-pacamara-accent print:text-pacamara-secondary print:text-[9pt]">
+                            {edu.data.school}
+                          </span>
                         </div>
                         <span class="text-sm font-bold text-pacamara-primary/60 dark:text-white/60 print:text-[#7f8c8d] print:text-[9pt] whitespace-nowrap shrink-0">
                           {edu.data.period}
@@ -263,14 +303,16 @@ const description = data.profile.content;
                 class="space-y-3 pl-0 list-none text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm print:text-[#333] print:text-[9pt] print:space-y-0.5 print:leading-tight"
               >
                 {
-                  data.skills.items.map((skill) => (
-                    <li class="print:break-inside-avoid">
-                      <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary block mb-0.5 print:mb-0.5">
-                        {skill.category}
-                      </strong>
-                      {skill.description}
-                    </li>
-                  ))
+                  data.skills.items.map(
+                    (skill: { category: string; description: string }) => (
+                      <li class="print:break-inside-avoid">
+                        <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary block mb-0.5 print:mb-0.5">
+                          {skill.category}
+                        </strong>
+                        {skill.description}
+                      </li>
+                    ),
+                  )
                 }
               </ul>
             </section>
@@ -286,20 +328,30 @@ const description = data.profile.content;
                 <ul
                   class="list-disc pl-5 text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm space-y-1.5 print:text-[#333] print:text-[9pt] print:space-y-0.5 print:leading-tight"
                 >
-                  {data.awards.items.map((award) => <li set:html={award} />)}
+                  {
+                    data.awards.items.map((award: string) => (
+                      <li
+                        set:html={sanitizeHtml(award, {
+                          allowedTags: ["strong"],
+                        })}
+                      />
+                    ))
+                  }
                 </ul>
                 <div
                   class="border-t border-gray-200 dark:border-white/10 pt-4 mt-4 print:pt-1.5 print:mt-1.5 print:border-[#bdc3c7] flex flex-wrap gap-x-4 gap-y-2 print:gap-x-4 print:gap-y-1 text-pacamara-primary/80 dark:text-white/80 font-outfit text-sm print:text-[#333] print:text-[9pt]"
                 >
                   {
-                    data.languages.map((lang) => (
-                      <span>
-                        <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary">
-                          {lang.name} :
-                        </strong>{" "}
-                        {lang.level}
-                      </span>
-                    ))
+                    data.languages.map(
+                      (lang: { name: string; level: string }) => (
+                        <span>
+                          <strong class="text-pacamara-dark dark:text-white print:text-pacamara-primary">
+                            {lang.name} :
+                          </strong>{" "}
+                          {lang.level}
+                        </span>
+                      ),
+                    )
                   }
                 </div>
               </div>
