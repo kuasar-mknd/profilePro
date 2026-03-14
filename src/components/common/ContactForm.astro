@@ -469,6 +469,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       successMessage?.classList.remove("flex");
       form.reset();
       if (messageCounter && messageInput) {
+        messageInput.style.height = "auto";
         messageCounter.textContent = `0 / ${messageInput.getAttribute("maxlength") || "5000"}`;
         messageCounter.classList.remove(
           "text-red-500",
