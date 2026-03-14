@@ -120,7 +120,7 @@ describe("Security Utilities", () => {
 
     it("should handle control characters in scheme", () => {
       // \x01javascript:alert(1)
-      expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("about:blank");
+      expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("");
     });
   });
 
@@ -215,5 +215,19 @@ describe("Security Utilities", () => {
       expect(match).not.toBeNull();
       expect(match![1]).toBe("dQw4w9WgXcQ");
     });
+  });
+});
+
+describe("obfuscated URLs", () => {
+  it("should block obfuscated javascript URLs", () => {
+    expect(sanitizeUrl("jav%0Aascript:alert(1)")).toBe("");
+    expect(sanitizeUrl("javascript&#58;alert(1)")).toBe("");
+    expect(sanitizeUrl("javascript&colon;alert(1)")).toBe("");
+    expect(sanitizeUrl(" jav&#x0a;ascript:alert(1)")).toBe("");
+  });
+
+  it("should reject obfuscated javascript URLs in validation", () => {
+    expect(isValidUrl("javascript&#58;alert(1)")).toBe(false);
+    expect(isValidUrl(" jav&#x0a;ascript:alert(1)")).toBe(false);
   });
 });
