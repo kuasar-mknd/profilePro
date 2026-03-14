@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl } from "../src/utils/security";
 
 test("safeJson handles undefined or function inputs safely", () => {
   // JSON.stringify returns undefined for functions and undefined itself
@@ -50,4 +50,14 @@ test("sanitizeInput strips control characters", () => {
   // Vertical Tab (\x0B) should be stripped
   const input2 = "Vertical\x0BTab";
   expect(sanitizeInput(input2)).toBe("VerticalTab");
+});
+
+test("sanitizeUrl blocks obfuscated javascript URLs", () => {
+  expect(sanitizeUrl("jav%0Aascript:alert(1)")).toBe("");
+  expect(sanitizeUrl("javascript&#58;alert(1)")).toBe("");
+  expect(sanitizeUrl("javascript&colon;alert(1)")).toBe("");
+  expect(sanitizeUrl(" jav&#x0a;ascript:alert(1)")).toBe("");
+
+  expect(isValidUrl("javascript&#58;alert(1)")).toBe(false);
+  expect(isValidUrl(" jav&#x0a;ascript:alert(1)")).toBe(false);
 });

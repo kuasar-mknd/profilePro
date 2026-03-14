@@ -135,6 +135,39 @@ export const VIMEO_ID_REGEX =
  * @param options - Validation options
  * @returns True if the URL is safe
  */
+
+/**
+ * 🛡️ Sentinel: Helper to detect obfuscated protocols like javascript:
+ * Decodes URL encoding and HTML entities before validating.
+ */
+function isObfuscatedProtocol(url: string): boolean {
+  let decoded = url;
+  try {
+    decoded = decodeURIComponent(decoded);
+  } catch {
+    // Ignore malformed URI sequences
+  }
+
+  // Decode HTML entities
+  decoded = decoded
+    .replace(/&#(\d+);?/g, (_, dec) => String.fromCharCode(Number(dec)))
+    .replace(/&#[xX]([0-9a-fA-F]+);?/g, (_, hex) =>
+      String.fromCharCode(parseInt(hex, 16)),
+    )
+    .replace(/&colon;/gi, ":")
+    .replace(/&tab;/gi, "\t")
+    .replace(/&newline;/gi, "\n");
+
+  // Strip control chars and spaces
+  decoded = decoded.replace(/[\x00-\x20\x7F]/g, "").toLowerCase();
+
+  return (
+    decoded.startsWith("javascript:") ||
+    decoded.startsWith("vbscript:") ||
+    decoded.startsWith("data:")
+  );
+}
+
 export function isValidUrl(
   url: string,
   options: {
@@ -153,6 +186,11 @@ export function isValidUrl(
   }
 
   const trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Block obfuscated protocols (e.g. javascript&#58;)
+  if (isObfuscatedProtocol(url)) {
+    return false;
+  }
 
   // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
   if (trimmedUrl.startsWith("//")) {
@@ -217,6 +255,13 @@ export function sanitizeUrl(url: string): string {
   let trimmedUrl = url.trim();
 
   let result = "";
+
+  // 🛡️ Sentinel: Block obfuscated protocols (e.g. javascript&#58;)
+  if (isObfuscatedProtocol(url)) {
+    result = "";
+    sanitizeUrlCache.set(url, result);
+    return result;
+  }
 
   // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
   if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
