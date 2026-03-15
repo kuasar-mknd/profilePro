@@ -549,14 +549,11 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       initHeroCTA();
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (win.__heroInitHandler) {
-      document.removeEventListener("astro:page-load", win.__heroInitHandler);
+    if (window.__heroInitHandler) {
+      document.removeEventListener("astro:page-load", window.__heroInitHandler);
     }
 
-    win.__heroInitHandler = initAll;
+    window.__heroInitHandler = initAll;
     document.addEventListener("astro:page-load", initAll);
 
     // Run immediately for current execution
