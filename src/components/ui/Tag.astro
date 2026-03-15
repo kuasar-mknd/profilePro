@@ -23,7 +23,7 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
       ]}
       style="contain: layout style;"
     >
-      <span>{tag}</span>
+      <span aria-hidden={safeHref ? "true" : undefined}>{tag}</span>
     </Element>
   )
 }
