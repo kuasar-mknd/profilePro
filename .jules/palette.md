@@ -51,3 +51,7 @@
 ## 2026-03-12 - Mobile Menu Background Inertia
 **Learning:** When a full-screen mobile menu traps focus, virtual cursor navigation (like VoiceOver's swipe) can still escape the trap and explore visually hidden background content if `inert` is not applied to the background elements.
 **Action:** Always apply `inert` and `aria-hidden="true"` to `#main-content`, `footer`, and other root siblings when a full-screen mobile menu or modal is open to ensure a truly isolated experience for assistive technologies.
+
+## 2026-03-13 - State Reset for Auto-Resizing Textareas
+**Learning:** For forms containing textareas that dynamically adjust their height based on content (e.g., via `input` listeners), calling `form.reset()` clears the text but leaves the DOM element at its expanded height. This creates a visually jarring "gap" in the UI.
+**Action:** Explicitly reset the `height` style property to `auto` (or the initial value) within the `reset` event listener or click handler of the reset button to ensure the textarea returns to its original collapsed state.
