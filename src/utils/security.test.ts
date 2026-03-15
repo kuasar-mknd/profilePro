@@ -75,7 +75,9 @@ describe("Security Utilities", () => {
 
     it("should reject unsupported protocols", () => {
       expect(isValidUrl("ftp://example.com")).toBe(false);
-      expect(isValidUrl("data:text/html,<script>alert(1)</script>")).toBe(false);
+      expect(isValidUrl("data:text/html,<script>alert(1)</script>")).toBe(
+        false,
+      );
       expect(isValidUrl("file:///etc/passwd")).toBe(false);
       expect(isValidUrl("ws://example.com")).toBe(false);
       expect(isValidUrl("vbscript:msgbox(1)")).toBe(false);
