@@ -12,7 +12,23 @@ interface ImportMeta {
 }
 
 interface Window {
-  __lightboxInstance?: { destroy: () => void };
+  __cleanupBackToTop?: (() => void) | null;
+  __themeObserver?: MutationObserver | null;
+  __baseInitHandler?: () => void;
+  __animationObserver?: IntersectionObserver | null;
+  __animInitHandler?: () => void;
+  __handleThemeChange?: (e: Event) => void;
+  __tagHapticsInitialized?: boolean;
+  __lightboxInitHandler?: () => void;
+  __tiltDelegationInitialized?: boolean;
+  __galleryInitHandler?: () => void;
+  __heroInitHandler?: () => void;
+  __videoPlayerLoadHandler?: () => void;
+  __videoPlayerClickHandler?: (e: Event) => void;
+  __videoPrefetchDelegationInitialized?: boolean;
+  _plyrPrefetched?: boolean;
+
+  __lightboxInstance?: { destroy: () => void } | null;
   __lightboxListenerAttached?: boolean;
   __contactInitHandler?: () => void;
   __mobileMenuInitHandler?: () => void;
