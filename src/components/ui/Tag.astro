@@ -30,8 +30,7 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
 
 <script>
   function initTagHaptics() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     if (win.__tagHapticsInitialized) return;
     win.__tagHapticsInitialized = true;

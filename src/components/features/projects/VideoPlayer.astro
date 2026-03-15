@@ -226,8 +226,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // ⚡ Bolt: Singleton event listener pattern for View Transitions
   // Ensures we don't accumulate listeners when the component script re-runs
   function setupVideoPlayerListeners() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     // Cleanup previous click listener if it exists
     if (win.__videoPlayerClickHandler) {
@@ -244,8 +243,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // ⚡ Bolt: Prefetch Plyr resources on hover/focus to improve perceived performance
   // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
   function setupVideoPrefetchDelegation() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     if (win.__videoPrefetchDelegationInitialized) return;
     win.__videoPrefetchDelegationInitialized = true;
@@ -310,8 +308,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 
   // ⚡ Bolt: Manage page load listener singleton
   function setupPageLoadListener() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     if (win.__videoPlayerLoadHandler) {
       document.removeEventListener(
