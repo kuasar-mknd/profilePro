@@ -24,6 +24,7 @@ interface Window {
   __projectFiltersInitHandler?: () => void;
   __tocInitHandler?: () => void;
   __backBtnInitHandler?: () => void;
+  __navHapticsInitHandler?: () => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
