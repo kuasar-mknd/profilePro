@@ -12,6 +12,11 @@ interface ImportMeta {
 }
 
 interface Window {
+  __cleanupBackToTop?: (() => void) | null;
+  __themeObserver?: MutationObserver | null;
+  __baseInitHandler?: () => void;
+  __animationObserver?: IntersectionObserver | null;
+  __animInitHandler?: () => void;
   __lightboxInstance?: { destroy: () => void };
   __lightboxListenerAttached?: boolean;
   __contactInitHandler?: () => void;
