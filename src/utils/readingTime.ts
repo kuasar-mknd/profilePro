@@ -7,24 +7,20 @@
  * @param wordsPerMinute Average reading speed (default: 200)
  * @returns Reading time in minutes (rounded up)
  */
-// ⚡ Bolt: Cache calculated reading times
+// ⚡ Bolt: Cache calculated word counts
 // Post bodies can be large, and getReadingTime might be called multiple times
 // for the same post (e.g., in Post.astro, [slug].astro, etc.).
 // Using an LRU cache or a simple Map prevents redundant O(n) string parsing.
-const readingTimeCache = new Map<string, number>();
+const wordCountCache = new Map<string, number>();
 
 export function getReadingTime(text: string, wordsPerMinute = 200): number {
   if (!text) return 0;
 
-  // Create a composite cache key if wordsPerMinute varies,
-  // though it's typically constant. We can just use text length as a fast initial
-  // check, but exact text matching is safer.
-  // We'll hash or use length prefix for safer large string keys if needed,
-  // but a simple Map with the text reference works well for SSG.
-  const cacheKey = `${wordsPerMinute}:${text}`;
-
-  const cached = readingTimeCache.get(cacheKey);
-  if (cached !== undefined) return cached;
+  // By caching the word count mapped exactly to the text reference,
+  // we avoid expensive string concatenations and large allocations
+  // that would occur if we used composite keys like `${wpm}:${text}`.
+  const cachedWords = wordCountCache.get(text);
+  if (cachedWords !== undefined) return Math.ceil(cachedWords / wordsPerMinute);
 
   let wordCount = 0;
   let inWord = false;
@@ -48,15 +44,13 @@ export function getReadingTime(text: string, wordsPerMinute = 200): number {
     }
   }
 
-  const time = Math.ceil(wordCount / wordsPerMinute);
-
   // Prevent unbounded memory growth in long-running processes (like dev server)
-  if (readingTimeCache.size > 1000) {
-    const firstKey = readingTimeCache.keys().next().value;
-    if (firstKey) readingTimeCache.delete(firstKey);
+  if (wordCountCache.size > 1000) {
+    const firstKey = wordCountCache.keys().next().value;
+    if (firstKey) wordCountCache.delete(firstKey);
   }
 
-  readingTimeCache.set(cacheKey, time);
+  wordCountCache.set(text, wordCount);
 
-  return time;
+  return Math.ceil(wordCount / wordsPerMinute);
 }
