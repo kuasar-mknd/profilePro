@@ -681,8 +681,7 @@
    * and previous listeners are removed before creating a new one.
    */
   function initLightbox() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     // ⚡ Clean up previous instance to prevent listener leaks or stale DOM refs
     if (win.__lightboxInstance) {
@@ -696,8 +695,7 @@
 
   // ⚡ Bolt: Singleton Listener Pattern for View Transitions
   function setupLightboxListeners() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     if (win.__lightboxInitHandler) {
       document.removeEventListener(

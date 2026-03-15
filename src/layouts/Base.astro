@@ -312,8 +312,7 @@ if (postData?.data?.image) {
        * - Throttles scroll updates using requestAnimationFrame
        */
       function initBackToTop() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
+        const win = window;
 
         // ⚡ Cleanup previous listeners before initializing new ones
         if (win.__cleanupBackToTop) {
@@ -456,8 +455,7 @@ if (postData?.data?.image) {
 
       // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
       function initThemeObserver() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
+        const win = window;
         if (win.__themeObserver) return; // Already initialized global observer
 
         // Initial sync of theme color on load
@@ -539,9 +537,7 @@ if (postData?.data?.image) {
           secureLinks();
           initThemeObserver();
         };
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
+        const win = window;
 
         if (win.__baseInitHandler) {
           document.removeEventListener(
@@ -567,8 +563,7 @@ if (postData?.data?.image) {
        * ⚡ Bolt: Centralized .infinite-scroll (carousel) and .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
        */
       function initAnimationOptimizer() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
+        const win = window;
 
         // Disconnect previous observer
         if (win.__animationObserver) {
@@ -603,8 +598,7 @@ if (postData?.data?.image) {
 
       // ⚡ Bolt: Singleton Listener Pattern for Animation Optimizer
       function setupAnimationListeners() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
+        const win = window;
 
         if (win.__animInitHandler) {
           document.removeEventListener(

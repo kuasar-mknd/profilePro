@@ -34,9 +34,7 @@ const {
    */
   function setupTiltListeners() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
+    const win = window;
 
     if (win.__tiltDelegationInitialized) return;
     win.__tiltDelegationInitialized = true;
