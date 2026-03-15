@@ -47,15 +47,11 @@ if (explicitImages && explicitImages.length > 0) {
     { eager: false },
   );
 
-  const folderPath = `/${folder}/`;
-  const folderPathLen = folderPath.length;
-
   const filteredImages = Object.entries(allImages).filter(([path]) => {
-    const folderMatchIndex = path.indexOf(folderPath);
-    if (folderMatchIndex === -1) return false;
+    const folderMatch = path.includes(`/${folder}/`);
+    if (!folderMatch) return false;
 
-    const isInSubfolder =
-      path.indexOf("/", folderMatchIndex + folderPathLen) !== -1;
+    const isInSubfolder = path.split(`/${folder}/`)[1]?.includes("/");
     if (isInSubfolder) return false;
 
     for (const pattern of excludePatterns) {
