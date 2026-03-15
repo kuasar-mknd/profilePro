@@ -50,3 +50,41 @@ const currentPath = normalizePath(pathname);
     </li>
   </ul>
 </nav>
+
+<script>
+  /**
+   * 🎨 Palette: Tactile feedback for primary navigation
+   * Provides a subtle physical confirmation when interacting with the main menu.
+   */
+  function initNavHaptics() {
+    const nav = document.querySelector('nav[aria-label="Menu principal"]');
+    if (!nav || (nav as HTMLElement).dataset.hapticsInitialized === "true")
+      return;
+
+    (nav as HTMLElement).dataset.hapticsInitialized = "true";
+
+    nav.addEventListener("click", (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(".nav-item a")) {
+        // 🎨 Palette: Respect user preferences for reduced motion/haptics
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (navigator.vibrate && !prefersReducedMotion) {
+          navigator.vibrate(30);
+        }
+      }
+    });
+  }
+
+  // Support View Transitions
+  if (window.__navHapticsInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__navHapticsInitHandler,
+    );
+  }
+  window.__navHapticsInitHandler = initNavHaptics;
+  document.addEventListener("astro:page-load", initNavHaptics);
+  initNavHaptics();
+</script>
