@@ -122,6 +122,43 @@ describe("Security Utilities", () => {
       // \x01javascript:alert(1)
       expect(sanitizeUrl("\x01javascript:alert(1)")).toBe("");
     });
+
+    it("should handle empty inputs", () => {
+      expect(sanitizeUrl("")).toBe("");
+    });
+
+    it("should return about:blank for URLs with control characters", () => {
+      expect(sanitizeUrl("https://example.com/\x01")).toBe("about:blank");
+      expect(sanitizeUrl("https://example.com/\x1F")).toBe("about:blank");
+      expect(sanitizeUrl("https://example.com/\x7F")).toBe("about:blank");
+    });
+
+    it("should allow safe relative paths without leading slashes", () => {
+      expect(sanitizeUrl("images/foo.png")).toBe("images/foo.png");
+      expect(sanitizeUrl("path/to/page")).toBe("path/to/page");
+    });
+
+    it("should block unparseable strings containing colons (potential protocols)", () => {
+      expect(sanitizeUrl("invalid:path/to/resource")).toBe("");
+      expect(sanitizeUrl("foo:bar")).toBe("");
+    });
+
+    it("should cache parsed URLs and evict after 1000 items", () => {
+      // Clear cache conceptually by filling it up and testing eviction
+      const uniqueUrl = "https://example.com/cache-test";
+
+      // First call, should calculate and cache
+      expect(sanitizeUrl(uniqueUrl)).toBe(uniqueUrl);
+
+      // We can't easily inspect the internal Map, but we can verify it doesn't break
+      // when adding more than 1000 items.
+      for (let i = 0; i < 1005; i++) {
+        sanitizeUrl(`https://cache-fill.com/${i}`);
+      }
+
+      // The original URL might have been evicted, but requesting it again should still work
+      expect(sanitizeUrl(uniqueUrl)).toBe(uniqueUrl);
+    });
   });
 
   describe("sanitizeInput", () => {
