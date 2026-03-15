@@ -226,16 +226,13 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // ⚡ Bolt: Singleton event listener pattern for View Transitions
   // Ensures we don't accumulate listeners when the component script re-runs
   function setupVideoPlayerListeners() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
     // Cleanup previous click listener if it exists
-    if (win.__videoPlayerClickHandler) {
-      document.removeEventListener("click", win.__videoPlayerClickHandler);
+    if (window.__videoPlayerClickHandler) {
+      document.removeEventListener("click", window.__videoPlayerClickHandler);
     }
 
     // Register new click listener
-    win.__videoPlayerClickHandler = handleVideoClick;
+    window.__videoPlayerClickHandler = handleVideoClick;
     document.addEventListener("click", handleVideoClick);
   }
 
@@ -244,19 +241,16 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // ⚡ Bolt: Prefetch Plyr resources on hover/focus to improve perceived performance
   // This eliminates the network delay (~200ms+ depending on connection) when the user clicks play
   function setupVideoPrefetchDelegation() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (win.__videoPrefetchDelegationInitialized) return;
-    win.__videoPrefetchDelegationInitialized = true;
+    if (window.__videoPrefetchDelegationInitialized) return;
+    window.__videoPrefetchDelegationInitialized = true;
 
     // Prefetch logic - idempotent
     const prefetch = (e: Event) => {
       const target = e.target as HTMLElement;
       if (!target.closest(".video-player-wrapper")) return;
 
-      if (win._plyrPrefetched) return;
-      win._plyrPrefetched = true;
+      if (window._plyrPrefetched) return;
+      window._plyrPrefetched = true;
 
       // Start fetching chunks in background
       // The browser dedupes these requests automatically
@@ -310,17 +304,14 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
 
   // ⚡ Bolt: Manage page load listener singleton
   function setupPageLoadListener() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (win.__videoPlayerLoadHandler) {
+    if (window.__videoPlayerLoadHandler) {
       document.removeEventListener(
         "astro:page-load",
-        win.__videoPlayerLoadHandler,
+        window.__videoPlayerLoadHandler,
       );
     }
 
-    win.__videoPlayerLoadHandler = initVideoPlayer;
+    window.__videoPlayerLoadHandler = initVideoPlayer;
     document.addEventListener("astro:page-load", initVideoPlayer);
 
     // Run immediately for current execution

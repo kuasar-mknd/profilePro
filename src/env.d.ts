@@ -12,7 +12,7 @@ interface ImportMeta {
 }
 
 interface Window {
-  __lightboxInstance?: { destroy: () => void };
+  __lightboxInstance?: { destroy: () => void } | null;
   __lightboxListenerAttached?: boolean;
   __contactInitHandler?: () => void;
   __mobileMenuInitHandler?: () => void;
@@ -25,6 +25,21 @@ interface Window {
   __tocInitHandler?: () => void;
   __backBtnInitHandler?: () => void;
   __navHapticsInitHandler?: () => void;
+  __cleanupBackToTop?: (() => void) | null;
+  __themeObserver?: MutationObserver;
+  __animationObserver?: IntersectionObserver | null;
+  __animInitHandler?: () => void;
+  __handleThemeChange?: (e: Event) => void;
+  __tagHapticsInitialized?: boolean;
+  __lightboxInitHandler?: () => void;
+  __tiltDelegationInitialized?: boolean;
+  __galleryInitHandler?: () => void;
+  __heroInitHandler?: () => void;
+  __videoPlayerClickHandler?: (e: MouseEvent) => void;
+  __videoPrefetchDelegationInitialized?: boolean;
+  _plyrPrefetched?: boolean;
+  __videoPlayerLoadHandler?: () => void;
+  __baseInitHandler?: () => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
