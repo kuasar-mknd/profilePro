@@ -66,6 +66,32 @@ describe("Security Utilities", () => {
       expect(isValidUrl("https://example.com\rHeader: Injection")).toBe(false);
       expect(isValidUrl("https://example.com\t")).toBe(false);
     });
+
+    it("should allow relative paths with anchors or queries", () => {
+      expect(isValidUrl("#section")).toBe(true);
+      expect(isValidUrl("?param=value")).toBe(true);
+      expect(isValidUrl("/path?query=1#hash")).toBe(true);
+    });
+
+    it("should reject unsupported protocols", () => {
+      expect(isValidUrl("ftp://example.com")).toBe(false);
+      expect(isValidUrl("data:text/html,<script>alert(1)</script>")).toBe(false);
+      expect(isValidUrl("file:///etc/passwd")).toBe(false);
+      expect(isValidUrl("ws://example.com")).toBe(false);
+      expect(isValidUrl("vbscript:msgbox(1)")).toBe(false);
+    });
+
+    it("should reject bare domains or malformed relative paths", () => {
+      expect(isValidUrl("example.com")).toBe(false);
+      expect(isValidUrl("www.example.com")).toBe(false);
+      expect(isValidUrl("invalid-path")).toBe(false);
+    });
+
+    it("should handle URLs with leading or trailing whitespace", () => {
+      expect(isValidUrl("  https://example.com  ")).toBe(true);
+      expect(isValidUrl("  #section  ")).toBe(true);
+      expect(isValidUrl("  javascript:alert(1)  ")).toBe(false); // Validates trimmed string rejection
+    });
   });
 
   describe("sanitizeUrl", () => {
