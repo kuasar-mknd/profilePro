@@ -12,7 +12,17 @@
  * @param value - The value to serialize
  * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+// ⚡ Bolt: Cache map and regex outside the function to avoid recreation on every call
+const SAFE_JSON_MAP: Record<string, string> = {
+  "<": "\\u003c",
+  ">": "\\u003e",
+  "&": "\\u0026",
+  "'": "\\u0027",
+  "\u2028": "\u005cu2028",
+  "\u2029": "\u005cu2029",
+};
+const SAFE_JSON_REGEX = /[<>&'\u2028\u2029]/g;
 export function safeJson(value: any): string {
   const serialized = JSON.stringify(value);
 
@@ -20,13 +30,7 @@ export function safeJson(value: any): string {
   // We must return a valid JSON string (like "null") to prevent TypeError during .replace()
   if (serialized === undefined) return "null";
 
-  return serialized
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026")
-    .replace(/'/g, "\\u0027")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029");
+  return serialized.replace(SAFE_JSON_REGEX, (match) => SAFE_JSON_MAP[match]);
 }
 
 /**

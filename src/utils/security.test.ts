@@ -1,5 +1,6 @@
 import { describe, it, expect } from "bun:test";
 import {
+  safeJson,
   sanitizeUrl,
   sanitizeInput,
   isValidUrl,
@@ -229,5 +230,37 @@ describe("obfuscated URLs", () => {
   it("should reject obfuscated javascript URLs in validation", () => {
     expect(isValidUrl("javascript&#58;alert(1)")).toBe(false);
     expect(isValidUrl(" jav&#x0a;ascript:alert(1)")).toBe(false);
+  });
+});
+
+describe("safeJson", () => {
+  it("should serialize strings correctly", () => {
+    expect(safeJson("test")).toBe('"test"');
+  });
+
+  it("should handle undefined and return 'null'", () => {
+    expect(safeJson(undefined)).toBe("null");
+  });
+
+  it("should escape malicious characters", () => {
+    const malicious = "<script>alert('xss & more')</script>";
+    const result = safeJson(malicious);
+    expect(result).not.toContain("<");
+    expect(result).not.toContain(">");
+    expect(result).not.toContain("&");
+    expect(result).not.toContain("'");
+    expect(result).toContain("\\u003c");
+    expect(result).toContain("\\u003e");
+    expect(result).toContain("\\u0026");
+    expect(result).toContain("\\u0027");
+  });
+
+  it("should escape line separators", () => {
+    const str = "line1\u2028line2\u2029line3";
+    const result = safeJson(str);
+    expect(result).not.toContain("\u2028");
+    expect(result).not.toContain("\u2029");
+    expect(result).toContain("\\u2028");
+    expect(result).toContain("\\u2029");
   });
 });
