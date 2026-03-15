@@ -25,6 +25,7 @@ interface Window {
   __tocInitHandler?: () => void;
   __backBtnInitHandler?: () => void;
   __navHapticsInitHandler?: () => void;
+  __tiltDelegationInitialized?: boolean;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
