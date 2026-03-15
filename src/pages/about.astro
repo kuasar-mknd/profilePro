@@ -1,11 +1,27 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
 import CTASection from "../components/common/CTASection.astro";
 import { Icon } from "astro-icon/components";
 import ScrollReveal from "../components/ui/ScrollReveal.astro";
 import TiltCard from "../components/ui/TiltCard.astro";
+
+// ⚡ Bolt: Pre-calculate image optimization to replace heavy <Picture> component
+// Reduces DOM size and improves loading performance for LCP image
+const img350 = await getImage({
+  src: logo,
+  width: 350,
+  format: "webp",
+  quality: 75,
+});
+const img700 = await getImage({
+  src: logo,
+  width: 700,
+  format: "webp",
+  quality: 75,
+});
+const srcset = `${img350.src} 350w, ${img700.src} 700w`;
 
 const title = "À propos de moi";
 const description =
@@ -88,17 +104,17 @@ const skills = [
             <div
               class="absolute inset-0 rounded-2xl overflow-hidden image-zoom"
             >
-              <Picture
-                src={logo}
-                widths={[350, 700]}
+              {
+                /* ⚡ Bolt: Replaced <Picture> with <img> + srcset for faster parsing */
+              }
+              <img
+                src={img350.src}
+                srcset={srcset}
                 sizes="(max-width: 768px) 100vw, 350px"
-                formats={["webp"]}
-                fallbackFormat="webp"
-                width={350}
-                height={438}
+                width="350"
+                height="438"
                 alt="Samuel Dulex"
                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                quality={75}
                 loading="eager"
                 decoding="sync"
                 fetchpriority="high"

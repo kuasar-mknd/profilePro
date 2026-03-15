@@ -1,6 +1,6 @@
 ---
 const { postData, bentoSize = "", priority = false } = Astro.props;
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
 import { getReadingTime } from "../../../utils/readingTime";
@@ -11,6 +11,31 @@ const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
 const readingTime = getReadingTime(postData.body);
+
+// ⚡ Bolt: Pre-calculate image optimization to replace heavy <Picture> component
+// This reduces DOM size and improves parsing speed by using a standard <img> tag with srcset
+const img400 = await getImage({
+  src: postData.data.image,
+  width: 400,
+  format: "webp",
+  quality: 65,
+});
+const img800 = await getImage({
+  src: postData.data.image,
+  width: 800,
+  format: "webp",
+  quality: 65,
+});
+const img1200 = await getImage({
+  src: postData.data.image,
+  width: 1200,
+  format: "webp",
+  quality: 65,
+});
+const srcset = `${img400.src} 400w, ${img800.src} 800w, ${img1200.src} 1200w`;
+const sizes = isLarge
+  ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
+  : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px";
 ---
 
 <article
@@ -33,16 +58,14 @@ const readingTime = getReadingTime(postData.body);
   <div
     class="absolute inset-0 image-zoom overflow-hidden rounded-2xl pointer-events-none group-hover:will-change-transform"
   >
-    {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
-    <Picture
-      src={postData.data.image}
-      widths={[400, 800, 1200]}
-      sizes={isLarge
-        ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-        : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
-      formats={["webp"]}
-      fallbackFormat="webp"
-      quality={65}
+    {
+      /* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates
+        Replaced <Picture> with <img> + srcset to reduce DOM nodes and memory overhead */
+    }
+    <img
+      src={img800.src}
+      srcset={srcset}
+      sizes={sizes}
       alt={postData.data.title}
       width={isLarge ? 800 : 400}
       height={isLarge ? 600 : 300}

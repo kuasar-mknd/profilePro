@@ -7,3 +7,8 @@
 
 **Learning:** When using `Intl.DateTimeFormat` inside a component that is rendered frequently (like a post/project card rendered for every item in a list or grid during SSG), creating a new instance on every render is computationally expensive and measurably slows down build times in Node/Bun environments.
 **Action:** Cache the `Intl.DateTimeFormat` instance globally (e.g., using `globalThis.__publishDateFormatter`) so it is only instantiated once and reused across all component renders. Ensure the global variable is typed in `src/env.d.ts` to prevent TypeScript errors.
+
+## 2025-03-15 - DOM Size Reduction via Pre-calculated Images
+
+**Learning:** The default Astro `<Picture>` component generates complex DOM trees (multiple `<source>` tags wrapped in `<picture>`). In high-frequency components (like Post and AuthorInfo cards or heavy landing pages), this leads to DOM bloat and slower parsing speed by the browser.
+**Action:** Replaced the heavy `<Picture>` component with standard `<img>` tags, passing pre-calculated `getImage()` API calls down directly (leveraging Astro's underlying optimization system but keeping the final DOM minimal). Applied this sequentially across `Post.astro`, `AuthorInfo.astro`, `[slug].astro`, `about.astro`, and `project/[slug].astro`.
