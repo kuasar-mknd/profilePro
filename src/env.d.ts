@@ -25,6 +25,10 @@ interface Window {
   __tocInitHandler?: () => void;
   __backBtnInitHandler?: () => void;
   __navHapticsInitHandler?: () => void;
+  __videoPlayerClickHandler?: (e: MouseEvent) => Promise<void>;
+  __videoPrefetchDelegationInitialized?: boolean;
+  _plyrPrefetched?: boolean;
+  __videoPlayerLoadHandler?: () => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
