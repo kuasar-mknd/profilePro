@@ -12,8 +12,9 @@ interface ImportMeta {
 }
 
 interface Window {
-  __lightboxInstance?: { destroy: () => void };
+  __lightboxInstance?: { destroy: () => void } | null;
   __lightboxListenerAttached?: boolean;
+  __lightboxInitHandler?: () => void;
   __contactInitHandler?: () => void;
   __mobileMenuInitHandler?: () => void;
   __carbonBadgeInitHandler?: () => void;
