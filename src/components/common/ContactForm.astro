@@ -2,12 +2,14 @@
 import { Icon } from "astro-icon/components";
 
 const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 ---
 
 {
   /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
 }
 <form
+  data-key={ENCODED_ACCESS_KEY}
   action="https://api.web3forms.com/submit"
   method="POST"
   class="contact-form-section w-full max-w-lg mx-auto bg-white/80 dark:bg-pacamara-dark/60 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-pacamara-secondary/10 dark:border-white/10 shadow-2xl relative overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_600px] contain-layout-paint"
@@ -44,8 +46,7 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
   >
   </div>
 
-  <!-- Access Key -->
-  <input type="hidden" name="access_key" value={PUBLIC_WEB3FORMS_ACCESS_KEY} />
+  <!-- 🛡️ Sentinel: Obfuscated Access Key to prevent scraping -->
 
   <!-- Optional: Subject -->
   <input type="hidden" name="subject" value="Nouveau message du Portfolio" />
@@ -666,6 +667,10 @@ const PUBLIC_WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
       try {
         const formData = new FormData(form);
         const data: Record<string, string> = {};
+        const encodedKey = form.getAttribute("data-key");
+        if (encodedKey) {
+          data["access_key"] = atob(encodedKey);
+        }
         const allowedFields = new Set([
           "name",
           "email",
