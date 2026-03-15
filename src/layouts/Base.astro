@@ -312,13 +312,10 @@ if (postData?.data?.image) {
        * - Throttles scroll updates using requestAnimationFrame
        */
       function initBackToTop() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-
         // ⚡ Cleanup previous listeners before initializing new ones
-        if (win.__cleanupBackToTop) {
-          win.__cleanupBackToTop();
-          win.__cleanupBackToTop = null;
+        if (window.__cleanupBackToTop) {
+          window.__cleanupBackToTop();
+          window.__cleanupBackToTop = null;
         }
 
         const backToTopBtn = document.getElementById("back-to-top");
@@ -433,7 +430,7 @@ if (postData?.data?.image) {
         backToTopBtn.addEventListener("click", onClick);
 
         // ⚡ Register cleanup
-        win.__cleanupBackToTop = () => {
+        window.__cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
           if (resizeObserver) resizeObserver.disconnect();
           if (backToTopObserver) {
@@ -456,14 +453,12 @@ if (postData?.data?.image) {
 
       // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
       function initThemeObserver() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        if (win.__themeObserver) return; // Already initialized global observer
+        if (window.__themeObserver) return; // Already initialized global observer
 
         // Initial sync of theme color on load
         updateThemeColor();
 
-        win.__themeObserver = new MutationObserver((mutations) => {
+        window.__themeObserver = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
               updateThemeColor();
@@ -471,7 +466,7 @@ if (postData?.data?.image) {
           });
         });
 
-        win.__themeObserver.observe(document.documentElement, {
+        window.__themeObserver.observe(document.documentElement, {
           attributes: true,
           attributeFilter: ["class"],
         });
@@ -540,17 +535,14 @@ if (postData?.data?.image) {
           initThemeObserver();
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-
-        if (win.__baseInitHandler) {
+        if (window.__baseInitHandler) {
           document.removeEventListener(
             "astro:page-load",
-            win.__baseInitHandler,
+            window.__baseInitHandler,
           );
         }
 
-        win.__baseInitHandler = initAll;
+        window.__baseInitHandler = initAll;
         document.addEventListener("astro:page-load", initAll);
 
         // Run immediately
@@ -567,13 +559,10 @@ if (postData?.data?.image) {
        * ⚡ Bolt: Centralized .infinite-scroll (carousel) and .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
        */
       function initAnimationOptimizer() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-
         // Disconnect previous observer
-        if (win.__animationObserver) {
-          win.__animationObserver.disconnect();
-          win.__animationObserver = null;
+        if (window.__animationObserver) {
+          window.__animationObserver.disconnect();
+          window.__animationObserver = null;
         }
 
         // Select all floating elements
@@ -583,7 +572,7 @@ if (postData?.data?.image) {
 
         if (animatedElements.length === 0) return;
 
-        win.__animationObserver = new IntersectionObserver(
+        window.__animationObserver = new IntersectionObserver(
           (entries) => {
             for (let i = 0; i < entries.length; i++) {
               if (!entries[i].isIntersecting) {
@@ -597,23 +586,20 @@ if (postData?.data?.image) {
         );
 
         for (let i = 0; i < animatedElements.length; i++) {
-          win.__animationObserver?.observe(animatedElements[i]);
+          window.__animationObserver?.observe(animatedElements[i]);
         }
       }
 
       // ⚡ Bolt: Singleton Listener Pattern for Animation Optimizer
       function setupAnimationListeners() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-
-        if (win.__animInitHandler) {
+        if (window.__animInitHandler) {
           document.removeEventListener(
             "astro:after-swap",
-            win.__animInitHandler,
+            window.__animInitHandler,
           );
         }
 
-        win.__animInitHandler = initAnimationOptimizer;
+        window.__animInitHandler = initAnimationOptimizer;
         document.addEventListener("astro:after-swap", initAnimationOptimizer);
 
         // Run immediately
