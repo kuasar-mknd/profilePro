@@ -1,6 +1,26 @@
 ---
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 const { authorData } = Astro.props;
+
+// ⚡ Bolt: Pre-calculate image optimization to replace heavy <Picture> component
+// Reduces DOM size and improves loading performance
+let img120: any = null;
+let img240: any = null;
+let srcset = "";
+
+if (authorData.data.photo) {
+  img120 = await getImage({
+    src: authorData.data.photo,
+    width: 120,
+    format: "webp",
+  });
+  img240 = await getImage({
+    src: authorData.data.photo,
+    width: 240,
+    format: "webp",
+  });
+  srcset = `${img120.src} 120w, ${img240.src} 240w`;
+}
 ---
 
 {
@@ -11,18 +31,17 @@ const { authorData } = Astro.props;
 >
   <div class="shrink-0">
     {
-      authorData.data.photo && (
+      authorData.data.photo && img120 && (
         <div class="relative group">
           <div class="absolute inset-0 bg-pacamara-accent/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <Picture
-            src={authorData.data.photo}
-            widths={[120, 240]}
+          {/* ⚡ Bolt: Replaced <Picture> with <img> + srcset to reduce DOM nodes */}
+          <img
+            src={img120.src}
+            srcset={srcset}
             sizes="(max-width: 768px) 120px, 120px"
-            formats={["webp"]}
-            fallbackFormat="webp"
             alt={authorData.data.displayName}
-            width={120}
-            height={120}
+            width="120"
+            height="120"
             class="relative z-10 rounded-full border-4 border-white dark:border-pacamara-secondary shadow-md hover:scale-105 transition-transform duration-300 object-cover w-[120px] h-[120px]"
             loading="lazy"
             decoding="async"

@@ -1,5 +1,5 @@
 ---
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 
 import Base from "../layouts/Base.astro";
@@ -20,6 +20,35 @@ const { Content } = await entry.render();
 
 // Calculate Reading Time
 const readingTime = getReadingTime(entry.body);
+
+// ⚡ Bolt: Pre-calculate image optimization to replace heavy <Picture> component
+// Reduces DOM size and improves loading performance for LCP image
+let img400: any = null;
+let img800: any = null;
+let img1200: any = null;
+let srcset = "";
+
+if (entry.data.image) {
+  img400 = await getImage({
+    src: entry.data.image,
+    width: 400,
+    format: "webp",
+    quality: 75,
+  });
+  img800 = await getImage({
+    src: entry.data.image,
+    width: 800,
+    format: "webp",
+    quality: 75,
+  });
+  img1200 = await getImage({
+    src: entry.data.image,
+    width: 1200,
+    format: "webp",
+    quality: 75,
+  });
+  srcset = `${img400.src} 400w, ${img800.src} 800w, ${img1200.src} 1200w`;
+}
 ---
 
 <Base postData={entry}>
@@ -67,22 +96,20 @@ const readingTime = getReadingTime(entry.body);
       </div>
     </div>
     {
-      entry.data.image && (
-        <Picture
-          src={entry.data.image}
-          widths={[400, 800, 1200]}
+      entry.data.image && img1200 && (
+        /* ⚡ Bolt: Replaced <Picture> with <img> + srcset for faster parsing */
+        <img
+          src={img800.src}
+          srcset={srcset}
           sizes="(max-width: 768px) 100vw, 800px"
-          formats={["webp"]}
-          fallbackFormat="webp"
           alt={entry.data.title}
-          width={1200}
-          height={600}
+          width="1200"
+          height="600"
           loading="eager"
           decoding="sync"
           fetchpriority="high"
           class="block relative mx-auto mt-10 object-cover h-72 md:h-[350px] image-shine rounded-[15px]"
           transition:name={`project-image-${entry.slug}`}
-          quality={75}
         />
       )
     }

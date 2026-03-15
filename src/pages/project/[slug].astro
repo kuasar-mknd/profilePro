@@ -1,5 +1,5 @@
 ---
-import { Picture, getImage } from "astro:assets";
+import { getImage } from "astro:assets";
 
 import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
@@ -77,6 +77,42 @@ if (entry.data.type === "video" && entry.data.image) {
   });
   optimizedPoster = img.src;
 }
+
+// ⚡ Bolt: Pre-calculate image optimization to replace heavy <Picture> component
+// Reduces DOM size and improves loading performance for LCP image
+let img640: any = null;
+let img960: any = null;
+let img1280: any = null;
+let img1600: any = null;
+let srcset = "";
+
+if (entry.data.image) {
+  img640 = await getImage({
+    src: entry.data.image,
+    width: 640,
+    format: "webp",
+    quality: 70,
+  });
+  img960 = await getImage({
+    src: entry.data.image,
+    width: 960,
+    format: "webp",
+    quality: 70,
+  });
+  img1280 = await getImage({
+    src: entry.data.image,
+    width: 1280,
+    format: "webp",
+    quality: 70,
+  });
+  img1600 = await getImage({
+    src: entry.data.image,
+    width: 1600,
+    format: "webp",
+    quality: 70,
+  });
+  srcset = `${img640.src} 640w, ${img960.src} 960w, ${img1280.src} 1280w, ${img1600.src} 1600w`;
+}
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
@@ -96,22 +132,20 @@ if (entry.data.type === "video" && entry.data.image) {
     class="relative w-full h-screen min-h-[600px] flex items-end justify-center overflow-hidden pb-32"
   >
     {
-      entry.data.image && (
+      entry.data.image && img1600 && (
         <div class="absolute inset-0 z-0">
           {/* Masque pour fondre l'image en haut et en bas */}
           <div class="relative w-full h-full mask-gradient-fade">
-            <Picture
-              src={entry.data.image}
-              widths={[640, 960, 1280, 1600]}
+            {/* ⚡ Bolt: Replaced <Picture> with <img> + srcset for faster parsing */}
+            <img
+              src={img1600.src}
+              srcset={srcset}
               sizes="100vw"
-              formats={["webp"]}
-              fallbackFormat="webp"
               alt={entry.data.title}
-              width={1600}
-              height={800}
+              width="1600"
+              height="800"
               class="w-full h-full object-cover"
               transition:name={`project-image-${entry.slug}`}
-              quality={70}
               loading="eager"
               fetchpriority="high"
             />
