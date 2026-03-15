@@ -628,13 +628,18 @@ if (postData?.data?.image) {
       }
     </script>
     <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      is:inline
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon={safeJson({
-        token: PUBLIC_CF_ANALYTICS_TOKEN,
-      })}></script>
+    {
+      PUBLIC_CF_ANALYTICS_TOKEN && PUBLIC_CF_ANALYTICS_TOKEN !== "dry_run" && (
+        <script
+          defer
+          is:inline
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={safeJson({
+            token: PUBLIC_CF_ANALYTICS_TOKEN,
+          })}
+        />
+      )
+    }
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
