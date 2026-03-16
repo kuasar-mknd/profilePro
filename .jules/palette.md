@@ -55,3 +55,7 @@
 ## 2026-03-13 - State Reset for Auto-Resizing Textareas
 **Learning:** For forms containing textareas that dynamically adjust their height based on content (e.g., via `input` listeners), calling `form.reset()` clears the text but leaves the DOM element at its expanded height. This creates a visually jarring "gap" in the UI.
 **Action:** Explicitly reset the `height` style property to `auto` (or the initial value) within the `reset` event listener or click handler of the reset button to ensure the textarea returns to its original collapsed state.
+
+## 2024-05-20 - Unified Interactive Element Descriptions
+**Learning:** For complex interactive elements like CTA cards or buttons with multiple icons and text layers, applying a unified `aria-label` to the wrapper while leaving inner text elements visible creates disjointed and duplicated reads for screen reader users. The screen reader announces the `aria-label` and then sequentially reads the internal visual content again.
+**Action:** When a unified `aria-label` is applied to a wrapper link or button, always apply `aria-hidden="true"` to the inner textual and visual content to ensure a clean, single announcement.
