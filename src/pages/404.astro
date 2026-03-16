@@ -40,8 +40,9 @@ import { Icon } from "astro-icon/components";
         <Icon
           name="mdi:home"
           class="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-1"
+          aria-hidden="true"
         />
-        <span>Retour à l'accueil</span>
+        <span aria-hidden="true">Retour à l'accueil</span>
       </a>
       <button
         id="go-back-btn"
@@ -51,8 +52,9 @@ import { Icon } from "astro-icon/components";
         <Icon
           name="mdi:arrow-left"
           class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1"
+          aria-hidden="true"
         />
-        <span>Page précédente</span>
+        <span aria-hidden="true">Page précédente</span>
       </button>
     </div>
   </section>
