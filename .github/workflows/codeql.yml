@@ -1,4 +1,4 @@
-# CodeQL static analysis configuration for JS/TS
+# Configuration for CodeQL static analysis scanning vulnerabilities in JS/TS
 name: "CodeQL"
 
 on:
