@@ -13,6 +13,17 @@
  * @returns The JSON string with '<', '>', '&', U+2028, and U+2029 escaped to prevent XSS.
  */
 
+// ⚡ Bolt: Define replacement map and regex outside function scope to prevent memory reallocation on every call
+const ESCAPE_JSON_REGEX = /[<>&'\u2028\u2029]/g;
+const ESCAPE_JSON_MAP: Record<string, string> = {
+  "<": "\\u003c",
+  ">": "\\u003e",
+  "&": "\\u0026",
+  "'": "\\u0027",
+  "\u2028": "\\u2028",
+  "\u2029": "\\u2029",
+};
+
 export function safeJson(value: unknown): string {
   const serialized = JSON.stringify(value);
 
@@ -20,13 +31,10 @@ export function safeJson(value: unknown): string {
   // We must return a valid JSON string (like "null") to prevent TypeError during .replace()
   if (serialized === undefined) return "null";
 
-  return serialized
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026")
-    .replace(/'/g, "\\u0027")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029");
+  return serialized.replace(
+    ESCAPE_JSON_REGEX,
+    (match) => ESCAPE_JSON_MAP[match]!,
+  );
 }
 
 /**
