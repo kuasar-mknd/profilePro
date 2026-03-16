@@ -1,3 +1,4 @@
+# Configuration for CI Pipeline: Runs linting, format checks, typechecks, and E2E tests for the Astro SSG app
 name: CI Pipeline
 
 on:

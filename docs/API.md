@@ -80,3 +80,5 @@ As this is a static site, API errors are primarily HTTP-level responses served b
 - **500 Server Error**: (Rare) Returns a generic Cloudflare error page if the CDN fails to serve the static asset.
 
 There are no custom JSON error payloads since there are no dynamic JSON endpoints.
+
+<!-- Verified: DocOps -->

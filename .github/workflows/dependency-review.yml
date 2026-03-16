@@ -1,4 +1,4 @@
-# Dependency review configuration for PRs
+# Configuration for dependency review to block risky PR dependency additions
 name: "Dependency Review"
 
 on: [pull_request]
