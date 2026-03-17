@@ -6,7 +6,7 @@
  * 1. Automatic loading from folder: <ImageGallery folder="my-project" />
  * 2. Explicit image array: <ImageGallery images={myImagesArray} />
  */
-import { Picture, getImage } from "astro:assets";
+import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 import EmptyState from "./EmptyState.astro";
@@ -86,14 +86,17 @@ const optimizedImages = await limitConcurrency(
   galleryImages,
   2,
   async (img) => {
-    const optimized = await getImage({
-      src: img.src,
-      width: 1600,
-      format: "webp",
-      quality: 80,
-    });
+    const [optimized, w400, w800] = await Promise.all([
+      getImage({ src: img.src, width: 1600, format: "webp", quality: 80 }),
+      getImage({ src: img.src, width: 400, format: "webp", quality: 80 }),
+      getImage({ src: img.src, width: 800, format: "webp", quality: 80 }),
+    ]);
+
     return {
       ...img,
+      src: w800.src,
+      srcset: `${w400.src} 400w, ${w800.src} 800w`,
+      attributes: w800.attributes,
       lightboxSrc: optimized.src,
     };
   },
@@ -117,14 +120,15 @@ const columnClasses = {
         <figure class="gallery-item group relative cursor-pointer">
           <Skeleton class="absolute inset-0 z-10 transition-opacity duration-500" />
           {/* ⚡ Bolt: Smart Loading - Eager load priority images, lazy load the rest */}
-          <Picture
+          {/* ⚡ Bolt: Replaced <Picture> with standard <img> populated by getImage() to reduce DOM bloat and improve parsing speed */}
+          <img
             src={image.src}
-            widths={[400, 800]}
+            srcset={image.srcset}
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
-            formats={["webp"]}
-            fallbackFormat="webp"
             alt={image.alt || `Photo ${index + 1}`}
-            class="cursor-pointer gallery-image focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+            width={image.attributes.width}
+            height={image.attributes.height}
+            class="cursor-pointer gallery-image focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 object-cover"
             data-gallery-image
             data-lightbox-src={image.lightboxSrc}
             tabindex="0"
