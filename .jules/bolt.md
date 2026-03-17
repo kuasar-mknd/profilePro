@@ -14,3 +14,11 @@
 ## 2024-05-19 - Replaced heavy Picture component with img and srcset
 **Learning:** In Astro, the `<Picture>` component generates multiple `<source>` tags for different formats and sizes. When this component is used in repeatedly rendered elements (like Post cards in LatestPosts or Project loops), it creates immense DOM bloat, increasing frontend parsing time and memory overhead.
 **Action:** Use `getImage` to pre-generate optimized WebP assets and pass them to a standard `<img>` tag via `srcset` and `sizes` attributes. This provides the exact same responsive functionality but drastically reduces DOM complexity.
+
+## 2025-03-17 - Bounded concurrency for getImage calls
+**Learning:** In Astro SSG builds, calling `getImage()` repeatedly inside frequent components (like a Post card rendered in an unbounded `map` loop) without concurrency limits can cause massive memory allocation overhead and CPU spikes.
+**Action:** Always wrap heavy asynchronous generation functions like `getImage()` in a concurrency limiting wrapper (e.g., `limitConcurrency`) when used repeatedly in components that iterate over large collections.
+
+## 2025-03-17 - RegEx and Map hoisting
+**Learning:** Instantiating Regular Expressions and lookup dictionaries inside heavily-called string formatting or sanitization functions (like `sanitizeInput`) causes redundant memory reallocation on every call.
+**Action:** Extract static regex patterns and replacement dictionaries to the module/file scope outside of the function body.

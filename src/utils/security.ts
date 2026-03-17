@@ -53,34 +53,40 @@ export function safeJson(value: unknown): string {
  * @param str - The input string to sanitize
  * @returns The sanitized string
  */
+// ⚡ Bolt: Define replacement map and regex outside function scope to prevent memory reallocation on every call
+const SANITIZE_INPUT_MAP: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+  "/": "&#x2F;",
+  "`": "&#x60;", // Prevent template injection
+  "=": "&#x3D;", // Prevent unquoted attribute injection
+  "(": "&#40;", // Prevent function calls / logic injection
+  ")": "&#41;",
+  "{": "&#123;", // Prevent template/logic injection
+  "}": "&#125;",
+  "[": "&#91;", // Prevent array/logic injection
+  "]": "&#93;",
+  "%": "&#37;", // Prevent URL-encoding attacks
+  "\\": "&#92;", // Prevent escaping attacks
+};
+
+// Regex matches all keys in the map
+const SANITIZE_INPUT_REGEX = /[&<>"'/`=(){}[\]%\\]/g;
+const CONTROL_CHAR_REGEX = /[\x00-\x08\x0B-\x1F\x7F]/g;
+
 export function sanitizeInput(str: string): string {
   // 🛡️ Sentinel: Strip control characters (CR, LF, Vertical Tab, etc.) to prevent Header Injection
   // and other control-character based attacks.
   // Exceptions: Horizontal Tab (\t) is usually safe in text content.
-  const cleanStr = str.replace(/[\x00-\x08\x0B-\x1F\x7F]/g, "");
+  const cleanStr = str.replace(CONTROL_CHAR_REGEX, "");
 
-  const map: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "/": "&#x2F;",
-    "`": "&#x60;", // Prevent template injection
-    "=": "&#x3D;", // Prevent unquoted attribute injection
-    "(": "&#40;", // Prevent function calls / logic injection
-    ")": "&#41;",
-    "{": "&#123;", // Prevent template/logic injection
-    "}": "&#125;",
-    "[": "&#91;", // Prevent array/logic injection
-    "]": "&#93;",
-    "%": "&#37;", // Prevent URL-encoding attacks
-    "\\": "&#92;", // Prevent escaping attacks
-  };
-  // Regex matches all keys in the map
-  const reg = /[&<>"'/`=(){}[\]%\\]/g;
-
-  return cleanStr.replace(reg, (match) => map[match] || match);
+  return cleanStr.replace(
+    SANITIZE_INPUT_REGEX,
+    (match) => SANITIZE_INPUT_MAP[match] || match,
+  );
 }
 
 /**
