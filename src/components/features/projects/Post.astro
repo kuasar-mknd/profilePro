@@ -1,6 +1,6 @@
 ---
 const { postData, bentoSize = "", priority = false } = Astro.props;
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import Tag from "../../ui/Tag.astro";
 import { getReadingTime } from "../../../utils/readingTime";
@@ -11,6 +11,32 @@ const isWide = bentoSize === "bento-item-wide";
 
 // 🎨 Palette: Calculate reading time for better UX
 const readingTime = getReadingTime(postData.body);
+
+// ⚡ Bolt: Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
+// This reduces DOM nodes per Post card, significantly speeding up frontend parsing time when displaying many projects.
+const w400 = await getImage({
+  src: postData.data.image,
+  width: 400,
+  format: "webp",
+  quality: 65,
+});
+const w800 = await getImage({
+  src: postData.data.image,
+  width: 800,
+  format: "webp",
+  quality: 65,
+});
+const w1200 = await getImage({
+  src: postData.data.image,
+  width: 1200,
+  format: "webp",
+  quality: 65,
+});
+
+const optimizedImage = {
+  src: w800.src, // Fallback/Default src
+  srcset: `${w400.src} 400w, ${w800.src} 800w, ${w1200.src} 1200w`,
+};
 ---
 
 <article
@@ -35,15 +61,15 @@ const readingTime = getReadingTime(postData.body);
     aria-hidden="true"
   >
     {/* ⚡ Bolt: Smart loading strategy - Eager load LCP candidates */}
-    <Picture
-      src={postData.data.image}
-      widths={[400, 800, 1200]}
+    {
+      /* ⚡ Bolt: Replaced <Picture> with standard <img> populated by getImage() to reduce DOM bloat and improve parsing speed */
+    }
+    <img
+      src={optimizedImage.src}
+      srcset={optimizedImage.srcset}
       sizes={isLarge
         ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
         : "(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"}
-      formats={["webp"]}
-      fallbackFormat="webp"
-      quality={65}
       alt={postData.data.title}
       width={isLarge ? 800 : 400}
       height={isLarge ? 600 : 300}

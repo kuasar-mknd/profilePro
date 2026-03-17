@@ -10,3 +10,7 @@
 ## 2026-03-15 - Optimize getReadingTime Cache Memory
 **Learning:** Caching results of operations on large strings using composite keys (e.g. `${wpm}:${text}`) causes severe memory allocations because it duplicates the large string for the key.
 **Action:** Replaced composite string caching with a `Map` keyed directly to the original `text` reference, caching the intermediate `wordCount` instead of the final result. Reduced memory allocation from ~76MB to 0MB per 100 misses on 1MB strings.
+
+## 2024-05-19 - Replaced heavy Picture component with img and srcset
+**Learning:** In Astro, the `<Picture>` component generates multiple `<source>` tags for different formats and sizes. When this component is used in repeatedly rendered elements (like Post cards in LatestPosts or Project loops), it creates immense DOM bloat, increasing frontend parsing time and memory overhead.
+**Action:** Use `getImage` to pre-generate optimized WebP assets and pass them to a standard `<img>` tag via `srcset` and `sizes` attributes. This provides the exact same responsive functionality but drastically reduces DOM complexity.
