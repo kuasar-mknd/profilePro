@@ -1,6 +1,15 @@
 ---
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 const { authorData } = Astro.props;
+
+let w120: Awaited<ReturnType<typeof getImage>> | undefined;
+let w240: Awaited<ReturnType<typeof getImage>> | undefined;
+if (authorData.data.photo) {
+  [w120, w240] = await Promise.all([
+    getImage({ src: authorData.data.photo, width: 120, format: "webp" }),
+    getImage({ src: authorData.data.photo, width: 240, format: "webp" }),
+  ]);
+}
 ---
 
 {
@@ -14,20 +23,21 @@ const { authorData } = Astro.props;
       authorData.data.photo && (
         <div class="relative group">
           <div class="absolute inset-0 bg-pacamara-accent/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <Picture
-            src={authorData.data.photo}
-            widths={[120, 240]}
-            sizes="(max-width: 768px) 120px, 120px"
-            formats={["webp"]}
-            fallbackFormat="webp"
-            alt={authorData.data.displayName}
-            width={120}
-            height={120}
-            class="relative z-10 rounded-full border-4 border-white dark:border-pacamara-secondary shadow-md hover:scale-105 transition-transform duration-300 object-cover w-[120px] h-[120px]"
-            loading="lazy"
-            decoding="async"
-            fetchpriority="low"
-          />
+          {/* ⚡ Bolt: Replaced <Picture> with <img> to reduce DOM bloat and improve parsing speed */}
+          {w120 && w240 && (
+            <img
+              src={w120.src}
+              srcset={`${w120.src} 120w, ${w240.src} 240w`}
+              sizes="(max-width: 768px) 120px, 120px"
+              alt={authorData.data.displayName}
+              width={w120.attributes.width}
+              height={w120.attributes.height}
+              class="relative z-10 rounded-full border-4 border-white dark:border-pacamara-secondary shadow-md hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          )}
         </div>
       )
     }
