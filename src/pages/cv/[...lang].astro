@@ -7,6 +7,7 @@ import yaml from "js-yaml";
 import sanitizeHtml from "sanitize-html";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
+import { limitConcurrency } from "../../utils/async";
 
 export function getStaticPaths() {
   return [
@@ -77,6 +78,27 @@ const allEducations = await getCvEducations();
 const educations = allEducations
   .filter((edu) => edu.data.lang === currentLang && !edu.data.draft)
   .sort((a, b) => a.data.order - b.data.order);
+
+// ⚡ Bolt: Pre-render markdown content in frontmatter with bounded concurrency
+// This prevents memory spikes and CPU saturation during Astro SSG builds
+// caused by unbounded async .map() calls in the JSX template.
+const renderedExperiences = await limitConcurrency(
+  experiences,
+  2,
+  async (exp) => {
+    const { Content } = await exp.render();
+    return { exp, Content };
+  },
+);
+
+const renderedEducations = await limitConcurrency(
+  educations,
+  2,
+  async (edu) => {
+    const { Content } = await edu.render();
+    return { edu, Content };
+  },
+);
 
 const title = "CV Samuel Dulex";
 const description = data.profile.content;
@@ -214,8 +236,7 @@ const description = data.profile.content;
 
             <div class="space-y-6 print:space-y-0.5">
               {
-                experiences.map(async (exp) => {
-                  const { Content } = await exp.render();
+                renderedExperiences.map(({ exp, Content }) => {
                   return (
                     <div class="item print:break-inside-avoid">
                       <div class="flex justify-between items-baseline mb-1 print:mb-0">
@@ -257,8 +278,7 @@ const description = data.profile.content;
 
             <div class="space-y-6 print:space-y-0.5">
               {
-                educations.map(async (edu) => {
-                  const { Content } = await edu.render();
+                renderedEducations.map(({ edu, Content }) => {
                   return (
                     <div class="item print:break-inside-avoid">
                       <div class="flex justify-between items-baseline mb-1 print:mb-0">
