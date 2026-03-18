@@ -32,7 +32,9 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
       ? `Tous (${totalCount} ${getProjetsLabel(totalCount)}, filtre actif)`
       : `Tous (${totalCount} ${getProjetsLabel(totalCount)})`}
   >
-    Tous <span class="ml-1 text-xs opacity-70">({totalCount})</span>
+    <span aria-hidden="true">
+      Tous <span class="ml-1 text-xs opacity-70">({totalCount})</span>
+    </span>
   </a>
   {
     tags.map((tag: string) => {
@@ -49,7 +51,9 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
               : `${tag} (${count} ${getProjetsLabel(count)})`
           }
         >
-          {tag} <span class="ml-1 text-xs opacity-70">({count})</span>
+          <span aria-hidden="true">
+            {tag} <span class="ml-1 text-xs opacity-70">({count})</span>
+          </span>
         </a>
       );
     })
