@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { Picture } from "astro:assets";
+import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
 import CTASection from "../components/common/CTASection.astro";
 import { Icon } from "astro-icon/components";
@@ -10,6 +10,11 @@ import TiltCard from "../components/ui/TiltCard.astro";
 const title = "À propos de moi";
 const description =
   "Vidéaste, Photographe & Développeur Web. Je crée des expériences visuelles et digitales uniques.";
+
+const [w350, w700] = await Promise.all([
+  getImage({ src: logo, width: 350, format: "webp", quality: 75 }),
+  getImage({ src: logo, width: 700, format: "webp", quality: 75 }),
+]);
 
 const services = [
   {
@@ -88,17 +93,17 @@ const skills = [
             <div
               class="absolute inset-0 rounded-2xl overflow-hidden image-zoom"
             >
-              <Picture
-                src={logo}
-                widths={[350, 700]}
+              {
+                /* ⚡ Bolt: Replaced <Picture> with <img> to reduce DOM bloat and improve parsing speed */
+              }
+              <img
+                src={w350.src}
+                srcset={`${w350.src} 350w, ${w700.src} 700w`}
                 sizes="(max-width: 768px) 100vw, 350px"
-                formats={["webp"]}
-                fallbackFormat="webp"
-                width={350}
-                height={438}
                 alt="Samuel Dulex"
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                quality={75}
+                width={w350.attributes.width}
+                height={w350.attributes.height}
+                class="transition-transform duration-700 group-hover:scale-105"
                 loading="eager"
                 decoding="sync"
                 fetchpriority="high"
