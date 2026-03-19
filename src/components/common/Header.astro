@@ -7,18 +7,21 @@ import logo from "../../assets/logo.avif";
 
 // ⚡ Bolt: Optimize logo loading with explicit dimensions for LCP/CLS
 // Generating 1x and 2x assets ensures crisp rendering on high-DPI screens without the overhead of <Picture>
-const logo1x = await getImage({
-  src: logo,
-  width: 40,
-  height: 40,
-  format: "webp",
-});
-const logo2x = await getImage({
-  src: logo,
-  width: 80,
-  height: 80,
-  format: "webp",
-});
+// ⚡ Bolt: Execute getImage calls concurrently via Promise.all to eliminate sequential blocking during SSG builds.
+const [logo1x, logo2x] = await Promise.all([
+  getImage({
+    src: logo,
+    width: 40,
+    height: 40,
+    format: "webp",
+  }),
+  getImage({
+    src: logo,
+    width: 80,
+    height: 80,
+    format: "webp",
+  }),
+]);
 ---
 
 <header
