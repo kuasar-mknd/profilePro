@@ -66,14 +66,17 @@ if (entry.data.image) {
         <button
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3"
-          aria-label="Partager cet article"
         >
           <div class="grid grid-cols-1 grid-rows-1 place-items-center">
             <!-- Normal State -->
             <div
               class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 group-[.copied]:opacity-0 group-[.copied]:translate-y-2"
             >
-              <Icon name="mdi:share-variant" class="w-4 h-4" />
+              <Icon
+                name="mdi:share-variant"
+                class="w-4 h-4"
+                aria-hidden="true"
+              />
               <span>Partager</span>
             </div>
             <!-- Copied State -->
