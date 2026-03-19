@@ -22,3 +22,7 @@
 ## 2025-03-17 - RegEx and Map hoisting
 **Learning:** Instantiating Regular Expressions and lookup dictionaries inside heavily-called string formatting or sanitization functions (like `sanitizeInput`) causes redundant memory reallocation on every call.
 **Action:** Extract static regex patterns and replacement dictionaries to the module/file scope outside of the function body.
+
+## 2024-05-18 - Awaiting sequential Astro operations
+**Learning:** Sequential async operations like `entry.render()`, `getEntry()`, and multiple `getImage()` calls block execution during Astro SSG builds and create measurable performance overhead per mapped page.
+**Action:** Group these independent asynchronous operations into a single `Promise.all()` to dramatically increase SSG concurrency and shorten build time, maintaining typing via `Awaited<ReturnType<typeof func>>`.

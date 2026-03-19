@@ -38,52 +38,30 @@ const { entry, prevPost, nextPost, allProjects } = Astro.props;
 // Calculate reading time
 const readingTime = getReadingTime(entry.body);
 
-const { Content, headings } = await entry.render();
-const author = await getEntry(entry.data.author);
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": entry.data.type === "video" ? "VideoObject" : "CreativeWork",
-  headline: entry.data.title,
-  description: entry.data.seoDescription || entry.data.intro,
-  image: entry.data.image
-    ? new URL(entry.data.image.src, Astro.url).toString()
-    : undefined,
-  datePublished: entry.data.pubDate.toISOString(),
-  author: {
-    "@type": "Person",
-    name: "Samuel Dulex",
-  },
-  ...(entry.data.type === "video" && entry.data.videoUrl
-    ? {
-        contentUrl: entry.data.videoUrl,
-        uploadDate: entry.data.pubDate.toISOString(),
-        thumbnailUrl: entry.data.image
-          ? new URL(entry.data.image.src, Astro.url).toString()
-          : undefined,
-      }
-    : {}),
-};
-
-// ⚡ Bolt: Generate optimized WebP poster for video player
-// This prevents serving the original massive image or fetching external provider thumbnails
-let optimizedPoster: string | null = null;
+// ⚡ Bolt: Execute render, getEntry, and all getImage calls concurrently via Promise.all
+// This eliminates sequential blocking during SSG builds.
+let optimizedPosterPromise: Promise<Awaited<
+  ReturnType<typeof getImage>
+> | null> = Promise.resolve(null);
 if (entry.data.type === "video" && entry.data.image) {
-  const img = await getImage({
+  optimizedPosterPromise = getImage({
     src: entry.data.image,
     width: 1280, // HD is sufficient for video poster
     format: "webp",
     quality: 80,
   });
-  optimizedPoster = img.src;
 }
 
-let w640: Awaited<ReturnType<typeof getImage>> | undefined;
-let w960: Awaited<ReturnType<typeof getImage>> | undefined;
-let w1280: Awaited<ReturnType<typeof getImage>> | undefined;
-let w1600: Awaited<ReturnType<typeof getImage>> | undefined;
+let heroImagesPromises: Promise<
+  Awaited<ReturnType<typeof getImage>> | undefined
+>[] = [
+  Promise.resolve(undefined),
+  Promise.resolve(undefined),
+  Promise.resolve(undefined),
+  Promise.resolve(undefined),
+];
 if (entry.data.image) {
-  [w640, w960, w1280, w1600] = await Promise.all([
+  heroImagesPromises = [
     getImage({
       src: entry.data.image,
       width: 640,
@@ -108,8 +86,42 @@ if (entry.data.image) {
       format: "webp",
       quality: 70,
     }),
-  ]);
+  ];
 }
+
+const [{ Content, headings }, author, posterImg, w640, w960, w1280, w1600] =
+  await Promise.all([
+    entry.render(),
+    getEntry(entry.data.author),
+    optimizedPosterPromise,
+    ...heroImagesPromises,
+  ]);
+
+let optimizedPoster = posterImg ? posterImg.src : null;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": entry.data.type === "video" ? "VideoObject" : "CreativeWork",
+  headline: entry.data.title,
+  description: entry.data.seoDescription || entry.data.intro,
+  image: entry.data.image
+    ? new URL(entry.data.image.src, Astro.url).toString()
+    : undefined,
+  datePublished: entry.data.pubDate.toISOString(),
+  author: {
+    "@type": "Person",
+    name: "Samuel Dulex",
+  },
+  ...(entry.data.type === "video" && entry.data.videoUrl
+    ? {
+        contentUrl: entry.data.videoUrl,
+        uploadDate: entry.data.pubDate.toISOString(),
+        thumbnailUrl: entry.data.image
+          ? new URL(entry.data.image.src, Astro.url).toString()
+          : undefined,
+      }
+    : {}),
+};
 ---
 
 <Base postData={entry} jsonLd={jsonLd} noPadding={true}>
