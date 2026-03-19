@@ -26,3 +26,7 @@
 ## 2024-05-18 - Awaiting sequential Astro operations
 **Learning:** Sequential async operations like `entry.render()`, `getEntry()`, and multiple `getImage()` calls block execution during Astro SSG builds and create measurable performance overhead per mapped page.
 **Action:** Group these independent asynchronous operations into a single `Promise.all()` to dramatically increase SSG concurrency and shorten build time, maintaining typing via `Awaited<ReturnType<typeof func>>`.
+
+## 2026-03-20 - Replace forEach with standard for loops
+**Learning:** Using `Array.prototype.forEach` or `NodeList.prototype.forEach` creates a new function execution context (callback) for every item in the array or list. In performance-critical sections like scroll events, mutation observers, or components rendered frequently, this allocation overhead and lack of loop optimization adds up to measurable CPU spikes.
+**Action:** Replace `forEach` with standard `for (let i = 0; i < elements.length; i++)` loops or `for...of` loops. This avoids the function callback allocation overhead and allows JavaScript engines (V8/JavaScriptCore) to better optimize the hot path execution.

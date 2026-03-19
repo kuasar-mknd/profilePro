@@ -289,7 +289,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
     const wrappers = document.querySelectorAll(
       ".video-player-wrapper:not([data-skeleton-init])",
     );
-    wrappers.forEach((wrapper) => {
+    // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+    for (let i = 0; i < wrappers.length; i++) {
+      const wrapper = wrappers[i];
       const posterImg = wrapper.querySelector("img");
       const skeleton = wrapper.querySelector(".skeleton");
       if (posterImg && skeleton) {
@@ -305,7 +307,7 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           posterImg.addEventListener("load", removeSkeleton, { once: true });
         }
       }
-    });
+    }
   }
 
   // ⚡ Bolt: Manage page load listener singleton

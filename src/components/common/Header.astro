@@ -157,7 +157,9 @@ const [logo1x, logo2x] = await Promise.all([
 
     // Observer to detect when menu is opened (via class change on html)
     headerObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+      // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i];
         if (mutation.attributeName === "class") {
           const isOpen = html.classList.contains("overflow-hidden");
 
@@ -172,7 +174,7 @@ const [logo1x, logo2x] = await Promise.all([
             }
           }
         }
-      });
+      }
     });
 
     headerObserver.observe(html, {
