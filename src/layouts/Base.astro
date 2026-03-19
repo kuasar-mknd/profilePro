@@ -464,11 +464,12 @@ if (postData?.data?.image) {
         updateThemeColor();
 
         window.__themeObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.attributeName === "class") {
+          // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+          for (let i = 0; i < mutations.length; i++) {
+            if (mutations[i].attributeName === "class") {
               updateThemeColor();
             }
-          });
+          }
         });
 
         window.__themeObserver.observe(document.documentElement, {

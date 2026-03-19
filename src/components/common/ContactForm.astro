@@ -681,7 +681,8 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           "form-load-timestamp",
         ]);
 
-        formData.forEach((value, key) => {
+        // ⚡ Bolt: Replaced forEach with standard for...of loop to avoid callback allocation
+        for (const [key, value] of formData.entries()) {
           if (allowedFields.has(key) && typeof value === "string") {
             if (key === "email") {
               data[key] = value;
@@ -689,7 +690,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
               data[key] = sanitizeInput(value);
             }
           }
-        });
+        }
 
         const response = await fetch("https://api.web3forms.com/submit", {
           method: "POST",

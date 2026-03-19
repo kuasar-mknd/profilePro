@@ -470,13 +470,15 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
           if (entry.isIntersecting) {
             track.style.animationPlayState = "running";
           } else {
             track.style.animationPlayState = "paused";
           }
-        });
+        }
       },
       { rootMargin: "200px" },
     ); // Pre-load animation slightly before it enters viewport

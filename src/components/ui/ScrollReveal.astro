@@ -48,7 +48,9 @@ const staggerClass =
 
     cachedScrollRevealObserver = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
           if (entry.isIntersecting) {
             const target = entry.target as HTMLElement;
             // ⚡ Bolt: Hint browser for layer promotion just before animation
@@ -70,7 +72,7 @@ const staggerClass =
 
             cachedScrollRevealObserver?.unobserve(target);
           }
-        });
+        }
       },
       {
         threshold: 0.1,
@@ -95,22 +97,26 @@ const staggerClass =
     ).matches;
 
     if (prefersReducedMotion) {
-      elements.forEach((el) => {
+      // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
         el.classList.add("visible", "initialized");
         // Force immediate visibility styles
         (el as HTMLElement).style.opacity = "1";
         (el as HTMLElement).style.transform = "none";
-      });
+      }
       return;
     }
 
     // ⚡ Get or create the singleton observer
     const observer = getScrollRevealObserver();
 
-    elements.forEach((el) => {
+    // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements[i];
       el.classList.add("initialized");
       observer.observe(el);
-    });
+    }
   }
 
   // Run on initial load

@@ -150,7 +150,9 @@
     document.addEventListener("keydown", handleEscape);
 
     const menuObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+      // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i];
         if (mutation.attributeName === "class") {
           const isMenuOpen =
             document.documentElement.classList.contains("overflow-hidden");
@@ -168,7 +170,7 @@
             nav.classList.remove("translate-x-0");
           }
         }
-      });
+      }
     });
 
     menuObserver.observe(document.documentElement, {
