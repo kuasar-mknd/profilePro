@@ -14,24 +14,27 @@ const readingTime = getReadingTime(postData.body);
 
 // ⚡ Bolt: Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
 // This reduces DOM nodes per Post card, significantly speeding up frontend parsing time when displaying many projects.
-const w400 = await getImage({
-  src: postData.data.image,
-  width: 400,
-  format: "webp",
-  quality: 65,
-});
-const w800 = await getImage({
-  src: postData.data.image,
-  width: 800,
-  format: "webp",
-  quality: 65,
-});
-const w1200 = await getImage({
-  src: postData.data.image,
-  width: 1200,
-  format: "webp",
-  quality: 65,
-});
+// ⚡ Bolt: Execute getImage calls concurrently via Promise.all to eliminate sequential blocking during SSG builds.
+const [w400, w800, w1200] = await Promise.all([
+  getImage({
+    src: postData.data.image,
+    width: 400,
+    format: "webp",
+    quality: 65,
+  }),
+  getImage({
+    src: postData.data.image,
+    width: 800,
+    format: "webp",
+    quality: 65,
+  }),
+  getImage({
+    src: postData.data.image,
+    width: 1200,
+    format: "webp",
+    quality: 65,
+  }),
+]);
 
 const optimizedImage = {
   src: w800.src, // Fallback/Default src
