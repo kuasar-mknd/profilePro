@@ -246,6 +246,7 @@ if (entry.data.image) {
         <button
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+          aria-label="Partager ce projet"
         >
           <div
             class="grid grid-cols-1 grid-rows-1 place-items-center px-6 py-3"
@@ -253,12 +254,9 @@ if (entry.data.image) {
             <!-- Normal State -->
             <div
               class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 group-[.copied]:opacity-0 group-[.copied]:translate-y-2"
+              aria-hidden="true"
             >
-              <Icon
-                name="mdi:share-variant"
-                class="w-5 h-5"
-                aria-hidden="true"
-              />
+              <Icon name="mdi:share-variant" class="w-5 h-5" />
               <span class="font-medium">Partager ce projet</span>
             </div>
             <!-- Copied State -->
