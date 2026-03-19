@@ -16,16 +16,18 @@ export async function getStaticPaths() {
 }
 const { entry } = Astro.props;
 
-const { Content } = await entry.render();
+// ⚡ Bolt: Execute entry.render and getImage calls concurrently via Promise.all
+// This eliminates sequential blocking during SSG builds.
+let heroImagesPromises: Promise<
+  Awaited<ReturnType<typeof getImage>> | undefined
+>[] = [
+  Promise.resolve(undefined),
+  Promise.resolve(undefined),
+  Promise.resolve(undefined),
+];
 
-// Calculate Reading Time
-const readingTime = getReadingTime(entry.body);
-
-let w400: Awaited<ReturnType<typeof getImage>> | undefined;
-let w800: Awaited<ReturnType<typeof getImage>> | undefined;
-let w1200: Awaited<ReturnType<typeof getImage>> | undefined;
 if (entry.data.image) {
-  [w400, w800, w1200] = await Promise.all([
+  heroImagesPromises = [
     getImage({
       src: entry.data.image,
       width: 400,
@@ -44,8 +46,16 @@ if (entry.data.image) {
       format: "webp",
       quality: 75,
     }),
-  ]);
+  ];
 }
+
+const [{ Content }, w400, w800, w1200] = await Promise.all([
+  entry.render(),
+  ...heroImagesPromises,
+]);
+
+// Calculate Reading Time
+const readingTime = getReadingTime(entry.body);
 ---
 
 <Base postData={entry}>
