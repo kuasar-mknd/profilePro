@@ -77,11 +77,15 @@ const SANITIZE_INPUT_MAP: Record<string, string> = {
 const SANITIZE_INPUT_REGEX = /[&<>"'/`=(){}[\]%\\]/g;
 const CONTROL_CHAR_REGEX = /[\x00-\x08\x0B-\x1F\x7F]/g;
 
-export function sanitizeInput(str: string): string {
+export function sanitizeInput(str: string, maxLength: number = 10000): string {
+  // 🛡️ Sentinel: Enforce maximum input length to prevent ReDoS and CPU exhaustion
+  // from maliciously large strings before running regular expressions.
+  const truncatedStr = str.length > maxLength ? str.slice(0, maxLength) : str;
+
   // 🛡️ Sentinel: Strip control characters (CR, LF, Vertical Tab, etc.) to prevent Header Injection
   // and other control-character based attacks.
   // Exceptions: Horizontal Tab (\t) is usually safe in text content.
-  const cleanStr = str.replace(CONTROL_CHAR_REGEX, "");
+  const cleanStr = truncatedStr.replace(CONTROL_CHAR_REGEX, "");
 
   return cleanStr.replace(
     SANITIZE_INPUT_REGEX,
