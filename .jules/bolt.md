@@ -33,3 +33,7 @@
 ## 2026-03-24 - Base Layout getImage Parallelization
 **Learning:** Sequential `await getImage` calls in layout frontmatter (like `Base.astro`) block the main thread and significantly slow down SSG builds, as they execute per-page.
 **Action:** Group these calls into `Promise.all()` to enable concurrent fetching and processing.
+
+## 2026-03-24 - Global ResizeObserver Singleton
+**Learning:** Instantiating multiple `ResizeObserver`s that all observe `document.documentElement` across different components (like Base layout, individual projects, etc.) causes memory overhead and redundant layout thrashing during scroll/resize events.
+**Action:** Consolidate multiple `ResizeObserver`s into a single `window.__globalResizeObserver` singleton in `src/layouts/Base.astro`. This singleton observes `document.documentElement` once and dispatches a lightweight custom `app:resize` event that other components can listen to using standard `window.addEventListener('app:resize', ...)`.

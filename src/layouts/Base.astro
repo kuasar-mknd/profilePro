@@ -344,7 +344,6 @@ const [heroLogo, lcpImage] = await Promise.all([
         let rafId: number | null = null;
         // ⚡ Bolt: Cache document height to avoid layout thrashing
         let cachedDocHeight = 0;
-        let resizeObserver: ResizeObserver | null = null;
 
         let backToTopObserver: IntersectionObserver | null = null;
 
@@ -379,13 +378,13 @@ const [heroLogo, lcpImage] = await Promise.all([
         };
 
         // Update visual state (deferred until button is visible)
-        // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
-        resizeObserver = new ResizeObserver(() => {
+        // ⚡ Bolt: Listen to global app:resize event instead of local ResizeObserver
+        const onResize = () => {
           updateDimensions();
           // Update visuals immediately in case scroll pos stayed same but height changed
           window.requestAnimationFrame(updateVisuals);
-        });
-        resizeObserver.observe(document.documentElement);
+        };
+        window.addEventListener("app:resize", onResize);
 
         // Initial calculation
         updateDimensions();
@@ -445,7 +444,7 @@ const [heroLogo, lcpImage] = await Promise.all([
         // ⚡ Register cleanup
         window.__cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
-          if (resizeObserver) resizeObserver.disconnect();
+          window.removeEventListener("app:resize", onResize);
           if (backToTopObserver) {
             backToTopObserver.disconnect();
             backToTopObserver = null;
@@ -462,6 +461,18 @@ const [heroLogo, lcpImage] = await Promise.all([
         if (meta) {
           meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
         }
+      }
+
+      // ⚡ Bolt: Global ResizeObserver Singleton
+      // Replaces multiple ResizeObservers across components observing document.documentElement
+      // with a single instance that dispatches a custom event, reducing memory overhead and layout thrashing.
+      function initGlobalResizeObserver() {
+        if (window.__globalResizeObserver) return;
+
+        window.__globalResizeObserver = new ResizeObserver(() => {
+          window.dispatchEvent(new CustomEvent("app:resize"));
+        });
+        window.__globalResizeObserver.observe(document.documentElement);
       }
 
       // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
@@ -544,6 +555,7 @@ const [heroLogo, lcpImage] = await Promise.all([
       // ⚡ Bolt: Singleton Listener Pattern for Base Scripts
       function setupBaseListeners() {
         const initAll = () => {
+          initGlobalResizeObserver();
           initBackToTop();
           secureLinks();
           initThemeObserver();

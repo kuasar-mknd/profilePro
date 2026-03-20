@@ -298,7 +298,6 @@ const jsonLd = {
           let ticking = false;
           // ⚡ Bolt: Cache document dimensions to avoid layout thrashing
           let cachedDocHeight = 0;
-          let resizeObserver: ResizeObserver | null = null;
 
           const updateDimensions = () => {
             cachedDocHeight =
@@ -325,13 +324,13 @@ const jsonLd = {
 
           window.addEventListener("scroll", onScroll, { passive: true });
 
-          // ⚡ Bolt: Observe document size changes
-          resizeObserver = new ResizeObserver(() => {
+          // ⚡ Bolt: Listen to global app:resize event instead of local ResizeObserver
+          const onResize = () => {
             updateDimensions();
             // Update immediately in case resize affected relative scroll pos
             window.requestAnimationFrame(updateProgress);
-          });
-          resizeObserver.observe(document.documentElement);
+          };
+          window.addEventListener("app:resize", onResize);
 
           // Initial calculation
           updateDimensions();
@@ -341,7 +340,7 @@ const jsonLd = {
             "astro:before-swap",
             () => {
               window.removeEventListener("scroll", onScroll);
-              if (resizeObserver) resizeObserver.disconnect();
+              window.removeEventListener("app:resize", onResize);
             },
             { once: true },
           );

@@ -12,6 +12,7 @@ interface ImportMeta {
 }
 
 interface Window {
+  __globalResizeObserver?: ResizeObserver | null;
   __cleanupBackToTop?: (() => void) | null;
   __themeObserver?: MutationObserver | null;
   __baseInitHandler?: () => void;
