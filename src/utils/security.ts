@@ -158,6 +158,14 @@ export const VIMEO_ID_REGEX =
  * 🛡️ Sentinel: Helper to detect obfuscated protocols like javascript:
  * Decodes URL encoding and HTML entities before validating.
  */
+// ⚡ Bolt: Define regex constants outside function scope to prevent memory reallocation on every call
+const DEC_ENTITY_REGEX = /&#(\d+);?/g;
+const HEX_ENTITY_REGEX = /&#[xX]([0-9a-fA-F]+);?/g;
+const COLON_ENTITY_REGEX = /&colon;/gi;
+const TAB_ENTITY_REGEX = /&tab;/gi;
+const NEWLINE_ENTITY_REGEX = /&newline;/gi;
+const URL_CONTROL_CHARS_REGEX = /[\x00-\x20\x7F]/g;
+
 function isObfuscatedProtocol(url: string): boolean {
   let decoded = url;
   try {
@@ -168,16 +176,16 @@ function isObfuscatedProtocol(url: string): boolean {
 
   // Decode HTML entities
   decoded = decoded
-    .replace(/&#(\d+);?/g, (_, dec) => String.fromCharCode(Number(dec)))
-    .replace(/&#[xX]([0-9a-fA-F]+);?/g, (_, hex) =>
+    .replace(DEC_ENTITY_REGEX, (_, dec) => String.fromCharCode(Number(dec)))
+    .replace(HEX_ENTITY_REGEX, (_, hex) =>
       String.fromCharCode(parseInt(hex, 16)),
     )
-    .replace(/&colon;/gi, ":")
-    .replace(/&tab;/gi, "\t")
-    .replace(/&newline;/gi, "\n");
+    .replace(COLON_ENTITY_REGEX, ":")
+    .replace(TAB_ENTITY_REGEX, "\t")
+    .replace(NEWLINE_ENTITY_REGEX, "\n");
 
   // Strip control chars and spaces
-  decoded = decoded.replace(/[\x00-\x20\x7F]/g, "").toLowerCase();
+  decoded = decoded.replace(URL_CONTROL_CHARS_REGEX, "").toLowerCase();
 
   return (
     decoded.startsWith("javascript:") ||
