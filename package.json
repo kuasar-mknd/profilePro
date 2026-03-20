@@ -60,7 +60,7 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.7",
+    "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/rss": "^4.0.17",
     "@astrojs/sitemap": "^3.7.1",
