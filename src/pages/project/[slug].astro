@@ -634,10 +634,14 @@ const jsonLd = {
       </p>
       <a
         href="/#cta-section"
-        class="inline-flex items-center gap-2 px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
+        class="group inline-flex items-center gap-2 px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
       >
         <span>Discuter de votre projet</span>
-        <Icon name="mdi:arrow-right" class="w-5 h-5" />
+        <Icon
+          name="mdi:arrow-right"
+          class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+          aria-hidden="true"
+        />
       </a>
     </div>
   </div>

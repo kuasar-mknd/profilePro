@@ -59,3 +59,7 @@
 ## 2024-05-20 - Unified Interactive Element Descriptions
 **Learning:** For complex interactive elements like CTA cards or buttons with multiple icons and text layers, applying a unified `aria-label` to the wrapper while leaving inner text elements visible creates disjointed and duplicated reads for screen reader users. The screen reader announces the `aria-label` and then sequentially reads the internal visual content again.
 **Action:** When a unified `aria-label` is applied to a wrapper link or button, always apply `aria-hidden="true"` to the inner textual and visual content to ensure a clean, single announcement.
+
+## 2025-02-15 - [CTA Hover Interaction & Accessibility]
+**Learning:** Decorative icons within CTAs (like arrows) must be hidden from screen readers (`aria-hidden="true"`) to prevent verbose double-speak.
+**Action:** Always pair decorative CTA icons with `aria-hidden="true"` and a subtle `transform` animation on hover/focus to indicate interactivity, ensuring the parent link has `group` and `focus-visible` styles.
