@@ -30,3 +30,6 @@
 ## 2026-03-20 - Replace forEach with standard for loops
 **Learning:** Using `Array.prototype.forEach` or `NodeList.prototype.forEach` creates a new function execution context (callback) for every item in the array or list. In performance-critical sections like scroll events, mutation observers, or components rendered frequently, this allocation overhead and lack of loop optimization adds up to measurable CPU spikes.
 **Action:** Replace `forEach` with standard `for (let i = 0; i < elements.length; i++)` loops or `for...of` loops. This avoids the function callback allocation overhead and allows JavaScript engines (V8/JavaScriptCore) to better optimize the hot path execution.
+## 2026-03-24 - Base Layout getImage Parallelization
+**Learning:** Sequential `await getImage` calls in layout frontmatter (like `Base.astro`) block the main thread and significantly slow down SSG builds, as they execute per-page.
+**Action:** Group these calls into `Promise.all()` to enable concurrent fetching and processing.

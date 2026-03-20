@@ -27,21 +27,29 @@ const {
 // Changed format from "webp" to "avif" to exactly match the <img> tag in Hero.astro.
 // This prevents the browser from downloading two separate image files for the LCP element.
 // We only generate this on the homepage to save processing time on subpages.
-let heroLogo: Awaited<ReturnType<typeof getImage>> | null = null;
-if (Astro.url.pathname === "/") {
-  heroLogo = await getImage({ src: logo, width: 360, format: "avif" });
-}
 const PUBLIC_CF_ANALYTICS_TOKEN = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 
+let heroLogoPromise: Promise<Awaited<ReturnType<typeof getImage>>> | null =
+  null;
+if (Astro.url.pathname === "/") {
+  heroLogoPromise = getImage({ src: logo, width: 360, format: "avif" });
+}
+
 // ⚡ Bolt: Precompute LCP image for subpages (Project/Blog posts)
-let lcpImage: Awaited<ReturnType<typeof getImage>> | null = null;
+let lcpImagePromise: Promise<Awaited<ReturnType<typeof getImage>>> | null =
+  null;
 if (postData?.data?.image) {
-  lcpImage = await getImage({
+  lcpImagePromise = getImage({
     src: postData.data.image,
     width: 1600,
     format: "webp",
   });
 }
+
+const [heroLogo, lcpImage] = await Promise.all([
+  heroLogoPromise,
+  lcpImagePromise,
+]);
 ---
 
 <!doctype html>
