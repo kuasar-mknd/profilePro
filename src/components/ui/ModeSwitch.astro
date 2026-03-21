@@ -145,8 +145,24 @@ import { Icon } from "astro-icon/components";
   }
 
   initThemeToggle();
-  document.addEventListener("astro:after-swap", initThemeToggle);
 
-  document.removeEventListener("keydown", handleGlobalKeydown);
-  document.addEventListener("keydown", handleGlobalKeydown);
+  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
+  // Prevents listener accumulation when component script re-runs
+  if (window.__themeToggleInitHandler) {
+    document.removeEventListener(
+      "astro:after-swap",
+      window.__themeToggleInitHandler,
+    );
+  }
+  window.__themeToggleInitHandler = initThemeToggle;
+  document.addEventListener(
+    "astro:after-swap",
+    window.__themeToggleInitHandler,
+  );
+
+  if (window.__themeKeydownHandler) {
+    document.removeEventListener("keydown", window.__themeKeydownHandler);
+  }
+  window.__themeKeydownHandler = handleGlobalKeydown;
+  document.addEventListener("keydown", window.__themeKeydownHandler);
 </script>
