@@ -129,7 +129,7 @@ const description = data.profile.content;
         class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
         aria-label="Changer de langue"
       >
-        <Icon name="mdi:translate" class="w-5 h-5" />
+        <Icon name="mdi:translate" class="w-5 h-5" aria-hidden="true" />
         {currentLang === "fr" ? "English Version" : "Version Française"}
       </a>
       <button
@@ -137,7 +137,7 @@ const description = data.profile.content;
         class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 cursor-pointer"
         aria-label="Exporter le CV en PDF"
       >
-        <Icon name="mdi:printer" class="w-5 h-5" />
+        <Icon name="mdi:printer" class="w-5 h-5" aria-hidden="true" />
         {currentLang === "fr" ? "Exporter en PDF" : "Export to PDF"}
       </button>
     </div>
@@ -177,6 +177,7 @@ const description = data.profile.content;
                 <Icon
                   name="mdi:map-marker"
                   class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
                 />
                 {data.personal.location}
               </span>
@@ -184,7 +185,11 @@ const description = data.profile.content;
                 href={sanitizeUrl(`mailto:${data.personal.email}`)}
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:email" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:email"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.email}
               </a>
               <a
@@ -193,7 +198,11 @@ const description = data.profile.content;
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:linkedin" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:linkedin"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.linkedin}
               </a>
               <a
@@ -202,7 +211,11 @@ const description = data.profile.content;
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:web" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:web"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.portfolio}
               </a>
             </div>
