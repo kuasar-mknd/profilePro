@@ -13,6 +13,17 @@ The following variables must be set in your `.env` file (locally) or in your CI/
 
 *(Note: No Prisma database URLs or Hono backend environment variables are required as this is a fully static frontend application built on Astro).*
 
+### TypeScript Interface
+
+The variables are strictly typed in `src/env.d.ts` under the `ImportMetaEnv` interface:
+
+```typescript
+interface ImportMetaEnv {
+  readonly PUBLIC_WEB3FORMS_ACCESS_KEY: string;
+  readonly PUBLIC_CF_ANALYTICS_TOKEN?: string;
+}
+```
+
 ## 🛡 Secrets
 
 **NEVER** commit your `.env` file containing real values. Use `.env.example` as a template.
