@@ -55,6 +55,7 @@ const optimizedImage = {
     href={sanitizeUrl(`/project/${postData.slug}`)}
     aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Lecture estimée ${readingTime} minutes.)`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+    data-haptic-card
   >
   </a>
 
@@ -179,3 +180,33 @@ const optimizedImage = {
   >
   </div>
 </article>
+
+<script>
+  function initPostHaptics() {
+    if (window.__postHapticsInitialized) return;
+    window.__postHapticsInitialized = true;
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-haptic-card]")) {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (navigator.vibrate && !prefersReducedMotion) {
+          navigator.vibrate(50);
+        }
+      }
+    });
+  }
+
+  // Support View Transitions
+  if (window.__postHapticsInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__postHapticsInitHandler,
+    );
+  }
+  window.__postHapticsInitHandler = initPostHaptics;
+  document.addEventListener("astro:page-load", initPostHaptics);
+  initPostHaptics();
+</script>
