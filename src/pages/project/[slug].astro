@@ -307,8 +307,7 @@ const jsonLd = {
           };
 
           const updateProgress = () => {
-            const winScroll =
-              document.body.scrollTop || document.documentElement.scrollTop;
+            const winScroll = window.scrollY;
             // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
             const scrolled =
               cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;

@@ -37,3 +37,7 @@
 ## 2026-03-24 - Global ResizeObserver Singleton
 **Learning:** Instantiating multiple `ResizeObserver`s that all observe `document.documentElement` across different components (like Base layout, individual projects, etc.) causes memory overhead and redundant layout thrashing during scroll/resize events.
 **Action:** Consolidate multiple `ResizeObserver`s into a single `window.__globalResizeObserver` singleton in `src/layouts/Base.astro`. This singleton observes `document.documentElement` once and dispatches a lightweight custom `app:resize` event that other components can listen to using standard `window.addEventListener('app:resize', ...)`.
+
+## 2026-03-24 - Efficient Scroll Progress Calculation
+**Learning:** In Astro components with scroll listeners (like `scroll-progress` in `[slug].astro`), calculating the scroll progress using `document.body.scrollTop || document.documentElement.scrollTop` forces a synchronous layout reflow on every scroll frame.
+**Action:** Replace `document.body.scrollTop || document.documentElement.scrollTop` with the pre-calculated `window.scrollY` value to prevent layout thrashing and preserve smooth scrolling performance (60fps).
