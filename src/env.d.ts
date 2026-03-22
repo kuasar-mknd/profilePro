@@ -34,6 +34,8 @@ interface Window {
   __tiltDelegationInitialized?: boolean;
   __themeToggleInitHandler?: () => void;
   __themeKeydownHandler?: (e: KeyboardEvent) => void;
+  __postHapticsInitHandler?: () => void;
+  __postHapticsInitialized?: boolean;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
