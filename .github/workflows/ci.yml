@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    name: Test & Verify
+    name: Test, Lint, and Verify
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

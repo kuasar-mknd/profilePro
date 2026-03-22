@@ -68,7 +68,7 @@ Directives for search engine crawlers.
 
 **No authentication is required.**
 
-**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only.
+**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases, or user sessions exposed to the client. All endpoints are public and read-only. *If a dynamic backend (such as Hono) were ever added, it would be expected to implement its own standard authentication expectations (like API keys or Bearer tokens).*
 
 ## ❌ Error Format
 
