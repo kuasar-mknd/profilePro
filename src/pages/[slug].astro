@@ -281,7 +281,7 @@ const readingTime = getReadingTime(entry.body);
 
   // ⚡ Bolt: Event Delegation for copy buttons
   // Reduces listener count and main-thread work by using a single document-level listener
-  document.addEventListener("click", async (e) => {
+  const handleCopyClick = async (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const btn = target.closest(".copy-code-btn");
     if (!btn) return;
@@ -317,7 +317,14 @@ const readingTime = getReadingTime(entry.body);
         );
       }
     }
-  });
+  };
+
+  // ⚡ Bolt: Singleton Listener Pattern for copy buttons
+  if (window.__copyBtnClickHandler) {
+    document.removeEventListener("click", window.__copyBtnClickHandler);
+  }
+  window.__copyBtnClickHandler = handleCopyClick as EventListener;
+  document.addEventListener("click", window.__copyBtnClickHandler);
 
   addCopyButtons();
   // Re-run on navigation
