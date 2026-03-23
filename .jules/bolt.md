@@ -41,3 +41,7 @@
 ## 2026-03-24 - Efficient Scroll Progress Calculation
 **Learning:** In Astro components with scroll listeners (like `scroll-progress` in `[slug].astro`), calculating the scroll progress using `document.body.scrollTop || document.documentElement.scrollTop` forces a synchronous layout reflow on every scroll frame.
 **Action:** Replace `document.body.scrollTop || document.documentElement.scrollTop` with the pre-calculated `window.scrollY` value to prevent layout thrashing and preserve smooth scrolling performance (60fps).
+
+## 2026-03-24 - Layout Thrashing with Width Animation
+**Learning:** Animating properties like `width` on elements (like a scroll progress bar) using CSS transitions or requestAnimationFrame forces the browser to recalculate the layout (reflow) on every frame. This causes layout thrashing and significant main thread jank, especially on mobile devices.
+**Action:** Replace layout-triggering property animations with composite-layer animations like `transform: scaleX(...)`. Add `origin-left` and `will-change: transform` to ensure the animation is offloaded to the GPU without triggering layout reflows.
