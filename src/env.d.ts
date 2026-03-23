@@ -36,6 +36,7 @@ interface Window {
   __themeKeydownHandler?: (e: KeyboardEvent) => void;
   __postHapticsInitHandler?: () => void;
   __postHapticsInitialized?: boolean;
+  __copyBtnClickHandler?: (e: MouseEvent) => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
