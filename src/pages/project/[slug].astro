@@ -130,7 +130,7 @@ const jsonLd = {
     class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none"
   >
     <div
-      class="h-full bg-pacamara-accent w-0 transition-all duration-100 ease-out"
+      class="h-full bg-pacamara-accent w-full origin-left scale-x-0 transition-transform duration-100 ease-out will-change-transform"
       id="scroll-progress"
     >
     </div>
@@ -310,8 +310,8 @@ const jsonLd = {
             const winScroll = window.scrollY;
             // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
             const scrolled =
-              cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;
-            progressBar.style.width = scrolled + "%";
+              cachedDocHeight > 0 ? winScroll / cachedDocHeight : 0;
+            progressBar.style.transform = `scaleX(${scrolled})`;
             ticking = false;
           };
 
