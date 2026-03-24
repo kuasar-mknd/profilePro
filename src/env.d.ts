@@ -19,7 +19,8 @@ interface Window {
   __animationObserver?: IntersectionObserver | null;
   __carouselObserver?: IntersectionObserver | null;
   __animInitHandler?: () => void;
-  __lightboxInstance?: { destroy: () => void };
+  __lightboxInstance?: { destroy: () => void } | null;
+  __lightboxInitHandler?: () => void;
   __lightboxListenerAttached?: boolean;
   __contactInitHandler?: () => void;
   __mobileMenuInitHandler?: () => void;
