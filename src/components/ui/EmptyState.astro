@@ -44,7 +44,8 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
     safeActionUrl && (
       <a
         href={safeActionUrl}
-        class="inline-flex items-center justify-center px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 shadow-sm hover:shadow-md"
+        class="inline-flex items-center justify-center px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 focus-visible:bg-pacamara-secondary/20 dark:focus-visible:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 shadow-sm hover:shadow-md focus-visible:shadow-md"
+        data-empty-state-cta="true"
       >
         {actionText}
       </a>
@@ -52,3 +53,40 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
   }
   <slot />
 </div>
+
+<script>
+  /**
+   * 🎨 Palette: Tactile feedback for empty state actions
+   */
+  function initEmptyStateHaptics() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+    if (win.__emptyStateHapticsInitialized) return;
+    win.__emptyStateHapticsInitialized = true;
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-empty-state-cta="true"]')) {
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        if (navigator.vibrate && !prefersReducedMotion) {
+          navigator.vibrate(50);
+        }
+      }
+    });
+  }
+
+  // Support View Transitions
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const win = window as any;
+  if (win.__emptyStateHapticsInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      win.__emptyStateHapticsInitHandler,
+    );
+  }
+  win.__emptyStateHapticsInitHandler = initEmptyStateHaptics;
+  document.addEventListener("astro:page-load", initEmptyStateHaptics);
+  initEmptyStateHaptics();
+</script>
