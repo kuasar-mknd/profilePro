@@ -48,3 +48,7 @@
 ## 2026-03-24 - Singleton Pattern for View Transitions Observers
 **Learning:** In Astro applications using View Transitions, component `<script>` tags may re-execute upon page navigation (e.g., via `astro:after-swap`). If observers (like `IntersectionObserver` or `MutationObserver`) are not explicitly disconnected and their references are lost, they accumulate and cause memory leaks or duplicate execution. Relying solely on a DOM dataset check (e.g., `data-observer-initialized="true"`) is insufficient if the DOM node itself is recreated during the transition.
 **Action:** Always use the Singleton Pattern for observers. Store the observer instance on the `window` object (e.g., `window.__carouselObserver`), explicitly call `.disconnect()` if it already exists before creating a new one, and attach an event listener to `astro:before-swap` or `astro:after-swap` to ensure proper cleanup during navigation.
+
+## 2026-03-24 - Expensive window.matchMedia parsing in event listeners
+**Learning:** Evaluating `window.matchMedia("(prefers-reduced-motion: reduce)").matches` inside hot paths like event listeners (e.g., `click` or `mousemove`) forces the browser engine to repeatedly parse and evaluate the media query string upon every interaction, which can cause micro-stutters.
+**Action:** Always cache the `MediaQueryList` object outside the listener (e.g., `const prefersReducedMotionQuery = window.matchMedia(...)`) and strictly evaluate its `.matches` property inside the listener callback to eliminate the string parsing overhead.
