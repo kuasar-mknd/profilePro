@@ -63,14 +63,16 @@ const currentPath = normalizePath(pathname);
 
     (nav as HTMLElement).dataset.hapticsInitialized = "true";
 
+    // ⚡ Bolt: Cache MediaQueryList to prevent evaluating the media query string on every click
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     nav.addEventListener("click", (e: Event) => {
       const target = e.target as HTMLElement;
       if (target.closest(".nav-item a")) {
         // 🎨 Palette: Respect user preferences for reduced motion/haptics
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        if (navigator.vibrate && !prefersReducedMotion) {
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(30);
         }
       }

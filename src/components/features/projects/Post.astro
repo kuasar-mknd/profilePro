@@ -186,13 +186,15 @@ const optimizedImage = {
     if (window.__postHapticsInitialized) return;
     window.__postHapticsInitialized = true;
 
+    // ⚡ Bolt: Cache MediaQueryList to prevent evaluating the media query string on every click
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     document.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
       if (target.closest("[data-haptic-card]")) {
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        if (navigator.vibrate && !prefersReducedMotion) {
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(50);
         }
       }
