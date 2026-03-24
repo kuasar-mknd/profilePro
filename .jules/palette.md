@@ -63,3 +63,7 @@
 ## 2025-02-15 - [CTA Hover Interaction & Accessibility]
 **Learning:** Decorative icons within CTAs (like arrows) must be hidden from screen readers (`aria-hidden="true"`) to prevent verbose double-speak.
 **Action:** Always pair decorative CTA icons with `aria-hidden="true"` and a subtle `transform` animation on hover/focus to indicate interactivity, ensuring the parent link has `group` and `focus-visible` styles.
+
+## 2025-02-17 - Keyboard Focus Visual Parity
+**Learning:** While interactive elements often receive rich visual feedback on `hover` (like color changes or opacity shifts via `group-hover`), failing to provide the equivalent `focus-visible` or `group-focus-visible` states creates a degraded, "second-class" experience for keyboard users who rely on the same visual cues to understand interactivity.
+**Action:** Always pair `hover` utility classes (e.g., `group-hover:text-accent`) with their corresponding keyboard focus classes (e.g., `group-focus-visible:text-accent`) on primary navigation links, footer links, and complex CTA components to ensure visual parity.
