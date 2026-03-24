@@ -154,16 +154,7 @@ const readingTime = getReadingTime(entry.body);
             title: document.title,
             url: window.location.href,
           });
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            // eslint-disable-next-line no-console
-            console.error(
-              "Error sharing:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
-        }
+        } catch {}
       } else {
         // Fallback: copy to clipboard
         try {
@@ -187,16 +178,7 @@ const readingTime = getReadingTime(entry.body);
               }
             }, 2000);
           }
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            // eslint-disable-next-line no-console
-            console.error(
-              "Failed to copy:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
-        }
+        } catch {}
       }
     });
   }
@@ -307,16 +289,7 @@ const readingTime = getReadingTime(entry.body);
           announcer.textContent = "";
         }
       }, 2000);
-    } catch (err) {
-      // 🛡️ Sentinel: Dev-only logging
-      if (import.meta.env.DEV) {
-        // eslint-disable-next-line no-console
-        console.error(
-          "Failed to copy code",
-          err instanceof Error ? err.message : "Unknown error",
-        );
-      }
-    }
+    } catch {}
   };
 
   // ⚡ Bolt: Singleton Listener Pattern for copy buttons
