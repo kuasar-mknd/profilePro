@@ -67,3 +67,7 @@
 ## 2025-02-17 - Keyboard Focus Visual Parity
 **Learning:** While interactive elements often receive rich visual feedback on `hover` (like color changes or opacity shifts via `group-hover`), failing to provide the equivalent `focus-visible` or `group-focus-visible` states creates a degraded, "second-class" experience for keyboard users who rely on the same visual cues to understand interactivity.
 **Action:** Always pair `hover` utility classes (e.g., `group-hover:text-accent`) with their corresponding keyboard focus classes (e.g., `group-focus-visible:text-accent`) on primary navigation links, footer links, and complex CTA components to ensure visual parity.
+
+## 2026-03-14 - Empty State Focus Parity and Haptics
+**Learning:** Empty states are critical recovery paths. While the primary action (e.g., "Return home") may have hover styles, neglecting `focus-visible` parity degrades the experience for keyboard users. Additionally, on mobile, providing subtle haptic feedback when clicking a recovery action adds a reassuring physical confirmation that the application is responding to the user's intent to escape the empty state.
+**Action:** Ensure all CTA links within empty states have visual parity between `hover` and `focus-visible` states (e.g., `hover:bg-gray-200 focus-visible:bg-gray-200`). Additionally, implement a delegated click listener that triggers `navigator.vibrate(50)` on these specific CTA actions, respecting `prefers-reduced-motion` settings.
