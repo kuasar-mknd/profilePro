@@ -57,7 +57,10 @@ import { Icon } from "astro-icon/components";
     localStorage.setItem("theme", isDarkNow ? "dark" : "light");
 
     // 🎨 Palette: Provide subtle haptic feedback for mobile users
-    if (navigator.vibrate) {
+    if (
+      navigator.vibrate &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       navigator.vibrate(50);
     }
 
