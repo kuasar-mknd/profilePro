@@ -17,6 +17,7 @@ interface Window {
   __themeObserver?: MutationObserver | null;
   __baseInitHandler?: () => void;
   __animationObserver?: IntersectionObserver | null;
+  __carouselObserver?: IntersectionObserver | null;
   __animInitHandler?: () => void;
   __lightboxInstance?: { destroy: () => void };
   __lightboxListenerAttached?: boolean;
