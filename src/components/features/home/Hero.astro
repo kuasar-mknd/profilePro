@@ -459,16 +459,20 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
    * to save GPU and main thread resources.
    */
   function initCarouselObserver() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (win.__carouselObserver) {
+      win.__carouselObserver.disconnect();
+      win.__carouselObserver = null;
+    }
+
     const carousel = document.getElementById("hero-carousel");
     const track = document.getElementById("carousel-track");
 
     if (!carousel || !track) return;
 
-    // Guard against duplicate observers
-    if (carousel.dataset.observerInitialized === "true") return;
-    carousel.dataset.observerInitialized = "true";
-
-    const observer = new IntersectionObserver(
+    win.__carouselObserver = new IntersectionObserver(
       (entries) => {
         // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
         for (let i = 0; i < entries.length; i++) {
@@ -483,8 +487,18 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       { rootMargin: "200px" },
     ); // Pre-load animation slightly before it enters viewport
 
-    observer.observe(carousel);
+    win.__carouselObserver.observe(carousel);
   }
+
+  // ⚡ Bolt: Cleanup observer on navigation to prevent memory leaks
+  document.addEventListener("astro:before-swap", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+    if (win.__carouselObserver) {
+      win.__carouselObserver.disconnect();
+      win.__carouselObserver = null;
+    }
+  });
 
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
