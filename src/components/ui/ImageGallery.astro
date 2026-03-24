@@ -65,15 +65,17 @@ if (explicitImages && explicitImages.length > 0) {
   });
 
   // Load only filtered images
-  galleryImages = await Promise.all(
-    filteredImages.map(async ([path, loader]) => {
+  galleryImages = await limitConcurrency(
+    filteredImages,
+    5,
+    async ([path, loader]) => {
       const module = await loader();
       return {
         src: module.default,
         filename: path.split("/").pop() || "",
         alt: `Photo - ${folder}`,
       };
-    }),
+    },
   );
 
   galleryImages.sort((a, b) => a.filename.localeCompare(b.filename));
