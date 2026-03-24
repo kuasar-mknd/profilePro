@@ -512,13 +512,18 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
       submitButton?.focus();
     });
 
+    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     submitButton?.addEventListener("click", (e) => {
       if (submitButton.getAttribute("aria-disabled") === "true") return;
 
       // 🎨 Palette: Tactile feedback for primary action
       if (navigator.vibrate) navigator.vibrate(50);
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (prefersReducedMotionQuery.matches) return;
       const rect = submitButton.getBoundingClientRect();
       const ripple = document.createElement("span");
       ripple.className = "ripple-circle";

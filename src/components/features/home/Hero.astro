@@ -521,6 +521,9 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     if (secondaryCta.dataset.initialized === "true") return;
     secondaryCta.dataset.initialized = "true";
 
+    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+    const pointerCoarseQuery = window.matchMedia("(pointer: coarse)");
+
     secondaryCta.addEventListener("click", (e) => {
       e.preventDefault();
 
@@ -528,7 +531,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       if (navigator.vibrate) navigator.vibrate(50);
 
       // Check if device uses coarse pointer (likely touch/mobile)
-      const isMobile = window.matchMedia("(pointer: coarse)").matches;
+      const isMobile = pointerCoarseQuery.matches;
 
       if (isMobile) {
         // Mobile: Scroll to form container and focus it
