@@ -459,12 +459,9 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
    * to save GPU and main thread resources.
    */
   function initCarouselObserver() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (win.__carouselObserver) {
-      win.__carouselObserver.disconnect();
-      win.__carouselObserver = null;
+    if (window.__carouselObserver) {
+      window.__carouselObserver.disconnect();
+      window.__carouselObserver = null;
     }
 
     const carousel = document.getElementById("hero-carousel");
@@ -472,7 +469,7 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
     if (!carousel || !track) return;
 
-    win.__carouselObserver = new IntersectionObserver(
+    window.__carouselObserver = new IntersectionObserver(
       (entries) => {
         // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
         for (let i = 0; i < entries.length; i++) {
@@ -487,16 +484,14 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       { rootMargin: "200px" },
     ); // Pre-load animation slightly before it enters viewport
 
-    win.__carouselObserver.observe(carousel);
+    window.__carouselObserver.observe(carousel);
   }
 
   // ⚡ Bolt: Cleanup observer on navigation to prevent memory leaks
   document.addEventListener("astro:before-swap", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    if (win.__carouselObserver) {
-      win.__carouselObserver.disconnect();
-      win.__carouselObserver = null;
+    if (window.__carouselObserver) {
+      window.__carouselObserver.disconnect();
+      window.__carouselObserver = null;
     }
   });
 
@@ -565,14 +560,11 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       initHeroCTA();
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (win.__heroInitHandler) {
-      document.removeEventListener("astro:page-load", win.__heroInitHandler);
+    if (window.__heroInitHandler) {
+      document.removeEventListener("astro:page-load", window.__heroInitHandler);
     }
 
-    win.__heroInitHandler = initAll;
+    window.__heroInitHandler = initAll;
     document.addEventListener("astro:page-load", initAll);
 
     // Run immediately for current execution

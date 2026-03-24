@@ -16,6 +16,7 @@ interface Window {
   __cleanupBackToTop?: (() => void) | null;
   __themeObserver?: MutationObserver | null;
   __baseInitHandler?: () => void;
+  __heroInitHandler?: () => void;
   __animationObserver?: IntersectionObserver | null;
   __carouselObserver?: IntersectionObserver | null;
   __animInitHandler?: () => void;
