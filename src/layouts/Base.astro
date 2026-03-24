@@ -635,16 +635,6 @@ const [heroLogo, lcpImage] = await Promise.all([
       if ("serviceWorker" in navigator) {
         registerSW({
           immediate: true,
-          onNeedRefresh() {
-            if (import.meta.env.DEV)
-              // eslint-disable-next-line no-console
-              console.log("⚡ Bolt PWA: New content available");
-          },
-          onOfflineReady() {
-            if (import.meta.env.DEV)
-              // eslint-disable-next-line no-console
-              console.log("⚡ Bolt PWA: App ready to work offline");
-          },
         });
       }
     </script>
