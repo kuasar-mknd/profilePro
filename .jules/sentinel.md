@@ -87,3 +87,15 @@ Each entry should include:
 **Vulnerability:** Potential Denial of Service (DoS) via ReDoS and memory exhaustion in `sanitizeInput`. The function used regex replace on an unbounded input string without prior length validation. An attacker could pass a massive string (e.g., several megabytes), causing the regex engine to block the main thread or cause out-of-memory errors on the client, particularly if this sanitized value is processed extensively.
 **Learning:** Never pass unbounded user input directly into regular expressions or memory-intensive string operations. Always enforce a reasonable maximum length on input data as early as possible in the processing pipeline.
 **Prevention:** Added a `maxLength` parameter (defaulting to 10000) to `sanitizeInput`. The string is now truncated before proceeding with any regex replacement, mitigating potential client-side DoS from massive payloads.
+
+## 2024-03-22 - Remove 'unsafe-eval' from Content-Security-Policy
+
+**Vulnerability:** The `'unsafe-eval'` directive was allowed in the `script-src` Content Security Policy inside `src/layouts/Base.astro`. This directive permits the execution of string-to-code APIs like `eval()`, `new Function()`, `setTimeout(string, ...)`, and `setInterval(string, ...)` which can be exploited by an attacker to execute arbitrary malicious code leading to Cross-Site Scripting (XSS).
+**Learning:** `unsafe-eval` significantly weakens the protection CSP provides against XSS attacks, specifically DOM-based XSS, as an attacker controlling input to one of these string evaluation functions can bypass otherwise robust policies. Modern frontend frameworks rarely necessitate its use outside of specific developmental tooling scenarios.
+**Prevention:** Removed `'unsafe-eval'` from the `script-src` directive in `src/layouts/Base.astro`. Ensured the application functions correctly without relying on string evaluation APIs.
+
+## 2026-11-20 - Enforce HTTP Header CSP over Meta Tags
+
+**Vulnerability:** A duplicate `Content-Security-Policy` was defined via a `<meta http-equiv="Content-Security-Policy">` tag in `src/layouts/Base.astro`, while a primary CSP already existed in `public/_headers`.
+**Learning:** Defining a CSP via meta tags is often incomplete and insecure. Meta tags explicitly ignore certain crucial directives such as `frame-ancestors` (used to prevent Clickjacking) and `report-uri`. Furthermore, when both HTTP headers and meta tags are present, the browser enforces the *strictest* intersection of both policies, which can lead to unexpected breakages and complicates security audits.
+**Prevention:** Removed the meta tag CSP entirely to enforce that Content Security Policies must be defined exclusively as HTTP response headers (e.g., in `public/_headers` for Cloudflare Pages), ensuring full directive support and avoiding policy conflicts.

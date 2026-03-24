@@ -24,7 +24,11 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
     tabindex="-1"
   >
     <div class="space-y-4 animate-fade-in-up">
-      <Icon name="mdi:check-circle" class="w-16 h-16 text-green-500 mx-auto" />
+      <Icon
+        name="mdi:check-circle"
+        class="w-16 h-16 text-green-500 mx-auto"
+        aria-hidden="true"
+      />
       <h3 class="text-2xl font-bold text-pacamara-primary dark:text-white">
         Message envoyé !
       </h3>
@@ -104,7 +108,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
-          <Icon name="mdi:check-circle" class="w-6 h-6" />
+          <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
     </div>
@@ -142,7 +146,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           class="validation-icon absolute right-4 top-1/2 -translate-y-1/2 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
-          <Icon name="mdi:check-circle" class="w-6 h-6" />
+          <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
     </div>
@@ -179,7 +183,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           class="validation-icon absolute right-4 top-4 text-green-500 opacity-0 scale-50 transition-all duration-300 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:scale-100"
           aria-hidden="true"
         >
-          <Icon name="mdi:check-circle" class="w-6 h-6" />
+          <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
       <!-- 🎨 Palette: Character counter -->
@@ -204,7 +208,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
       <span class="btn-text relative z-10">Envoyer le message</span>
       <Icon
         name="mdi:send"
-        class="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform"
+        class="w-5 h-5 relative z-10 group-hover:translate-x-1 group-focus-visible:translate-x-1 transition-transform"
         aria-hidden="true"
       />
       <span

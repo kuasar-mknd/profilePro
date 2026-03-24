@@ -34,10 +34,10 @@ const [logo1x, logo2x] = await Promise.all([
       href="/"
       class="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-xl p-2 -m-2"
       aria-current={Astro.url.pathname === "/" ? "page" : undefined}
-      aria-label="Samuel Dulex - Retour à l'accueil"
+      aria-label="Samuel Dulex (Retour à l'accueil)"
     >
       <div
-        class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent transition-colors contain-layout"
+        class="w-10 h-10 rounded-full overflow-hidden border border-pacamara-secondary/20 group-hover:border-pacamara-accent group-focus-visible:border-pacamara-accent transition-colors contain-layout"
         aria-hidden="true"
       >
         <!-- ⚡ Bolt: Optimized Header Logo
@@ -58,7 +58,7 @@ const [logo1x, logo2x] = await Promise.all([
       </div>
       <span
         aria-hidden="true"
-        class="font-pacamara-space font-bold text-lg text-pacamara-dark dark:text-white group-hover:text-pacamara-accent transition-colors"
+        class="font-pacamara-space font-bold text-lg text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors"
         >Samuel Dulex</span
       >
     </a>
