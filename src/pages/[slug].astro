@@ -154,15 +154,8 @@ const readingTime = getReadingTime(entry.body);
             title: document.title,
             url: window.location.href,
           });
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            // eslint-disable-next-line no-console
-            console.error(
-              "Error sharing:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
+        } catch {
+          // Ignored
         }
       } else {
         // Fallback: copy to clipboard
@@ -187,15 +180,8 @@ const readingTime = getReadingTime(entry.body);
               }
             }, 2000);
           }
-        } catch (err) {
-          // 🛡️ Sentinel: Dev-only logging
-          if (import.meta.env.DEV) {
-            // eslint-disable-next-line no-console
-            console.error(
-              "Failed to copy:",
-              err instanceof Error ? err.message : "Unknown error",
-            );
-          }
+        } catch {
+          // Ignored
         }
       }
     });
@@ -307,15 +293,8 @@ const readingTime = getReadingTime(entry.body);
           announcer.textContent = "";
         }
       }, 2000);
-    } catch (err) {
-      // 🛡️ Sentinel: Dev-only logging
-      if (import.meta.env.DEV) {
-        // eslint-disable-next-line no-console
-        console.error(
-          "Failed to copy code",
-          err instanceof Error ? err.message : "Unknown error",
-        );
-      }
+    } catch {
+      // Ignored
     }
   };
 
