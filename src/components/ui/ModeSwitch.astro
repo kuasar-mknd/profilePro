@@ -48,6 +48,11 @@ import { Icon } from "astro-icon/components";
    * - Handles View Transitions properly
    */
 
+  // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   const handleThemeToggle = (e: Event) => {
     e.preventDefault();
     const element = document.documentElement;
@@ -57,10 +62,7 @@ import { Icon } from "astro-icon/components";
     localStorage.setItem("theme", isDarkNow ? "dark" : "light");
 
     // 🎨 Palette: Provide subtle haptic feedback for mobile users
-    if (
-      navigator.vibrate &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
       navigator.vibrate(50);
     }
 

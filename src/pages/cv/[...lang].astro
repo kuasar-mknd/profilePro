@@ -482,11 +482,13 @@ const description = data.profile.content;
     if (!printBtn || !langBtn || printBtn.dataset.initialized === "true")
       return;
 
+    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     const vibrate = (ms: number) => {
-      if (
-        navigator.vibrate &&
-        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      )
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches)
         navigator.vibrate(ms);
     };
 
