@@ -125,20 +125,32 @@ const description = data.profile.content;
       class="container mx-auto px-7 mb-8 flex flex-wrap justify-end gap-4 print:hidden"
     >
       <a
+        id="lang-toggle-btn"
         href={sanitizeUrl(currentLang === "fr" ? "/cv/en" : "/cv")}
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300"
-        aria-label="Changer de langue"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
+        aria-label={currentLang === "fr"
+          ? "Passer à la version anglaise"
+          : "Switch to French version"}
       >
-        <Icon name="mdi:translate" class="w-5 h-5" />
+        <Icon name="mdi:translate" class="w-5 h-5" aria-hidden="true" />
         {currentLang === "fr" ? "English Version" : "Version Française"}
       </a>
       <button
-        onclick="window.print()"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 cursor-pointer"
-        aria-label="Exporter le CV en PDF"
+        id="print-cv-btn"
+        type="button"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        aria-label={currentLang === "fr"
+          ? "Exporter le CV en PDF (Ctrl+P)"
+          : "Export CV to PDF (Ctrl+P)"}
+        aria-keyshortcuts="Control+P"
       >
-        <Icon name="mdi:printer" class="w-5 h-5" />
-        {currentLang === "fr" ? "Exporter en PDF" : "Export to PDF"}
+        <Icon name="mdi:printer" class="w-5 h-5" aria-hidden="true" />
+        <span aria-hidden="true">
+          {currentLang === "fr" ? "Exporter en PDF" : "Export to PDF"}
+          <kbd class="font-sans ml-1 opacity-70 text-xs hidden sm:inline-block"
+            >(Ctrl+P)</kbd
+          >
+        </span>
       </button>
     </div>
 
@@ -177,6 +189,7 @@ const description = data.profile.content;
                 <Icon
                   name="mdi:map-marker"
                   class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
                 />
                 {data.personal.location}
               </span>
@@ -184,7 +197,11 @@ const description = data.profile.content;
                 href={sanitizeUrl(`mailto:${data.personal.email}`)}
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:email" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:email"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.email}
               </a>
               <a
@@ -193,7 +210,11 @@ const description = data.profile.content;
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:linkedin" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:linkedin"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.linkedin}
               </a>
               <a
@@ -202,7 +223,11 @@ const description = data.profile.content;
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
               >
-                <Icon name="mdi:web" class="w-4 h-4 print:w-4 print:h-4" />
+                <Icon
+                  name="mdi:web"
+                  class="w-4 h-4 print:w-4 print:h-4"
+                  aria-hidden="true"
+                />
                 {data.personal.portfolio}
               </a>
             </div>
@@ -443,3 +468,61 @@ const description = data.profile.content;
     }
   }
 </style>
+
+<script>
+  /**
+   * 🎨 Palette: CV Page UX Improvement
+   * - Adds haptic feedback to print and language buttons
+   * - Handles print action and keyboard shortcuts
+   * - Uses Singleton Listener Pattern for View Transitions
+   */
+  function initCV() {
+    const printBtn = document.getElementById("print-cv-btn");
+    const langBtn = document.getElementById("lang-toggle-btn");
+    if (!printBtn || !langBtn || printBtn.dataset.initialized === "true")
+      return;
+
+    const vibrate = (ms: number) => {
+      if (
+        navigator.vibrate &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      )
+        navigator.vibrate(ms);
+    };
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "p") vibrate(50);
+    };
+
+    const handlePrint = (e: Event) => {
+      e.preventDefault();
+      vibrate(50);
+      window.print();
+    };
+
+    printBtn.addEventListener("click", handlePrint);
+    langBtn.addEventListener("click", () => vibrate(30));
+    document.addEventListener("keydown", handleKeydown);
+
+    printBtn.dataset.initialized = "true";
+    window.__cvCleanup = () => {
+      printBtn.removeEventListener("click", handlePrint);
+      document.removeEventListener("keydown", handleKeydown);
+      if (window.__cvKeydownHandler)
+        document.removeEventListener("keydown", window.__cvKeydownHandler);
+    };
+    window.__cvKeydownHandler = handleKeydown;
+  }
+
+  function setupCVListeners() {
+    if (window.__cvInitHandler) {
+      document.removeEventListener("astro:page-load", window.__cvInitHandler);
+      window.__cvCleanup?.();
+    }
+    window.__cvInitHandler = initCV;
+    document.addEventListener("astro:page-load", initCV);
+    initCV();
+  }
+
+  setupCVListeners();
+</script>

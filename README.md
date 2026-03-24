@@ -131,6 +131,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run check` : Vérifie le code (linting + formatage + types).
 - `pnpm run lighthouse` : Lance l'audit de performance.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
+*(Des tests unitaires existent également dans le code source mais ne disposent pas de commande npm dédiée pour le moment).*
 
 ### API Access (Main Endpoints)
 
