@@ -56,11 +56,6 @@ const [heroLogo, lcpImage] = await Promise.all([
 <html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <!-- 🛡️ Sentinel: Basic Content Security Policy to mitigate XSS and injection attacks -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://kuasar.xyz https://i.ytimg.com; connect-src 'self' https://api.websitecarbon.com https://api.web3forms.com wss://*.cloudflareinsights.com; frame-src 'self' https://www.youtube.com https://player.vimeo.com;"
-    />
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
     <link
       rel="preconnect"
@@ -344,7 +339,6 @@ const [heroLogo, lcpImage] = await Promise.all([
         let rafId: number | null = null;
         // ⚡ Bolt: Cache document height to avoid layout thrashing
         let cachedDocHeight = 0;
-        let resizeObserver: ResizeObserver | null = null;
 
         let backToTopObserver: IntersectionObserver | null = null;
 
@@ -379,13 +373,13 @@ const [heroLogo, lcpImage] = await Promise.all([
         };
 
         // Update visual state (deferred until button is visible)
-        // ⚡ Bolt: Observe body for size changes (lazy loading, accordion, etc)
-        resizeObserver = new ResizeObserver(() => {
+        // ⚡ Bolt: Listen to global app:resize event instead of local ResizeObserver
+        const onResize = () => {
           updateDimensions();
           // Update visuals immediately in case scroll pos stayed same but height changed
           window.requestAnimationFrame(updateVisuals);
-        });
-        resizeObserver.observe(document.documentElement);
+        };
+        window.addEventListener("app:resize", onResize);
 
         // Initial calculation
         updateDimensions();
@@ -445,7 +439,7 @@ const [heroLogo, lcpImage] = await Promise.all([
         // ⚡ Register cleanup
         window.__cleanupBackToTop = () => {
           window.removeEventListener("scroll", onScroll);
-          if (resizeObserver) resizeObserver.disconnect();
+          window.removeEventListener("app:resize", onResize);
           if (backToTopObserver) {
             backToTopObserver.disconnect();
             backToTopObserver = null;
@@ -462,6 +456,18 @@ const [heroLogo, lcpImage] = await Promise.all([
         if (meta) {
           meta.setAttribute("content", isDark ? "#0b0f19" : "#f8fafc");
         }
+      }
+
+      // ⚡ Bolt: Global ResizeObserver Singleton
+      // Replaces multiple ResizeObservers across components observing document.documentElement
+      // with a single instance that dispatches a custom event, reducing memory overhead and layout thrashing.
+      function initGlobalResizeObserver() {
+        if (window.__globalResizeObserver) return;
+
+        window.__globalResizeObserver = new ResizeObserver(() => {
+          window.dispatchEvent(new CustomEvent("app:resize"));
+        });
+        window.__globalResizeObserver.observe(document.documentElement);
       }
 
       // ⚡ Bolt: Theme Color Observer (Singleton Pattern)
@@ -544,6 +550,7 @@ const [heroLogo, lcpImage] = await Promise.all([
       // ⚡ Bolt: Singleton Listener Pattern for Base Scripts
       function setupBaseListeners() {
         const initAll = () => {
+          initGlobalResizeObserver();
           initBackToTop();
           secureLinks();
           initThemeObserver();

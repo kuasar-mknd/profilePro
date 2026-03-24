@@ -33,3 +33,18 @@
 ## 2026-03-24 - Base Layout getImage Parallelization
 **Learning:** Sequential `await getImage` calls in layout frontmatter (like `Base.astro`) block the main thread and significantly slow down SSG builds, as they execute per-page.
 **Action:** Group these calls into `Promise.all()` to enable concurrent fetching and processing.
+
+## 2026-03-24 - Global ResizeObserver Singleton
+**Learning:** Instantiating multiple `ResizeObserver`s that all observe `document.documentElement` across different components (like Base layout, individual projects, etc.) causes memory overhead and redundant layout thrashing during scroll/resize events.
+**Action:** Consolidate multiple `ResizeObserver`s into a single `window.__globalResizeObserver` singleton in `src/layouts/Base.astro`. This singleton observes `document.documentElement` once and dispatches a lightweight custom `app:resize` event that other components can listen to using standard `window.addEventListener('app:resize', ...)`.
+
+## 2026-03-24 - Efficient Scroll Progress Calculation
+**Learning:** In Astro components with scroll listeners (like `scroll-progress` in `[slug].astro`), calculating the scroll progress using `document.body.scrollTop || document.documentElement.scrollTop` forces a synchronous layout reflow on every scroll frame.
+**Action:** Replace `document.body.scrollTop || document.documentElement.scrollTop` with the pre-calculated `window.scrollY` value to prevent layout thrashing and preserve smooth scrolling performance (60fps).
+
+## 2026-03-24 - Layout Thrashing with Width Animation
+**Learning:** Animating properties like `width` on elements (like a scroll progress bar) using CSS transitions or requestAnimationFrame forces the browser to recalculate the layout (reflow) on every frame. This causes layout thrashing and significant main thread jank, especially on mobile devices.
+**Action:** Replace layout-triggering property animations with composite-layer animations like `transform: scaleX(...)`. Add `origin-left` and `will-change: transform` to ensure the animation is offloaded to the GPU without triggering layout reflows.
+## 2026-03-24 - Singleton Pattern for View Transitions Observers
+**Learning:** In Astro applications using View Transitions, component `<script>` tags may re-execute upon page navigation (e.g., via `astro:after-swap`). If observers (like `IntersectionObserver` or `MutationObserver`) are not explicitly disconnected and their references are lost, they accumulate and cause memory leaks or duplicate execution. Relying solely on a DOM dataset check (e.g., `data-observer-initialized="true"`) is insufficient if the DOM node itself is recreated during the transition.
+**Action:** Always use the Singleton Pattern for observers. Store the observer instance on the `window` object (e.g., `window.__carouselObserver`), explicitly call `.disconnect()` if it already exists before creating a new one, and attach an event listener to `astro:before-swap` or `astro:after-swap` to ensure proper cleanup during navigation.

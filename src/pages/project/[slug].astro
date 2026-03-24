@@ -130,7 +130,7 @@ const jsonLd = {
     class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent pointer-events-none"
   >
     <div
-      class="h-full bg-pacamara-accent w-0 transition-all duration-100 ease-out"
+      class="h-full bg-pacamara-accent w-full origin-left scale-x-0 transition-transform duration-100 ease-out will-change-transform"
       id="scroll-progress"
     >
     </div>
@@ -258,6 +258,7 @@ const jsonLd = {
         <button
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+          aria-label="Partager ce projet"
         >
           <div
             class="grid grid-cols-1 grid-rows-1 place-items-center px-6 py-3"
@@ -278,7 +279,7 @@ const jsonLd = {
               class="col-start-1 row-start-1 flex items-center gap-2 transition-all duration-300 opacity-0 -translate-y-2 group-[.copied]:opacity-100 group-[.copied]:translate-y-0 text-green-600 dark:text-green-400"
               aria-hidden="true"
             >
-              <Icon name="mdi:check" class="w-5 h-5" />
+              <Icon name="mdi:check" class="w-5 h-5" aria-hidden="true" />
               <span class="font-medium">Lien copié !</span>
             </div>
           </div>
@@ -298,7 +299,6 @@ const jsonLd = {
           let ticking = false;
           // ⚡ Bolt: Cache document dimensions to avoid layout thrashing
           let cachedDocHeight = 0;
-          let resizeObserver: ResizeObserver | null = null;
 
           const updateDimensions = () => {
             cachedDocHeight =
@@ -307,12 +307,11 @@ const jsonLd = {
           };
 
           const updateProgress = () => {
-            const winScroll =
-              document.body.scrollTop || document.documentElement.scrollTop;
+            const winScroll = window.scrollY;
             // ⚡ Bolt: Use cached height instead of querying DOM (prevents reflow)
             const scrolled =
-              cachedDocHeight > 0 ? (winScroll / cachedDocHeight) * 100 : 0;
-            progressBar.style.width = scrolled + "%";
+              cachedDocHeight > 0 ? winScroll / cachedDocHeight : 0;
+            progressBar.style.transform = `scaleX(${scrolled})`;
             ticking = false;
           };
 
@@ -325,13 +324,13 @@ const jsonLd = {
 
           window.addEventListener("scroll", onScroll, { passive: true });
 
-          // ⚡ Bolt: Observe document size changes
-          resizeObserver = new ResizeObserver(() => {
+          // ⚡ Bolt: Listen to global app:resize event instead of local ResizeObserver
+          const onResize = () => {
             updateDimensions();
             // Update immediately in case resize affected relative scroll pos
             window.requestAnimationFrame(updateProgress);
-          });
-          resizeObserver.observe(document.documentElement);
+          };
+          window.addEventListener("app:resize", onResize);
 
           // Initial calculation
           updateDimensions();
@@ -341,7 +340,7 @@ const jsonLd = {
             "astro:before-swap",
             () => {
               window.removeEventListener("scroll", onScroll);
-              if (resizeObserver) resizeObserver.disconnect();
+              window.removeEventListener("app:resize", onResize);
             },
             { once: true },
           );
@@ -497,7 +496,7 @@ const jsonLd = {
 
         // ⚡ Bolt: Event Delegation for copy buttons
         // Reduces listener count and main-thread work by using a single document-level listener
-        document.addEventListener("click", async (e) => {
+        const handleCopyClick = async (e: MouseEvent) => {
           const target = e.target as HTMLElement;
           const btn = target.closest(".copy-code-btn");
           if (!btn) return;
@@ -547,7 +546,14 @@ const jsonLd = {
               );
             }
           }
-        });
+        };
+
+        // ⚡ Bolt: Singleton Listener Pattern for copy buttons
+        if (window.__copyBtnClickHandler) {
+          document.removeEventListener("click", window.__copyBtnClickHandler);
+        }
+        window.__copyBtnClickHandler = handleCopyClick as EventListener;
+        document.addEventListener("click", window.__copyBtnClickHandler);
 
         addCopyButtons();
         // Re-run on navigation

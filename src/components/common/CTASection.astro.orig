@@ -1,7 +1,6 @@
 ---
 import ContactForm from "./ContactForm.astro";
 import ScrollReveal from "../ui/ScrollReveal.astro";
-import { Icon } from "astro-icon/components";
 ---
 
 {
@@ -75,14 +74,9 @@ import { Icon } from "astro-icon/components";
           >
             <a
               href="/project"
-              class="group flex items-center justify-center gap-2 px-8 py-4 border-2 border-pacamara-accent text-pacamara-accent rounded-full font-bold text-lg hover:bg-pacamara-accent hover:text-white transition-all duration-300 hover:shadow-glow-accent active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              class="px-8 py-4 border-2 border-pacamara-accent text-pacamara-accent rounded-full font-bold text-lg hover:bg-pacamara-accent hover:text-white transition-all duration-300 hover:shadow-glow-accent active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
             >
               Voir mes réalisations
-              <Icon
-                name="mdi:arrow-right"
-                class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
-                aria-hidden="true"
-              />
             </a>
           </div>
         </div>

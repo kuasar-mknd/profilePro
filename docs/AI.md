@@ -16,7 +16,7 @@ If implemented, the AI adapter will require the following:
 - **Environment Variables**:
   - `AI_API_KEY`: The secret key to access the LLM provider.
   - `AI_MODEL_NAME`: The model version to use (e.g., `gpt-4o-mini`, `llama3`).
-  - *These variables must be added to `src/env.d.ts` and `.env.example` before use.*
+  - *These variables must be added to `src/env.d.ts` and `.env.example` before use.* (Currently, they do not exist in the codebase).
 
 ## 📋 Data Schemas (Expected)
 
