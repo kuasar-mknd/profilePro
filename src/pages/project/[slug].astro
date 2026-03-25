@@ -350,6 +350,10 @@ const jsonLd = {
         const shareBtn = document.getElementById("share-btn");
         const announcer = document.getElementById("share-announcer");
 
+        const prefersReducedMotionQuery = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
         if (shareBtn) {
           shareBtn.addEventListener("click", async () => {
             if (navigator.share) {
@@ -366,10 +370,7 @@ const jsonLd = {
 
                 // 🎨 Palette: Visual, Audible, and Haptic Feedback
                 // Vibrate for 50ms on mobile devices
-                if (
-                  navigator.vibrate &&
-                  !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                )
+                if (navigator.vibrate && !prefersReducedMotionQuery.matches)
                   navigator.vibrate([50]);
 
                 if (!shareBtn.classList.contains("copied")) {

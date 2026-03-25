@@ -33,13 +33,14 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
     if (window.__tagHapticsInitialized) return;
     window.__tagHapticsInitialized = true;
 
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     document.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
       if (target.closest(".interactive-tag")) {
-        if (
-          navigator.vibrate &&
-          !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(30);
         }
       }
