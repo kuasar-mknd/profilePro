@@ -43,6 +43,15 @@ interface Window {
   __postHapticsInitHandler?: () => void;
   __postHapticsInitialized?: boolean;
   __copyBtnClickHandler?: (e: MouseEvent) => void;
+  __handleThemeChange?: (e: Event) => void;
+  __emptyStateHapticsInitialized?: boolean;
+  __emptyStateHapticsInitHandler?: () => void;
+  __tagHapticsInitialized?: boolean;
+  __galleryInitHandler?: () => void;
+  __videoPlayerClickHandler?: (e: MouseEvent) => void;
+  __videoPrefetchDelegationInitialized?: boolean;
+  _plyrPrefetched?: boolean;
+  __videoPlayerLoadHandler?: () => void;
 }
 
 // Global variable augmentation for Node/Bun SSG environment

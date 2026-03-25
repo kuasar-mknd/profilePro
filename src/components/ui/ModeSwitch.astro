@@ -132,18 +132,16 @@ import { Icon } from "astro-icon/components";
     // ⚡ Bolt: Define event handler using Singleton Pattern to prevent memory leaks
     // caused by recreating function references on every View Transition.
     // Store it on the window object to ensure we can remove it cleanly.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    if (win.__handleThemeChange) {
-      window.removeEventListener("theme-change", win.__handleThemeChange);
+    if (window.__handleThemeChange) {
+      window.removeEventListener("theme-change", window.__handleThemeChange);
     }
 
-    win.__handleThemeChange = (e: Event) => {
+    window.__handleThemeChange = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       updateLabels(detail.isDark, true);
     };
 
-    window.addEventListener("theme-change", win.__handleThemeChange);
+    window.addEventListener("theme-change", window.__handleThemeChange);
 
     // ⚡ Bolt: Event Delegation for Theme Switcher
     // Reduces listener count from N to 1
