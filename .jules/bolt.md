@@ -52,3 +52,7 @@
 ## 2026-03-24 - Expensive window.matchMedia parsing in event listeners
 **Learning:** Evaluating `window.matchMedia("(prefers-reduced-motion: reduce)").matches` inside hot paths like event listeners (e.g., `click` or `mousemove`) forces the browser engine to repeatedly parse and evaluate the media query string upon every interaction, which can cause micro-stutters.
 **Action:** Always cache the `MediaQueryList` object outside the listener (e.g., `const prefersReducedMotionQuery = window.matchMedia(...)`) and strictly evaluate its `.matches` property inside the listener callback to eliminate the string parsing overhead.
+
+## 2026-03-24 - Frontmatter Array Map Optimization
+**Learning:** In Astro components, iterating over the same props array multiple times (e.g., using `.map()` for JSON-LD schema generation and then again for HTML rendering) causes redundant allocations and repetitive function calls (like `sanitizeUrl` or `new URL`).
+**Action:** Consolidate multiple `.map()` passes into a single frontmatter variable (e.g., `processedItems`) that pre-calculates sanitized properties, schema objects, and loop conditions (like `isLast`). This avoids duplicating work in both the metadata generation and the template execution.
