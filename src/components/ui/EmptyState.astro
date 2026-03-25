@@ -59,10 +59,8 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
    * 🎨 Palette: Tactile feedback for empty state actions
    */
   function initEmptyStateHaptics() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    if (win.__emptyStateHapticsInitialized) return;
-    win.__emptyStateHapticsInitialized = true;
+    if (window.__emptyStateHapticsInitialized) return;
+    window.__emptyStateHapticsInitialized = true;
 
     // ⚡ Bolt: Cache MediaQueryList to prevent evaluating the media query string on every click
     const prefersReducedMotionQuery = window.matchMedia(
@@ -80,15 +78,13 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
   }
 
   // Support View Transitions
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const win = window as any;
-  if (win.__emptyStateHapticsInitHandler) {
+  if (window.__emptyStateHapticsInitHandler) {
     document.removeEventListener(
       "astro:page-load",
-      win.__emptyStateHapticsInitHandler,
+      window.__emptyStateHapticsInitHandler,
     );
   }
-  win.__emptyStateHapticsInitHandler = initEmptyStateHaptics;
+  window.__emptyStateHapticsInitHandler = initEmptyStateHaptics;
   document.addEventListener("astro:page-load", initEmptyStateHaptics);
   initEmptyStateHaptics();
 </script>
