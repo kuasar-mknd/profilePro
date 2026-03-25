@@ -70,13 +70,14 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
 
     nav.dataset.initialized = "true";
 
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     nav.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
       if (target.closest(".project-filter-link")) {
-        if (
-          navigator.vibrate &&
-          !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(30);
         }
       }
