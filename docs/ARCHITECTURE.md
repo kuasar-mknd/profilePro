@@ -103,10 +103,10 @@ Workflows are defined in `.github/workflows/`:
 1.  **CI (`ci.yml`)**:
     - Triggers on Push & PR.
     - Sets up Node 20.
-    - Installs dependencies (`npm ci --legacy-peer-deps`).
-    - Runs `npm run check` (Lint + Types + Format).
-    - Runs `npm run test:e2e` (Playwright).
-    - Builds the site `npm run build`.
+    - Installs dependencies (`pnpm install`).
+    - Runs `pnpm run check` (Lint + Types + Format).
+    - Runs `pnpm run test:e2e` (Playwright).
+    - Builds the site `pnpm run build`.
 
 2.  **Security**:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
