@@ -36,7 +36,10 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
     document.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
       if (target.closest(".interactive-tag")) {
-        if (navigator.vibrate) {
+        if (
+          navigator.vibrate &&
+          !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
           navigator.vibrate(30);
         }
       }

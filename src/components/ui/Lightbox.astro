@@ -462,7 +462,10 @@
       if (trigger) this.triggerElement = trigger;
 
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (navigator.vibrate) {
+      if (
+        navigator.vibrate &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
         navigator.vibrate(50);
       }
 
@@ -523,7 +526,11 @@
 
     public next() {
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (navigator.vibrate && this.galleryElements.length > 1) {
+      if (
+        navigator.vibrate &&
+        this.galleryElements.length > 1 &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
         navigator.vibrate(50);
       }
       this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
@@ -532,7 +539,11 @@
 
     public prev() {
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (navigator.vibrate && this.galleryElements.length > 1) {
+      if (
+        navigator.vibrate &&
+        this.galleryElements.length > 1 &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
         navigator.vibrate(50);
       }
       this.currentIndex =
