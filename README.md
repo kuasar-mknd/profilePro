@@ -42,7 +42,7 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Si l'erreur persiste :
       ```bash
       rm -rf node_modules package-lock.json
-      pnpm install --legacy-peer-deps
+      pnpm install
       ```
 2.  **Erreur `pnpm run` introuvable** :
     - Installez npm via Node.js installer.
@@ -109,7 +109,7 @@ git clone https://github.com/kuasar-mknd/profilePro.git
 cd profilePro
 
 # Installer les dépendances
-pnpm install --legacy-peer-deps
+pnpm install
 
 # Configurer l'environnement
 cp .env.example .env
