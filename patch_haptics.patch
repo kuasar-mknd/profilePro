@@ -1,0 +1,90 @@
+--- src/components/ui/Lightbox.astro
++++ src/components/ui/Lightbox.astro
+@@ -462,8 +462,8 @@
+       if (trigger) this.triggerElement = trigger;
+
+       // 🎨 Palette: Provide subtle haptic feedback for mobile users
+-      if (navigator.vibrate) {
++      if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+         navigator.vibrate(50);
+       }
+
+       this.currentIndex = index;
+@@ -523,8 +523,8 @@
+
+     public next() {
+       // 🎨 Palette: Provide subtle haptic feedback for mobile users
+-      if (navigator.vibrate && this.galleryElements.length > 1) {
++      if (navigator.vibrate && this.galleryElements.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+         navigator.vibrate(50);
+       }
+       this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
+       this.updateImage();
+     }
+
+     public prev() {
+       // 🎨 Palette: Provide subtle haptic feedback for mobile users
+-      if (navigator.vibrate && this.galleryElements.length > 1) {
++      if (navigator.vibrate && this.galleryElements.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+         navigator.vibrate(50);
+       }
+       this.currentIndex =
+--- src/components/ui/Tag.astro
++++ src/components/ui/Tag.astro
+@@ -36,8 +36,8 @@
+     document.addEventListener("click", (e) => {
+       const target = e.target as HTMLElement;
+       if (target.closest(".interactive-tag")) {
+-        if (navigator.vibrate) {
++        if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+           navigator.vibrate(30);
+         }
+       }
+     });
+--- src/components/features/projects/ProjectFilter.astro
++++ src/components/features/projects/ProjectFilter.astro
+@@ -73,8 +73,8 @@
+
+     nav.addEventListener("click", (e) => {
+       const target = e.target as HTMLElement;
+       if (target.closest(".project-filter-link")) {
+-        if (navigator.vibrate) {
++        if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+           navigator.vibrate(30);
+         }
+       }
+     });
+--- src/components/features/projects/VideoPlayer.astro
++++ src/components/features/projects/VideoPlayer.astro
+@@ -171,7 +171,7 @@
+     wrapper.dataset.playing = "true";
+
+     // 🎨 Palette: Tactile feedback for play button
+-    if (navigator.vibrate) navigator.vibrate(50);
++    if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) navigator.vibrate(50);
+
+     const poster = wrapper.querySelector("[id^='poster-']");
+     const playerDiv = wrapper.querySelector("[id^='player-']");
+--- src/pages/[slug].astro
++++ src/pages/[slug].astro
+@@ -161,7 +161,7 @@
+         try {
+           await navigator.clipboard.writeText(window.location.href);
+
+           // 🎨 Palette: Haptic Feedback
+-          if (navigator.vibrate) navigator.vibrate([50]);
++          if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) navigator.vibrate([50]);
+
+           if (!shareBtn.classList.contains("copied")) {
+             shareBtn.classList.add("copied");
+--- src/pages/project/[slug].astro
++++ src/pages/project/[slug].astro
+@@ -366,7 +366,7 @@
+
+                 // 🎨 Palette: Visual, Audible, and Haptic Feedback
+                 // Vibrate for 50ms on mobile devices
+-                if (navigator.vibrate) navigator.vibrate([50]);
++                if (navigator.vibrate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) navigator.vibrate([50]);
+
+                 if (!shareBtn.classList.contains("copied")) {
+                   shareBtn.classList.add("copied");

@@ -161,11 +161,7 @@ const readingTime = getReadingTime(entry.body);
           await navigator.clipboard.writeText(window.location.href);
 
           // 🎨 Palette: Haptic Feedback
-          if (
-            navigator.vibrate &&
-            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          )
-            navigator.vibrate([50]);
+          if (navigator.vibrate) navigator.vibrate([50]);
 
           if (!shareBtn.classList.contains("copied")) {
             shareBtn.classList.add("copied");

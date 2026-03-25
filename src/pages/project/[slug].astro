@@ -366,7 +366,11 @@ const jsonLd = {
 
                 // 🎨 Palette: Visual, Audible, and Haptic Feedback
                 // Vibrate for 50ms on mobile devices
-                if (navigator.vibrate) navigator.vibrate([50]);
+                if (
+                  navigator.vibrate &&
+                  !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                )
+                  navigator.vibrate([50]);
 
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
