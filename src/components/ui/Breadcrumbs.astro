@@ -11,19 +11,30 @@ interface Props {
 
 const { items } = Astro.props;
 
-// Schema.org Structured Data
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: items.map((item, index) => {
-    const safeHref = item.href ? sanitizeUrl(item.href) : undefined;
-    return {
+// ⚡ Bolt: Single pass processing for Breadcrumbs
+// Pre-calculate sanitized URLs and schema items in one pass to avoid duplicate array allocations and function calls
+const processedItems = items.map((item, index) => {
+  const safeHref = item.href ? sanitizeUrl(item.href) : undefined;
+  const isLast = index === items.length - 1;
+
+  return {
+    ...item,
+    safeHref,
+    isLast,
+    schemaItem: {
       "@type": "ListItem",
       position: index + 1,
       name: item.label,
       item: safeHref ? new URL(safeHref, Astro.url).href : undefined,
-    };
-  }),
+    },
+  };
+});
+
+// Schema.org Structured Data
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: processedItems.map((item) => item.schemaItem),
 };
 ---
 
@@ -36,10 +47,7 @@ const schema = {
     class="flex items-center flex-wrap gap-2 text-sm text-pacamara-primary/60 dark:text-white/60"
   >
     {
-      items.map((item, index) => {
-        const isLast = index === items.length - 1;
-        const safeHref = item.href ? sanitizeUrl(item.href) : undefined;
-
+      processedItems.map((item, index) => {
         return (
           <li class="flex items-center gap-2">
             {index > 0 && (
@@ -50,7 +58,7 @@ const schema = {
               />
             )}
 
-            {isLast ? (
+            {item.isLast ? (
               <span
                 class="text-pacamara-primary dark:text-white font-medium truncate max-w-[200px] md:max-w-xs"
                 aria-current="page"
@@ -60,7 +68,7 @@ const schema = {
               </span>
             ) : (
               <a
-                href={safeHref || undefined}
+                href={item.safeHref || undefined}
                 class="hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-md p-1.5 -m-1.5"
               >
                 {item.label}
