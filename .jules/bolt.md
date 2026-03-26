@@ -56,3 +56,7 @@
 ## 2026-03-24 - Frontmatter Array Map Optimization
 **Learning:** In Astro components, iterating over the same props array multiple times (e.g., using `.map()` for JSON-LD schema generation and then again for HTML rendering) causes redundant allocations and repetitive function calls (like `sanitizeUrl` or `new URL`).
 **Action:** Consolidate multiple `.map()` passes into a single frontmatter variable (e.g., `processedItems`) that pre-calculates sanitized properties, schema objects, and loop conditions (like `isLast`). This avoids duplicating work in both the metadata generation and the template execution.
+
+## 2025-05-18 - Caching matchMedia in event listeners
+**Learning:** `window.matchMedia("(prefers-reduced-motion: reduce)")` string parsing and evaluation can become a bottleneck when executed repeatedly inside high-frequency event listeners like `click` or `scroll`.
+**Action:** Always cache the `MediaQueryList` object outside the listener using a variable like `prefersReducedMotionQuery` and check its `.matches` property dynamically inside the listener callback to correctly access the current media status without parsing overhead.

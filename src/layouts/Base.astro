@@ -436,13 +436,15 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
 
         backToTopObserver.observe(sentinel);
 
+        // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+        const prefersReducedMotionQuery = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
         // Scroll to top action
         const onClick = () => {
-          const prefersReducedMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
           // 🎨 Palette: Provide subtle haptic feedback for mobile users
-          if (navigator.vibrate && !prefersReducedMotion) {
+          if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
             navigator.vibrate(50);
           }
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -523,9 +525,11 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
        */
       function initSkipLinks() {
         const skipLinks = document.querySelectorAll(".skip-link");
-        const prefersReducedMotion = window.matchMedia(
+
+        // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+        const prefersReducedMotionQuery = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
-        ).matches;
+        );
 
         for (let i = 0; i < skipLinks.length; i++) {
           if (
@@ -535,7 +539,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
           (skipLinks[i] as HTMLElement).dataset.hapticsInitialized = "true";
 
           skipLinks[i].addEventListener("click", () => {
-            if (navigator.vibrate && !prefersReducedMotion) {
+            if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
               navigator.vibrate(30);
             }
           });
