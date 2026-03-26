@@ -52,6 +52,9 @@ interface Window {
   __videoPrefetchDelegationInitialized?: boolean;
   _plyrPrefetched?: boolean;
   __videoPlayerLoadHandler?: () => void;
+  __pageTransitionBeforePrepHandler?: () => void;
+  __pageTransitionAfterPrepHandler?: () => void;
+  __pageTransitionClickHandler?: EventListener;
 }
 
 // Global variable augmentation for Node/Bun SSG environment
