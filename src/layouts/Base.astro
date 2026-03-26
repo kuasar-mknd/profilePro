@@ -50,6 +50,23 @@ const [heroLogo, lcpImage] = await Promise.all([
   heroLogoPromise,
   lcpImagePromise,
 ]);
+
+const translations = {
+  fr: {
+    skipContent: "Aller au contenu principal",
+    skipFooter: "Aller au pied de page",
+    backToTop: "Retour en haut de page",
+    backToTopTooltip: "Retour en haut",
+  },
+  en: {
+    skipContent: "Skip to main content",
+    skipFooter: "Skip to footer",
+    backToTop: "Back to top",
+    backToTopTooltip: "Back to top",
+  },
+};
+
+const t = translations[lang as keyof typeof translations] || translations.fr;
 ---
 
 <!doctype html>
@@ -226,15 +243,15 @@ const [heroLogo, lcpImage] = await Promise.all([
     <div class="absolute z-[100] top-0 left-0 pointer-events-none">
       <a
         href="#main-content"
-        class="absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
       >
-        Aller au contenu principal
+        {t.skipContent}
       </a>
       <a
         href="#main-footer"
-        class="absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
       >
-        Aller au pied de page
+        {t.skipFooter}
       </a>
     </div>
     <Header />
@@ -258,14 +275,14 @@ const [heroLogo, lcpImage] = await Promise.all([
     <button
       id="back-to-top"
       class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 group cursor-pointer"
-      aria-label="Retour en haut de page"
+      aria-label={t.backToTop}
       tabindex="-1"
     >
       <span
         class="absolute right-full mr-4 px-2 py-1 bg-pacamara-dark/90 dark:bg-white/90 text-white dark:text-pacamara-dark text-xs rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
         aria-hidden="true"
       >
-        Retour en haut
+        {t.backToTopTooltip}
         <span
           class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-4 border-y-transparent border-l-[5px] border-l-pacamara-dark/90 dark:border-l-white/90"
         ></span>
@@ -497,6 +514,31 @@ const [heroLogo, lcpImage] = await Promise.all([
       // and a warning in title/aria-label.
       const warning = " (ouvre un nouvel onglet)";
 
+      /**
+       * 🎨 Palette: Skip Link Haptics
+       * Provides subtle physical confirmation when using keyboard navigation shortcuts.
+       */
+      function initSkipLinks() {
+        const skipLinks = document.querySelectorAll(".skip-link");
+        const prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        for (let i = 0; i < skipLinks.length; i++) {
+          if (
+            (skipLinks[i] as HTMLElement).dataset.hapticsInitialized === "true"
+          )
+            continue;
+          (skipLinks[i] as HTMLElement).dataset.hapticsInitialized = "true";
+
+          skipLinks[i].addEventListener("click", () => {
+            if (navigator.vibrate && !prefersReducedMotion) {
+              navigator.vibrate(30);
+            }
+          });
+        }
+      }
+
       function secureLink(link: Element) {
         if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
           return;
@@ -552,6 +594,7 @@ const [heroLogo, lcpImage] = await Promise.all([
         const initAll = () => {
           initGlobalResizeObserver();
           initBackToTop();
+          initSkipLinks();
           secureLinks();
           initThemeObserver();
         };
