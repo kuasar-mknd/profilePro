@@ -507,11 +507,16 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     const form = document.getElementById("contact-form");
     const nameInput = document.getElementById("name");
 
+    const prefersReducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     if (primaryCta && primaryCta.dataset.initialized !== "true") {
       primaryCta.dataset.initialized = "true";
       primaryCta.addEventListener("click", () => {
         // 🎨 Palette: Tactile feedback for primary action
-        if (navigator.vibrate) navigator.vibrate(50);
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
+          navigator.vibrate(50);
       });
     }
 
@@ -528,7 +533,8 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       e.preventDefault();
 
       // 🎨 Palette: Tactile feedback for primary action
-      if (navigator.vibrate) navigator.vibrate(50);
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches)
+        navigator.vibrate(50);
 
       // Check if device uses coarse pointer (likely touch/mobile)
       const isMobile = pointerCoarseQuery.matches;
