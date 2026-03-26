@@ -143,32 +143,66 @@
 </style>
 
 <script>
-  // Handle page transitions
-  document.addEventListener("astro:before-preparation", () => {
-    document.body.classList.add("page-loading");
-    const announcer = document.getElementById("page-transition-announcer");
-    if (announcer) announcer.textContent = "Chargement de la page en cours...";
-  });
+  // ⚡ Bolt: Singleton Listener Pattern for View Transitions
+  // Prevents listener accumulation when component script re-runs on navigation
+  function setupPageTransitionListeners() {
+    // 1. Before Preparation
+    const handleBeforePrep = () => {
+      document.body.classList.add("page-loading");
+      const announcer = document.getElementById("page-transition-announcer");
+      if (announcer)
+        announcer.textContent = "Chargement de la page en cours...";
+    };
 
-  document.addEventListener("astro:after-preparation", () => {
-    document.body.classList.remove("page-loading");
-    const announcer = document.getElementById("page-transition-announcer");
-    if (announcer) announcer.textContent = "Page chargée";
-  });
-
-  // ⚡ Bolt: Use event delegation for transition links
-  // This eliminates the need for document.querySelectorAll and automatically
-  // supports new elements added during View Transitions without re-initialization.
-  document.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
-    const link = target.closest("[data-slide-transition]");
-
-    if (link) {
-      document.body.classList.add("slide-transition-active");
-
-      setTimeout(() => {
-        document.body.classList.remove("slide-transition-active");
-      }, 600);
+    if (window.__pageTransitionBeforePrepHandler) {
+      document.removeEventListener(
+        "astro:before-preparation",
+        window.__pageTransitionBeforePrepHandler,
+      );
     }
-  });
+    window.__pageTransitionBeforePrepHandler = handleBeforePrep;
+    document.addEventListener("astro:before-preparation", handleBeforePrep);
+
+    // 2. After Preparation
+    const handleAfterPrep = () => {
+      document.body.classList.remove("page-loading");
+      const announcer = document.getElementById("page-transition-announcer");
+      if (announcer) announcer.textContent = "Page chargée";
+    };
+
+    if (window.__pageTransitionAfterPrepHandler) {
+      document.removeEventListener(
+        "astro:after-preparation",
+        window.__pageTransitionAfterPrepHandler,
+      );
+    }
+    window.__pageTransitionAfterPrepHandler = handleAfterPrep;
+    document.addEventListener("astro:after-preparation", handleAfterPrep);
+
+    // 3. Click Delegation for transition links
+    const handleTransitionClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest("[data-slide-transition]");
+
+      if (link) {
+        document.body.classList.add("slide-transition-active");
+
+        setTimeout(() => {
+          document.body.classList.remove("slide-transition-active");
+        }, 600);
+      }
+    };
+
+    if (window.__pageTransitionClickHandler) {
+      document.removeEventListener(
+        "click",
+        window.__pageTransitionClickHandler,
+      );
+    }
+    window.__pageTransitionClickHandler =
+      handleTransitionClick as EventListener;
+    document.addEventListener("click", window.__pageTransitionClickHandler);
+  }
+
+  setupPageTransitionListeners();
 </script>
