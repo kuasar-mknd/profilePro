@@ -23,6 +23,21 @@
     ></span>
   </div>
   <span class="sr-only" aria-live="polite" id="menu-live-region"></span>
+
+  <!-- 🎨 Palette: Custom Visual Tooltip -->
+  <span
+    class="absolute top-full right-0 mt-3 px-2.5 py-1.5 bg-pacamara-dark text-white text-xs font-medium rounded-md opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap dark:bg-white dark:text-pacamara-dark shadow-md z-[60]"
+    aria-hidden="true"
+  >
+    <span id="menu_tooltip_text">Menu</span><kbd
+      id="menu_tooltip_shortcut"
+      class="font-sans ml-1 opacity-70 hidden"
+      aria-hidden="true">(Esc)</kbd
+    >
+    <span
+      class="absolute bottom-full right-3 w-0 h-0 border-x-4 border-x-transparent border-b-[5px] border-b-pacamara-dark dark:border-b-white"
+    ></span>
+  </span>
 </button>
 
 <script>
@@ -41,6 +56,8 @@
 
     const button = document.querySelector("#menu_toggle");
     const nav = document.querySelector("#navigation_wrapper");
+    const tooltipText = document.querySelector("#menu_tooltip_text");
+    const tooltipShortcut = document.querySelector("#menu_tooltip_shortcut");
 
     // ⚡ Early return guards
     if (!button || !nav) return;
@@ -53,6 +70,11 @@
       button.setAttribute("aria-expanded", "false");
       button.setAttribute("aria-label", "Ouvrir le menu");
       button.removeAttribute("aria-keyshortcuts");
+
+      if (tooltipText) tooltipText.textContent = "Menu";
+      if (tooltipShortcut) {
+        tooltipShortcut.classList.remove("sm:inline");
+      }
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
 
@@ -92,6 +114,11 @@
       button.setAttribute("aria-expanded", "true");
       button.setAttribute("aria-label", "Fermer le menu");
       button.setAttribute("aria-keyshortcuts", "Escape");
+
+      if (tooltipText) tooltipText.textContent = "Fermer";
+      if (tooltipShortcut) {
+        tooltipShortcut.classList.add("sm:inline");
+      }
       nav.classList.remove("translate-x-full");
       nav.classList.add("translate-x-0");
 
