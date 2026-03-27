@@ -12,3 +12,7 @@
 ## 2026-03-27 - Keyboard Shortcut Discoverability for Screen Readers
 **Learning:** Visible `<kbd>` hints (e.g., `(M)`) aren't always automatically associated with an element's accessible name by screen readers, especially if they are decorative or hidden.
 **Action:** Always append keyboard shortcut hints in parentheses to the `aria-label` of interactive elements (e.g., 'Ouvrir le menu (M)'). For stateful elements, ensure these labels are dynamically updated in the logic (e.g., changing to 'Fermer le menu (Esc)' when the menu is open).
+
+## 2024-03-27 - Focus State Parity for Hover Animations
+**Learning:** Interactive elements that rely solely on CSS hover states for visual feedback (e.g., `group-hover:rotate-90`) create a degraded experience for keyboard users who navigate via `Tab`. Screen reader and keyboard-only users miss these visual cues entirely.
+**Action:** Always pair `hover` or `group-hover` utility classes with equivalent `focus-visible`, `focus-within`, or `group-focus-visible` classes to ensure parity in visual feedback (like scaling, rotating, or background changes) for keyboard navigation.
