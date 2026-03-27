@@ -4,7 +4,8 @@
   type="button"
   aria-controls="navigation_wrapper"
   aria-expanded="false"
-  aria-label="Ouvrir le menu"
+  aria-label="Ouvrir le menu (M)"
+  aria-keyshortcuts="M"
 >
   <div
     class="relative w-8 h-6 flex flex-col justify-between items-center group-hover:scale-105 group-focus-visible:scale-105 transition-transform duration-300"
@@ -31,8 +32,8 @@
   >
     <span id="menu_tooltip_text">Menu</span><kbd
       id="menu_tooltip_shortcut"
-      class="font-sans ml-1 opacity-70 hidden"
-      aria-hidden="true">(Esc)</kbd
+      class="font-sans ml-1 opacity-70 hidden sm:inline"
+      aria-hidden="true">(M)</kbd
     >
     <span
       class="absolute bottom-full right-3 w-0 h-0 border-x-4 border-x-transparent border-b-[5px] border-b-pacamara-dark dark:border-b-white"
@@ -68,12 +69,13 @@
     const closeMenu = () => {
       document.documentElement.classList.remove("overflow-hidden");
       button.setAttribute("aria-expanded", "false");
-      button.setAttribute("aria-label", "Ouvrir le menu");
-      button.removeAttribute("aria-keyshortcuts");
+      button.setAttribute("aria-label", "Ouvrir le menu (M)");
+      button.setAttribute("aria-keyshortcuts", "M");
 
       if (tooltipText) tooltipText.textContent = "Menu";
       if (tooltipShortcut) {
-        tooltipShortcut.classList.remove("sm:inline");
+        tooltipShortcut.textContent = "(M)";
+        tooltipShortcut.classList.add("sm:inline");
       }
       nav.classList.add("translate-x-full");
       nav.classList.remove("translate-x-0");
@@ -112,11 +114,12 @@
 
       document.documentElement.classList.add("overflow-hidden");
       button.setAttribute("aria-expanded", "true");
-      button.setAttribute("aria-label", "Fermer le menu");
+      button.setAttribute("aria-label", "Fermer le menu (Esc)");
       button.setAttribute("aria-keyshortcuts", "Escape");
 
       if (tooltipText) tooltipText.textContent = "Fermer";
       if (tooltipShortcut) {
+        tooltipShortcut.textContent = "(Esc)";
         tooltipShortcut.classList.add("sm:inline");
       }
       nav.classList.remove("translate-x-full");
@@ -181,6 +184,33 @@
 
     document.addEventListener("keydown", handleEscape);
 
+    // 🎨 Palette: Global keyboard shortcut for menu (M)
+    const handleGlobalKeydown = (e: KeyboardEvent) => {
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+      const target = e.target as HTMLElement;
+
+      // Ignore if user is typing in an input
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      if ((e.key === "m" || e.key === "M") && !isExpanded) {
+        e.preventDefault();
+        openMenu();
+        const liveRegion = document.getElementById("menu-live-region");
+        if (liveRegion) liveRegion.textContent = "Menu ouvert";
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
+          navigator.vibrate(50);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleGlobalKeydown);
+
     const menuObserver = new MutationObserver((mutations) => {
       // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
       for (let i = 0; i < mutations.length; i++) {
@@ -213,6 +243,7 @@
     // ⚡ Register cleanup
     cleanupMenu = () => {
       document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleGlobalKeydown);
       menuObserver.disconnect();
     };
   }
