@@ -39,6 +39,10 @@ const staggerClass =
    * and avoid creating multiple observers for the same purpose.
    */
   let cachedScrollRevealObserver: IntersectionObserver | null = null;
+  // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
 
   function getScrollRevealObserver(): IntersectionObserver {
     // ⚡ Reuse existing observer instance
@@ -92,11 +96,7 @@ const staggerClass =
     if (elements.length === 0) return;
 
     // Respect reduced motion preference
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (prefersReducedMotion) {
+    if (prefersReducedMotionQuery.matches) {
       // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
       for (let i = 0; i < elements.length; i++) {
         const el = elements[i];
