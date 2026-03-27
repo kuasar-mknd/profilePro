@@ -8,3 +8,7 @@
 ## 2026-03-26 - Keyboard Shortcut Hints on Mobile
 **Learning:** Displaying keyboard shortcuts (like `(Shift+T)`) in tooltips or expanding labels adds unnecessary visual noise on mobile devices where physical keyboards are typically unavailable.
 **Action:** When adding discoverable keyboard shortcuts via `<kbd>` tags within interactive labels, ensure they are hidden on smaller viewports using utility classes like `hidden sm:inline`.
+
+## 2026-03-27 - Keyboard Shortcut Discoverability for Screen Readers
+**Learning:** Visible `<kbd>` hints (e.g., `(M)`) aren't always automatically associated with an element's accessible name by screen readers, especially if they are decorative or hidden.
+**Action:** Always append keyboard shortcut hints in parentheses to the `aria-label` of interactive elements (e.g., 'Ouvrir le menu (M)'). For stateful elements, ensure these labels are dynamically updated in the logic (e.g., changing to 'Fermer le menu (Esc)' when the menu is open).
