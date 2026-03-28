@@ -81,4 +81,10 @@ As this is a static site, API errors are primarily HTTP-level responses served b
 
 There are no custom JSON error payloads since there are no dynamic JSON endpoints.
 
+## 🗄 Database & ORM Expectations
+
+**No database connections are exposed.**
+
+As this is an Astro static site, there is no connected Prisma database or SQL layer. All site content is pre-rendered at build time from static Markdown files, so there are no data retrieval endpoints or backend logic required.
+
 <!-- Verified: DocOps -->
