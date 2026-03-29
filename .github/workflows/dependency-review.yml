@@ -12,7 +12,8 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
-      - name: "Dependency Review"
+
+      - name: "Dependency Review Action"
         uses: actions/dependency-review-action@v4
         with:
           # Fail on any new vulnerability (moderate, high, critical)

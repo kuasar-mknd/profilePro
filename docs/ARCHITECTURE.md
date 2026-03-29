@@ -17,7 +17,7 @@ To maintain a scalable and testable codebase, the project structure maps to Clea
 **Where to add new endpoints/use-cases:**
 As an Astro static site generator (SSG), there is no dynamic backend routing or Prisma database layer.
 To add a "new endpoint" (a new page route) or "use-case", you must define the routing in the **Application/Pages Layer** (`src/pages/`) by creating a new `.astro` file. The underlying business logic or data schema should be implemented in the **Domain/Content Layer** (`src/content/`) via Markdown/MDX content collections.
-*Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the future, it should ideally be deployed independently or placed in a dedicated `api/` directory so it doesn't pollute the SSG routing.*
+*Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the future, it should ideally be deployed independently or placed in a dedicated `api/` directory so it doesn't pollute the SSG routing. Currently, this repository relies entirely on the file system for data storage and does not execute database queries.*
 
 ### 2. Data Flow & State Management
 
