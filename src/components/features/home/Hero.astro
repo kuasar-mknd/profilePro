@@ -23,7 +23,13 @@ const slides: { src: any; alt: string }[] = [];
 const indices = Array.from({ length: projects.length }, (_, i) => i);
 
 for (let i = 0; i < limit; i++) {
-  const randomIndex = i + Math.floor(Math.random() * (indices.length - i));
+  // 🛡️ Sentinel: Replace weak Math.random() with cryptographically secure PRNG
+  // Ensures unpredictable distribution of hero images
+  const randomBuffer = new Uint32Array(1);
+  crypto.getRandomValues(randomBuffer);
+  const randomFloat = randomBuffer[0] / (0xffffffff + 1);
+  const randomIndex = i + Math.floor(randomFloat * (indices.length - i));
+
   // Swap the picked index to the current position 'i'
   [indices[i], indices[randomIndex]] = [indices[randomIndex], indices[i]];
   const selectedProject = projects[indices[i]];
