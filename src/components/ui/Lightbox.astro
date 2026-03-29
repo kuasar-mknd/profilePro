@@ -566,6 +566,46 @@
       this.currentSpan.textContent = String(this.currentIndex + 1);
       this.totalSpan.textContent = String(this.galleryElements.length);
 
+      // 🎨 Palette: Hide navigation controls for single-image galleries
+      const totalImages = this.galleryElements.length;
+      const prevBtn = this.lightbox.querySelector(
+        ".lightbox-prev",
+      ) as HTMLElement;
+      const nextBtn = this.lightbox.querySelector(
+        ".lightbox-next",
+      ) as HTMLElement;
+      const counter = this.lightbox.querySelector(
+        ".lightbox-counter",
+      ) as HTMLElement;
+
+      if (totalImages <= 1) {
+        if (prevBtn) {
+          prevBtn.style.display = "none";
+          prevBtn.setAttribute("aria-hidden", "true");
+        }
+        if (nextBtn) {
+          nextBtn.style.display = "none";
+          nextBtn.setAttribute("aria-hidden", "true");
+        }
+        if (counter) {
+          counter.style.display = "none";
+          counter.setAttribute("aria-hidden", "true");
+        }
+      } else {
+        if (prevBtn) {
+          prevBtn.style.display = "";
+          prevBtn.setAttribute("aria-hidden", "false");
+        }
+        if (nextBtn) {
+          nextBtn.style.display = "";
+          nextBtn.setAttribute("aria-hidden", "false");
+        }
+        if (counter) {
+          counter.style.display = "";
+          counter.setAttribute("aria-hidden", "false");
+        }
+      }
+
       // 🎨 Palette: Announce image description
       if (this.announcer) {
         this.announcer.textContent = `Image ${this.currentIndex + 1} sur ${this.galleryElements.length}. ${alt || "Image sans description"}`;
