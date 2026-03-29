@@ -330,6 +330,11 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     </button>
 
     <script>
+      // ⚡ Bolt: Cache matchMedia globally to avoid re-parsing on every navigation and component initialization
+      const prefersReducedMotionQuery = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
       /**
        * ⚡ Bolt: Back to Top Performance Optimization
        * - Implements cleanup pattern to prevent event listener leaks on navigation
@@ -436,11 +441,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
 
         backToTopObserver.observe(sentinel);
 
-        // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-        const prefersReducedMotionQuery = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        );
-
         // Scroll to top action
         const onClick = () => {
           // 🎨 Palette: Provide subtle haptic feedback for mobile users
@@ -525,11 +525,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
        */
       function initSkipLinks() {
         const skipLinks = document.querySelectorAll(".skip-link");
-
-        // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-        const prefersReducedMotionQuery = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        );
 
         for (let i = 0; i < skipLinks.length; i++) {
           if (
