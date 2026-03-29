@@ -9,6 +9,7 @@ updates:
     commit-message:
       prefix: "chore"
 
+  # Dependabot checks for GitHub Actions dependencies
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

@@ -34,7 +34,7 @@ If AI integration is added, the expected JSON schema for a project summary might
 
 ## 🫰 Cost-Control Guidance & Limits
 
-- **Static Generation Strategy**: Since this is an Astro SSG project without a Hono backend, AI model execution is restricted strictly to **build time** (e.g., inside `getStaticPaths` or an integration script). There are **no runtime AI costs** and no serverless latency for users.
+- **Static Generation Strategy**: Since this is an Astro SSG project without a Hono backend or Prisma DB, AI model execution is restricted strictly to **build time** (e.g., inside `getStaticPaths` or an integration script). There are **no runtime AI costs** and no serverless latency for users.
 - **Caching**: AI responses *must* be heavily cached locally (e.g., in `.astro/cache` or a `src/data/ai-cache.json` flat file). This ensures the model is not re-queried during redundant CI builds unless the source Markdown actually changes.
 - **Rate Limit Management**: The build script adapter must implement a queue or concurrency limiter (like `p-limit`) to prevent exceeding API rate limits when statically generating metadata for many projects simultaneously.
 

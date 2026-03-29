@@ -26,7 +26,7 @@ jobs:
           version: 10
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
@@ -35,6 +35,9 @@ jobs:
         run: pnpm config set ignore-scripts false && pnpm install
         env:
           HUSKY: 0
+
+      - name: Run Prisma Generate (Placeholder)
+        run: echo "No Prisma database exists in this Astro SSG repository. Skipping Prisma generation."
 
       - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
