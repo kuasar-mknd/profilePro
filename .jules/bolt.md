@@ -60,3 +60,6 @@
 ## 2025-05-18 - Caching matchMedia in event listeners
 **Learning:** `window.matchMedia("(prefers-reduced-motion: reduce)")` string parsing and evaluation can become a bottleneck when executed repeatedly inside high-frequency event listeners like `click` or `scroll`.
 **Action:** Always cache the `MediaQueryList` object outside the listener using a variable like `prefersReducedMotionQuery` and check its `.matches` property dynamically inside the listener callback to correctly access the current media status without parsing overhead.
+## 2026-03-24 - Cache matchMedia outside class constructor
+**Learning:** Initializing window.matchMedia inside a class constructor still forces the browser engine to repeatedly parse the media query string every time the class is instantiated on page load or navigation.
+**Action:** Always cache the MediaQueryList object at the top level of the script block, outside of any class definitions or event listeners, to strictly evaluate its matches property when needed and eliminate string parsing overhead entirely across instantiations.
