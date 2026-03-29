@@ -306,6 +306,11 @@
 </style>
 
 <script>
+  // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener and class instantiation
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   class Lightbox {
     private lightbox: HTMLElement;
     private image: HTMLImageElement;
@@ -327,16 +332,12 @@
     private boundKeyHandler: (e: KeyboardEvent) => void;
     private boundClickHandler: (e: MouseEvent) => void;
     private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
-    private prefersReducedMotionQuery: MediaQueryList;
 
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.boundClickHandler = this.handleClick.bind(this);
       this.boundDelegatedKeyHandler = this.handleDelegatedKeyboard.bind(this);
       this.lightbox = document.getElementById("lightbox")!;
-      this.prefersReducedMotionQuery = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      );
       this.image = this.lightbox.querySelector(
         ".lightbox-image",
       ) as HTMLImageElement;
@@ -466,7 +467,7 @@
       if (trigger) this.triggerElement = trigger;
 
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (navigator.vibrate && !this.prefersReducedMotionQuery.matches) {
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
         navigator.vibrate(50);
       }
 
@@ -530,7 +531,7 @@
       if (
         navigator.vibrate &&
         this.galleryElements.length > 1 &&
-        !this.prefersReducedMotionQuery.matches
+        !prefersReducedMotionQuery.matches
       ) {
         navigator.vibrate(50);
       }
@@ -543,7 +544,7 @@
       if (
         navigator.vibrate &&
         this.galleryElements.length > 1 &&
-        !this.prefersReducedMotionQuery.matches
+        !prefersReducedMotionQuery.matches
       ) {
         navigator.vibrate(50);
       }
