@@ -64,14 +64,36 @@ const schema = {
                 aria-current="page"
                 title={item.label}
               >
-                {item.label}
+                {index === 0 && item.safeHref === "/" ? (
+                  <span class="flex items-center gap-1">
+                    <Icon
+                      name="mdi:home-outline"
+                      class="w-4 h-4"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">{item.label}</span>
+                  </span>
+                ) : (
+                  item.label
+                )}
               </span>
             ) : (
               <a
                 href={item.safeHref || undefined}
-                class="hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-md p-1.5 -m-1.5"
+                class="hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-md p-1.5 -m-1.5 flex items-center gap-1"
               >
-                {item.label}
+                {index === 0 && item.safeHref === "/" ? (
+                  <>
+                    <Icon
+                      name="mdi:home-outline"
+                      class="w-4 h-4"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">{item.label}</span>
+                  </>
+                ) : (
+                  item.label
+                )}
               </a>
             )}
           </li>
