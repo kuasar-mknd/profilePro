@@ -1,6 +1,7 @@
 ---
 import config from "../../config.mjs";
 import SocialIcon from "../ui/SocialIcon.astro";
+import { Icon } from "astro-icon/components";
 ---
 
 {
@@ -105,8 +106,13 @@ import SocialIcon from "../ui/SocialIcon.astro";
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
-          class="font-medium hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2"
-          aria-label="Astro (ouvre un nouvel onglet)">Astro</a
+          class="font-medium hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2 inline-flex items-center gap-1"
+          aria-label="Astro (ouvre un nouvel onglet)"
+          >Astro<Icon
+            name="mdi:open-in-new"
+            class="w-4 h-4 opacity-70"
+            aria-hidden="true"
+          /></a
         >
       </span>
     </div>
@@ -186,8 +192,20 @@ import SocialIcon from "../ui/SocialIcon.astro";
         link.rel = "noopener noreferrer";
         link.href = "https://websitecarbon.com";
         link.className =
-          "bg-pacamara-secondary text-white px-3 py-2 text-sm font-bold hover:bg-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-pacamara-accent";
+          "bg-pacamara-secondary text-white px-3 py-2 text-sm font-bold hover:bg-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-pacamara-accent flex items-center gap-1";
         link.textContent = "Website Carbon";
+
+        // 🎨 Palette: Add visual indicator for external link
+        const iconSvg = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg",
+        );
+        iconSvg.setAttribute("viewBox", "0 0 24 24");
+        iconSvg.setAttribute("class", "w-4 h-4 opacity-70");
+        iconSvg.setAttribute("aria-hidden", "true");
+        iconSvg.innerHTML =
+          '<path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>';
+        link.appendChild(iconSvg);
 
         const warning = " (ouvre un nouvel onglet)";
         link.setAttribute("aria-label", "Website Carbon" + warning);
