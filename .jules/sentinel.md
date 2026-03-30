@@ -99,3 +99,9 @@ Each entry should include:
 **Vulnerability:** A duplicate `Content-Security-Policy` was defined via a `<meta http-equiv="Content-Security-Policy">` tag in `src/layouts/Base.astro`, while a primary CSP already existed in `public/_headers`.
 **Learning:** Defining a CSP via meta tags is often incomplete and insecure. Meta tags explicitly ignore certain crucial directives such as `frame-ancestors` (used to prevent Clickjacking) and `report-uri`. Furthermore, when both HTTP headers and meta tags are present, the browser enforces the *strictest* intersection of both policies, which can lead to unexpected breakages and complicates security audits.
 **Prevention:** Removed the meta tag CSP entirely to enforce that Content Security Policies must be defined exclusively as HTTP response headers (e.g., in `public/_headers` for Cloudflare Pages), ensuring full directive support and avoiding policy conflicts.
+
+## 2026-11-20 - Safe SVG DOM Construction
+
+**Vulnerability:** Use of `innerHTML` to inject SVG markup, which can introduce XSS risks and bypass certain CSP protections.
+**Learning:** `document.createElementNS` is the safer and preferred approach for creating SVG elements dynamically. It requires the `http://www.w3.org/2000/svg` namespace URI to properly generate the elements without relying on `innerHTML`.
+**Prevention:** Avoid `innerHTML` assignments when constructing SVGs dynamically in client-side scripts. Use explicit element creation with `createElementNS` and assign attributes directly.
