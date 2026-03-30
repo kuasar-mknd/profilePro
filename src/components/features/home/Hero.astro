@@ -501,6 +501,12 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     }
   });
 
+  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
+  const pointerCoarseQuery = window.matchMedia("(pointer: coarse)");
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * 🎨 Palette: Smart Focus for Contact CTA
    * Smooth scrolls to form and intelligently manages focus:
@@ -512,10 +518,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     const secondaryCta = document.getElementById("hero-cta-secondary");
     const form = document.getElementById("contact-form");
     const nameInput = document.getElementById("name");
-
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     if (primaryCta && primaryCta.dataset.initialized !== "true") {
       primaryCta.dataset.initialized = "true";
@@ -531,9 +533,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     // Guard against duplicate listeners
     if (secondaryCta.dataset.initialized === "true") return;
     secondaryCta.dataset.initialized = "true";
-
-    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-    const pointerCoarseQuery = window.matchMedia("(pointer: coarse)");
 
     secondaryCta.addEventListener("click", (e) => {
       e.preventDefault();

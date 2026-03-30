@@ -26,6 +26,11 @@ const {
 </div>
 
 <script>
+  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * ⚡ Bolt: TiltCard performance optimization
    * - Event delegation: 'mouseover' on document instead of attaching 'mouseenter' to every card
@@ -33,7 +38,7 @@ const {
    * - RAF throttling
    */
   function setupTiltListeners() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotionQuery.matches) return;
 
     if (window.__tiltDelegationInitialized) return;
     window.__tiltDelegationInitialized = true;

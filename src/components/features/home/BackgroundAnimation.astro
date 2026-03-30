@@ -28,6 +28,11 @@
 </div>
 
 <script>
+  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * ⚡ Bolt: BackgroundAnimation Performance Optimizations
    * - Initialization guard to prevent duplicate listeners
@@ -54,7 +59,7 @@
     if (!blob || !container) return;
 
     // ⚡ Skip for reduced motion preference
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotionQuery.matches) {
       blob.style.display = "none";
       return;
     }
