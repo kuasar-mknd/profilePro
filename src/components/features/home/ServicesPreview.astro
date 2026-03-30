@@ -80,11 +80,11 @@ const services = [
                 class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300 cursor-default`}
               >
                 <div
-                  class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}
+                  class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500 rounded-2xl`}
                 />
                 <div class="relative z-10">
                   <div
-                    class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
+                    class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 group-focus-visible:scale-110 transition-transform duration-300`}
                   >
                     <Icon
                       name={service.icon}
