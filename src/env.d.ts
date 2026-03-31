@@ -60,3 +60,5 @@ interface Window {
 
 // Global variable augmentation for Node/Bun SSG environment
 declare var __publishDateFormatter: Intl.DateTimeFormat | undefined;
+declare module "plyr/dist/plyr.css";
+declare module "plyr";

@@ -194,9 +194,9 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
     if (svgIcon) svgIcon.style.opacity = "0";
 
     // Dynamically import Plyr and its CSS only when needed
-    // @ts-ignore
+
     await import("plyr/dist/plyr.css");
-    // @ts-ignore
+
     const { default: Plyr } = await import("plyr");
 
     // Initialize Plyr only on click
@@ -260,9 +260,8 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
       // Start fetching chunks in background
       // The browser dedupes these requests automatically
       try {
-        // @ts-ignore
         import("plyr/dist/plyr.css");
-        // @ts-ignore
+
         import("plyr");
       } catch {
         // Silent failure is acceptable for prefetch
