@@ -70,19 +70,19 @@ const services = [
     </ScrollReveal>
 
     <ul
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 list-none p-0 contain-layout-paint"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 list-none p-0"
     >
       {
         services.map((service, index) => (
           <li class="h-full service-item">
             <ScrollReveal delay={0.1 * index} class="h-full">
               <TiltCard
-                class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl p-6 shadow-sm card-glow group transition-all duration-300 cursor-default`}
+                class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl shadow-sm card-glow group`}
               >
                 <div
                   class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500 rounded-2xl`}
                 />
-                <div class="relative z-10">
+                <div class="relative z-10 p-6">
                   <div
                     class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 group-focus-visible:scale-110 transition-transform duration-300`}
                   >

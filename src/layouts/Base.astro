@@ -211,14 +211,23 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     <!-- Critical preconnects - must be early in head for effectiveness -->
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
+      const applyTheme = () => {
+        if (
+          localStorage.getItem("theme") === "dark" ||
+          (!localStorage.getItem("theme") &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      };
+
       // Early theme detection to prevent FOUC
-      if (
-        localStorage.getItem("theme") === "dark" ||
-        (!localStorage.getItem("theme") &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      }
+      applyTheme();
+
+      // Re-apply theme across View Transitions
+      document.addEventListener("astro:after-swap", applyTheme);
     </script>
     <SeoHead postData={postData} jsonLd={jsonLd} noindex={noindex} />
     <LocalBusinessSchema />
@@ -240,7 +249,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     </div>
 
     <!-- 🎨 Palette: Accessible Skip Links -->
-    <div class="absolute z-[100] top-0 left-0 pointer-events-none">
+    <div class="absolute z-100 top-0 left-0 pointer-events-none">
       <a
         href="#main-content"
         class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"

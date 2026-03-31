@@ -52,16 +52,27 @@ const services = [
 ];
 
 const skills = [
+  // Web & Dev
   { name: "Astro", icon: "mdi:rocket-launch" },
+  { name: "Vue.js", icon: "mdi:vuejs" },
   { name: "React", icon: "mdi:react" },
+  { name: "Laravel", icon: "mdi:laravel" },
   { name: "Tailwind CSS", icon: "mdi:tailwind" },
   { name: "TypeScript", icon: "mdi:language-typescript" },
+  // Design & Création Visuelle
+  { name: "Figma", icon: "mdi:vector-square" },
+  { name: "UX / UI Design", icon: "mdi:monitor-dashboard" },
+  { name: "Adobe Photoshop", icon: "mdi:palette" },
   { name: "DaVinci Resolve", icon: "mdi:video-vintage" },
   { name: "Lightroom", icon: "mdi:image-edit" },
-  { name: "Sony FX3", icon: "mdi:video-box" },
-  { name: "Google Ads", icon: "mdi:google-ads" },
-  { name: "Meta Ads", icon: "mdi:facebook" },
-  { name: "SEO", icon: "mdi:chart-line" },
+  { name: "Prise de vue", icon: "mdi:camera-iris" },
+  // Marketing & Stratégie
+  { name: "Stratégie de Contenu", icon: "mdi:lightbulb-on" },
+  { name: "Copywriting", icon: "mdi:pen" },
+  { name: "Email Marketing & CRM", icon: "mdi:email-outline" },
+  { name: "Social Media Management", icon: "mdi:share-variant" },
+  { name: "Google Ads & Meta Ads", icon: "mdi:bullhorn-outline" },
+  { name: "SEO & Analytics", icon: "mdi:chart-line" },
 ];
 ---
 
@@ -103,7 +114,7 @@ const skills = [
                 alt="Samuel Dulex"
                 width={w350.attributes.width}
                 height={w350.attributes.height}
-                class="transition-transform duration-700 group-hover:scale-105"
+                class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 loading="eager"
                 decoding="sync"
                 fetchpriority="high"
@@ -251,11 +262,11 @@ const skills = [
           services.map((service, index) => (
             <li class="h-full">
               <ScrollReveal delay={0.15 * index} class="h-full">
-                <TiltCard class="h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-3xl p-8 md:p-10 shadow-lg card-glow group">
+                <TiltCard class="h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-3xl shadow-lg card-glow group">
                   <div
                     class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl`}
                   />
-                  <div class="relative z-10">
+                  <div class="relative z-10 p-8 md:p-10">
                     <div
                       class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 ${service.color} bg-current/10 group-hover:scale-110 transition-transform duration-300`}
                     >
