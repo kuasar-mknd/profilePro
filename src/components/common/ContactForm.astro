@@ -92,6 +92,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           id="name"
           autocomplete="name"
           required
+          aria-describedby="name-hint"
           aria-required="true"
           maxlength="100"
           minlength="2"
@@ -112,6 +113,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
+      <p id="name-hint" class="sr-only">Au moins 2 caractères.</p>
     </div>
 
     <!-- Email Field -->
@@ -132,6 +134,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           id="email"
           autocomplete="email"
           required
+          aria-describedby="email-hint"
           aria-required="true"
           maxlength="254"
           inputmode="email"
@@ -151,6 +154,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
+      <p id="email-hint" class="sr-only">Format d'adresse email valide.</p>
     </div>
 
     <!-- Message Field -->
@@ -170,6 +174,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           id="message"
           rows="4"
           required
+          aria-describedby="message-hint"
           aria-required="true"
           maxlength="5000"
           minlength="10"
@@ -189,6 +194,9 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           <Icon name="mdi:check-circle" class="w-6 h-6" aria-hidden="true" />
         </div>
       </div>
+      <p id="message-hint" class="sr-only">
+        Au moins 10 caractères. Maximum 5000 caractères.
+      </p>
       <!-- 🎨 Palette: Character counter -->
       <div class="flex justify-end mt-1 gap-2">
         <div
@@ -506,6 +514,16 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
         submitButton.removeAttribute("aria-busy");
         submitButton.classList.remove("loading");
       }
+
+      if (nameInput) {
+        nameInput.setAttribute("aria-describedby", "name-hint");
+      }
+      if (emailInput) {
+        emailInput.setAttribute("aria-describedby", "email-hint");
+      }
+      if (messageInput) {
+        messageInput.setAttribute("aria-describedby", "message-hint");
+      }
       (form.querySelector("input") as HTMLInputElement)?.focus();
     });
 
@@ -569,6 +587,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       if (nameInput.hasAttribute("aria-invalid") && isValid) {
         nameInput.removeAttribute("aria-invalid");
+        nameInput.setAttribute("aria-describedby", "name-hint");
         hideErrorIfFormIsValid();
       }
     });
@@ -579,6 +598,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       if (emailInput.hasAttribute("aria-invalid") && isValid) {
         emailInput.removeAttribute("aria-invalid");
+        emailInput.setAttribute("aria-describedby", "email-hint");
         hideErrorIfFormIsValid();
       }
     });
@@ -589,6 +609,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       if (messageInput.hasAttribute("aria-invalid") && isValid) {
         messageInput.removeAttribute("aria-invalid");
+        messageInput.setAttribute("aria-describedby", "message-hint");
         hideErrorIfFormIsValid();
       }
     });
@@ -627,7 +648,10 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       if (nameInput && nameInput.value.trim().length < 2) {
         nameInput.setAttribute("aria-invalid", "true");
-        nameInput.setAttribute("aria-describedby", "form-error-message");
+        nameInput.setAttribute(
+          "aria-describedby",
+          "name-hint form-error-message",
+        );
         showError(
           "Veuillez entrer votre nom (minimum 2 caractères).",
           nameInput,
@@ -637,14 +661,20 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       if (emailInput && !isValidEmail(emailInput.value)) {
         emailInput.setAttribute("aria-invalid", "true");
-        emailInput.setAttribute("aria-describedby", "form-error-message");
+        emailInput.setAttribute(
+          "aria-describedby",
+          "email-hint form-error-message",
+        );
         showError("Veuillez entrer une adresse email valide.", emailInput);
         return;
       }
 
       if (messageInput && messageInput.value.trim().length < 10) {
         messageInput.setAttribute("aria-invalid", "true");
-        messageInput.setAttribute("aria-describedby", "form-error-message");
+        messageInput.setAttribute(
+          "aria-describedby",
+          "message-hint form-error-message",
+        );
         showError(
           "Veuillez entrer un message d'au moins 10 caractères.",
           messageInput,
