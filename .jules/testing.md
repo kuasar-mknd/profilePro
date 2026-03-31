@@ -1,0 +1,4 @@
+- **Task:** Add missing tests for `getCvExperiences` and `getCvEducations` in `src/utils/cv.ts`.
+- **Gap:** Missing test file for `src/utils/cv.ts` caused zero coverage on `cvExperience` and `cvEducation` content fetching logic, including development mode bypassing and production caching.
+- **Coverage:** Tested content retrieval, DEV mode cache bypassing, and PROD mode caching for both `getCvExperiences` and `getCvEducations`.
+- **Result:** Improved test coverage for `src/utils/cv.ts` ensuring robust module-level caching and data retrieval.
