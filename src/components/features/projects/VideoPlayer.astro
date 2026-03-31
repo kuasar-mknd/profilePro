@@ -1,6 +1,7 @@
 ---
 const { videoUrl, poster, videoTitle = "la vidéo" } = Astro.props;
 import Skeleton from "../../ui/Skeleton.astro";
+import { fetchVimeoPosterWithCache } from "../../../utils/async";
 import {
   isValidUrl,
   YOUTUBE_ID_REGEX,
@@ -52,11 +53,7 @@ if (!posterUrl && provider === "youtube" && videoId) {
   posterUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 } else if (!posterUrl && provider === "vimeo" && videoId) {
   try {
-    const response = await fetch(
-      `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
-    );
-    const data = await response.json();
-    posterUrl = data.thumbnail_url;
+    posterUrl = await fetchVimeoPosterWithCache(videoUrl);
   } catch (e) {
     // 🛡️ Sentinel: Silence detailed error logging in production
     if (import.meta.env.DEV) {

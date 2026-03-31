@@ -37,3 +37,26 @@ export async function limitConcurrency<T, R>(
 
   return results;
 }
+
+// ⚡ Bolt: Global Cache for Vimeo Posters to avoid redundant network requests across component instances
+const vimeoPosterCache = new Map<string, string | null>();
+
+export async function fetchVimeoPosterWithCache(
+  videoUrl: string,
+): Promise<string | null> {
+  if (vimeoPosterCache.has(videoUrl)) {
+    return vimeoPosterCache.get(videoUrl) || null;
+  }
+
+  try {
+    const response = await fetch(
+      `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
+    );
+    const data = await response.json();
+    vimeoPosterCache.set(videoUrl, data.thumbnail_url);
+    return data.thumbnail_url;
+  } catch (e) {
+    vimeoPosterCache.set(videoUrl, null);
+    throw e;
+  }
+}
