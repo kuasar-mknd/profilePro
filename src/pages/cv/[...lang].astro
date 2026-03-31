@@ -21,7 +21,10 @@ const langParam = Astro.params.lang;
 const currentLang = langParam === "en" ? "en" : "fr";
 
 // Lire le fichier YAML manuellement au moment du build (SSR)
-const fileContents = fs.readFileSync("./src/data/cv-basics.yml", "utf8");
+const fileContents = await fs.promises.readFile(
+  "./src/data/cv-basics.yml",
+  "utf8",
+);
 
 interface CVData {
   personal: {
