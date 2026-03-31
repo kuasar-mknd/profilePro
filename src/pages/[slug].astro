@@ -159,7 +159,9 @@ const readingTime = getReadingTime(entry.body);
             title: document.title,
             url: window.location.href,
           });
-        } catch {}
+        } catch (_e) {
+          console.warn("Clipboard/Share API failed:", _e); // eslint-disable-line no-console
+        }
       } else {
         // Fallback: copy to clipboard
         try {
@@ -184,7 +186,9 @@ const readingTime = getReadingTime(entry.body);
               }
             }, 2000);
           }
-        } catch {}
+        } catch (_e) {
+          console.warn("Clipboard/Share API failed:", _e); // eslint-disable-line no-console
+        }
       }
     });
   }
@@ -314,7 +318,9 @@ const readingTime = getReadingTime(entry.body);
           announcer.textContent = "";
         }
       }, 2000);
-    } catch {}
+    } catch (_e) {
+      console.warn("Clipboard/Share API failed:", _e); // eslint-disable-line no-console
+    }
   };
 
   // ⚡ Bolt: Singleton Listener Pattern for copy buttons
