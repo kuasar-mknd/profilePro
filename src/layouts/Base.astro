@@ -244,12 +244,14 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       <a
         href="#main-content"
         class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        data-haptic="30"
       >
         {t.skipContent}
       </a>
       <a
         href="#main-footer"
         class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        data-haptic="30"
       >
         {t.skipFooter}
       </a>
@@ -520,25 +522,28 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       const warning = " (ouvre un nouvel onglet)";
 
       /**
-       * 🎨 Palette: Skip Link Haptics
-       * Provides subtle physical confirmation when using keyboard navigation shortcuts.
+       * 🎨 Palette: Global Haptic Feedback
+       * Centrally manages tactile feedback for interactive elements with data-haptic.
        */
-      function initSkipLinks() {
-        const skipLinks = document.querySelectorAll(".skip-link");
+      function initHaptics() {
+        if (window.__hapticsInitialized) return;
+        window.__hapticsInitialized = true;
 
-        for (let i = 0; i < skipLinks.length; i++) {
+        document.addEventListener("click", (e) => {
+          const target = e.target as HTMLElement;
+          const hapticEl = target.closest("[data-haptic]");
           if (
-            (skipLinks[i] as HTMLElement).dataset.hapticsInitialized === "true"
-          )
-            continue;
-          (skipLinks[i] as HTMLElement).dataset.hapticsInitialized = "true";
-
-          skipLinks[i].addEventListener("click", () => {
-            if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-              navigator.vibrate(30);
-            }
-          });
-        }
+            hapticEl &&
+            navigator.vibrate &&
+            !prefersReducedMotionQuery.matches
+          ) {
+            const duration = parseInt(
+              hapticEl.getAttribute("data-haptic") || "30",
+              10,
+            );
+            navigator.vibrate(duration);
+          }
+        });
       }
 
       function secureLink(link: Element) {
@@ -596,7 +601,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         const initAll = () => {
           initGlobalResizeObserver();
           initBackToTop();
-          initSkipLinks();
+          initHaptics();
           secureLinks();
           initThemeObserver();
         };
