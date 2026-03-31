@@ -103,7 +103,7 @@ export function sanitizeInput(str: string, maxLength: number = 10000): string {
  * - Avoids nested quantifiers that could lead to ReDoS
  */
 export const EMAIL_PATTERN =
-  /^[a-zA-Z0-9_%+-]+(?:\.[a-zA-Z0-9_%+-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+  /^[a-zA-Z0-9_%+-]+(?:\.[a-zA-Z0-9_%+-]+)*@(?:[a-zA-Z0-9]+(?:-+[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}$/;
 
 /**
  * Validates an email address against strict structural requirements.
