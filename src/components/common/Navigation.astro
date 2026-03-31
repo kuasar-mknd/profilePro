@@ -52,6 +52,11 @@ const currentPath = normalizePath(pathname);
 </nav>
 
 <script>
+  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * 🎨 Palette: Tactile feedback for primary navigation
    * Provides a subtle physical confirmation when interacting with the main menu.
@@ -62,11 +67,6 @@ const currentPath = normalizePath(pathname);
       return;
 
     (nav as HTMLElement).dataset.hapticsInitialized = "true";
-
-    // ⚡ Bolt: Cache MediaQueryList to prevent evaluating the media query string on every click
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     nav.addEventListener("click", (e: Event) => {
       const target = e.target as HTMLElement;

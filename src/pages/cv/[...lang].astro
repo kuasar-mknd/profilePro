@@ -473,6 +473,11 @@ const description = data.profile.content;
 </style>
 
 <script>
+  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * 🎨 Palette: CV Page UX Improvement
    * - Adds haptic feedback to print and language buttons
@@ -484,11 +489,6 @@ const description = data.profile.content;
     const langBtn = document.getElementById("lang-toggle-btn");
     if (!printBtn || !langBtn || printBtn.dataset.initialized === "true")
       return;
-
-    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     const vibrate = (ms: number) => {
       if (navigator.vibrate && !prefersReducedMotionQuery.matches)
