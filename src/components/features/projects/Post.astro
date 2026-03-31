@@ -182,14 +182,14 @@ const optimizedImage = {
 </article>
 
 <script>
+  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   function initPostHaptics() {
     if (window.__postHapticsInitialized) return;
     window.__postHapticsInitialized = true;
-
-    // ⚡ Bolt: Cache MediaQueryList to prevent evaluating the media query string on every click
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     document.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;

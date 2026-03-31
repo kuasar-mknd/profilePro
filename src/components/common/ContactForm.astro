@@ -366,9 +366,13 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 <script>
   import { sanitizeInput, isValidEmail } from "../../utils/security";
 
+  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   class ContactFormController {
     private form: HTMLFormElement;
-    private prefersReducedMotionQuery: MediaQueryList;
     private timestampInput: HTMLInputElement;
     private submitButton: HTMLButtonElement;
     private resetBtn: HTMLButtonElement;
@@ -389,10 +393,6 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
       if (this.form.dataset.initialized === "true") return;
       this.form.dataset.initialized = "true";
       this.form.setAttribute("novalidate", "true");
-
-      this.prefersReducedMotionQuery = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      );
 
       this.timestampInput = this.form.querySelector(
         "#form-load-timestamp",
@@ -525,7 +525,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
     private showError = (message: string, fieldToFocus?: HTMLElement) => {
       // 🎨 Palette: Distinct tactile pattern for errors
-      if (navigator.vibrate && !this.prefersReducedMotionQuery.matches)
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches)
         navigator.vibrate([50, 50, 50]);
 
       if (this.errorMessage && this.errorText) {
@@ -557,7 +557,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       this.resetBtn?.addEventListener("click", () => {
         // 🎨 Palette: Subtle tactile feedback
-        if (navigator.vibrate && !this.prefersReducedMotionQuery.matches)
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
           navigator.vibrate(30);
 
         const successMessage = this.form.querySelector("#form-success-message");
@@ -603,7 +603,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
       this.errorResetBtn?.addEventListener("click", () => {
         // 🎨 Palette: Subtle tactile feedback
-        if (navigator.vibrate && !this.prefersReducedMotionQuery.matches)
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
           navigator.vibrate(30);
 
         this.errorMessage?.classList.add("hidden");
@@ -618,10 +618,10 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
         if (this.submitButton.getAttribute("aria-disabled") === "true") return;
 
         // 🎨 Palette: Tactile feedback for primary action
-        if (navigator.vibrate && !this.prefersReducedMotionQuery.matches)
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
           navigator.vibrate(50);
 
-        if (this.prefersReducedMotionQuery.matches) return;
+        if (prefersReducedMotionQuery.matches) return;
         const rect = this.submitButton.getBoundingClientRect();
         const ripple = document.createElement("span");
         ripple.className = "ripple-circle";
@@ -779,7 +779,7 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
           if (result.success) {
             // 🎨 Palette: Tactile feedback for success
-            if (navigator.vibrate && !this.prefersReducedMotionQuery.matches)
+            if (navigator.vibrate && !prefersReducedMotionQuery.matches)
               navigator.vibrate(50);
 
             this.errorMessage?.classList.add("hidden");

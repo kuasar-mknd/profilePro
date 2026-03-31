@@ -46,6 +46,11 @@
    * ⚡ Bolt: HamburgerButton Performance Optimization
    * Added initialization guard to prevent duplicate observers and handlers
    */
+  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   let cleanupMenu: (() => void) | null = null;
 
   function initMenu() {
@@ -137,11 +142,6 @@
         mainFooter.setAttribute("aria-hidden", "true");
       }
     };
-
-    // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     button.addEventListener("click", function () {
       const isExpanded = button.getAttribute("aria-expanded") === "true";

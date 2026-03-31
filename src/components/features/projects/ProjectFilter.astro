@@ -61,6 +61,11 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
 </nav>
 
 <script>
+  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   /**
    * 🎨 Palette: Tactile feedback for filter toggles
    */
@@ -69,10 +74,6 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
     if (!nav || nav.dataset.initialized === "true") return;
 
     nav.dataset.initialized = "true";
-
-    const prefersReducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     nav.addEventListener("click", (e) => {
       const target = e.target as HTMLElement;
