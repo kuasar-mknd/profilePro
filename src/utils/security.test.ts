@@ -97,6 +97,17 @@ describe("Security Utilities", () => {
   });
 
   describe("sanitizeUrl", () => {
+    it("should reject non-string inputs safely", () => {
+      // @ts-ignore
+      expect(sanitizeUrl(null)).toBe("");
+      // @ts-ignore
+      expect(sanitizeUrl(123)).toBe("");
+      // @ts-ignore
+      expect(sanitizeUrl({})).toBe("");
+      // @ts-ignore
+      expect(sanitizeUrl(undefined)).toBe("");
+    });
+
     it("should allow valid http/https URLs", () => {
       expect(sanitizeUrl("https://example.com")).toBe("https://example.com");
       expect(sanitizeUrl("http://example.com")).toBe("http://example.com");
@@ -190,6 +201,17 @@ describe("Security Utilities", () => {
   });
 
   describe("sanitizeInput", () => {
+    it("should reject non-string inputs safely", () => {
+      // @ts-ignore
+      expect(sanitizeInput(null)).toBe("");
+      // @ts-ignore
+      expect(sanitizeInput(123)).toBe("");
+      // @ts-ignore
+      expect(sanitizeInput({})).toBe("");
+      // @ts-ignore
+      expect(sanitizeInput(undefined)).toBe("");
+    });
+
     it("should sanitize dangerous characters", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",

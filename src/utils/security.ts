@@ -78,6 +78,8 @@ const SANITIZE_INPUT_REGEX = /[&<>"'/`=(){}[\]%\\]/g;
 const CONTROL_CHAR_REGEX = /[\x00-\x08\x0B-\x1F\x7F]/g;
 
 export function sanitizeInput(str: string, maxLength: number = 10000): string {
+  if (!str || typeof str !== "string") return "";
+
   // 🛡️ Sentinel: Enforce maximum input length to prevent ReDoS and CPU exhaustion
   // from maliciously large strings before running regular expressions.
   const truncatedStr = str.length > maxLength ? str.slice(0, maxLength) : str;
@@ -272,7 +274,7 @@ const sanitizeUrlCache = new Map<string, string>();
  * @returns The sanitized URL or an empty string if invalid
  */
 export function sanitizeUrl(url: string): string {
-  if (!url) return "";
+  if (!url || typeof url !== "string") return "";
 
   const cached = sanitizeUrlCache.get(url);
   if (cached !== undefined) return cached;
