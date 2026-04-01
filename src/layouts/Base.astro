@@ -207,11 +207,15 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     <!-- Critical preconnects - must be early in head for effectiveness -->
     <meta name="theme-color" content="#f8fafc" />
     <script is:inline>
+      // ⚡ Bolt: Cache matchMedia outside function to avoid re-parsing on every navigation
+      const prefersDarkQuery = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      );
+
       const applyTheme = () => {
         if (
           localStorage.getItem("theme") === "dark" ||
-          (!localStorage.getItem("theme") &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches)
+          (!localStorage.getItem("theme") && prefersDarkQuery.matches)
         ) {
           document.documentElement.classList.add("dark");
         } else {
