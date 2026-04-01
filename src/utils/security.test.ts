@@ -220,8 +220,6 @@ describe("Security Utilities", () => {
     });
   });
 
-
-
   describe("isValidEmail", () => {
     it("should allow valid emails", () => {
       const validEmails = [
@@ -232,7 +230,7 @@ describe("Security Utilities", () => {
         "user_name@domain.com",
         "user-name@domain.com",
       ];
-      validEmails.forEach(email => {
+      validEmails.forEach((email) => {
         expect(isValidEmail(email)).toBe(true);
       });
     });
@@ -256,7 +254,7 @@ describe("Security Utilities", () => {
         "no-at-sign.com",
         "user@domain",
       ];
-      missingParts.forEach(email => {
+      missingParts.forEach((email) => {
         expect(isValidEmail(email)).toBe(false);
       });
     });
@@ -270,7 +268,7 @@ describe("Security Utilities", () => {
         "user@-domain.com",
         "user@domain-.com",
       ];
-      invalidDomains.forEach(email => {
+      invalidDomains.forEach((email) => {
         expect(isValidEmail(email)).toBe(false);
       });
     });
@@ -281,7 +279,7 @@ describe("Security Utilities", () => {
         "user.@domain.com",
         "user..name@domain.com",
       ];
-      invalidLocals.forEach(email => {
+      invalidLocals.forEach((email) => {
         expect(isValidEmail(email)).toBe(false);
       });
     });
