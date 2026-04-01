@@ -83,3 +83,7 @@
 **Learning:** Initializing window.matchMedia inside a class constructor still forces the browser engine to repeatedly parse the media query string every time the class is instantiated on page load or navigation.
 **Action:** Always cache the MediaQueryList object at the top level of the script block, outside of any class definitions or event listeners, to strictly evaluate its matches property when needed and eliminate string parsing overhead entirely across instantiations.
 | 2024-03-31 | Bolt | src/pages/cv/[...lang].astro | Replaced synchronous fs.readFileSync with asynchronous fs.promises.readFile to prevent main thread blocking during SSG page generation |
+
+## 2024-04-01 - Cache matchMedia globally in inline scripts
+**Learning:** `window.matchMedia("(prefers-color-scheme: dark)")` parsing and evaluation inside a frequently called function (like `applyTheme` triggered on every page transition via View Transitions) forces the browser engine to repeatedly parse the media query string, which is a micro-stutter hazard.
+**Action:** Always cache the `MediaQueryList` object outside the function body (at the top level of the inline script) and check its `.matches` property dynamically inside the function to eliminate the string parsing overhead.
