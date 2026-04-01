@@ -3,6 +3,7 @@ import {
   sanitizeUrl,
   sanitizeInput,
   isValidUrl,
+  isValidEmail,
   VIMEO_ID_REGEX,
   YOUTUBE_ID_REGEX,
 } from "./security";
@@ -219,6 +220,72 @@ describe("Security Utilities", () => {
     });
   });
 
+
+
+  describe("isValidEmail", () => {
+    it("should allow valid emails", () => {
+      const validEmails = [
+        "test@example.com",
+        "user.name+tag@example.co.uk",
+        "123@domain.com",
+        "a@b.cc",
+        "user_name@domain.com",
+        "user-name@domain.com",
+      ];
+      validEmails.forEach(email => {
+        expect(isValidEmail(email)).toBe(true);
+      });
+    });
+
+    it("should reject non-string and empty inputs", () => {
+      expect(isValidEmail("")).toBe(false);
+      // @ts-ignore
+      expect(isValidEmail(null)).toBe(false);
+      // @ts-ignore
+      expect(isValidEmail(undefined)).toBe(false);
+      // @ts-ignore
+      expect(isValidEmail(123)).toBe(false);
+      // @ts-ignore
+      expect(isValidEmail({})).toBe(false);
+    });
+
+    it("should reject emails missing required parts", () => {
+      const missingParts = [
+        "plainaddress",
+        "@no-local-part.com",
+        "no-at-sign.com",
+        "user@domain",
+      ];
+      missingParts.forEach(email => {
+        expect(isValidEmail(email)).toBe(false);
+      });
+    });
+
+    it("should reject invalid domain formats", () => {
+      const invalidDomains = [
+        "user@.com",
+        "user@domain..com",
+        "user@domain.c",
+        "user@domain.com.",
+        "user@-domain.com",
+        "user@domain-.com",
+      ];
+      invalidDomains.forEach(email => {
+        expect(isValidEmail(email)).toBe(false);
+      });
+    });
+
+    it("should reject invalid local part formats", () => {
+      const invalidLocals = [
+        ".user@domain.com",
+        "user.@domain.com",
+        "user..name@domain.com",
+      ];
+      invalidLocals.forEach(email => {
+        expect(isValidEmail(email)).toBe(false);
+      });
+    });
+  });
   describe("VIMEO_ID_REGEX", () => {
     it("should match valid Vimeo URLs and extract ID", () => {
       const urls = [
