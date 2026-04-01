@@ -196,6 +196,26 @@ function isObfuscatedProtocol(url: string): boolean {
   );
 }
 
+function isValidProtocol(
+  protocol: string,
+  options: {
+    allowMailto?: boolean;
+    allowTel?: boolean;
+    allowSms?: boolean;
+  },
+): boolean {
+  const allowedProtocols = ["http:", "https:"];
+  if (options.allowMailto) allowedProtocols.push("mailto:");
+  if (options.allowTel) allowedProtocols.push("tel:");
+  if (options.allowSms) allowedProtocols.push("sms:");
+
+  return allowedProtocols.includes(protocol);
+}
+
+function isValidRelativePath(url: string): boolean {
+  return url.startsWith("/") || url.startsWith("#") || url.startsWith("?");
+}
+
 export function isValidUrl(
   url: string,
   options: {
@@ -225,38 +245,14 @@ export function isValidUrl(
     return false;
   }
 
-  const { allowMailto = false, allowTel = false, allowSms = false } = options;
-
   try {
     // Try parsing as absolute URL
     const parsed = new URL(trimmedUrl);
-    const protocol = parsed.protocol.toLowerCase();
-
-    // Whitelist of safe protocols
-    const allowedProtocols = ["http:", "https:"];
-    if (allowMailto) {
-      allowedProtocols.push("mailto:");
-    }
-    if (allowTel) {
-      allowedProtocols.push("tel:");
-    }
-    if (allowSms) {
-      allowedProtocols.push("sms:");
-    }
-
-    return allowedProtocols.includes(protocol);
+    return isValidProtocol(parsed.protocol.toLowerCase(), options);
   } catch {
     // If parsing fails, check if it's a valid relative path
     // Must start with / (but not //), #, or ?
-    if (
-      trimmedUrl.startsWith("/") ||
-      trimmedUrl.startsWith("#") ||
-      trimmedUrl.startsWith("?")
-    ) {
-      return true;
-    }
-
-    return false;
+    return isValidRelativePath(trimmedUrl);
   }
 }
 
