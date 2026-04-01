@@ -274,14 +274,13 @@ const columnClasses = {
           skeleton.classList.add("opacity-0");
           setTimeout(() => skeleton.remove(), 500);
         }
-      };
-
-      // Check already loaded images
-      const images = gallery.querySelectorAll(
-        "img[data-gallery-image]",
-      ) as NodeListOf<HTMLImageElement>;
+      }; // Check already loaded images
+      const images = gallery.getElementsByTagName(
+        "img",
+      ) as HTMLCollectionOf<HTMLImageElement>;
 
       for (let j = 0; j < images.length; j++) {
+        if (!images[j].hasAttribute("data-gallery-image")) continue;
         if (images[j].complete) {
           removeSkeleton(images[j]);
         }
