@@ -262,6 +262,86 @@ export function isValidUrl(
 const sanitizeUrlCache = new Map<string, string>();
 
 /**
+ * Helper to get cached sanitized URL or manage cache size.
+ */
+function getCachedSanitizedUrl(url: string): string | undefined {
+  return sanitizeUrlCache.get(url);
+}
+
+function setCachedSanitizedUrl(url: string, result: string): void {
+  // Prevent unbounded memory growth in long-running processes (like dev server)
+  if (sanitizeUrlCache.size > 1000) {
+    const firstKey = sanitizeUrlCache.keys().next().value;
+    if (firstKey) sanitizeUrlCache.delete(firstKey);
+  }
+  sanitizeUrlCache.set(url, result);
+}
+
+/**
+ * Validates the protocol of a parsed URL.
+ */
+function validateParsedProtocol(trimmedUrl: string): string {
+  try {
+    // Try parsing as absolute URL
+    const parsed = new URL(trimmedUrl);
+    const protocol = parsed.protocol.toLowerCase();
+
+    // Whitelist of safe protocols
+    if (["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)) {
+      return trimmedUrl;
+    } else {
+      return ""; // Block other protocols (javascript:, data:, etc.)
+    }
+  } catch {
+    // If it fails to parse as absolute URL, it might be a relative path without a leading slash
+    // or a malformed URL.
+    // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
+    // If it contains a colon but is not a recognized protocol, it's likely unsafe.
+    if (!trimmedUrl.includes(":")) {
+      // This could be a relative path like "images/foo.png" or "path/to/page"
+      // We allow these as they are generally safe unless they contain control characters (already checked).
+      return trimmedUrl;
+    } else {
+      return ""; // Block anything else that looks like a protocol but isn't whitelisted
+    }
+  }
+}
+
+/**
+ * Core sanitization logic without caching wrapper.
+ */
+function performSanitization(url: string): string {
+  // Trim whitespace
+  let trimmedUrl = url.trim();
+
+  // 🛡️ Sentinel: Block obfuscated protocols (e.g. javascript&#58;)
+  if (isObfuscatedProtocol(url)) {
+    return "";
+  }
+
+  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
+  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
+    return "about:blank";
+  }
+
+  if (
+    trimmedUrl.startsWith("/") ||
+    trimmedUrl.startsWith("#") ||
+    trimmedUrl.startsWith("?")
+  ) {
+    // Allow relative URLs (starting with / or #)
+    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
+    if (trimmedUrl.startsWith("//")) {
+      return "";
+    } else {
+      return trimmedUrl;
+    }
+  }
+
+  return validateParsedProtocol(trimmedUrl);
+}
+
+/**
  * Sanitizes a URL to ensure it uses a safe protocol.
  * Allowed protocols: http, https, mailto, tel, sms.
  * Allowed formats: Relative paths (starting with /), anchors (#), query (?).
@@ -272,69 +352,11 @@ const sanitizeUrlCache = new Map<string, string>();
 export function sanitizeUrl(url: string): string {
   if (!url || typeof url !== "string") return "";
 
-  const cached = sanitizeUrlCache.get(url);
+  const cached = getCachedSanitizedUrl(url);
   if (cached !== undefined) return cached;
 
-  // Trim whitespace
-  let trimmedUrl = url.trim();
+  const result = performSanitization(url);
 
-  let result = "";
-
-  // 🛡️ Sentinel: Block obfuscated protocols (e.g. javascript&#58;)
-  if (isObfuscatedProtocol(url)) {
-    result = "";
-    sanitizeUrlCache.set(url, result);
-    return result;
-  }
-
-  // 🛡️ Sentinel: Prevent control characters (0x00-0x1F) in URL to avoid filter bypass
-  if (/[\x00-\x1F\x7F]/.test(trimmedUrl)) {
-    result = "about:blank";
-  } else if (
-    trimmedUrl.startsWith("/") ||
-    trimmedUrl.startsWith("#") ||
-    trimmedUrl.startsWith("?")
-  ) {
-    // Allow relative URLs (starting with / or #)
-    // 🛡️ Sentinel: Explicitly reject protocol-relative URLs (//)
-    if (trimmedUrl.startsWith("//")) {
-      result = "";
-    } else {
-      result = trimmedUrl;
-    }
-  } else {
-    try {
-      // Try parsing as absolute URL
-      const parsed = new URL(trimmedUrl);
-      const protocol = parsed.protocol.toLowerCase();
-
-      // Whitelist of safe protocols
-      if (["http:", "https:", "mailto:", "tel:", "sms:"].includes(protocol)) {
-        result = trimmedUrl;
-      } else {
-        result = ""; // Block other protocols (javascript:, data:, etc.)
-      }
-    } catch {
-      // If it fails to parse as absolute URL, it might be a relative path without a leading slash
-      // or a malformed URL.
-      // Check for dangerous characters that might indicate a malformed protocol or XSS attempt.
-      // If it contains a colon but is not a recognized protocol, it's likely unsafe.
-      if (!trimmedUrl.includes(":")) {
-        // This could be a relative path like "images/foo.png" or "path/to/page"
-        // We allow these as they are generally safe unless they contain control characters (already checked).
-        result = trimmedUrl;
-      } else {
-        result = ""; // Block anything else that looks like a protocol but isn't whitelisted
-      }
-    }
-  }
-
-  // Prevent unbounded memory growth in long-running processes (like dev server)
-  if (sanitizeUrlCache.size > 1000) {
-    const firstKey = sanitizeUrlCache.keys().next().value;
-    if (firstKey) sanitizeUrlCache.delete(firstKey);
-  }
-
-  sanitizeUrlCache.set(url, result);
+  setCachedSanitizedUrl(url, result);
   return result;
 }
