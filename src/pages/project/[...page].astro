@@ -5,6 +5,7 @@ import config from "../../config.mjs";
 import { getSortedProjects } from "../../utils/projects";
 
 import Base from "../../layouts/Base.astro";
+import { safeJson } from "../../utils/security";
 import Post from "../../components/features/projects/Post.astro";
 import ProjectFilter from "../../components/features/projects/ProjectFilter.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
@@ -92,7 +93,7 @@ const collectionJsonLd = {
   <script
     type="application/ld+json"
     is:inline
-    set:html={JSON.stringify(collectionJsonLd)}
+    set:html={safeJson(collectionJsonLd)}
   />
   <section class="container mx-auto max-w-7xl px-7 pt-10 pb-20">
     <ScrollReveal class="text-center mb-10">

@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { safeJson } from "../utils/security";
 import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
 import CTASection from "../components/common/CTASection.astro";
@@ -171,11 +172,7 @@ const faqJsonLd = {
 ---
 
 <Base postData={{ data: { title, description } }} jsonLd={jsonLd}>
-  <script
-    type="application/ld+json"
-    is:inline
-    set:html={JSON.stringify(faqJsonLd)}
-  />
+  <script type="application/ld+json" is:inline set:html={safeJson(faqJsonLd)} />
   <!-- Hero Section -->
   <section class="relative pt-32 pb-20 overflow-hidden">
     <!-- Animated background elements -->
