@@ -52,7 +52,7 @@ const optimizedImage = {
 >
   <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
-    href={sanitizeUrl(`/project/${postData.slug}`)}
+    href={sanitizeUrl(`/project/${postData.slug}/`)}
     aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Lecture estimée ${readingTime} minutes.)`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
     data-haptic-card
