@@ -109,8 +109,9 @@ import { Icon } from "astro-icon/components";
   };
 
   function initThemeToggle() {
-    const buttons = document.querySelectorAll(".theme-toggle-btn");
-    const liveRegions = document.querySelectorAll(".theme-live-region");
+    // ⚡ Bolt: Use getElementsByClassName instead of querySelectorAll for faster live node lists
+    const buttons = document.getElementsByClassName("theme-toggle-btn");
+    const liveRegions = document.getElementsByClassName("theme-live-region");
 
     const updateLabels = (isDark: boolean, announce = false) => {
       const label = isDark
