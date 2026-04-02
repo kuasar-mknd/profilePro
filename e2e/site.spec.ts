@@ -49,7 +49,7 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
   test("contact form should show validation errors on empty submit", async ({
     page,
   }) => {
-    await page.goto("/about");
+    await page.goto("/about/");
 
     const contactForm = page.locator("#contact-form");
     await contactForm.scrollIntoViewIfNeeded();
@@ -83,7 +83,7 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
   });
 
   test("textarea should auto-resize", async ({ page }) => {
-    await page.goto("/about");
+    await page.goto("/about/");
     const textarea = page.locator("#message");
     await textarea.scrollIntoViewIfNeeded();
 

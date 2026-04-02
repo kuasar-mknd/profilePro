@@ -5,7 +5,7 @@ test.describe("Lightbox E2E Tests", () => {
     page,
   }) => {
     // Navigate to a project page with a gallery
-    await page.goto("/project/larev");
+    await page.goto("/project/larev/");
 
     // Wait for gallery images to load
     const galleryImage = page.locator("[data-gallery-image]").first();
