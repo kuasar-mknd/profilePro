@@ -1,0 +1,39 @@
+# Samuel Dulex — Portfolio
+
+> Créateur de contenu visuel et développeur web freelance basé à Lausanne, Suisse romande.
+> Spécialisé en production vidéo (clips musicaux, aftermovies, films corporate),
+> photographie (portraits, événementiel, lifestyle), développement web fullstack
+> (React, Laravel, Astro, Next.js) et stratégie digitale (SEO, Social Ads, CRM).
+
+## Pages principales
+
+- [Accueil](https://portfolio.kuasar.xyz/): Page d'accueil du portfolio avec les projets récents
+- [À propos](https://portfolio.kuasar.xyz/about/): Parcours, compétences et philosophie de travail
+- [Projets](https://portfolio.kuasar.xyz/project/): Catalogue complet des réalisations
+
+## Services proposés
+
+- Production Vidéo : clips musicaux, aftermovies, vidéos corporate, captation événementielle
+- Photographie : portraits, photographie événementielle, lifestyle, photographie de plateau
+- Développement Web : applications fullstack, plateformes SaaS, sites vitrines, e-commerce
+- Stratégie Digitale : optimisation SEO, campagnes Social Ads, email marketing, CRM
+
+## Informations de contact
+
+- Email : samuel@edulex.ch
+- Localisation : Lausanne, Vaud, Suisse
+- Zone d'intervention : Lausanne, Vaud, Genève, Fribourg, Neuchâtel, Valais, Suisse romande
+
+## Réseaux sociaux
+
+- [Instagram](https://www.instagram.com/kuasar.mknd)
+- [YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
+- [GitHub](https://github.com/kuasar-mknd)
+
+## Projets notables
+
+- [Production Vidéo](https://portfolio.kuasar.xyz/project/producteur/): Showreel et portfolio vidéo complet
+- [La Rev](https://portfolio.kuasar.xyz/project/larev/): Aftermovie événementiel
+- [Paternelle](https://portfolio.kuasar.xyz/project/paternelle/): Direction artistique et production
+- [Jimmy CPDV](https://portfolio.kuasar.xyz/project/jimmy-cpdv/): Clip musical et direction photo
+- [IZIA - Proud Rebel](https://portfolio.kuasar.xyz/project/izia-proudRebel/): Photographe de plateau

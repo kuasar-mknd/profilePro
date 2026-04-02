@@ -12,14 +12,49 @@ const allProjects = await getSortedProjects();
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://portfolio.kuasar.xyz/#person",
   name: config.title,
-  url: config.url,
+  url: "https://portfolio.kuasar.xyz",
+  image: "https://portfolio.kuasar.xyz/defaultog.jpg",
   sameAs: [
     config.social.instagram,
     config.social.github,
     config.social.youtube,
   ].filter(Boolean),
   jobTitle: "Créateur de contenu & Développeur Web",
+  description:
+    "Vidéaste, photographe et développeur web freelance basé à Lausanne, Suisse romande. Spécialisé en production vidéo, photographie événementielle, développement fullstack et stratégie digitale.",
+  knowsAbout: [
+    "Production vidéo",
+    "Clips musicaux",
+    "Aftermovies",
+    "Photographie événementielle",
+    "Photographie de plateau",
+    "Développement web fullstack",
+    "React",
+    "Laravel",
+    "Astro",
+    "SEO",
+    "Stratégie digitale",
+    "Direction artistique",
+  ],
+  hasOccupation: [
+    {
+      "@type": "Occupation",
+      name: "Vidéaste / Réalisateur",
+      occupationalCategory: "27-4031",
+    },
+    {
+      "@type": "Occupation",
+      name: "Photographe",
+      occupationalCategory: "27-4021",
+    },
+    {
+      "@type": "Occupation",
+      name: "Développeur Web Fullstack",
+      occupationalCategory: "15-1254",
+    },
+  ],
   worksFor: {
     "@type": "Organization",
     name: "Indépendant",
@@ -27,9 +62,19 @@ const jsonLd = {
   address: {
     "@type": "PostalAddress",
     addressLocality: "Lausanne",
+    postalCode: "1000",
     addressRegion: "Vaud",
     addressCountry: "CH",
   },
+  areaServed: [
+    { "@type": "City", name: "Lausanne" },
+    { "@type": "State", name: "Vaud" },
+    { "@type": "State", name: "Genève" },
+    { "@type": "State", name: "Fribourg" },
+    { "@type": "State", name: "Neuchâtel" },
+    { "@type": "State", name: "Valais" },
+    { "@type": "AdministrativeArea", name: "Suisse romande" },
+  ],
 };
 ---
 

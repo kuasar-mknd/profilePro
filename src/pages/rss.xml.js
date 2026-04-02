@@ -21,6 +21,6 @@ export async function GET(_context) {
       }),
       link: `/project/${post.slug}/`,
     })),
-    customData: `<language>en-us</language>`,
+    customData: `<language>fr-ch</language>`,
   });
 }

@@ -56,9 +56,44 @@ export interface Props {
 }
 
 const { page, allTags, tagCounts, totalCount } = Astro.props;
+
+const siteUrl = "https://portfolio.kuasar.xyz";
+const collectionJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Projets — Samuel Dulex",
+  description:
+    "Collection complète des réalisations de Samuel Dulex en production vidéo, photographie et développement web à Lausanne, Suisse romande.",
+  url: siteUrl + "/project/",
+  isPartOf: { "@id": siteUrl + "/#website" },
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: totalCount,
+    itemListElement: page.data.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: siteUrl + `/project/${project.slug}/`,
+      name: project.data.title,
+    })),
+  },
+};
 ---
 
-<Base>
+<Base
+  postData={{
+    data: {
+      title: "Projets",
+      description:
+        "Collection de projets en production vidéo, photographie et développement web par Samuel Dulex, basé à Lausanne.",
+    },
+  }}
+  jsonLd={collectionJsonLd}
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(collectionJsonLd)}
+  />
   <section class="container mx-auto max-w-7xl px-7 pt-10 pb-20">
     <ScrollReveal class="text-center mb-10">
       <Breadcrumbs

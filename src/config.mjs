@@ -8,7 +8,7 @@ export default {
   defaultOgImage: "./defaultog.jpg",
   latestPosts: 5,
   postsPerPage: 20,
-  url: "https://kuasar.xyz",
+  url: "https://portfolio.kuasar.xyz",
   social: {
     dribbble: false,
     facebook: false,

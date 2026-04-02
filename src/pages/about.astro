@@ -74,9 +74,108 @@ const skills = [
   { name: "Google Ads & Meta Ads", icon: "mdi:bullhorn-outline" },
   { name: "SEO & Analytics", icon: "mdi:chart-line" },
 ];
+const siteUrl = "https://portfolio.kuasar.xyz";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  mainEntity: {
+    "@type": "Person",
+    "@id": siteUrl + "/#person",
+    name: "Samuel Dulex",
+    alternateName: "Kuasar",
+    url: siteUrl,
+    image: siteUrl + "/defaultog.jpg",
+    jobTitle: "Créateur de contenu visuel & Développeur Web",
+    description:
+      "Vidéaste, photographe et développeur web freelance basé à Lausanne, Suisse romande.",
+    email: "samuel@edulex.ch",
+    knowsAbout: [
+      "Production vidéo",
+      "Clips musicaux",
+      "Aftermovies",
+      "Photographie événementielle",
+      "Photographie de plateau",
+      "Développement web fullstack",
+      "React",
+      "Laravel",
+      "Astro",
+      "SEO",
+      "Stratégie digitale",
+      "Direction artistique",
+      "DaVinci Resolve",
+      "Adobe Lightroom",
+    ],
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Lausanne",
+      postalCode: "1000",
+      addressRegion: "Vaud",
+      addressCountry: "CH",
+    },
+    areaServed: [
+      { "@type": "City", name: "Lausanne" },
+      { "@type": "State", name: "Vaud" },
+      { "@type": "State", name: "Genève" },
+      { "@type": "State", name: "Fribourg" },
+      { "@type": "State", name: "Neuchâtel" },
+      { "@type": "State", name: "Valais" },
+      { "@type": "AdministrativeArea", name: "Suisse romande" },
+    ],
+    sameAs: [
+      "https://www.instagram.com/kuasar.mknd",
+      "https://github.com/kuasar-mknd",
+      "https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w",
+    ],
+  },
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Quels services propose Samuel Dulex ?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Samuel Dulex propose quatre services principaux : la production vidéo (clips musicaux, aftermovies, vidéos corporate), la photographie (portraits, événementiel, lifestyle), le développement web fullstack (React, Laravel, Astro, SaaS) et la stratégie digitale (SEO, Social Ads, email marketing).",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Où est basé Samuel Dulex ?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Samuel Dulex est basé à Lausanne, dans le canton de Vaud en Suisse romande. Il intervient dans toute la Suisse romande.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Dans quelles régions Samuel Dulex intervient-il ?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Samuel Dulex intervient dans toute la Suisse romande : Lausanne, Vaud, Genève, Fribourg, Neuchâtel, Valais, Montreux, Nyon et Yverdon-les-Bains. Il se déplace également pour des projets dans toute la Suisse et à l'international.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Quelles sont les compétences techniques de Samuel Dulex ?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "En développement web : React, Vue.js, Laravel, Astro, TypeScript, Tailwind CSS. En création visuelle : DaVinci Resolve, Adobe Lightroom, Figma, photographie et direction artistique. En stratégie digitale : SEO, Google Ads, Meta Ads, email marketing et CRM.",
+      },
+    },
+  ],
+};
 ---
 
-<Base postData={{ data: { title, description } }}>
+<Base postData={{ data: { title, description } }} jsonLd={jsonLd}>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(faqJsonLd)}
+  />
   <!-- Hero Section -->
   <section class="relative pt-32 pb-20 overflow-hidden">
     <!-- Animated background elements -->

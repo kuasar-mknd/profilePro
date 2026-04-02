@@ -2,17 +2,28 @@
 import config from "../../config.mjs";
 import { safeJson } from "../../utils/security";
 
+const siteUrl = "https://portfolio.kuasar.xyz";
+
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": ["LocalBusiness", "ProfessionalService"],
+  "@id": siteUrl + "/#business",
   name: config.title,
+  alternateName: "Kuasar",
   description: config.description,
-  image: config.url + config.defaultOgImage,
-  url: config.url,
+  image: siteUrl + "/defaultog.jpg",
+  url: siteUrl,
   email: "samuel@edulex.ch",
+  founder: {
+    "@type": "Person",
+    "@id": siteUrl + "/#person",
+    name: "Samuel Dulex",
+  },
   address: {
     "@type": "PostalAddress",
+    streetAddress: "",
     addressLocality: "Lausanne",
+    postalCode: "1000",
     addressRegion: "VD",
     addressCountry: "CH",
   },
@@ -22,24 +33,77 @@ const jsonLd = {
     longitude: 6.632273,
   },
   areaServed: [
+    { "@type": "City", name: "Lausanne" },
+    { "@type": "City", name: "Montreux" },
+    { "@type": "City", name: "Nyon" },
+    { "@type": "City", name: "Yverdon-les-Bains" },
+    { "@type": "State", name: "Vaud" },
+    { "@type": "State", name: "Genève" },
+    { "@type": "State", name: "Fribourg" },
+    { "@type": "State", name: "Neuchâtel" },
+    { "@type": "State", name: "Valais" },
     {
-      "@type": "City",
-      name: "Lausanne",
-    },
-    {
-      "@type": "State",
-      name: "Vaud",
-    },
-    {
-      "@type": "State",
-      name: "Genève",
-    },
-    {
-      "@type": "State",
-      name: "Fribourg",
+      "@type": "AdministrativeArea",
+      name: "Suisse romande",
     },
   ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Production Vidéo",
+          description:
+            "Clips musicaux, aftermovies, vidéos corporate et captation événementielle à Lausanne et en Suisse romande.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Développement Web",
+          description:
+            "Applications web fullstack, plateformes SaaS, sites vitrines performants avec React, Laravel et Astro.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Photographie",
+          description:
+            "Portraits, photographie événementielle et lifestyle. Direction artistique et photographie de plateau.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Stratégie Digitale",
+          description:
+            "Optimisation SEO, campagnes Social Ads, email marketing et CRM pour booster votre visibilité en ligne.",
+        },
+      },
+    ],
+  },
+  knowsAbout: [
+    "Production vidéo",
+    "Clips musicaux",
+    "Photographie événementielle",
+    "Développement web fullstack",
+    "React",
+    "Laravel",
+    "Astro",
+    "SEO",
+    "Stratégie digitale",
+    "Direction artistique",
+  ],
   priceRange: "$$",
+  paymentAccepted: "Virement bancaire, TWINT",
+  currenciesAccepted: "CHF, EUR",
   openingHours: "Mo-Fr 09:00-18:00",
   sameAs: [
     config.social.instagram || "",
