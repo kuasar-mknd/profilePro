@@ -597,11 +597,17 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         // ⚡ Bolt: Optimized query by filtering out already-secured links using CSS :not()
         // This significantly reduces redundant JS execution and main-thread work on View Transitions.
         // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
-        const links = document.querySelectorAll(
-          'a[target="_blank"]:not([rel~="noopener"])',
-        );
+        // ⚡ Bolt: Optimize client-side DOM query in performance-sensitive context
+        // Replaced complex CSS attribute selector with getElementsByTagName and internal loop filter
+        const links = document.getElementsByTagName("a");
         for (let i = 0; i < links.length; i++) {
-          secureLink(links[i]);
+          const link = links[i];
+          if (link.getAttribute("target") === "_blank") {
+            const rel = link.getAttribute("rel");
+            if (!rel || !rel.includes("noopener")) {
+              secureLink(link);
+            }
+          }
         }
       }
 

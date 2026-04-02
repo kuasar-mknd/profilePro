@@ -449,7 +449,15 @@
       // perfectly isolates separate ImageGalleries on the same page instead of merging them.
       const container =
         galleryImage.closest("[data-gallery-container]") || document;
-      const elements = container.querySelectorAll("[data-gallery-image]");
+      // ⚡ Bolt: Optimize client-side DOM query in performance-sensitive context
+      // Replaced complex CSS attribute selector with getElementsByTagName and internal loop filter
+      const allImages = container.getElementsByTagName("img");
+      const elements: HTMLImageElement[] = [];
+      for (let i = 0; i < allImages.length; i++) {
+        if (allImages[i].hasAttribute("data-gallery-image")) {
+          elements.push(allImages[i]);
+        }
+      }
       this.galleryElements = Array.from(elements) as HTMLImageElement[];
 
       const index = this.galleryElements.indexOf(
