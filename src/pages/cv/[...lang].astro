@@ -211,7 +211,8 @@ const description = data.profile.content;
                 href={sanitizeUrl(data.personal.linkedinUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
+                aria-label={`${data.personal.linkedin} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
                 <Icon
                   name="mdi:linkedin"
@@ -219,12 +220,18 @@ const description = data.profile.content;
                   aria-hidden="true"
                 />
                 {data.personal.linkedin}
+                <Icon
+                  name="mdi:open-in-new"
+                  class="w-3 h-3 opacity-70 print:hidden transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </a>
               <a
                 href={sanitizeUrl(data.personal.portfolioUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
+                aria-label={`${data.personal.portfolio} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
                 <Icon
                   name="mdi:web"
@@ -232,6 +239,11 @@ const description = data.profile.content;
                   aria-hidden="true"
                 />
                 {data.personal.portfolio}
+                <Icon
+                  name="mdi:open-in-new"
+                  class="w-3 h-3 opacity-70 print:hidden transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </a>
             </div>
           </div>
