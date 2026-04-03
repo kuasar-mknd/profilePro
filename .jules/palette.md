@@ -11,3 +11,7 @@
 ## 2024-05-19 - Lightbox Single Image Navigation
 **Learning:** Rendering previous/next arrows and a counter for a single-image gallery adds visual noise and confusion, as users might attempt to navigate non-existent items.
 **Action:** Dynamically hide navigation controls (.lightbox-prev, .lightbox-next, .lightbox-counter) and set their aria-hidden attributes to true when the gallery length is 1 or fewer.
+
+## 2026-03-31 - Interaction Consistency for CTA Buttons
+**Learning:** Primary action links on secondary pages (like "Voir mon portfolio" or "Me contacter" on the About page) often lack the interaction feedback and visual cues present on the homepage CTA. Missing icons and haptic properties can make navigation feel disjointed and less responsive.
+**Action:** Always ensure that call-to-action buttons across the site follow the established interaction pattern (e.g., including directional icons for navigation, contextual icons for actions, and standard `data-haptic` attributes for tactile feedback) to maintain a cohesive user experience.
