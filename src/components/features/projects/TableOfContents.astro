@@ -32,6 +32,7 @@ const showToC = filteredHeadings.length >= 2;
             <a
               href={sanitizeUrl(`#${h.slug}`)}
               class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-bold"
+              data-haptic="30"
             >
               {h.text}
             </a>
