@@ -1,6 +1,7 @@
 ---
 import { getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import { Icon } from "astro-icon/components";
 import logo from "../../../assets/logo.avif";
 import { limitConcurrency } from "../../../utils/async";
 import { getSortedProjects } from "../../../utils/projects";
@@ -161,10 +162,16 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     >
       <a
         href="/project/"
-        class="group relative block px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
+        class="group relative inline-flex items-center gap-2 justify-center px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow overflow-hidden active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-primary"
+        data-haptic="50"
       >
         <span class="relative z-10">Voir mes projets</span>
+        <Icon
+          name="mdi:arrow-right"
+          class="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
+          aria-hidden="true"
+        />
         <div
           class="absolute inset-0 bg-linear-to-r from-pacamara-secondary to-pacamara-accent opacity-0 group-hover:opacity-100 focus-visible:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300"
         >
@@ -173,9 +180,15 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
       <a
         href="#contact-form"
-        class="block px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
+        class="group inline-flex items-center gap-2 justify-center px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-secondary"
+        data-haptic="50"
       >
+        <Icon
+          name="mdi:email-outline"
+          class="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
+          aria-hidden="true"
+        />
         Me contacter
       </a>
     </div>
