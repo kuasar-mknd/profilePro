@@ -15,3 +15,7 @@
 ## 2026-03-31 - Interaction Consistency for CTA Buttons
 **Learning:** Primary action links on secondary pages (like "Voir mon portfolio" or "Me contacter" on the About page) often lack the interaction feedback and visual cues present on the homepage CTA. Missing icons and haptic properties can make navigation feel disjointed and less responsive.
 **Action:** Always ensure that call-to-action buttons across the site follow the established interaction pattern (e.g., including directional icons for navigation, contextual icons for actions, and standard `data-haptic` attributes for tactile feedback) to maintain a cohesive user experience.
+
+## 2024-04-03 - In-Page Navigation Haptics
+**Learning:** In-page navigation links like Table of Contents (TOC) items often lack the tactile feedback provided by primary site navigation, making them feel less responsive on mobile devices despite being critical interaction points.
+**Action:** Apply the standard `data-haptic="30"` attribute to all secondary in-page navigation links, including Table of Contents anchors, to maintain tactile consistency with main navigation elements.
