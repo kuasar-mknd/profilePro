@@ -213,13 +213,21 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       );
 
       const applyTheme = () => {
-        if (
-          localStorage.getItem("theme") === "dark" ||
-          (!localStorage.getItem("theme") && prefersDarkQuery.matches)
-        ) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
+        try {
+          if (
+            localStorage.getItem("theme") === "dark" ||
+            (!localStorage.getItem("theme") && prefersDarkQuery.matches)
+          ) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (_e) {
+          if (prefersDarkQuery.matches) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
         }
       };
 

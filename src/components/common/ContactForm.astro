@@ -720,17 +720,21 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
           return;
         }
 
-        const lastSubmission = localStorage.getItem(
-          "contact_form_last_submission",
-        );
-        if (
-          lastSubmission &&
-          Date.now() - parseInt(lastSubmission, 10) < 120000
-        ) {
-          this.showError(
-            "Veuillez attendre quelques minutes avant de renvoyer un message.",
+        try {
+          const lastSubmission = localStorage.getItem(
+            "contact_form_last_submission",
           );
-          return;
+          if (
+            lastSubmission &&
+            Date.now() - parseInt(lastSubmission, 10) < 120000
+          ) {
+            this.showError(
+              "Veuillez attendre quelques minutes avant de renvoyer un message.",
+            );
+            return;
+          }
+        } catch (_e) {
+          // Ignore localStorage errors
         }
 
         if (this.submitButton) {
@@ -793,10 +797,14 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
               successMessage.classList.add("flex");
               setTimeout(() => successMessage.focus(), 100);
             }
-            localStorage.setItem(
-              "contact_form_last_submission",
-              Date.now().toString(),
-            );
+            try {
+              localStorage.setItem(
+                "contact_form_last_submission",
+                Date.now().toString(),
+              );
+            } catch (_e) {
+              // Ignore localStorage errors
+            }
             this.form.reset();
           } else {
             throw new Error(result.message || "Submission failed");
