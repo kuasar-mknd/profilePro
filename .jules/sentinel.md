@@ -105,3 +105,9 @@ Each entry should include:
 **Vulnerability:** Use of `innerHTML` to inject SVG markup, which can introduce XSS risks and bypass certain CSP protections.
 **Learning:** `document.createElementNS` is the safer and preferred approach for creating SVG elements dynamically. It requires the `http://www.w3.org/2000/svg` namespace URI to properly generate the elements without relying on `innerHTML`.
 **Prevention:** Avoid `innerHTML` assignments when constructing SVGs dynamically in client-side scripts. Use explicit element creation with `createElementNS` and assign attributes directly.
+
+## 2024-05-18 - Safe localStorage Access
+
+**Vulnerability:** Unhandled `SecurityError` exceptions when accessing `localStorage.getItem` or `localStorage.setItem`.
+**Learning:** If a user has strict privacy settings, is browsing in incognito mode, or blocks third-party cookies, accessing `localStorage` can throw a synchronous `DOMException`. Without `try...catch` blocks, this exception will crash the inline script, potentially leaving the UI broken, preventing form submissions, or causing critical layout failures (like FOUC or theme toggling).
+**Prevention:** Always wrap `localStorage` interactions in `try...catch` blocks, gracefully falling back to default behavior or system preferences (e.g., `prefers-color-scheme`) if `localStorage` is inaccessible.

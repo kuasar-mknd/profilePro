@@ -63,7 +63,11 @@ import { Icon } from "astro-icon/components";
     element.classList.toggle("dark");
 
     const isDarkNow = element.classList.contains("dark");
-    localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+    try {
+      localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+    } catch (_e) {
+      // Ignore localStorage errors
+    }
 
     // 🎨 Palette: Provide subtle haptic feedback for mobile users
     if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
@@ -100,7 +104,11 @@ import { Icon } from "astro-icon/components";
       element.classList.toggle("dark");
 
       const isDarkNow = element.classList.contains("dark");
-      localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+      try {
+        localStorage.setItem("theme", isDarkNow ? "dark" : "light");
+      } catch (_e) {
+        // Ignore localStorage errors
+      }
 
       window.dispatchEvent(
         new CustomEvent("theme-change", { detail: { isDark: isDarkNow } }),
