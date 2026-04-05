@@ -87,3 +87,8 @@
 ## 2024-04-01 - Cache matchMedia globally in inline scripts
 **Learning:** `window.matchMedia("(prefers-color-scheme: dark)")` parsing and evaluation inside a frequently called function (like `applyTheme` triggered on every page transition via View Transitions) forces the browser engine to repeatedly parse the media query string, which is a micro-stutter hazard.
 **Action:** Always cache the `MediaQueryList` object outside the function body (at the top level of the inline script) and check its `.matches` property dynamically inside the function to eliminate the string parsing overhead.
+
+## 2026-03-24 - Native querySelectorAll vs JS loop filtering
+
+**Learning:** When optimizing client-side DOM queries, prefer native `querySelectorAll` over `getElementsByClassName` or `getElementsByTagName` combined with manual JavaScript filtering loops. Native `querySelectorAll` is highly optimized in modern browser engines (written in C++), making manual JS filtering (like using `closest()` or `classList.contains()` inside a loop) generally slower and an unnecessary micro-optimization, and it increases main-thread work.
+**Action:** Replace `getElementsByTagName` with manual loops with `querySelectorAll` with the appropriate CSS selector.
