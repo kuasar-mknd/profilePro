@@ -37,9 +37,14 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
       </p>
       <button
         type="button"
-        class="reset-form-btn cursor-pointer mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="reset-form-btn group cursor-pointer mt-6 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 flex items-center justify-center gap-2 mx-auto"
       >
-        Envoyer un autre message
+        <Icon
+          name="mdi:refresh"
+          class="w-5 h-5 transition-transform duration-300 group-hover:rotate-180 group-focus-visible:rotate-180"
+          aria-hidden="true"
+        />
+        <span>Envoyer un autre message</span>
       </button>
     </div>
   </div>
@@ -271,10 +276,15 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
       <button
         type="button"
         id="reset-error-btn"
-        class="mt-4 px-4 py-2 cursor-pointer bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+        class="group mt-4 px-4 py-2 cursor-pointer bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-800 dark:text-red-300 font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 inline-flex items-center gap-2"
         aria-label="Réessayer de soumettre le formulaire"
       >
-        Réessayer
+        <Icon
+          name="mdi:refresh"
+          class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180 group-focus-visible:rotate-180"
+          aria-hidden="true"
+        />
+        <span>Réessayer</span>
       </button>
     </div>
   </div>
