@@ -606,15 +606,13 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         // This significantly reduces redundant JS execution and main-thread work on View Transitions.
         // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
         // ⚡ Bolt: Optimize client-side DOM query in performance-sensitive context
-        // Replaced complex CSS attribute selector with getElementsByTagName and internal loop filter
-        const links = document.getElementsByTagName("a");
+        // Replaced manual JS loop filtering with native querySelectorAll for better performance
+        const links = document.querySelectorAll("a[target='_blank']");
         for (let i = 0; i < links.length; i++) {
           const link = links[i];
-          if (link.getAttribute("target") === "_blank") {
-            const rel = link.getAttribute("rel");
-            if (!rel || !rel.includes("noopener")) {
-              secureLink(link);
-            }
+          const rel = link.getAttribute("rel");
+          if (!rel || !rel.includes("noopener")) {
+            secureLink(link);
           }
         }
       }
