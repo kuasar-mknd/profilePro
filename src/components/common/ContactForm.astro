@@ -560,7 +560,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
           if (this.messageInput.hasAttribute("aria-invalid") && isValid) {
             this.messageInput.removeAttribute("aria-invalid");
-            this.messageInput.setAttribute("aria-describedby", "message-hint");
+            const currentDesc =
+              this.messageInput.getAttribute("aria-describedby") || "";
+            this.messageInput.setAttribute(
+              "aria-describedby",
+              currentDesc.replace("form-error-message", "").trim(),
+            );
             this.hideErrorIfFormIsValid();
           }
         });
@@ -601,13 +606,28 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
         }
 
         if (this.nameInput) {
-          this.nameInput.setAttribute("aria-describedby", "name-hint");
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
+          this.nameInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         if (this.emailInput) {
-          this.emailInput.setAttribute("aria-describedby", "email-hint");
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
+          this.emailInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         if (this.messageInput) {
-          this.messageInput.setAttribute("aria-describedby", "message-hint");
+          const currentDesc =
+            this.messageInput.getAttribute("aria-describedby") || "";
+          this.messageInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         (this.form.querySelector("input") as HTMLInputElement)?.focus();
       });
@@ -650,7 +670,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.nameInput.hasAttribute("aria-invalid") && isValid) {
           this.nameInput.removeAttribute("aria-invalid");
-          this.nameInput.setAttribute("aria-describedby", "name-hint");
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
+          this.nameInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
           this.hideErrorIfFormIsValid();
         }
       });
@@ -661,7 +686,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.emailInput.hasAttribute("aria-invalid") && isValid) {
           this.emailInput.removeAttribute("aria-invalid");
-          this.emailInput.setAttribute("aria-describedby", "email-hint");
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
+          this.emailInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
           this.hideErrorIfFormIsValid();
         }
       });
@@ -684,10 +714,16 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.nameInput && this.nameInput.value.trim().length < 2) {
           this.nameInput.setAttribute("aria-invalid", "true");
-          this.nameInput.setAttribute(
-            "aria-describedby",
-            "name-hint form-error-message",
-          );
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
+          if (!currentDesc.includes("form-error-message")) {
+            this.nameInput.setAttribute(
+              "aria-describedby",
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
+            );
+          }
           this.showError(
             "Veuillez entrer votre nom (minimum 2 caractères).",
             this.nameInput,
@@ -697,10 +733,16 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.emailInput && !isValidEmail(this.emailInput.value)) {
           this.emailInput.setAttribute("aria-invalid", "true");
-          this.emailInput.setAttribute(
-            "aria-describedby",
-            "email-hint form-error-message",
-          );
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
+          if (!currentDesc.includes("form-error-message")) {
+            this.emailInput.setAttribute(
+              "aria-describedby",
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
+            );
+          }
           this.showError(
             "Veuillez entrer une adresse email valide.",
             this.emailInput,
@@ -710,10 +752,16 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.messageInput && this.messageInput.value.trim().length < 10) {
           this.messageInput.setAttribute("aria-invalid", "true");
-          this.messageInput.setAttribute(
-            "aria-describedby",
-            "message-hint form-error-message",
-          );
+          const currentDesc =
+            this.messageInput.getAttribute("aria-describedby") || "";
+          if (!currentDesc.includes("form-error-message")) {
+            this.messageInput.setAttribute(
+              "aria-describedby",
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
+            );
+          }
           this.showError(
             "Veuillez entrer un message d'au moins 10 caractères.",
             this.messageInput,
