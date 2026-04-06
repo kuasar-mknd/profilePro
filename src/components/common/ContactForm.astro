@@ -560,8 +560,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
           if (this.messageInput.hasAttribute("aria-invalid") && isValid) {
             this.messageInput.removeAttribute("aria-invalid");
-            const currentDesc = this.messageInput.getAttribute("aria-describedby") || "";
-          this.messageInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+            const currentDesc =
+              this.messageInput.getAttribute("aria-describedby") || "";
+            this.messageInput.setAttribute(
+              "aria-describedby",
+              currentDesc.replace("form-error-message", "").trim(),
+            );
             this.hideErrorIfFormIsValid();
           }
         });
@@ -602,16 +606,28 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
         }
 
         if (this.nameInput) {
-          const currentDesc = this.nameInput.getAttribute("aria-describedby") || "";
-          this.nameInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
+          this.nameInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         if (this.emailInput) {
-          const currentDesc = this.emailInput.getAttribute("aria-describedby") || "";
-          this.emailInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
+          this.emailInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         if (this.messageInput) {
-          const currentDesc = this.messageInput.getAttribute("aria-describedby") || "";
-          this.messageInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+          const currentDesc =
+            this.messageInput.getAttribute("aria-describedby") || "";
+          this.messageInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
         }
         (this.form.querySelector("input") as HTMLInputElement)?.focus();
       });
@@ -654,8 +670,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.nameInput.hasAttribute("aria-invalid") && isValid) {
           this.nameInput.removeAttribute("aria-invalid");
-          const currentDesc = this.nameInput.getAttribute("aria-describedby") || "";
-          this.nameInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
+          this.nameInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
           this.hideErrorIfFormIsValid();
         }
       });
@@ -666,8 +686,12 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.emailInput.hasAttribute("aria-invalid") && isValid) {
           this.emailInput.removeAttribute("aria-invalid");
-          const currentDesc = this.emailInput.getAttribute("aria-describedby") || "";
-          this.emailInput.setAttribute("aria-describedby", currentDesc.replace("form-error-message", "").trim());
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
+          this.emailInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
           this.hideErrorIfFormIsValid();
         }
       });
@@ -690,11 +714,14 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.nameInput && this.nameInput.value.trim().length < 2) {
           this.nameInput.setAttribute("aria-invalid", "true");
-          const currentDesc = this.nameInput.getAttribute("aria-describedby") || "";
+          const currentDesc =
+            this.nameInput.getAttribute("aria-describedby") || "";
           if (!currentDesc.includes("form-error-message")) {
             this.nameInput.setAttribute(
               "aria-describedby",
-              currentDesc ? `${currentDesc} form-error-message` : "form-error-message"
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
             );
           }
           this.showError(
@@ -706,11 +733,14 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.emailInput && !isValidEmail(this.emailInput.value)) {
           this.emailInput.setAttribute("aria-invalid", "true");
-          const currentDesc = this.emailInput.getAttribute("aria-describedby") || "";
+          const currentDesc =
+            this.emailInput.getAttribute("aria-describedby") || "";
           if (!currentDesc.includes("form-error-message")) {
             this.emailInput.setAttribute(
               "aria-describedby",
-              currentDesc ? `${currentDesc} form-error-message` : "form-error-message"
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
             );
           }
           this.showError(
@@ -722,11 +752,14 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
 
         if (this.messageInput && this.messageInput.value.trim().length < 10) {
           this.messageInput.setAttribute("aria-invalid", "true");
-          const currentDesc = this.messageInput.getAttribute("aria-describedby") || "";
+          const currentDesc =
+            this.messageInput.getAttribute("aria-describedby") || "";
           if (!currentDesc.includes("form-error-message")) {
             this.messageInput.setAttribute(
               "aria-describedby",
-              currentDesc ? `${currentDesc} form-error-message` : "form-error-message"
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
             );
           }
           this.showError(
