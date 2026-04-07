@@ -106,6 +106,7 @@ import { Icon } from "astro-icon/components";
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
+          referrerpolicy="strict-origin-when-cross-origin"
           class="font-medium hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2 inline-flex items-center gap-1"
           data-haptic="30"
           aria-label="Astro (ouvre un nouvel onglet)"
@@ -191,6 +192,7 @@ import { Icon } from "astro-icon/components";
         link.id = "wcb_a";
         link.target = "_blank";
         link.rel = "noopener noreferrer";
+        link.referrerPolicy = "strict-origin-when-cross-origin";
         link.href = "https://websitecarbon.com";
         link.className =
           "bg-pacamara-secondary text-white px-3 py-2 text-sm font-bold hover:bg-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-pacamara-accent flex items-center gap-1";

@@ -211,6 +211,7 @@ const description = data.profile.content;
                 href={sanitizeUrl(data.personal.linkedinUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
+                referrerpolicy="strict-origin-when-cross-origin"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
                 aria-label={`${data.personal.linkedin} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
@@ -230,6 +231,7 @@ const description = data.profile.content;
                 href={sanitizeUrl(data.personal.portfolioUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
+                referrerpolicy="strict-origin-when-cross-origin"
                 class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
                 aria-label={`${data.personal.portfolio} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
