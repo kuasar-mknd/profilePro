@@ -607,13 +607,11 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         // ⚡ Bolt: Optimized forEach loop into a standard for loop to avoid array callback allocation.
         // ⚡ Bolt: Optimize client-side DOM query in performance-sensitive context
         // Replaced manual JS loop filtering with native querySelectorAll for better performance
-        const links = document.querySelectorAll("a[target='_blank']");
+        const links = document.querySelectorAll(
+          "a[target='_blank']:not([rel~='noopener'])",
+        );
         for (let i = 0; i < links.length; i++) {
-          const link = links[i];
-          const rel = link.getAttribute("rel");
-          if (!rel || !rel.includes("noopener")) {
-            secureLink(link);
-          }
+          secureLink(links[i]);
         }
       }
 
