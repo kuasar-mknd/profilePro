@@ -34,6 +34,7 @@ interface Window {
   __tocInitHandler?: () => void;
   __backBtnInitHandler?: () => void;
   __navHapticsInitHandler?: () => void;
+  __navKeydownHandler?: (e: KeyboardEvent) => void;
   __cvInitHandler?: () => void;
   __cvKeydownHandler?: (e: KeyboardEvent) => void;
   __cvCleanup?: () => void;
