@@ -42,3 +42,4 @@ If AI integration is added, the expected JSON schema for a project summary might
 
 - All AI-generated content must be reviewed by a human before publishing.
 - No user data is sent to AI endpoints.
+<!-- Verified: DocOps 2026-04-07 -->
