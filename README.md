@@ -200,3 +200,4 @@ This project is [MIT](LICENSE) licensed.
 ---
 
 Construit avec ❤️ par Samuel Dulex
+<!-- Verified: DocOps 2026-04-07 -->
