@@ -574,6 +574,14 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         relValues.add("noreferrer");
         link.setAttribute("rel", Array.from(relValues).join(" "));
 
+        // 🛡️ Sentinel: Add strict-origin-when-cross-origin to prevent leaking sensitive URLs
+        if (!link.hasAttribute("referrerpolicy")) {
+          link.setAttribute(
+            "referrerpolicy",
+            "strict-origin-when-cross-origin",
+          );
+        }
+
         // Accessibility: Append warning to title
         const title = link.getAttribute("title") || "";
         if (!title.includes(warning.trim())) {
