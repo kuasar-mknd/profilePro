@@ -18,8 +18,13 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/" ? "page" : undefined}
+        aria-label="Accueil (Alt+1)"
+        aria-keyshortcuts="Alt+1"
       >
-        Accueil</a
+        Accueil <kbd
+          class="font-sans ml-1 opacity-70 hidden md:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+          aria-hidden="true">(1)</kbd
+        ></a
       >
     </li>
     <li class="nav-item">
@@ -31,8 +36,13 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath.startsWith("/project") ? "page" : undefined}
+        aria-label="Projets (Alt+2)"
+        aria-keyshortcuts="Alt+2"
       >
-        Projets</a
+        Projets <kbd
+          class="font-sans ml-1 opacity-70 hidden md:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+          aria-hidden="true">(2)</kbd
+        ></a
       >
     </li>
     <li class="nav-item">
@@ -44,8 +54,13 @@ const currentPath = normalizePath(pathname);
             : "opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
         }`}
         aria-current={currentPath === "/about" ? "page" : undefined}
+        aria-label="À propos (Alt+3)"
+        aria-keyshortcuts="Alt+3"
       >
-        À propos</a
+        À propos <kbd
+          class="font-sans ml-1 opacity-70 hidden md:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+          aria-hidden="true">(3)</kbd
+        ></a
       >
     </li>
   </ul>
@@ -89,4 +104,40 @@ const currentPath = normalizePath(pathname);
   window.__navHapticsInitHandler = initNavHaptics;
   document.addEventListener("astro:page-load", initNavHaptics);
   initNavHaptics();
+
+  /**
+   * 🎨 Palette: Global keyboard shortcuts for main navigation
+   */
+  import { navigate } from "astro:transitions/client";
+
+  const handleNavKeydown = (e: KeyboardEvent) => {
+    // Ignore if user is typing in an input
+    const target = e.target as HTMLElement;
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      if (e.key === "1") {
+        e.preventDefault();
+        navigate("/");
+      } else if (e.key === "2") {
+        e.preventDefault();
+        navigate("/project/");
+      } else if (e.key === "3") {
+        e.preventDefault();
+        navigate("/about/");
+      }
+    }
+  };
+
+  if (window.__navKeydownHandler) {
+    document.removeEventListener("keydown", window.__navKeydownHandler);
+  }
+  window.__navKeydownHandler = handleNavKeydown;
+  document.addEventListener("keydown", window.__navKeydownHandler);
 </script>
