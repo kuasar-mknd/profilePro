@@ -576,7 +576,10 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
 
         // 🛡️ Sentinel: Add strict-origin-when-cross-origin to prevent leaking sensitive URLs
         if (!link.hasAttribute("referrerpolicy")) {
-          link.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+          link.setAttribute(
+            "referrerpolicy",
+            "strict-origin-when-cross-origin",
+          );
         }
 
         // Accessibility: Append warning to title
