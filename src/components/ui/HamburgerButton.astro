@@ -64,6 +64,9 @@
     const nav = document.querySelector("#navigation_wrapper");
     const tooltipText = document.querySelector("#menu_tooltip_text");
     const tooltipShortcut = document.querySelector("#menu_tooltip_shortcut");
+    // ⚡ Bolt: Cache main content DOM queries instead of querying on every menu open/close
+    const mainContent = document.getElementById("main-content");
+    const mainFooter = document.getElementById("main-footer");
 
     // ⚡ Early return guards
     if (!button || !nav) return;
@@ -86,8 +89,6 @@
       nav.classList.remove("translate-x-0");
 
       // 🎨 Palette: Remove inert and aria-hidden from background content
-      const mainContent = document.getElementById("main-content");
-      const mainFooter = document.getElementById("main-footer");
       if (mainContent) {
         mainContent.removeAttribute("inert");
         mainContent.removeAttribute("aria-hidden");
@@ -131,8 +132,6 @@
       nav.classList.add("translate-x-0");
 
       // 🎨 Palette: Apply inert and aria-hidden to background content
-      const mainContent = document.getElementById("main-content");
-      const mainFooter = document.getElementById("main-footer");
       if (mainContent) {
         mainContent.setAttribute("inert", "");
         mainContent.setAttribute("aria-hidden", "true");
