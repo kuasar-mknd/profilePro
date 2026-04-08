@@ -11,6 +11,7 @@ import { Icon } from "astro-icon/components";
 import Skeleton from "./Skeleton.astro";
 import EmptyState from "./EmptyState.astro";
 import { limitConcurrency } from "../../utils/async";
+import { getImagesForFolder } from "../../utils/imageRegistry";
 
 interface Props {
   folder?: string;
@@ -42,27 +43,8 @@ if (explicitImages && explicitImages.length > 0) {
   // Load from folder
   // ⚡ Bolt: Use eager: false to prevent loading all images in the project
   // We filter paths first, then load only the required modules
-  const allImages = import.meta.glob<{ default: ImageMetadata }>(
-    "../../assets/**/*.{avif,png,jpg,jpeg,webp,JPEG,PNG,JPG}",
-    { eager: false },
-  );
-
-  const folderPath = `/${folder}/`;
-  const folderPathLen = folderPath.length;
-
-  const filteredImages = Object.entries(allImages).filter(([path]) => {
-    const folderMatchIndex = path.indexOf(folderPath);
-    if (folderMatchIndex === -1) return false;
-
-    const isInSubfolder =
-      path.indexOf("/", folderMatchIndex + folderPathLen) !== -1;
-    if (isInSubfolder) return false;
-
-    for (const pattern of excludePatterns) {
-      if (path.includes(pattern)) return false;
-    }
-    return true;
-  });
+  // ⚡ Bolt: Use pre-compiled Map to find images in O(1) time instead of parsing all assets
+  const filteredImages = getImagesForFolder(folder, excludePatterns);
 
   // Load only filtered images
   galleryImages = await limitConcurrency(
