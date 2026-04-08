@@ -19,3 +19,7 @@
 ## 2024-04-03 - In-Page Navigation Haptics
 **Learning:** In-page navigation links like Table of Contents (TOC) items often lack the tactile feedback provided by primary site navigation, making them feel less responsive on mobile devices despite being critical interaction points.
 **Action:** Apply the standard `data-haptic="30"` attribute to all secondary in-page navigation links, including Table of Contents anchors, to maintain tactile consistency with main navigation elements.
+
+## 2024-05-19 - Haptic Feedback on Lightbox Controls
+**Learning:** Full-screen modal interactions like Lightboxes often lack the tactile feedback present on standard page elements, making the mobile experience feel less responsive.
+**Action:** Consistently apply `data-haptic="50"` to modal navigation controls (.lightbox-close, .lightbox-prev, .lightbox-next) to match the global interaction pattern.
