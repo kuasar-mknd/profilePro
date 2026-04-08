@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl, VIMEO_ID_REGEX } from "../src/utils/security";
 
 test("safeJson handles undefined or function inputs safely", () => {
   // JSON.stringify returns undefined for functions and undefined itself
@@ -60,4 +60,45 @@ test("sanitizeUrl blocks obfuscated javascript URLs", () => {
 
   expect(isValidUrl("javascript&#58;alert(1)")).toBe(false);
   expect(isValidUrl(" jav&#x0a;ascript:alert(1)")).toBe(false);
+});
+
+test("VIMEO_ID_REGEX should correctly match valid Vimeo strings and extract capture groups", () => {
+  // standard valid cases
+  expect("https://vimeo.com/123456789".match(VIMEO_ID_REGEX)?.[1]).toBe("123456789");
+  expect("http://vimeo.com/987654321".match(VIMEO_ID_REGEX)?.[1]).toBe("987654321");
+  expect("vimeo.com/112233".match(VIMEO_ID_REGEX)?.[1]).toBe("112233");
+  expect("www.vimeo.com/123".match(VIMEO_ID_REGEX)?.[1]).toBe("123");
+  expect("https://www.vimeo.com/456".match(VIMEO_ID_REGEX)?.[1]).toBe("456");
+
+  // with hashes
+  const matchHash = "https://vimeo.com/123456789/abcdef0123".match(VIMEO_ID_REGEX);
+  expect(matchHash?.[1]).toBe("123456789");
+  expect(matchHash?.[2]).toBe("abcdef0123");
+
+  const matchHashNoHttp = "vimeo.com/987/xyZ1".match(VIMEO_ID_REGEX);
+  expect(matchHashNoHttp?.[1]).toBe("987");
+  expect(matchHashNoHttp?.[2]).toBe("xyZ1");
+});
+
+test("VIMEO_ID_REGEX should reject invalid strings and not match", () => {
+  // completely invalid
+  expect("https://notvimeo.com/123456789".match(VIMEO_ID_REGEX)).toBeNull();
+  expect("https://youtube.com/watch?v=123".match(VIMEO_ID_REGEX)).toBeNull();
+  expect("just a string".match(VIMEO_ID_REGEX)).toBeNull();
+
+  // missing ID
+  expect("https://vimeo.com/".match(VIMEO_ID_REGEX)).toBeNull();
+  expect("vimeo.com".match(VIMEO_ID_REGEX)).toBeNull();
+
+  // non-numeric ID
+  expect("https://vimeo.com/abc".match(VIMEO_ID_REGEX)).toBeNull();
+
+  // trailing slash on ID without hash
+  expect("https://vimeo.com/123/".match(VIMEO_ID_REGEX)).toBeNull();
+
+  // too many parts
+  expect("https://vimeo.com/123/abc/def".match(VIMEO_ID_REGEX)).toBeNull();
+
+  // subdomains other than www
+  expect("https://player.vimeo.com/video/123".match(VIMEO_ID_REGEX)).toBeNull();
 });
