@@ -29,6 +29,39 @@ describe("Security Utilities", () => {
       expect(isValidUrl("javascript:alert(1)")).toBe(false);
     });
 
+    it("should allow valid URL variants with ports, subdomains, and IP addresses", () => {
+      expect(isValidUrl("https://sub.domain.example.com")).toBe(true);
+      expect(isValidUrl("http://localhost:8080/path")).toBe(true);
+      expect(isValidUrl("http://192.168.1.1")).toBe(true);
+      expect(isValidUrl("http://192.168.1.1:3000/api")).toBe(true);
+      expect(isValidUrl("http://[2001:db8::1]:8080")).toBe(true); // IPv6
+    });
+
+    it("should allow URLs with complex query parameters and fragments", () => {
+      expect(
+        isValidUrl("https://example.com/search?q=test+query&lang=en#results"),
+      ).toBe(true);
+      expect(isValidUrl("https://example.com/api?array[]=1&array[]=2")).toBe(
+        true,
+      );
+      expect(
+        isValidUrl("https://example.com/?redirect=https%3A%2F%2Fother.com"),
+      ).toBe(true);
+    });
+
+    it("should safely reject non-string inputs", () => {
+      // @ts-ignore
+      expect(isValidUrl(undefined)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(123)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(true)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl({})).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl([])).toBe(false);
+    });
+
     it("should reject invalid inputs", () => {
       expect(isValidUrl("")).toBe(false);
       // @ts-expect-error
