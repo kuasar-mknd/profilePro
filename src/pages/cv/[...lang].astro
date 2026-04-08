@@ -4,7 +4,6 @@ import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
 import fs from "node:fs";
 import yaml from "js-yaml";
-import sanitizeHtml from "sanitize-html";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
 import { limitConcurrency } from "../../utils/async";
@@ -393,11 +392,18 @@ const description = data.profile.content;
                 >
                   {
                     data.awards.items.map((award: string) => (
-                      <li
-                        set:html={sanitizeHtml(award, {
-                          allowedTags: ["strong"],
-                        })}
-                      />
+                      <li>
+                        {award
+                          .split(/(<strong>.*?<\/strong>)/g)
+                          .map((part: string) =>
+                            part.startsWith("<strong>") &&
+                            part.endsWith("</strong>") ? (
+                              <strong>{part.slice(8, -9)}</strong>
+                            ) : (
+                              part
+                            ),
+                          )}
+                      </li>
                     ))
                   }
                 </ul>
