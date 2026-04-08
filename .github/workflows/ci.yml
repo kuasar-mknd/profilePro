@@ -67,7 +67,7 @@ jobs:
       - name: Build Check (Dry Run)
         run: pnpm run build
         env:
-          PUBLIC_WEB3FORMS_ACCESS_KEY: "dry_run"
+          WEB3FORMS_ACCESS_KEY: "dry_run"
           PUBLIC_CF_ANALYTICS_TOKEN: "dry_run"
 
       - name: Upload Playwright Report

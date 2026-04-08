@@ -77,7 +77,7 @@ jobs:
       - name: Build Check (Dry Run)
         run: pnpm run build
         env:
-          PUBLIC_WEB3FORMS_ACCESS_KEY: "dry_run"
+          WEB3FORMS_ACCESS_KEY: "dry_run"
           PUBLIC_CF_ANALYTICS_TOKEN: "dry_run"
 
       - name: Upload Playwright Report
@@ -125,7 +125,7 @@ jobs:
       - name: Build Astro
         run: pnpm run build
         env:
-          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+          WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
