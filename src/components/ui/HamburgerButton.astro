@@ -67,6 +67,7 @@
     // ⚡ Bolt: Cache main content DOM queries instead of querying on every menu open/close
     const mainContent = document.getElementById("main-content");
     const mainFooter = document.getElementById("main-footer");
+    const liveRegion = document.getElementById("menu-live-region");
 
     // ⚡ Early return guards
     if (!button || !nav) return;
@@ -146,8 +147,6 @@
       const isExpanded = button.getAttribute("aria-expanded") === "true";
 
       // 🎨 Palette: Announce menu state change to screen readers
-      const liveRegion = document.getElementById("menu-live-region");
-
       if (isExpanded) {
         closeMenu();
         if (liveRegion) liveRegion.textContent = "Menu fermé";
@@ -200,7 +199,6 @@
       if ((e.key === "m" || e.key === "M") && !isExpanded) {
         e.preventDefault();
         openMenu();
-        const liveRegion = document.getElementById("menu-live-region");
         if (liveRegion) liveRegion.textContent = "Menu ouvert";
         if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(50);
