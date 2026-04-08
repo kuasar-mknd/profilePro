@@ -308,6 +308,33 @@ describe("Security Utilities", () => {
       expect(match![2]).toBe("abcdef0123");
     });
 
+    it("should match additional valid URL formats", () => {
+      const urls = [
+        "http://www.vimeo.com/123456789",
+        "www.vimeo.com/123456789",
+      ];
+      urls.forEach((url) => {
+        const match = url.match(VIMEO_ID_REGEX);
+        expect(match).not.toBeNull();
+        expect(match![1]).toBe("123456789");
+        expect(match![2]).toBeUndefined();
+      });
+    });
+
+    it("should strictly reject URLs with query params, fragments, or extra paths due to anchors in regex", () => {
+      const invalidUrls = [
+        "https://vimeo.com/123456789?query=1",
+        "https://vimeo.com/123456789#hash",
+        "https://vimeo.com/123456789/hash/extra",
+        "https://vimeo.com/123456789/",
+        "https://vimeo.com/",
+        "vimeo.com",
+      ];
+      invalidUrls.forEach((url) => {
+        expect(url.match(VIMEO_ID_REGEX)).toBeNull();
+      });
+    });
+
     it("should not match invalid Vimeo URLs", () => {
       const invalidUrls = [
         "https://notvimeo.com/123456789",
