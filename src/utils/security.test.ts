@@ -184,7 +184,6 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("foo:bar")).toBe("");
     });
 
-
     it("should block relative URLs containing colons but not matching whitelisted protocols", () => {
       // Test the else branch in validateParsedProtocol's catch block
       expect(sanitizeUrl("javascript :alert(1)")).toBe("");
@@ -231,20 +230,24 @@ describe("Security Utilities", () => {
 
   describe("safeJson", () => {
     it("should serialize objects and escape HTML characters", () => {
-      const input = { html: "<script>alert('xss')</script>", text: "normal text & stuff" };
-      const expected = '{"html":"\\u003cscript\\u003ealert(\\u0027xss\\u0027)\\u003c/script\\u003e","text":"normal text \\u0026 stuff"}';
+      const input = {
+        html: "<script>alert('xss')</script>",
+        text: "normal text & stuff",
+      };
+      const expected =
+        '{"html":"\\u003cscript\\u003ealert(\\u0027xss\\u0027)\\u003c/script\\u003e","text":"normal text \\u0026 stuff"}';
       expect(safeJson(input)).toBe(expected);
     });
 
-    it("should handle undefined and return \"null\"", () => {
+    it('should handle undefined and return "null"', () => {
       expect(safeJson(undefined)).toBe("null");
     });
 
-    it("should handle symbols and return \"null\"", () => {
+    it('should handle symbols and return "null"', () => {
       expect(safeJson(Symbol("test"))).toBe("null");
     });
 
-    it("should handle functions and return \"null\"", () => {
+    it('should handle functions and return "null"', () => {
       expect(safeJson(() => {})).toBe("null");
     });
   });
