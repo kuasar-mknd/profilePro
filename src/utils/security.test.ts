@@ -31,7 +31,7 @@ describe("Security Utilities", () => {
 
     it("should reject invalid inputs", () => {
       expect(isValidUrl("")).toBe(false);
-      // @ts-ignore
+      // @ts-expect-error
       expect(isValidUrl(null)).toBe(false);
     });
 
@@ -99,13 +99,13 @@ describe("Security Utilities", () => {
 
   describe("sanitizeUrl", () => {
     it("should reject non-string inputs safely", () => {
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeUrl(null)).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeUrl(123)).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeUrl({})).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeUrl(undefined)).toBe("");
     });
 
@@ -203,13 +203,13 @@ describe("Security Utilities", () => {
 
   describe("sanitizeInput", () => {
     it("should reject non-string inputs safely", () => {
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeInput(null)).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeInput(123)).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeInput({})).toBe("");
-      // @ts-ignore
+      // @ts-expect-error
       expect(sanitizeInput(undefined)).toBe("");
     });
 
@@ -237,13 +237,13 @@ describe("Security Utilities", () => {
 
     it("should reject non-string and empty inputs", () => {
       expect(isValidEmail("")).toBe(false);
-      // @ts-ignore
+      // @ts-expect-error
       expect(isValidEmail(null)).toBe(false);
-      // @ts-ignore
+      // @ts-expect-error
       expect(isValidEmail(undefined)).toBe(false);
-      // @ts-ignore
+      // @ts-expect-error
       expect(isValidEmail(123)).toBe(false);
-      // @ts-ignore
+      // @ts-expect-error
       expect(isValidEmail({})).toBe(false);
     });
 
