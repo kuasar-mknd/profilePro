@@ -252,6 +252,15 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("foo:bar")).toBe("");
     });
 
+    it("should block unparseable strings containing colons (potential protocols) if colon exists", () => {
+      expect(sanitizeUrl("invalid:protocol:format")).toBe("");
+      expect(sanitizeUrl("javascript: alert(1);")).toBe("");
+      // "some_string:" fails URL construct because it's missing trailing parts, but also triggers the fallback path because it's not a whitelisted protocol format but has a colon.
+      expect(sanitizeUrl("some_string:")).toBe("");
+      expect(sanitizeUrl("a:b")).toBe("");
+      expect(sanitizeUrl("invalid:/protocol/test")).toBe("");
+    });
+
     it("should cache parsed URLs and evict after 1000 items", () => {
       // Clear cache conceptually by filling it up and testing eviction
       const uniqueUrl = "https://example.com/cache-test";
@@ -444,6 +453,22 @@ describe("Security Utilities", () => {
       const match = url.match(YOUTUBE_ID_REGEX);
       expect(match).not.toBeNull();
       expect(match![1]).toBe("a-B_3456789");
+    });
+
+    it("should extract ID when followed by additional parameters or fragments", () => {
+      const cases = [
+        { url: "https://youtu.be/dQw4w9WgXcQ?t=10", id: "dQw4w9WgXcQ" },
+        {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PL123",
+          id: "dQw4w9WgXcQ",
+        },
+        { url: "https://youtu.be/dQw4w9WgXcQ#time=1", id: "dQw4w9WgXcQ" },
+      ];
+      cases.forEach(({ url, id }) => {
+        const match = url.match(YOUTUBE_ID_REGEX);
+        expect(match).not.toBeNull();
+        expect(match![1]).toBe(id);
+      });
     });
 
     it("should not match invalid YouTube IDs", () => {
