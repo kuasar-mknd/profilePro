@@ -68,6 +68,42 @@ describe("Security Utilities", () => {
       expect(isValidUrl(null)).toBe(false);
     });
 
+    it("should allow valid URL variants", () => {
+      expect(isValidUrl("https://example.com:8080")).toBe(true);
+      expect(isValidUrl("https://sub.domain.example.co.uk")).toBe(true);
+      expect(isValidUrl("http://192.168.1.1")).toBe(true);
+      expect(
+        isValidUrl("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"),
+      ).toBe(true);
+      expect(
+        isValidUrl("https://example.com/path?query=1&param=2#fragment"),
+      ).toBe(true);
+    });
+
+    it("should strictly reject non-string inputs", () => {
+      // @ts-ignore
+      expect(isValidUrl(undefined)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(123)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl({})).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl([])).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(NaN)).toBe(false);
+      // @ts-ignore
+      expect(isValidUrl(true)).toBe(false);
+    });
+
+    it("should reject obfuscation bypass attempts in isValidUrl", () => {
+      expect(isValidUrl("jav%0Aascript:alert(1)")).toBe(false);
+      expect(isValidUrl("javascript&#58;alert(1)")).toBe(false);
+      expect(isValidUrl("javascript&colon;alert(1)")).toBe(false);
+      expect(isValidUrl(" jav&#x0a;ascript:alert(1)")).toBe(false);
+      expect(isValidUrl("\x01javascript:alert(1)")).toBe(false);
+      expect(isValidUrl("javascript:alert(1)\x00")).toBe(false);
+    });
+
     it("should allow mailto if option enabled", () => {
       expect(isValidUrl("mailto:user@example.com", { allowMailto: true })).toBe(
         true,
