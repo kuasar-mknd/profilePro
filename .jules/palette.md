@@ -23,3 +23,8 @@
 ## 2024-05-19 - Haptic Feedback on Lightbox Controls
 **Learning:** Full-screen modal interactions like Lightboxes often lack the tactile feedback present on standard page elements, making the mobile experience feel less responsive.
 **Action:** Consistently apply `data-haptic="50"` to modal navigation controls (.lightbox-close, .lightbox-prev, .lightbox-next) to match the global interaction pattern.
+
+
+## 2026-04-08 - Global Keyboard Shortcuts
+**Learning:** When implementing global keyboard shortcuts (e.g., "T" for Back to Top), it is critical to explicitly check that modifier keys (`e.ctrlKey`, `e.metaKey`, `e.altKey`) are false. Failing to do so can intercept standard browser navigation commands (like Cmd+T to open a new tab), causing a severe UX regression.
+**Action:** Always include `!e.ctrlKey && !e.metaKey && !e.altKey` in global keydown event listeners, and ensure inputs (`INPUT`, `TEXTAREA`, `SELECT`, `isContentEditable`) are ignored.
