@@ -4,6 +4,7 @@ import {
   sanitizeInput,
   isValidUrl,
   isValidEmail,
+  safeJson,
   VIMEO_ID_REGEX,
   YOUTUBE_ID_REGEX,
 } from "./security";
@@ -183,6 +184,14 @@ describe("Security Utilities", () => {
       expect(sanitizeUrl("foo:bar")).toBe("");
     });
 
+
+    it("should block relative URLs containing colons but not matching whitelisted protocols", () => {
+      // Test the else branch in validateParsedProtocol's catch block
+      expect(sanitizeUrl("javascript :alert(1)")).toBe("");
+      expect(sanitizeUrl("javascript:alert(1)")).toBe("");
+      expect(sanitizeUrl("foo : bar")).toBe("");
+    });
+
     it("should cache parsed URLs and evict after 1000 items", () => {
       // Clear cache conceptually by filling it up and testing eviction
       const uniqueUrl = "https://example.com/cache-test";
@@ -217,6 +226,26 @@ describe("Security Utilities", () => {
       expect(sanitizeInput("<script>alert(1)</script>")).toBe(
         "&lt;script&gt;alert&#40;1&#41;&lt;&#x2F;script&gt;",
       );
+    });
+  });
+
+  describe("safeJson", () => {
+    it("should serialize objects and escape HTML characters", () => {
+      const input = { html: "<script>alert('xss')</script>", text: "normal text & stuff" };
+      const expected = '{"html":"\\u003cscript\\u003ealert(\\u0027xss\\u0027)\\u003c/script\\u003e","text":"normal text \\u0026 stuff"}';
+      expect(safeJson(input)).toBe(expected);
+    });
+
+    it("should handle undefined and return \"null\"", () => {
+      expect(safeJson(undefined)).toBe("null");
+    });
+
+    it("should handle symbols and return \"null\"", () => {
+      expect(safeJson(Symbol("test"))).toBe("null");
+    });
+
+    it("should handle functions and return \"null\"", () => {
+      expect(safeJson(() => {})).toBe("null");
     });
   });
 
@@ -283,7 +312,27 @@ describe("Security Utilities", () => {
         expect(isValidEmail(email)).toBe(false);
       });
     });
+
+    it("should reject extremely long inputs to prevent ReDoS", () => {
+      // The current regex allows long emails, we just want to ensure it doesn't ReDoS
+      const longLocalPart = "a".repeat(250) + "@example.com";
+      const start = performance.now();
+      expect(isValidEmail(longLocalPart)).toBe(true);
+      const end = performance.now();
+      expect(end - start).toBeLessThan(10);
+
+      const longDomainPart = "test@" + "a".repeat(250) + ".com";
+      expect(isValidEmail(longDomainPart)).toBe(true);
+    });
+
+    it("should reject emails with invalid characters", () => {
+      expect(isValidEmail("test@examp!e.com")).toBe(false);
+      expect(isValidEmail("te st@example.com")).toBe(false);
+      expect(isValidEmail("test@example.com\n")).toBe(false);
+      expect(isValidEmail("<script>@example.com")).toBe(false);
+    });
   });
+
   describe("VIMEO_ID_REGEX", () => {
     it("should match valid Vimeo URLs and extract ID", () => {
       const urls = [
