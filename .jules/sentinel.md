@@ -111,3 +111,9 @@ Each entry should include:
 **Vulnerability:** Unhandled `SecurityError` exceptions when accessing `localStorage.getItem` or `localStorage.setItem`.
 **Learning:** If a user has strict privacy settings, is browsing in incognito mode, or blocks third-party cookies, accessing `localStorage` can throw a synchronous `DOMException`. Without `try...catch` blocks, this exception will crash the inline script, potentially leaving the UI broken, preventing form submissions, or causing critical layout failures (like FOUC or theme toggling).
 **Prevention:** Always wrap `localStorage` interactions in `try...catch` blocks, gracefully falling back to default behavior or system preferences (e.g., `prefers-color-scheme`) if `localStorage` is inaccessible.
+
+## 2026-11-20 - Client-Side API Timeout (DoS Prevention)
+
+**Vulnerability:** Hanging connections / DoS risk from third-party API dependencies without a timeout. The form submission logic previously used `fetch` to call `https://api.web3forms.com/submit` without a timeout mechanism. If the third-party API hangs or responds extremely slowly, the user's browser connection stays open indefinitely and the UI remains stuck in a loading state.
+**Learning:** External API dependencies on the client-side should not be blindly trusted to respond in a timely manner. Hanging fetch requests can lock up the UI, frustrate users, and consume browser resources. Implementing an explicit timeout guarantees that the application can recover gracefully from external failures.
+**Prevention:** Added an `AbortController` combined with a `setTimeout` (10 seconds) to the `fetch` request in `src/components/common/ContactForm.astro`. We capture the `AbortError` exception in the `catch` block to display a user-friendly timeout message without exposing underlying errors.
