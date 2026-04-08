@@ -92,3 +92,7 @@
 
 **Learning:** When optimizing client-side DOM queries, prefer native `querySelectorAll` over `getElementsByClassName` or `getElementsByTagName` combined with manual JavaScript filtering loops. Native `querySelectorAll` is highly optimized in modern browser engines (written in C++), making manual JS filtering (like using `closest()` or `classList.contains()` inside a loop) generally slower and an unnecessary micro-optimization, and it increases main-thread work.
 **Action:** Replace `getElementsByTagName` with manual loops with `querySelectorAll` with the appropriate CSS selector.
+
+## 2024-05-18 - Caching DOM queries in HamburgerButton to prevent redundant lookups
+**Learning:** Querying `document.getElementById` inside frequently triggered event listeners or mutation callbacks (like toggling a navigation menu) causes redundant DOM lookups and unnecessary main-thread work.
+**Action:** Always cache main content DOM queries (like `main-content` and `main-footer`) outside the open/close functions, ideally at the top of the initialization script block, to ensure O(1) query lookups on every menu click instead of N.
