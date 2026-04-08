@@ -362,7 +362,10 @@ describe("Security Utilities", () => {
     it("should extract ID when followed by additional parameters or fragments", () => {
       const cases = [
         { url: "https://youtu.be/dQw4w9WgXcQ?t=10", id: "dQw4w9WgXcQ" },
-        { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PL123", id: "dQw4w9WgXcQ" },
+        {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=PL123",
+          id: "dQw4w9WgXcQ",
+        },
         { url: "https://youtu.be/dQw4w9WgXcQ#time=1", id: "dQw4w9WgXcQ" },
       ];
       cases.forEach(({ url, id }) => {
