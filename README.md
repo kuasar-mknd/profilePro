@@ -48,7 +48,7 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Installez npm via Node.js installer.
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
-    - Les variables `PUBLIC_WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
+    - Les variables `WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
     - Si `pnpm run test:e2e` échoue, lancez `npx playwright install --with-deps` pour installer les navigateurs.
     - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `pnpm run dev` dans un autre terminal avant les tests.
@@ -63,7 +63,7 @@ Portfolio professionnel de **Samuel Dulex**, spécialisé dans la création de c
 
 Consultez la [documentation d'architecture](docs/ARCHITECTURE.md) pour plus de détails techniques.
 
-*(Note: This project is implemented purely as a static Astro SSG architecture without dynamic backend frameworks).*
+_(Note: This project is implemented purely as a static Astro SSG architecture without dynamic backend frameworks)._
 
 ## ✨ Fonctionnalités
 
@@ -131,7 +131,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run check` : Vérifie le code (linting + formatage + types).
 - `pnpm run lighthouse` : Lance l'audit de performance.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
-*(Des tests unitaires existent également dans le code source mais ne disposent pas de commande npm dédiée pour le moment).*
+  _(Des tests unitaires existent également dans le code source mais ne disposent pas de commande npm dédiée pour le moment)._
 
 ### API Access (Main Endpoints)
 
@@ -148,7 +148,7 @@ curl https://portfolio.kuasar.xyz/sitemap-index.xml
 curl https://portfolio.kuasar.xyz/robots.txt
 ```
 
-*(Note: There are no dynamic backend routes (such as Hono), Prisma database, or API POST endpoints as this is a fully static Astro application. The project relies purely on file-based markdown collections).*
+_(Note: There are no dynamic backend routes (such as Hono), Prisma database, or API POST endpoints as this is a fully static Astro application. The project relies purely on file-based markdown collections)._
 
 ## 📂 Structure du projet
 
@@ -200,4 +200,5 @@ This project is [MIT](LICENSE) licensed.
 ---
 
 Construit avec ❤️ par Samuel Dulex
+
 <!-- Verified: DocOps 2026-04-07 -->
