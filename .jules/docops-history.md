@@ -39,3 +39,4 @@
 | 2026-04-05 | Security Workflow | .github/workflows/pnpm-audit.yml | Added pnpm audit workflow to enhance security without rewriting existing valid files |
 | 2026-04-06 | Documentation & Workflows | docs/TESTING.md, .github/workflows/stale.yml | Added missing documentation for local testing strategy and added stale workflow for PR/issue management, respecting anti-loop logic and confirming static architecture. |
 | 2026-04-07 | GitHub Workflows & Scripts | .github/workflows/ci.yml, .github/workflows/pipeline.yml, .lighthouserc.json, .github/dependabot.yml | Fixed non-existent action versions to v4 and updated package-ecosystem for dependabot and lighthouserc script |
+| 2026-04-08 | Action Version Bumps | .github/workflows/ci.yml, .github/workflows/pipeline.yml, .github/workflows/pnpm-audit.yml, README.md, docs/ARCHITECTURE.md | Corrected non-existent setup-node actions and clarified Hono instructions in docs |

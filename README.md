@@ -148,7 +148,7 @@ curl https://portfolio.kuasar.xyz/sitemap-index.xml
 curl https://portfolio.kuasar.xyz/robots.txt
 ```
 
-*(Note: There are no dynamic backend routes, Prisma database, or API POST endpoints as this is a fully static Astro application. The project relies purely on file-based markdown collections).*
+*(Note: There are no dynamic backend routes (such as Hono), Prisma database, or API POST endpoints as this is a fully static Astro application. The project relies purely on file-based markdown collections).*
 
 ## 📂 Structure du projet
 
