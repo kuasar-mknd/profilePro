@@ -873,12 +873,17 @@ const ENCODED_ACCESS_KEY = btoa(PUBLIC_WEB3FORMS_ACCESS_KEY || "");
             throw new Error(result.message || "Submission failed");
           }
         } catch (error) {
-          const isAbortError = error instanceof Error && error.name === "AbortError";
+          const isAbortError =
+            error instanceof Error && error.name === "AbortError";
           if (import.meta.env.DEV) {
             // eslint-disable-next-line no-console
             console.error(
               "Form submission failed:",
-              isAbortError ? "Request timed out" : (error instanceof Error ? error.message : "Unknown error"),
+              isAbortError
+                ? "Request timed out"
+                : error instanceof Error
+                  ? error.message
+                  : "Unknown error",
             );
           }
 
