@@ -146,9 +146,14 @@ curl https://portfolio.kuasar.xyz/sitemap-index.xml
 
 # Récupérer le fichier robots.txt (Directives crawlers)
 curl https://portfolio.kuasar.xyz/robots.txt
+
+# Soumettre le formulaire de contact (Proxy API)
+curl -X POST https://portfolio.kuasar.xyz/api/submit \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test","email":"test@example.com","message":"Hello"}'
 ```
 
-_(Note: There are no dynamic backend routes (such as Hono), Prisma database, or API POST endpoints as this is a fully static Astro application. The project relies purely on file-based markdown collections)._
+_(Note: While there are no complex dynamic backend frameworks (such as Hono) or Prisma databases, the project does use Cloudflare Pages Functions (`/api/submit`) to securely proxy contact form submissions. Otherwise, the project is a fully static Astro application relying on file-based markdown collections.)_
 
 ## 📂 Structure du projet
 

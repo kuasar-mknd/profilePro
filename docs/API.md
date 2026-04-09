@@ -64,21 +64,51 @@ Directives for search engine crawlers.
 - **Format:** Plain Text
 - **Usage:** SEO / Crawling Control.
 
+### 4. Contact Form Submission
+
+Provides a serverless proxy to Web3Forms for handling contact form submissions securely without exposing the access key in the client bundle.
+
+- **URL:** `/api/submit`
+- **Method:** `POST`
+- **Format:** JSON
+- **Usage:** Form submission endpoint for the frontend.
+- **Request Body (Example):**
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "message": "Hello!"
+  }
+  ```
+
+**Example Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Form submitted successfully."
+}
+```
+
 ## 🔐 Authentication
 
 **No authentication is required.**
 
-**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases (Prisma), or user sessions exposed to the client. All endpoints are public and read-only. *If a dynamic backend (such as Hono) were ever added, it would be expected to implement its own standard authentication expectations (like API keys or Bearer tokens).*
+**Auth expectations:** No authentication is required or expected for this static setup. While this is primarily a static portfolio (SSG), it includes a stateless serverless function (`/api/submit`) for form submissions. There are no databases (Prisma) or user sessions exposed to the client. All endpoints are public and read-only. *If a dynamic backend (such as Hono) were ever added, it would be expected to implement its own standard authentication expectations (like API keys or Bearer tokens).*
 
 ## ❌ Error Format
 
-**Error format:** The standard error format simply falls back to standard HTTP error pages served by the host (Cloudflare Pages), rather than custom JSON payloads.
-
-As this is a static site, API errors are primarily HTTP-level responses served by the hosting provider (Cloudflare Pages).
+**Error format:** The standard error format simply falls back to standard HTTP error pages served by the host (Cloudflare Pages) for static routes. However, the `/api/submit` serverless function returns a custom JSON payload upon failure:
 
 - **404 Not Found**: Returns the standard HTML page defined in `src/pages/404.astro`.
-- **500 Server Error**: (Rare) Returns a generic Cloudflare error page if the CDN fails to serve the static asset.
-
-There are no custom JSON error payloads since there are no dynamic JSON endpoints or Hono backend routing to generate them.
+- **500 Server Error**:
+  - The `/api/submit` endpoint returns:
+    ```json
+    {
+      "success": false,
+      "message": "Internal server error"
+    }
+    ```
+  - For static assets, returns a generic Cloudflare error page if the CDN fails.
 
 <!-- Verified: DocOps -->
