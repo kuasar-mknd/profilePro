@@ -101,3 +101,7 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` inside frequently triggered event listeners (like `click` or `keydown` for menus/modals) adds unnecessary overhead.
 **Action:** Cache these DOM elements at the module or initialization block level to ensure an O(1) direct reference during critical user interaction paths, improving responsiveness.
+
+## 2024-05-18 - Caching DOM queries in Header to prevent redundant lookups
+**Learning:** Querying `document.querySelectorAll` inside frequently triggered event listeners or mutation callbacks (like toggling a navigation menu inert states) causes redundant DOM lookups and unnecessary main-thread work.
+**Action:** Always cache main content DOM queries (like `main-content` and `main-footer` for inert settings) outside the open/close functions, ideally at the top of the initialization script block, to ensure O(1) query lookups on every menu toggle instead of N.

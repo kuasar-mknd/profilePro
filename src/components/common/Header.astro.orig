@@ -148,8 +148,6 @@ const [logo1x, logo2x] = await Promise.all([
 
     const navWrapper = document.getElementById("navigation_wrapper");
     const html = document.documentElement;
-    // ⚡ Bolt: Cache DOM queries for inert background elements outside the toggle functions to avoid redundant lookups
-    const bgElements = document.querySelectorAll("#main-content, #main-footer");
 
     // Guard clause if header elements aren't found
     if (!navWrapper) return;
@@ -241,6 +239,9 @@ const [logo1x, logo2x] = await Promise.all([
       navWrapper.addEventListener("keydown", handleTab);
 
       // 🎨 Palette: Make background content inert to prevent screen reader escape
+      const bgElements = document.querySelectorAll(
+        "#main-content, #main-footer",
+      );
       for (let i = 0; i < bgElements.length; i++) {
         bgElements[i].setAttribute("inert", "");
         bgElements[i].setAttribute("aria-hidden", "true");
@@ -260,6 +261,9 @@ const [logo1x, logo2x] = await Promise.all([
       navWrapper?.removeEventListener("keydown", handleTab);
 
       // 🎨 Palette: Restore background content
+      const bgElements = document.querySelectorAll(
+        "#main-content, #main-footer",
+      );
       for (let i = 0; i < bgElements.length; i++) {
         bgElements[i].removeAttribute("inert");
         bgElements[i].removeAttribute("aria-hidden");
