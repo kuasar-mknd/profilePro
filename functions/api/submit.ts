@@ -6,9 +6,11 @@ export async function onRequestPost(context: {
     const origin = context.request.headers.get("Origin") || "";
     const allowedOrigins = ["https://kuasar.xyz", "https://www.kuasar.xyz"];
 
+    // 🛡️ Sentinel: Enforce strict validation of localhost origins to prevent bypasses
+    // using maliciously crafted domains like "http://localhost:8080.evil.com"
     if (
       !allowedOrigins.includes(origin) &&
-      !origin.startsWith("http://localhost:")
+      !/^http:\/\/localhost(:\d+)?$/.test(origin)
     ) {
       return new Response(
         JSON.stringify({
