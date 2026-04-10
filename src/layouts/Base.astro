@@ -493,6 +493,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
           // Ignore if user is typing in an input
           if (
             target.tagName === "INPUT" ||
+            target.tagName === "SELECT" ||
             target.tagName === "TEXTAREA" ||
             target.isContentEditable
           ) {
