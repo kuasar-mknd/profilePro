@@ -28,3 +28,7 @@
 ## 2026-04-08 - Global Keyboard Shortcuts
 **Learning:** When implementing global keyboard shortcuts (e.g., "T" for Back to Top), it is critical to explicitly check that modifier keys (`e.ctrlKey`, `e.metaKey`, `e.altKey`) are false. Failing to do so can intercept standard browser navigation commands (like Cmd+T to open a new tab), causing a severe UX regression.
 **Action:** Always include `!e.ctrlKey && !e.metaKey && !e.altKey` in global keydown event listeners, and ensure inputs (`INPUT`, `TEXTAREA`, `SELECT`, `isContentEditable`) are ignored.
+
+## 2026-04-10 - Empty State Call-to-Action Feedback
+**Learning:** Call-to-action links inside empty state components (e.g., "Aucun élément trouvé") can feel disconnected from the primary interactive patterns if they lack visual cues and reactive feedback. Users might miss them as actionable items.
+**Action:** Enhance empty state CTA links by wrapping their text in a `span`, appending a directional icon (like `mdi:arrow-right`), and utilizing `group-hover` and `group-focus-visible` Tailwind classes with `transition-transform` to introduce a subtle directional micro-interaction.
