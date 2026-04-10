@@ -115,6 +115,7 @@ const currentPath = normalizePath(pathname);
     const target = e.target as HTMLElement;
     if (
       target.tagName === "INPUT" ||
+      target.tagName === "SELECT" ||
       target.tagName === "TEXTAREA" ||
       target.isContentEditable
     ) {
