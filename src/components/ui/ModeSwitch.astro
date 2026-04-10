@@ -93,7 +93,8 @@ import { Icon } from "astro-icon/components";
       e.shiftKey &&
       (e.key === "T" || e.key === "t") &&
       !e.ctrlKey &&
-      !e.metaKey
+      !e.metaKey &&
+      !e.altKey
     ) {
       const target = e.target as HTMLElement;
       if (

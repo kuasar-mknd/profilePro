@@ -516,7 +516,21 @@ const description = data.profile.content;
     };
 
     const handleKeydown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "p") vibrate(50);
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        !e.altKey &&
+        !e.shiftKey &&
+        (e.key === "p" || e.key === "P")
+      )
+        vibrate(50);
     };
 
     const handlePrint = (e: Event) => {
