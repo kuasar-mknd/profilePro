@@ -89,7 +89,12 @@ import { Icon } from "astro-icon/components";
   };
 
   const handleGlobalKeydown = (e: KeyboardEvent) => {
-    if (e.shiftKey && (e.key === "T" || e.key === "t")) {
+    if (
+      e.shiftKey &&
+      (e.key === "T" || e.key === "t") &&
+      !e.ctrlKey &&
+      !e.metaKey
+    ) {
       const target = e.target as HTMLElement;
       if (
         target.tagName === "INPUT" ||
