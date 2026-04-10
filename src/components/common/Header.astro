@@ -150,6 +150,10 @@ const [logo1x, logo2x] = await Promise.all([
     const html = document.documentElement;
     // ⚡ Bolt: Cache DOM queries for inert background elements outside the toggle functions to avoid redundant lookups
     const bgElements = document.querySelectorAll("#main-content, #main-footer");
+    // ⚡ Bolt: Cache DOM query for the menu toggle button
+    const menuToggleBtn = document.querySelector(
+      'button[aria-controls="navigation_wrapper"]',
+    );
 
     // Guard clause if header elements aren't found
     if (!navWrapper) return;
@@ -187,10 +191,7 @@ const [logo1x, logo2x] = await Promise.all([
     function handleEscape(e: KeyboardEvent) {
       if (e.key === "Escape" && html.classList.contains("overflow-hidden")) {
         // Find and click the hamburger button to close
-        const btn = document.querySelector(
-          'button[aria-controls="navigation_wrapper"]',
-        );
-        if (btn instanceof HTMLElement) btn.click();
+        if (menuToggleBtn instanceof HTMLElement) menuToggleBtn.click();
       }
     }
 
