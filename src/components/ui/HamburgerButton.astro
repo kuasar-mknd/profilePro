@@ -187,19 +187,28 @@
       const isExpanded = button.getAttribute("aria-expanded") === "true";
       const target = e.target as HTMLElement;
 
-      // Ignore if user is typing in an input
+      // Ignore if user is typing in an input or using modifiers
       if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
-        target.isContentEditable
+        target.isContentEditable ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.altKey
       ) {
         return;
       }
 
-      if ((e.key === "m" || e.key === "M") && !isExpanded) {
+      if (e.key === "m" || e.key === "M") {
         e.preventDefault();
-        openMenu();
-        if (liveRegion) liveRegion.textContent = "Menu ouvert";
+        if (isExpanded) {
+          closeMenu();
+          if (liveRegion) liveRegion.textContent = "Menu fermé";
+        } else {
+          openMenu();
+          if (liveRegion) liveRegion.textContent = "Menu ouvert";
+        }
+
         if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
           navigator.vibrate(50);
         }
