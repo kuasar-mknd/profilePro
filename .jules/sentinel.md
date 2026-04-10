@@ -54,12 +54,15 @@ Each entry should include:
 **Vulnerability:** Regular Expression Denial of Service (ReDoS) in `minimatch` versions < 3.0.5, present in nested dependencies (`rimraf`, `workbox-build`, `filelist`).
 **Learning:** Deeply nested dependencies can harbor vulnerabilities that top-level updates miss. `npm overrides` allow for surgical fixes without waiting for upstream packages to update their dependencies.
 **Prevention:** Added specific `overrides` in `package.json` to force secure versions of `minimatch` (`^3.1.2`, `^5.1.9`, `^10.2.4`) for affected packages.
+
 ## 2023-10-25 - JSON Serialization and Social Link sanitization Enhancement
+
 **Vulnerability:** Missing escaping of single quotes in `safeJson` and reliance on validation (`isValidUrl`) over sanitization (`sanitizeUrl`) in `SocialIcon.astro`.
 **Learning:** `JSON.stringify` does not escape `'`, risking HTML attribute breakout if JSON is embedded into single-quoted elements. Furthermore, validation checks may allow syntactically allowed structural quirks but actual string mutation via `sanitizeUrl` provides stronger defense-in-depth against malicious schemes.
 **Prevention:** Always serialize `'` in JSON destined for DOM inclusion and prefer sanitizing over merely validating URLs to ensure sanitized values are used.
 
 ## 2023-10-25 - Preventing Stack Trace Leaks ("The Silencer")
+
 **Vulnerability:** Stack Trace Leaks.
 **Learning:** Error handlers logging full `error` or `err` objects via `console.error` can leak sensitive stack traces and internal application details to the browser console. Even when wrapped in `import.meta.env.DEV`, this pattern is unsafe and can lead to accidental leaks if environment variables are misconfigured or if code is copied to production contexts.
 **Prevention:** Replaced direct logging of error objects with explicit property access: `error instanceof Error ? error.message : "Unknown error"`. This ensures that only the relevant error message string is logged, completely eliminating the risk of stack trace leaks. Applied to `ContactForm.astro` and `[slug].astro`.
@@ -79,7 +82,7 @@ Each entry should include:
 ## 2026-10-15 - Obfuscated Protocol XSS Bypass
 
 **Vulnerability:** XSS via obfuscated protocols in URLs (e.g. \`javascript&#58;alert(1)\`, \`jav&#x0a;ascript:alert(1)\`, \`javascript&colon;alert(1)\`). Browsers decode HTML entities and URL encoding inside \`href\` attributes before evaluating the URL. The \`sanitizeUrl\` and \`isValidUrl\` functions checked for literal \`javascript:\` strings without decoding entities, allowing obfuscated malicious payloads to bypass validation and execute when clicked.
-**Learning:** Naive string matching on URLs is insufficient when the output context is an HTML attribute (\`href\`), because the HTML parser decodes entities *before* the browser's URL parser processes the scheme. Any security function validating URLs must perform basic entity and URL decoding (or aggressively reject any suspicious encoding) before making security decisions.
+**Learning:** Naive string matching on URLs is insufficient when the output context is an HTML attribute (\`href\`), because the HTML parser decodes entities _before_ the browser's URL parser processes the scheme. Any security function validating URLs must perform basic entity and URL decoding (or aggressively reject any suspicious encoding) before making security decisions.
 **Prevention:** Added an \`isObfuscatedProtocol\` helper to \`src/utils/security.ts\` that proactively decodes URL encoding and HTML entities (numeric, hex, and named entities like \`&colon;\`, \`&tab;\`, \`&newline;\`) and strips control characters before checking for malicious schemes (\`javascript:\`, \`vbscript:\`, \`data:\`). Updated tests to ensure these vectors are caught.
 
 ## 2026-10-28 - Unbounded String Input Length (DoS via ReDoS/Memory Exhaustion)
@@ -97,7 +100,7 @@ Each entry should include:
 ## 2026-11-20 - Enforce HTTP Header CSP over Meta Tags
 
 **Vulnerability:** A duplicate `Content-Security-Policy` was defined via a `<meta http-equiv="Content-Security-Policy">` tag in `src/layouts/Base.astro`, while a primary CSP already existed in `public/_headers`.
-**Learning:** Defining a CSP via meta tags is often incomplete and insecure. Meta tags explicitly ignore certain crucial directives such as `frame-ancestors` (used to prevent Clickjacking) and `report-uri`. Furthermore, when both HTTP headers and meta tags are present, the browser enforces the *strictest* intersection of both policies, which can lead to unexpected breakages and complicates security audits.
+**Learning:** Defining a CSP via meta tags is often incomplete and insecure. Meta tags explicitly ignore certain crucial directives such as `frame-ancestors` (used to prevent Clickjacking) and `report-uri`. Furthermore, when both HTTP headers and meta tags are present, the browser enforces the _strictest_ intersection of both policies, which can lead to unexpected breakages and complicates security audits.
 **Prevention:** Removed the meta tag CSP entirely to enforce that Content Security Policies must be defined exclusively as HTTP response headers (e.g., in `public/_headers` for Cloudflare Pages), ensuring full directive support and avoiding policy conflicts.
 
 ## 2026-11-20 - Safe SVG DOM Construction
@@ -117,3 +120,9 @@ Each entry should include:
 **Vulnerability:** Hanging connections / DoS risk from third-party API dependencies without a timeout. The form submission logic previously used `fetch` to call `https://api.web3forms.com/submit` without a timeout mechanism. If the third-party API hangs or responds extremely slowly, the user's browser connection stays open indefinitely and the UI remains stuck in a loading state.
 **Learning:** External API dependencies on the client-side should not be blindly trusted to respond in a timely manner. Hanging fetch requests can lock up the UI, frustrate users, and consume browser resources. Implementing an explicit timeout guarantees that the application can recover gracefully from external failures.
 **Prevention:** Added an `AbortController` combined with a `setTimeout` (10 seconds) to the `fetch` request in `src/components/common/ContactForm.astro`. We capture the `AbortError` exception in the `catch` block to display a user-friendly timeout message without exposing underlying errors.
+
+## 2024-05-24 - Enforce Origin Validation on Proxy Endpoints (CSRF & Quota Protection)
+
+**Vulnerability:** Missing Origin validation on the serverless proxy endpoint `/api/submit`. The endpoint forwarded requests directly to an external API (Web3Forms) using an injected secret key without validating the caller. An attacker could craft a malicious webpage that POSTs directly to this public endpoint from any domain, bypassing client-side validations and consuming the application's external API quota or spamming the form.
+**Learning:** Any serverless function or API route that acts as a proxy to inject private credentials before forwarding a request MUST strictly validate the source of the incoming request. Failing to do so turns the endpoint into an open proxy for the third-party service.
+**Prevention:** Always enforce strict `Origin` header validation against an explicit allowlist of known domains (e.g., the production domain and local development environment) before processing or forwarding requests that utilize backend secrets.
