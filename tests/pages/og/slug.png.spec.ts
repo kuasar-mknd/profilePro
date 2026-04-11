@@ -50,7 +50,8 @@ mock.module("../../../src/utils/projects", () => ({
 }));
 
 // Import the module to test AFTER mocks
-const { getStaticPaths, GET } = await import("../../../src/pages/og/[slug].png");
+const { getStaticPaths, GET } =
+  await import("../../../src/pages/og/[slug].png");
 
 // Mock fetch for the font
 const originalFetch = global.fetch;
@@ -99,6 +100,7 @@ describe("OG Image Generation", () => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledWith(
         "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
       );
 
       // Verify satori call

@@ -19,9 +19,21 @@ export const GET: APIRoute = async ({ props }) => {
 
   // Load font (Inter Bold) from CDN (WOFF is supported by Satori)
   if (!fontPromise) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     fontPromise = fetch(
       "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.8/files/inter-latin-700-normal.woff",
-    ).then((res) => res.arrayBuffer());
+      { signal: controller.signal },
+    )
+      .then((res) => {
+        clearTimeout(timeoutId);
+        return res.arrayBuffer();
+      })
+      .catch((e) => {
+        clearTimeout(timeoutId);
+        throw e;
+      });
   }
   const fontData = await fontPromise;
 
