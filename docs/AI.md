@@ -43,3 +43,14 @@ If AI integration is added, the expected JSON schema for a project summary might
 - All AI-generated content must be reviewed by a human before publishing.
 - No user data is sent to AI endpoints.
 <!-- Verified: DocOps 2026-04-07 -->
+
+### Expected JSON Schema from AI Adapter
+If the summarization feature is fully integrated with a hypothetical Hono backend, the expected JSON schema is:
+```json
+{
+  "summary": "String representing the short text summary.",
+  "keywords": ["Array of", "Strings"],
+  "sentiment": "String (positive, neutral, negative)"
+}
+```
+**Cost-control guidance**: Local caching of responses and strict rate-limiting must be enforced within the Hono routes or Astro integrations to prevent runaway API costs.

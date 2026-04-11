@@ -41,3 +41,5 @@
 | 2026-04-07 | GitHub Workflows & Scripts | .github/workflows/ci.yml, .github/workflows/pipeline.yml, .lighthouserc.json, .github/dependabot.yml | Fixed non-existent action versions to v4 and updated package-ecosystem for dependabot and lighthouserc script |
 | 2026-04-08 | Action Version Bumps | .github/workflows/ci.yml, .github/workflows/pipeline.yml, .github/workflows/pnpm-audit.yml, README.md, docs/ARCHITECTURE.md | Corrected non-existent setup-node actions and clarified Hono instructions in docs |
 | 2026-04-10 | CodeQL Fix | .github/workflows/codeql.yml | Fixed CodeQL matrix conflict |
+| 2026-04-11 | GitHub Workflows | .github/workflows/ci.yml, pipeline.yml, pnpm-audit.yml | Updated actions/setup-node to v4 |
+| 2026-04-11 | Documentation & Workflows | docs/*.md, README.md, .github/workflows/ | Updated actions/setup-node to v4 and explicitly addressed Hono/Prisma/AI requirements in docs |

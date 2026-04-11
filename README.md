@@ -202,3 +202,9 @@ This project is [MIT](LICENSE) licensed.
 Construit avec ❤️ par Samuel Dulex
 
 <!-- Verified: DocOps 2026-04-07 -->
+
+### Local Setup for Hono/Prisma (Hypothetical)
+While this is currently an Astro SSG, if the Hono/Prisma features are activated in the future, you would need to:
+1. Ensure a local database (e.g., PostgreSQL) is running.
+2. Provide a valid `DATABASE_URL` in `.env`.
+3. Run `pnpm prisma generate` and `pnpm prisma db push` to initialize the database schema.

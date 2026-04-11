@@ -82,3 +82,9 @@ As this is a static site, API errors are primarily HTTP-level responses served b
 There are no custom JSON error payloads since there are no dynamic JSON endpoints or Hono backend routing to generate them.
 
 <!-- Verified: DocOps -->
+
+## Hono REST API Format (Hypothetical)
+If a dynamic REST API were implemented using Hono:
+- **Request Format:** JSON bodies for `POST`/`PUT` requests.
+- **Error Format:** `{ "error": "Message", "status": 400 }`
+- **Auth Expectations:** Bearer tokens (JWT) in the `Authorization` header would be expected for protected endpoints.
