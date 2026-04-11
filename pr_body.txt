@@ -1,0 +1,5 @@
+🚨 Severity: LOW/MEDIUM
+💡 Vulnerability: External fetch calls in server-side functions (Vimeo poster fetching and jsdelivr CDN font loading) were missing timeout constraints.
+🎯 Impact: Without timeouts, hanging external requests can tie up serverless function instances, potentially leading to resource exhaustion or denial of service (DoS) for the application.
+🔧 Fix: Added `AbortController` combined with a 10s `setTimeout` to all external `fetch` calls. Correctly implemented `clearTimeout` to avoid memory leaks.
+✅ Verification: Tested via unit tests (`bun test`) ensuring mock fetches resolve, format check passed, and E2E tests (`pnpm test:e2e`) ran correctly without unexpected crashes.
