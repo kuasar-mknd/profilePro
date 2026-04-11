@@ -258,7 +258,8 @@ const jsonLd = {
         <button
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-pacamara-secondary/5 hover:bg-pacamara-secondary/10 dark:text-white transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-          aria-label="Partager ce projet"
+          aria-label="Partager ce projet (S)"
+          aria-keyshortcuts="S"
         >
           <div
             class="grid grid-cols-1 grid-rows-1 place-items-center px-6 py-3"
@@ -272,7 +273,12 @@ const jsonLd = {
                 class="w-5 h-5"
                 aria-hidden="true"
               />
-              <span class="font-medium">Partager ce projet</span>
+              <span class="font-medium"
+                >Partager ce projet <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true">(S)</kbd
+                ></span
+              >
             </div>
             <!-- Copied State -->
             <div
@@ -395,6 +401,66 @@ const jsonLd = {
 
         import { initCopyButtons } from "../../utils/client/copy";
         initCopyButtons();
+
+        /**
+         * 🎨 Palette: Project Page Keyboard Shortcuts
+         * - [ : Previous Project
+         * - ] : Next Project
+         * - S : Share Project
+         */
+        const handleProjectKeydown = (e: KeyboardEvent) => {
+          const target = e.target as HTMLElement;
+          const lightbox = document.getElementById("lightbox");
+
+          // Ignore if user is typing or if Lightbox is active
+          if (
+            target.tagName === "INPUT" ||
+            target.tagName === "SELECT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable ||
+            (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+          ) {
+            return;
+          }
+
+          // Modifier keys check (ignore if any are pressed)
+          if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+            return;
+          }
+
+          if (e.key === "[") {
+            const prevLink = document.getElementById(
+              "prev-project-link",
+            ) as HTMLAnchorElement;
+            if (prevLink) {
+              e.preventDefault();
+              prevLink.click();
+            }
+          } else if (e.key === "]") {
+            const nextLink = document.getElementById(
+              "next-project-link",
+            ) as HTMLAnchorElement;
+            if (nextLink) {
+              e.preventDefault();
+              nextLink.click();
+            }
+          } else if (e.key === "s" || e.key === "S") {
+            const shareBtn = document.getElementById("share-btn");
+            if (shareBtn) {
+              e.preventDefault();
+              shareBtn.click();
+            }
+          }
+        };
+
+        if (window.__projectKeydownHandler) {
+          document.removeEventListener(
+            "keydown",
+            window.__projectKeydownHandler,
+          );
+        }
+        window.__projectKeydownHandler = handleProjectKeydown;
+        document.addEventListener("keydown", window.__projectKeydownHandler);
       </script>
     </div>
   </article>
@@ -408,10 +474,12 @@ const jsonLd = {
       {
         nextPost ? (
           <a
+            id="prev-project-link"
             href={sanitizeUrl(`/project/${nextPost.slug}/`)}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5"
             data-haptic="50"
-            aria-label={`Projet précédent : ${nextPost.data.title} (${nextPost.data.tag})`}
+            aria-label={`Projet précédent : ${nextPost.data.title} (${nextPost.data.tag}) ([)`}
+            aria-keyshortcuts="["
           >
             <Icon
               name="mdi:arrow-left"
@@ -421,6 +489,12 @@ const jsonLd = {
             <div class="flex-1 text-left" aria-hidden="true">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet précédent • {nextPost.data.tag}
+                <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true"
+                >
+                  [
+                </kbd>
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {nextPost.data.title}
@@ -435,14 +509,22 @@ const jsonLd = {
       {
         prevPost ? (
           <a
+            id="next-project-link"
             href={sanitizeUrl(`/project/${prevPost.slug}/`)}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5"
             data-haptic="50"
-            aria-label={`Projet suivant : ${prevPost.data.title} (${prevPost.data.tag})`}
+            aria-label={`Projet suivant : ${prevPost.data.title} (${prevPost.data.tag}) (])`}
+            aria-keyshortcuts="]"
           >
             <div class="flex-1 text-right" aria-hidden="true">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet suivant • {prevPost.data.tag}
+                <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true"
+                >
+                  ]
+                </kbd>
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {prevPost.data.title}

@@ -38,6 +38,7 @@ interface Window {
   __cvInitHandler?: () => void;
   __cvKeydownHandler?: (e: KeyboardEvent) => void;
   __cvCleanup?: () => void;
+  __projectKeydownHandler?: (e: KeyboardEvent) => void;
   __tiltDelegationInitialized?: boolean;
   __themeToggleInitHandler?: () => void;
   __themeKeydownHandler?: (e: KeyboardEvent) => void;
