@@ -123,3 +123,9 @@ Workflows are defined in `.github/workflows/`:
 - **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
 - **Content Collections**: Type-safe content management for Markdown/MDX.
 <!-- Verified: DocOps 2026-04-07 -->
+
+### Hono + Prisma Integration (Hypothetical)
+While this project is currently an Astro SSG, if a Hono + Prisma backend were to be implemented:
+- **Clean Architecture:** Hono routes would map to the Application Layer, while Prisma schemas would define the Domain Layer.
+- **Where to add new endpoints:** New endpoints would be added in a hypothetical `api/` directory using Hono syntax (e.g., `app.get('/new-route', (c) => ...)`).
+- **Prisma:** A real database would be queried inside these Hono routes. Since this is currently a static portfolio, `prisma generate` and dynamic database queries are not required.

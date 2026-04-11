@@ -26,3 +26,8 @@ PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
 ```
 
 <!-- Verified: DocOps 2026-04-07 -->
+
+## Hono + Prisma Variables (Hypothetical)
+If a dynamic backend were added, the following would be required:
+- `DATABASE_URL`: Connection string for Prisma.
+- `JWT_SECRET`: Secret key for authentication.
