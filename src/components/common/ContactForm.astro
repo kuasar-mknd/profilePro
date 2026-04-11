@@ -406,8 +406,8 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
       this.form.dataset.initialized = "true";
       this.form.setAttribute("novalidate", "true");
 
-      this.timestampInput = this.form.querySelector(
-        "#form-load-timestamp",
+      this.timestampInput = document.getElementById(
+        "form-load-timestamp",
       ) as HTMLInputElement;
       if (this.timestampInput) {
         this.timestampInput.value = Date.now().toString();
@@ -419,14 +419,14 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
       this.resetBtn = this.form.querySelector(
         ".reset-form-btn",
       ) as HTMLButtonElement;
-      this.errorResetBtn = this.form.querySelector(
-        "#reset-error-btn",
+      this.errorResetBtn = document.getElementById(
+        "reset-error-btn",
       ) as HTMLButtonElement;
-      this.errorMessage = this.form.querySelector(
-        "#form-error-message",
+      this.errorMessage = document.getElementById(
+        "form-error-message",
       ) as HTMLElement;
-      this.errorText = this.form.querySelector(
-        "#error-text",
+      this.errorText = document.getElementById(
+        "error-text",
       ) as HTMLParagraphElement;
       this.nameInput = this.form.querySelector(
         'input[name="name"]',
@@ -437,11 +437,11 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
       this.messageInput = this.form.querySelector(
         'textarea[name="message"]',
       ) as HTMLTextAreaElement;
-      this.messageCounter = this.form.querySelector(
-        "#message-counter",
+      this.messageCounter = document.getElementById(
+        "message-counter",
       ) as HTMLElement;
-      this.messageCounterSr = this.form.querySelector(
-        "#message-counter-sr",
+      this.messageCounterSr = document.getElementById(
+        "message-counter-sr",
       ) as HTMLElement;
 
       if (this.messageInput && this.messageCounter) {
@@ -577,7 +577,7 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
         if (navigator.vibrate && !prefersReducedMotionQuery.matches)
           navigator.vibrate(30);
 
-        const successMessage = this.form.querySelector("#form-success-message");
+        const successMessage = document.getElementById("form-success-message");
         successMessage?.classList.add("hidden");
         successMessage?.classList.remove("flex");
         this.form.reset();
@@ -856,8 +856,8 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
 
             this.errorMessage?.classList.add("hidden");
             this.form.removeAttribute("aria-describedby");
-            const successMessage = this.form.querySelector(
-              "#form-success-message",
+            const successMessage = document.getElementById(
+              "form-success-message",
             ) as HTMLElement;
             if (successMessage) {
               successMessage.classList.remove("hidden");

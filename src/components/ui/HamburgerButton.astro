@@ -60,10 +60,10 @@
       cleanupMenu = null;
     }
 
-    const button = document.querySelector("#menu_toggle");
-    const nav = document.querySelector("#navigation_wrapper");
-    const tooltipText = document.querySelector("#menu_tooltip_text");
-    const tooltipShortcut = document.querySelector("#menu_tooltip_shortcut");
+    const button = document.getElementById("menu_toggle");
+    const nav = document.getElementById("navigation_wrapper");
+    const tooltipText = document.getElementById("menu_tooltip_text");
+    const tooltipShortcut = document.getElementById("menu_tooltip_shortcut");
     // ⚡ Bolt: Cache main content DOM queries instead of querying on every menu open/close
     const mainContent = document.getElementById("main-content");
     const mainFooter = document.getElementById("main-footer");
