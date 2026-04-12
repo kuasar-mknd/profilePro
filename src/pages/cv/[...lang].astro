@@ -197,7 +197,7 @@ const description = data.profile.content;
               </span>
               <a
                 href={sanitizeUrl(`mailto:${data.personal.email}`)}
-                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-sm"
               >
                 <Icon
                   name="mdi:email"
@@ -211,7 +211,7 @@ const description = data.profile.content;
                 target="_blank"
                 rel="noopener noreferrer"
                 referrerpolicy="strict-origin-when-cross-origin"
-                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-sm"
                 aria-label={`${data.personal.linkedin} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
                 <Icon
@@ -231,7 +231,7 @@ const description = data.profile.content;
                 target="_blank"
                 rel="noopener noreferrer"
                 referrerpolicy="strict-origin-when-cross-origin"
-                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group"
+                class="flex items-center gap-1.5 print:gap-1.5 font-outfit hover:text-pacamara-secondary transition-colors duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-sm"
                 aria-label={`${data.personal.portfolio} ${currentLang === "en" ? "(opens in a new tab)" : "(ouvre un nouvel onglet)"}`}
               >
                 <Icon
