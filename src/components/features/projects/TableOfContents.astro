@@ -31,10 +31,15 @@ const showToC = filteredHeadings.length >= 2;
           <li class={`${h.depth === 3 ? "ml-4" : ""}`}>
             <a
               href={sanitizeUrl(`#${h.slug}`)}
-              class="toc-link block text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-bold"
+              class="toc-link flex items-center gap-2 group text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent dark:hover:text-pacamara-accent transition-colors text-sm py-1 focus-visible:outline-none focus-visible:text-pacamara-accent data-[active=true]:text-pacamara-accent data-[active=true]:font-bold"
               data-haptic="30"
             >
-              {h.text}
+              <Icon
+                name="mdi:chevron-right"
+                class="w-4 h-4 text-pacamara-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-focus-visible:opacity-100 group-focus-visible:translate-x-0 group-data-[active=true]:opacity-100 group-data-[active=true]:translate-x-0 transition-all duration-300"
+                aria-hidden="true"
+              />
+              <span>{h.text}</span>
             </a>
           </li>
         ))}
