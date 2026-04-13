@@ -26,7 +26,6 @@
     aria-label="Fermer la galerie (Esc)"
     aria-description="Ferme la fenêtre modale"
     aria-keyshortcuts="Escape"
-    data-haptic="50"
   >
     <svg
       aria-hidden="true"
@@ -53,10 +52,9 @@
   <button
     type="button"
     class="lightbox-nav lightbox-prev cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-    aria-label="Précédente (image) (←)"
+    aria-label="Précédente (image) (← / [)"
     aria-description="Affiche l'image précédente"
-    aria-keyshortcuts="ArrowLeft"
-    data-haptic="50"
+    aria-keyshortcuts="ArrowLeft ["
   >
     <svg
       aria-hidden="true"
@@ -75,7 +73,7 @@
     <span
       class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
       aria-hidden="true"
-      >Précédente <kbd class="font-sans ml-1 opacity-70">(←)</kbd></span
+      >Précédente <kbd class="font-sans ml-1 opacity-70">(← / [)</kbd></span
     >
   </button>
 
@@ -100,10 +98,9 @@
   <button
     type="button"
     class="lightbox-nav lightbox-next cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-    aria-label="Suivante (image) (→)"
+    aria-label="Suivante (image) (→ / ])"
     aria-description="Affiche l'image suivante"
-    aria-keyshortcuts="ArrowRight"
-    data-haptic="50"
+    aria-keyshortcuts="ArrowRight ]"
   >
     <svg
       aria-hidden="true"
@@ -122,7 +119,7 @@
     <span
       class="hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-2 text-xs font-medium text-white/70 bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap"
       aria-hidden="true"
-      >Suivante <kbd class="font-sans ml-1 opacity-70">(→)</kbd></span
+      >Suivante <kbd class="font-sans ml-1 opacity-70">(→ / ])</kbd></span
     >
   </button>
 
@@ -341,6 +338,12 @@
     private boundClickHandler: (e: MouseEvent) => void;
     private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
 
+    private vibrate(duration = 50) {
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
+        navigator.vibrate(duration);
+      }
+    }
+
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.boundClickHandler = this.handleClick.bind(this);
@@ -377,7 +380,10 @@
       // Close button
       this.lightbox
         .querySelector(".lightbox-close")
-        ?.addEventListener("click", () => this.close());
+        ?.addEventListener("click", () => {
+          this.vibrate(30);
+          this.close();
+        });
 
       // Backdrop click
       const backdrop = this.lightbox.querySelector(".lightbox-backdrop");
@@ -386,10 +392,20 @@
       // Navigation
       this.lightbox
         .querySelector(".lightbox-prev")
-        ?.addEventListener("click", () => this.prev());
+        ?.addEventListener("click", () => {
+          if (this.galleryElements.length > 1) {
+            this.vibrate(50);
+            this.prev();
+          }
+        });
       this.lightbox
         .querySelector(".lightbox-next")
-        ?.addEventListener("click", () => this.next());
+        ?.addEventListener("click", () => {
+          if (this.galleryElements.length > 1) {
+            this.vibrate(50);
+            this.next();
+          }
+        });
 
       // Touch events for swipe
       this.lightbox.addEventListener(
@@ -477,9 +493,7 @@
       if (trigger) this.triggerElement = trigger;
 
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-        navigator.vibrate(50);
-      }
+      this.vibrate(50);
 
       this.currentIndex = index;
       this.updateImage();
@@ -537,27 +551,11 @@
     }
 
     public next() {
-      // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (
-        navigator.vibrate &&
-        this.galleryElements.length > 1 &&
-        !prefersReducedMotionQuery.matches
-      ) {
-        navigator.vibrate(50);
-      }
       this.currentIndex = (this.currentIndex + 1) % this.galleryElements.length;
       this.updateImage();
     }
 
     public prev() {
-      // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      if (
-        navigator.vibrate &&
-        this.galleryElements.length > 1 &&
-        !prefersReducedMotionQuery.matches
-      ) {
-        navigator.vibrate(50);
-      }
       this.currentIndex =
         (this.currentIndex - 1 + this.galleryElements.length) %
         this.galleryElements.length;
@@ -701,10 +699,16 @@
           this.close();
           break;
         case "ArrowLeft":
-          this.prev();
+        case "[":
+          if (this.galleryElements.length > 1) {
+            this.prev();
+          }
           break;
         case "ArrowRight":
-          this.next();
+        case "]":
+          if (this.galleryElements.length > 1) {
+            this.next();
+          }
           break;
       }
     }
@@ -723,10 +727,15 @@
       const diff = this.touchStartX - this.touchEndX;
 
       if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          this.next();
-        } else {
-          this.prev();
+        if (this.galleryElements.length > 1) {
+          // 🎨 Palette: Provide subtle haptic feedback for swipe navigation
+          this.vibrate(50);
+
+          if (diff > 0) {
+            this.next();
+          } else {
+            this.prev();
+          }
         }
       }
     }
