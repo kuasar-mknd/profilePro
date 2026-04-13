@@ -4,6 +4,7 @@ import { Icon } from "astro-icon/components";
 
 <button
   type="button"
+  data-haptic="50"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-40 hover:bg-pacamara-accent hover:text-white focus-visible:w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
   aria-label="Lune (Activer le mode sombre) (Shift+T)"
@@ -67,11 +68,6 @@ import { Icon } from "astro-icon/components";
       localStorage.setItem("theme", isDarkNow ? "dark" : "light");
     } catch (_e) {
       // Ignore localStorage errors
-    }
-
-    // 🎨 Palette: Provide subtle haptic feedback for mobile users
-    if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-      navigator.vibrate(50);
     }
 
     window.dispatchEvent(
