@@ -408,59 +408,73 @@ const jsonLd = {
          * - ] : Next Project
          * - S : Share Project
          */
-        const handleProjectKeydown = (e: KeyboardEvent) => {
-          const target = e.target as HTMLElement;
+        function initProjectInteractions() {
+          // ⚡ Bolt: Cache DOM queries instead of querying on every keystroke
           const lightbox = document.getElementById("lightbox");
+          const prevLink = document.getElementById(
+            "prev-project-link",
+          ) as HTMLAnchorElement;
+          const nextLink = document.getElementById(
+            "next-project-link",
+          ) as HTMLAnchorElement;
+          const shareBtnFromKey = document.getElementById("share-btn");
 
-          // Ignore if user is typing or if Lightbox is active
-          if (
-            target.tagName === "INPUT" ||
-            target.tagName === "SELECT" ||
-            target.tagName === "TEXTAREA" ||
-            target.isContentEditable ||
-            (lightbox && lightbox.getAttribute("aria-hidden") === "false")
-          ) {
-            return;
-          }
+          const handleProjectKeydown = (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement;
 
-          // Modifier keys check (ignore if any are pressed)
-          if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
-            return;
-          }
-
-          if (e.key === "[") {
-            const prevLink = document.getElementById(
-              "prev-project-link",
-            ) as HTMLAnchorElement;
-            if (prevLink) {
-              e.preventDefault();
-              prevLink.click();
+            // Ignore if user is typing or if Lightbox is active
+            if (
+              target.tagName === "INPUT" ||
+              target.tagName === "SELECT" ||
+              target.tagName === "TEXTAREA" ||
+              target.isContentEditable ||
+              (lightbox && lightbox.getAttribute("aria-hidden") === "false")
+            ) {
+              return;
             }
-          } else if (e.key === "]") {
-            const nextLink = document.getElementById(
-              "next-project-link",
-            ) as HTMLAnchorElement;
-            if (nextLink) {
-              e.preventDefault();
-              nextLink.click();
-            }
-          } else if (e.key === "s" || e.key === "S") {
-            const shareBtn = document.getElementById("share-btn");
-            if (shareBtn) {
-              e.preventDefault();
-              shareBtn.click();
-            }
-          }
-        };
 
-        if (window.__projectKeydownHandler) {
+            // Modifier keys check (ignore if any are pressed)
+            if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+              return;
+            }
+
+            if (e.key === "[") {
+              if (prevLink) {
+                e.preventDefault();
+                prevLink.click();
+              }
+            } else if (e.key === "]") {
+              if (nextLink) {
+                e.preventDefault();
+                nextLink.click();
+              }
+            } else if (e.key === "s" || e.key === "S") {
+              if (shareBtnFromKey) {
+                e.preventDefault();
+                shareBtnFromKey.click();
+              }
+            }
+          };
+
+          if (window.__projectKeydownHandler) {
+            document.removeEventListener(
+              "keydown",
+              window.__projectKeydownHandler,
+            );
+          }
+          window.__projectKeydownHandler = handleProjectKeydown;
+          document.addEventListener("keydown", window.__projectKeydownHandler);
+        }
+
+        if (window.__projectInteractionsInitHandler) {
           document.removeEventListener(
-            "keydown",
-            window.__projectKeydownHandler,
+            "astro:page-load",
+            window.__projectInteractionsInitHandler,
           );
         }
-        window.__projectKeydownHandler = handleProjectKeydown;
-        document.addEventListener("keydown", window.__projectKeydownHandler);
+        window.__projectInteractionsInitHandler = initProjectInteractions;
+        document.addEventListener("astro:page-load", initProjectInteractions);
+        initProjectInteractions();
       </script>
     </div>
   </article>
