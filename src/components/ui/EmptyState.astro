@@ -46,6 +46,7 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
         href={safeActionUrl}
         class="group inline-flex items-center justify-center gap-2 px-6 py-3 bg-pacamara-secondary/10 dark:bg-white/10 hover:bg-pacamara-secondary/20 dark:hover:bg-white/20 focus-visible:bg-pacamara-secondary/20 dark:focus-visible:bg-white/20 text-pacamara-primary dark:text-white font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 shadow-sm hover:shadow-md focus-visible:shadow-md"
         data-empty-state-cta="true"
+        data-haptic="50"
       >
         <span>{actionText}</span>
         <Icon
@@ -58,38 +59,3 @@ const safeActionUrl = actionUrl ? sanitizeUrl(actionUrl) : undefined;
   }
   <slot />
 </div>
-
-<script>
-  /**
-   * 🎨 Palette: Tactile feedback for empty state actions
-   */
-  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
-  function initEmptyStateHaptics() {
-    if (window.__emptyStateHapticsInitialized) return;
-    window.__emptyStateHapticsInitialized = true;
-
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('[data-empty-state-cta="true"]')) {
-        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-          navigator.vibrate(50);
-        }
-      }
-    });
-  }
-
-  // Support View Transitions
-  if (window.__emptyStateHapticsInitHandler) {
-    document.removeEventListener(
-      "astro:page-load",
-      window.__emptyStateHapticsInitHandler,
-    );
-  }
-  window.__emptyStateHapticsInitHandler = initEmptyStateHaptics;
-  document.addEventListener("astro:page-load", initEmptyStateHaptics);
-  initEmptyStateHaptics();
-</script>

@@ -44,3 +44,8 @@
 
 **Learning:** Adding custom JavaScript event listeners to individual components to call `navigator.vibrate()` is redundant and can lead to duplicated logic. The project already has a global `initHaptics()` listener set up in `src/layouts/Base.astro`.
 **Action:** Always leverage the centralized haptics management by simply adding the `data-haptic` attribute (e.g., `data-haptic="30"` or `data-haptic="50"`) directly to the HTML markup of the interactive element. No custom JS listeners are needed.
+
+## 2024-05-19 - Haptic Feedback Centralization
+
+**Learning:** Adding custom JavaScript event listeners to individual components to call `navigator.vibrate()` is redundant and can lead to duplicated logic. The project already has a global `initHaptics()` listener set up in `src/layouts/Base.astro`.
+**Action:** Always leverage the centralized haptics management by simply adding the `data-haptic` attribute (e.g., `data-haptic="30"` or `data-haptic="50"`) directly to the HTML markup of the interactive element. No custom JS listeners are needed.
