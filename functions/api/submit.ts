@@ -27,6 +27,10 @@ export async function onRequestPost(context: {
     const data = await context.request.json();
     data.access_key = context.env.WEB3FORMS_ACCESS_KEY;
 
+    // 🛡️ Sentinel: Implement timeout to prevent hanging connections (DoS mitigation)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: {
@@ -34,7 +38,10 @@ export async function onRequestPost(context: {
         Accept: "application/json",
       },
       body: JSON.stringify(data),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     const result = await response.json();
     return new Response(JSON.stringify(result), {
