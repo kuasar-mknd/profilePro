@@ -1,5 +1,14 @@
-🚨 Severity: LOW/MEDIUM
-💡 Vulnerability: External fetch calls in server-side functions (Vimeo poster fetching and jsdelivr CDN font loading) were missing timeout constraints.
-🎯 Impact: Without timeouts, hanging external requests can tie up serverless function instances, potentially leading to resource exhaustion or denial of service (DoS) for the application.
-🔧 Fix: Added `AbortController` combined with a 10s `setTimeout` to all external `fetch` calls. Correctly implemented `clearTimeout` to avoid memory leaks.
-✅ Verification: Tested via unit tests (`bun test`) ensuring mock fetches resolve, format check passed, and E2E tests (`pnpm test:e2e`) ran correctly without unexpected crashes.
+💡 What:
+Added a global keyboard shortcut (`S`) to trigger the "Share" functionality on standard articles (`src/pages/[slug].astro`), matching the behavior already present on project pages. Also added visual `kbd` hints and proper ARIA shortcut attributes.
+
+🎯 Why:
+To improve consistency, discoverability, and accessibility. Project pages already had this shortcut and hint, but standard pages were missing it, creating a disjointed user experience for keyboard users.
+
+📸 Before/After:
+Before: The "Partager" button had no shortcut, no `kbd` visual hint, and no `aria-keyshortcuts` attribute.
+After: The button now reads "Partager (S)" with a visual `kbd` hint, uses `aria-keyshortcuts="S"`, and correctly triggers when pressing "S".
+
+♿ Accessibility:
+- Added `aria-keyshortcuts="S"`
+- Updated `aria-label` to explicitly include the shortcut keys.
+- Prevented keyboard trap/conflict by ensuring shortcut does not fire when typing inside `INPUT`, `SELECT`, `TEXTAREA` or `contenteditable` elements.

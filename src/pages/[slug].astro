@@ -76,7 +76,8 @@ const readingTime = getReadingTime(entry.body);
         <button
           id="share-btn"
           class="group relative overflow-hidden rounded-full bg-transparent hover:bg-pacamara-secondary/5 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 px-3 py-1 -mx-3"
-          aria-label="Partager cet article"
+          aria-label="Partager cet article (S)"
+          aria-keyshortcuts="S"
         >
           <div class="grid grid-cols-1 grid-rows-1 place-items-center">
             <!-- Normal State -->
@@ -88,7 +89,12 @@ const readingTime = getReadingTime(entry.body);
                 class="w-4 h-4"
                 aria-hidden="true"
               />
-              <span>Partager</span>
+              <span class="font-medium"
+                >Partager <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true">(S)</kbd
+                ></span
+              >
             </div>
             <!-- Copied State -->
             <div
@@ -146,6 +152,38 @@ const readingTime = getReadingTime(entry.body);
 <script>
   const shareBtn = document.getElementById("share-btn");
   const announcer = document.getElementById("share-announcer");
+
+  const handleArticleKeydown = (e: KeyboardEvent) => {
+    const target = e.target as HTMLElement;
+
+    // Ignore if user is typing
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "SELECT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    if (
+      (e.key === "s" || e.key === "S") &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey
+    ) {
+      if (shareBtn) {
+        e.preventDefault();
+        shareBtn.click();
+      }
+    }
+  };
+
+  if (window.__articleKeydownHandler) {
+    document.removeEventListener("keydown", window.__articleKeydownHandler);
+  }
+  window.__articleKeydownHandler = handleArticleKeydown;
+  document.addEventListener("keydown", window.__articleKeydownHandler);
 
   const prefersReducedMotionQuery = window.matchMedia(
     "(prefers-reduced-motion: reduce)",

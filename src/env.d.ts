@@ -67,4 +67,5 @@ declare module "plyr";
 
 interface Window {
   __projectInteractionsInitHandler?: () => void;
+  __articleKeydownHandler?: (e: KeyboardEvent) => void;
 }
