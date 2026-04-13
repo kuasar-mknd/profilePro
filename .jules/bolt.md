@@ -85,6 +85,7 @@
 | 2024-03-31 | Bolt | src/pages/cv/[...lang].astro | Replaced synchronous fs.readFileSync with asynchronous fs.promises.readFile to prevent main thread blocking during SSG page generation |
 
 ## 2024-04-01 - Cache matchMedia globally in inline scripts
+
 **Learning:** `window.matchMedia("(prefers-color-scheme: dark)")` parsing and evaluation inside a frequently called function (like `applyTheme` triggered on every page transition via View Transitions) forces the browser engine to repeatedly parse the media query string, which is a micro-stutter hazard.
 **Action:** Always cache the `MediaQueryList` object outside the function body (at the top level of the inline script) and check its `.matches` property dynamically inside the function to eliminate the string parsing overhead.
 
@@ -94,6 +95,7 @@
 **Action:** Replace `getElementsByTagName` with manual loops with `querySelectorAll` with the appropriate CSS selector.
 
 ## 2024-05-18 - Caching DOM queries in HamburgerButton to prevent redundant lookups
+
 **Learning:** Querying `document.getElementById` inside frequently triggered event listeners or mutation callbacks (like toggling a navigation menu) causes redundant DOM lookups and unnecessary main-thread work.
 **Action:** Always cache main content DOM queries (like `main-content` and `main-footer`) outside the open/close functions, ideally at the top of the initialization script block, to ensure O(1) query lookups on every menu click instead of N.
 
@@ -103,6 +105,7 @@
 **Action:** Cache these DOM elements at the module or initialization block level to ensure an O(1) direct reference during critical user interaction paths, improving responsiveness.
 
 ## 2024-05-18 - Caching DOM queries in Header to prevent redundant lookups
+
 **Learning:** Querying `document.querySelectorAll` inside frequently triggered event listeners or mutation callbacks (like toggling a navigation menu inert states) causes redundant DOM lookups and unnecessary main-thread work.
 **Action:** Always cache main content DOM queries (like `main-content` and `main-footer` for inert settings) outside the open/close functions, ideally at the top of the initialization script block, to ensure O(1) query lookups on every menu toggle instead of N.
 
@@ -110,3 +113,8 @@
 
 **Learning:** Repeatedly querying the DOM with `document.getElementById` or `document.querySelector` inside frequently triggered event listeners (like `KeyboardEvent` for "Escape" or `onClick`) or callbacks (like `IntersectionObserver` callbacks) adds unnecessary main-thread overhead.
 **Action:** Cache these DOM elements at the module or initialization block level to ensure an O(1) direct reference during critical user interaction paths, improving responsiveness.
+
+## 2026-03-24 - Avoid globally caching document.getElementById in SPA/ViewTransitions
+
+**Learning:** Caching DOM nodes (like `document.getElementById`) at the module scope or using singletons inside an Astro component script works on the first load, but during View Transitions (e.g., `astro:page-load`), the execution context persists while the DOM nodes are detached and replaced. This results in the cached variables referencing "stale" elements, breaking functionality (like keyboard shortcuts) on subsequent navigations. Furthermore, modern browsers execute `document.getElementById` natively in C++, effectively making it an O(1) operation taking fractions of a millisecond. Micro-optimizing it by caching the node is unnecessary and introduces significant fragility in SPAs.
+**Action:** Do not micro-optimize `document.getElementById` by globally caching nodes outside of event listeners. If caching is required for high-frequency events (like `mousemove` or `scroll`), cache the DOM nodes _within_ the `astro:page-load` initialization function block to ensure fresh references upon every View Transition, or simply query the DOM natively on interaction.
