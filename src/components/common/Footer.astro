@@ -269,7 +269,7 @@ import { Icon } from "astro-icon/components";
               localStorage.setItem(cacheKey, JSON.stringify(data));
             } catch (_e) {}
           })
-          .catch((error) => {
+          .catch((_error) => {
             clearTimeout(timeoutId);
             wcb.textContent = "Pas de résultat";
             try {
