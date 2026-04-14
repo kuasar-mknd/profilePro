@@ -25,6 +25,7 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
 >
   <a
     href="/project/"
+    data-haptic="30"
     class={`project-filter-link px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
           ${!activeTag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 focus-visible:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
     aria-current={!activeTag ? "page" : undefined}
@@ -42,6 +43,7 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
       return (
         <a
           href={sanitizeUrl(`/project/tag/${encodeURIComponent(tag)}/`)}
+          data-haptic="30"
           class={`project-filter-link px-4 py-2 rounded-full transition-all duration-300 border border-pacamara-secondary/30 backdrop-blur-md capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2
             ${activeTag === tag ? "bg-pacamara-accent text-white shadow-lg" : "bg-white/10 hover:bg-pacamara-accent/20 focus-visible:bg-pacamara-accent/20 text-pacamara-primary dark:text-white"}`}
           aria-current={activeTag === tag ? "page" : undefined}
@@ -59,40 +61,3 @@ const getProjetsLabel = (count: number) => (count > 1 ? "projets" : "projet");
     })
   }
 </nav>
-
-<script>
-  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
-  /**
-   * 🎨 Palette: Tactile feedback for filter toggles
-   */
-  function initProjectFilters() {
-    const nav = document.getElementById("project-filter-nav");
-    if (!nav || nav.dataset.initialized === "true") return;
-
-    nav.dataset.initialized = "true";
-
-    nav.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest(".project-filter-link")) {
-        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-          navigator.vibrate(30);
-        }
-      }
-    });
-  }
-
-  // Support View Transitions
-  if (window.__projectFiltersInitHandler) {
-    document.removeEventListener(
-      "astro:page-load",
-      window.__projectFiltersInitHandler,
-    );
-  }
-  window.__projectFiltersInitHandler = initProjectFilters;
-  document.addEventListener("astro:page-load", initProjectFilters);
-  initProjectFilters();
-</script>

@@ -13,6 +13,7 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
     <Element
       href={safeHref || undefined}
       aria-label={ariaLabel}
+      data-haptic={safeHref ? "30" : undefined}
       class:list={[
         "text-[14px] leading-none rounded-full flex flex-row content-center items-center h-[28px] px-3 font-medium backdrop-blur-sm",
         isDark
@@ -27,35 +28,3 @@ const ariaLabel = safeHref ? `${tag} (Voir les projets)` : undefined;
     </Element>
   )
 }
-
-<script>
-  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
-  function initTagHaptics() {
-    if (window.__tagHapticsInitialized) return;
-    window.__tagHapticsInitialized = true;
-
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest(".interactive-tag")) {
-        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-          navigator.vibrate(30);
-        }
-      }
-    });
-  }
-
-  // Support View Transitions
-  if (window.__tagHapticsInitHandler) {
-    document.removeEventListener(
-      "astro:page-load",
-      window.__tagHapticsInitHandler,
-    );
-  }
-  window.__tagHapticsInitHandler = initTagHaptics;
-  document.addEventListener("astro:page-load", initTagHaptics);
-  initTagHaptics();
-</script>
