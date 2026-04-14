@@ -69,3 +69,8 @@ interface Window {
   __projectInteractionsInitHandler?: () => void;
   __articleKeydownHandler?: (e: KeyboardEvent) => void;
 }
+
+interface Window {
+  __paginationKeydownHandler?: (e: KeyboardEvent) => void;
+  __paginationInteractionsInitHandler?: () => void;
+}

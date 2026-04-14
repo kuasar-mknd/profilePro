@@ -154,9 +154,11 @@ const collectionJsonLd = {
           <div class="flex items-center gap-4">
             {page.url.prev ? (
               <a
+                id="prev-page-link"
                 href={sanitizeUrl(page.url.prev)}
                 class="group flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-                aria-label={`Précédent (page ${page.currentPage - 1})`}
+                aria-label={`Précédent (page ${page.currentPage - 1}) ([)`}
+                aria-keyshortcuts="["
                 data-haptic="30"
               >
                 <Icon
@@ -165,6 +167,12 @@ const collectionJsonLd = {
                   aria-hidden="true"
                 />
                 <span>Précédent</span>
+                <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true"
+                >
+                  [
+                </kbd>
               </a>
             ) : (
               <span
@@ -182,12 +190,20 @@ const collectionJsonLd = {
 
             {page.url.next ? (
               <a
+                id="next-page-link"
                 href={sanitizeUrl(page.url.next)}
                 class="group flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-                aria-label={`Suivant (page ${page.currentPage + 1})`}
+                aria-label={`Suivant (page ${page.currentPage + 1}) (])`}
+                aria-keyshortcuts="]"
                 data-haptic="30"
               >
                 <span>Suivant</span>
+                <kbd
+                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  aria-hidden="true"
+                >
+                  ]
+                </kbd>
                 <Icon
                   name="mdi:arrow-right"
                   class="w-5 h-5 transition-transform group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -227,3 +243,67 @@ const collectionJsonLd = {
     }
   </section>
 </Base>
+
+<script>
+  /**
+   * 🎨 Palette: Pagination Keyboard Shortcuts
+   * - [ : Previous Page
+   * - ] : Next Page
+   */
+  function initPaginationInteractions() {
+    const prevLink = document.getElementById(
+      "prev-page-link",
+    ) as HTMLAnchorElement;
+    const nextLink = document.getElementById(
+      "next-page-link",
+    ) as HTMLAnchorElement;
+
+    const handlePaginationKeydown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "SELECT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+        return;
+      }
+
+      if (e.key === "[") {
+        if (prevLink) {
+          e.preventDefault();
+          prevLink.click();
+        }
+      } else if (e.key === "]") {
+        if (nextLink) {
+          e.preventDefault();
+          nextLink.click();
+        }
+      }
+    };
+
+    if (window.__paginationKeydownHandler) {
+      document.removeEventListener(
+        "keydown",
+        window.__paginationKeydownHandler,
+      );
+    }
+    window.__paginationKeydownHandler = handlePaginationKeydown;
+    document.addEventListener("keydown", window.__paginationKeydownHandler);
+  }
+
+  if (window.__paginationInteractionsInitHandler) {
+    document.removeEventListener(
+      "astro:page-load",
+      window.__paginationInteractionsInitHandler,
+    );
+  }
+  window.__paginationInteractionsInitHandler = initPaginationInteractions;
+  document.addEventListener("astro:page-load", initPaginationInteractions);
+  initPaginationInteractions();
+</script>
