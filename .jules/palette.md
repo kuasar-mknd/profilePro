@@ -49,3 +49,7 @@
 
 **Learning:** Adding custom JavaScript event listeners to individual components to call `navigator.vibrate()` is redundant and can lead to duplicated logic. The project already has a global `initHaptics()` listener set up in `src/layouts/Base.astro`.
 **Action:** Always leverage the centralized haptics management by simply adding the `data-haptic` attribute (e.g., `data-haptic="30"` or `data-haptic="50"`) directly to the HTML markup of the interactive element. No custom JS listeners are needed.
+
+## 2026-04-14 - Pagination Accessibility & Navigation Context
+**Learning:** When adding keyboard shortcuts to pagination controls in a Single Page Application (SPA) utilizing View Transitions (like Astro's `astro:page-load`), global event listeners (like `document.addEventListener("keydown", ...)`) must be explicitly managed. They must be registered with a singleton pattern, where the previous instance is removed on subsequent page loads, otherwise memory leaks and duplicate trigger events will occur on every keystroke. Furthermore, when adding elements like `<kbd>` hints to Astro pagination controls, you must account for both active `<a>` tags and inactive boundary states, where the controls render as disabled `<span>` elements with `cursor-not-allowed` class.
+**Action:** Always test pagination components on both the first and last pages to ensure interactive styles (like hovers and keyboard shortcuts) don't apply to disabled states, and wrap global event listener additions in a cleanup check to ensure they survive SPA transitions intact.
