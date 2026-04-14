@@ -63,6 +63,7 @@ function addCopyButtons() {
     btn.className =
       "copy-code-btn group/btn absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 text-white/70 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/20 hover:text-white focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent backdrop-blur-sm";
     btn.setAttribute("aria-label", "Copier le code");
+    btn.setAttribute("data-haptic", "30");
 
     btn.appendChild(createIcon(false));
 

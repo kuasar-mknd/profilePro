@@ -26,6 +26,7 @@
     aria-label="Fermer la galerie (Esc)"
     aria-description="Ferme la fenêtre modale"
     aria-keyshortcuts="Escape"
+    data-haptic="50"
   >
     <svg
       aria-hidden="true"
@@ -55,6 +56,7 @@
     aria-label="Précédente (image) (← / [)"
     aria-description="Affiche l'image précédente"
     aria-keyshortcuts="ArrowLeft ["
+    data-haptic="50"
   >
     <svg
       aria-hidden="true"
@@ -101,6 +103,7 @@
     aria-label="Suivante (image) (→ / ])"
     aria-description="Affiche l'image suivante"
     aria-keyshortcuts="ArrowRight ]"
+    data-haptic="50"
   >
     <svg
       aria-hidden="true"
@@ -338,12 +341,6 @@
     private boundClickHandler: (e: MouseEvent) => void;
     private boundDelegatedKeyHandler: (e: KeyboardEvent) => void;
 
-    private vibrate(duration = 50) {
-      if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
-        navigator.vibrate(duration);
-      }
-    }
-
     constructor() {
       this.boundKeyHandler = this.handleKeyboard.bind(this);
       this.boundClickHandler = this.handleClick.bind(this);
@@ -381,7 +378,6 @@
       this.lightbox
         .querySelector(".lightbox-close")
         ?.addEventListener("click", () => {
-          this.vibrate(30);
           this.close();
         });
 
@@ -394,7 +390,6 @@
         .querySelector(".lightbox-prev")
         ?.addEventListener("click", () => {
           if (this.galleryElements.length > 1) {
-            this.vibrate(50);
             this.prev();
           }
         });
@@ -402,7 +397,6 @@
         .querySelector(".lightbox-next")
         ?.addEventListener("click", () => {
           if (this.galleryElements.length > 1) {
-            this.vibrate(50);
             this.next();
           }
         });
@@ -493,7 +487,10 @@
       if (trigger) this.triggerElement = trigger;
 
       // 🎨 Palette: Provide subtle haptic feedback for mobile users
-      this.vibrate(50);
+      // This is handled manually as it's not a direct click on a [data-haptic] element
+      if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
+        navigator.vibrate(50);
+      }
 
       this.currentIndex = index;
       this.updateImage();
@@ -729,7 +726,9 @@
       if (Math.abs(diff) > threshold) {
         if (this.galleryElements.length > 1) {
           // 🎨 Palette: Provide subtle haptic feedback for swipe navigation
-          this.vibrate(50);
+          if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
+            navigator.vibrate(50);
+          }
 
           if (diff > 0) {
             this.next();
