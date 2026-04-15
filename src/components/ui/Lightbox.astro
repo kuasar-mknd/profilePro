@@ -334,6 +334,8 @@
     private preloadedUrls = new Set<string>();
     private touchStartX: number = 0;
     private touchEndX: number = 0;
+    private touchStartY: number = 0;
+    private touchEndY: number = 0;
     private focusableElements: HTMLElement[] = [];
     private firstFocusableElement: HTMLElement | null = null;
     private lastFocusableElement: HTMLElement | null = null;
@@ -712,25 +714,39 @@
 
     private handleTouchStart(e: TouchEvent) {
       this.touchStartX = e.changedTouches[0].screenX;
+      this.touchStartY = e.changedTouches[0].screenY;
     }
 
     private handleTouchEnd(e: TouchEvent) {
       this.touchEndX = e.changedTouches[0].screenX;
+      this.touchEndY = e.changedTouches[0].screenY;
       this.handleSwipe();
     }
 
     private handleSwipe() {
-      const threshold = 50;
-      const diff = this.touchStartX - this.touchEndX;
+      const thresholdX = 50;
+      const thresholdY = 100;
+      const diffX = this.touchStartX - this.touchEndX;
+      const diffY = this.touchStartY - this.touchEndY;
 
-      if (Math.abs(diff) > threshold) {
+      // 🎨 Palette: Swipe down to close
+      // Logic: vertical displacement is downward (> thresholdY) AND significantly more vertical than horizontal
+      if (diffY < -thresholdY && Math.abs(diffY) > Math.abs(diffX) * 1.5) {
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
+          navigator.vibrate(30);
+        }
+        this.close();
+        return;
+      }
+
+      if (Math.abs(diffX) > thresholdX) {
         if (this.galleryElements.length > 1) {
           // 🎨 Palette: Provide subtle haptic feedback for swipe navigation
           if (navigator.vibrate && !prefersReducedMotionQuery.matches) {
             navigator.vibrate(50);
           }
 
-          if (diff > 0) {
+          if (diffX > 0) {
             this.next();
           } else {
             this.prev();
