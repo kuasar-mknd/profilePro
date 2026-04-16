@@ -2,7 +2,6 @@
 import Base from "../../layouts/Base.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
-import fs from "node:fs";
 import yaml from "js-yaml";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
@@ -19,11 +18,13 @@ const langParam = Astro.params.lang;
 // Configuration de la langue affichée dynamiquement via l'URL
 const currentLang = langParam === "en" ? "en" : "fr";
 
-// Lire le fichier YAML manuellement au moment du build (SSR)
-const fileContents = await fs.promises.readFile(
-  "./src/data/cv-basics.yml",
-  "utf8",
-);
+// Lire le fichier YAML au moment du build (SSR) avec Vite
+const yamlFiles = import.meta.glob("../../data/cv-basics.yml", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+const fileContents = yamlFiles["../../data/cv-basics.yml"] as string;
 
 interface CVData {
   personal: {
