@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl, VIMEO_ID_REGEX } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl, VIMEO_ID_REGEX, isValidEmail } from "../src/utils/security";
 
 test("safeJson handles undefined or function inputs safely", () => {
   // JSON.stringify returns undefined for functions and undefined itself
@@ -101,4 +101,67 @@ test("VIMEO_ID_REGEX should reject invalid strings and not match", () => {
 
   // subdomains other than www
   expect("https://player.vimeo.com/video/123".match(VIMEO_ID_REGEX)).toBeNull();
+});
+
+test("isValidEmail should allow valid emails", () => {
+  const validEmails = [
+    "test@example.com",
+    "user.name+tag@example.co.uk",
+    "123@domain.com",
+    "a@b.cc",
+    "user_name@domain.com",
+    "user-name@domain.com",
+  ];
+  validEmails.forEach((email) => {
+    expect(isValidEmail(email)).toBe(true);
+  });
+});
+
+test("isValidEmail should reject non-string and empty inputs", () => {
+  expect(isValidEmail("")).toBe(false);
+  // @ts-expect-error
+  expect(isValidEmail(null)).toBe(false);
+  // @ts-expect-error
+  expect(isValidEmail(undefined)).toBe(false);
+  // @ts-expect-error
+  expect(isValidEmail(123)).toBe(false);
+  // @ts-expect-error
+  expect(isValidEmail({})).toBe(false);
+});
+
+test("isValidEmail should reject emails missing required parts", () => {
+  const missingParts = [
+    "plainaddress",
+    "@no-local-part.com",
+    "no-at-sign.com",
+    "user@domain",
+  ];
+  missingParts.forEach((email) => {
+    expect(isValidEmail(email)).toBe(false);
+  });
+});
+
+test("isValidEmail should reject invalid domain formats", () => {
+  const invalidDomains = [
+    "user@.com",
+    "user@domain..com",
+    "user@domain.c",
+    "user@domain.com.",
+    "user@-domain.com",
+    "user@domain-.com",
+  ];
+  invalidDomains.forEach((email) => {
+    expect(isValidEmail(email)).toBe(false);
+  });
+});
+
+test("isValidEmail should reject invalid local part formats", () => {
+  const invalidLocals = [
+    ".user@domain.com",
+    "user.@domain.com",
+    "user..name@domain.com",
+  ];
+  invalidLocals.forEach((email) => {
+    expect(isValidEmail(email)).toBe(false);
+  });
 });
