@@ -1,14 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
-
-const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
 ---
 
 {
   /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
 }
 <form
-  data-key={import.meta.env.DEV ? WEB3FORMS_ACCESS_KEY : ""}
   action={import.meta.env.DEV
     ? "https://api.web3forms.com/submit"
     : "/api/submit"}
@@ -821,9 +818,17 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
         try {
           const formData = new FormData(this.form);
           const data: Record<string, string> = {};
-          const encodedKey = this.form.getAttribute("data-key");
-          if (encodedKey) {
-            data["access_key"] = encodedKey;
+          if (import.meta.env.DEV) {
+            try {
+              const res = await fetch("/api/dev-key");
+              if (res.ok) {
+                const json = await res.json();
+                if (json.key) data["access_key"] = json.key;
+              }
+            } catch (e) {
+              // eslint-disable-next-line no-console
+              console.error(e);
+            }
           }
           const allowedFields = new Set([
             "name",
