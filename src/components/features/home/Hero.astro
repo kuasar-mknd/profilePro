@@ -521,16 +521,12 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   );
 
   /**
-   * 🎨 Palette: Smart Focus for Contact CTA
-   * Smooth scrolls to form and intelligently manages focus:
-   * - Desktop: Focuses input for immediate typing
-   * - Mobile: Focuses form container to avoid keyboard pop-up while scrolling
+   * 🎨 Palette: Hero CTA Haptics
+   * Tactile feedback for primary navigation buttons
    */
   function initHeroCTA() {
     const primaryCta = document.getElementById("hero-cta-primary");
     const secondaryCta = document.getElementById("hero-cta-secondary");
-    const form = document.getElementById("contact-form");
-    const nameInput = document.getElementById("name");
 
     if (primaryCta && primaryCta.dataset.initialized !== "true") {
       primaryCta.dataset.initialized = "true";
@@ -541,41 +537,14 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
       });
     }
 
-    if (!secondaryCta || !form) return;
-
-    // Guard against duplicate listeners
-    if (secondaryCta.dataset.initialized === "true") return;
-    secondaryCta.dataset.initialized = "true";
-
-    secondaryCta.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      // 🎨 Palette: Tactile feedback for primary action
-      if (navigator.vibrate && !prefersReducedMotionQuery.matches)
-        navigator.vibrate(50);
-
-      // Check if device uses coarse pointer (likely touch/mobile)
-      const isMobile = pointerCoarseQuery.matches;
-
-      if (isMobile) {
-        // Mobile: Scroll to form container and focus it
-        // This brings the form into view without triggering the keyboard
-        form.setAttribute("tabindex", "-1");
-        form.focus({ preventScroll: true });
-        form.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        // Desktop: Focus input directly for immediate typing
-        if (nameInput) {
-          nameInput.focus({ preventScroll: true }); // Set focus without jump
-          nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
-        } else {
-          // Fallback if input not found
-          form.setAttribute("tabindex", "-1");
-          form.focus({ preventScroll: true });
-          form.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }
-    });
+    if (secondaryCta && secondaryCta.dataset.initialized !== "true") {
+      secondaryCta.dataset.initialized = "true";
+      secondaryCta.addEventListener("click", () => {
+        // 🎨 Palette: Tactile feedback for primary action
+        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
+          navigator.vibrate(50);
+      });
+    }
   }
 
   // ⚡ Bolt: Singleton Listener Pattern
