@@ -49,6 +49,14 @@ jobs:
         env:
           HUSKY: 0
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Run Unit Tests
+        run: pnpm run test
+
       - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
 
@@ -113,6 +121,14 @@ jobs:
         run: pnpm install
         env:
           HUSKY: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Run Unit Tests
+        run: pnpm run test
 
       - name: Cache Astro Generated Images
         uses: actions/cache@v4
