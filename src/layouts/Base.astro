@@ -222,7 +222,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
           } else {
             document.documentElement.classList.remove("dark");
           }
-        } catch (_e) {
+        } catch {
           if (prefersDarkQuery.matches) {
             document.documentElement.classList.add("dark");
           } else {
