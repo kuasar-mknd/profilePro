@@ -7,6 +7,7 @@ import yaml from "js-yaml";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
 import { limitConcurrency } from "../../utils/async";
+const STRONG_TAG_REGEX = /(<strong>.*?<\/strong>)/g;
 
 export function getStaticPaths() {
   return [
@@ -394,7 +395,7 @@ const description = data.profile.content;
                     data.awards.items.map((award: string) => (
                       <li>
                         {award
-                          .split(/(<strong>.*?<\/strong>)/g)
+                          .split(STRONG_TAG_REGEX)
                           .map((part: string) =>
                             part.startsWith("<strong>") &&
                             part.endsWith("</strong>") ? (
