@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl, VIMEO_ID_REGEX } from "../src/utils/security";
+import { safeJson, sanitizeInput, sanitizeUrl, isValidUrl, VIMEO_ID_REGEX, YOUTUBE_ID_REGEX } from "../src/utils/security";
 
 test("safeJson handles undefined or function inputs safely", () => {
   // JSON.stringify returns undefined for functions and undefined itself
@@ -101,4 +101,40 @@ test("VIMEO_ID_REGEX should reject invalid strings and not match", () => {
 
   // subdomains other than www
   expect("https://player.vimeo.com/video/123".match(VIMEO_ID_REGEX)).toBeNull();
+});
+
+test("YOUTUBE_ID_REGEX should correctly match valid YouTube strings and extract capture groups", () => {
+  // youtu.be/ID
+  expect("https://youtu.be/12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  // v/ID
+  expect("https://youtube.com/v/12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  // u/w/ID
+  expect("https://youtube.com/u/w/12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  // embed/ID
+  expect("https://youtube.com/embed/12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  // watch?v=ID
+  expect("https://youtube.com/watch?v=12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  // &v=ID
+  expect("https://youtube.com/watch?abc=1&v=12345678901".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+
+  // with query params or hash after ID
+  expect("https://youtu.be/12345678901?t=10s".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  expect("https://youtu.be/12345678901#hash".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+  expect("https://youtube.com/watch?v=12345678901&t=10s".match(YOUTUBE_ID_REGEX)?.[1]).toBe("12345678901");
+});
+
+test("YOUTUBE_ID_REGEX should reject invalid strings and not match", () => {
+  // invalid ID length (less than 11)
+  expect("https://youtu.be/1234567890".match(YOUTUBE_ID_REGEX)).toBeNull();
+
+  // invalid ID length (more than 11)
+  expect("https://youtu.be/123456789012".match(YOUTUBE_ID_REGEX)).toBeNull();
+
+  // completely invalid format
+  expect("https://vimeo.com/123456789".match(YOUTUBE_ID_REGEX)).toBeNull();
+  expect("just a string".match(YOUTUBE_ID_REGEX)).toBeNull();
+
+  // missing ID
+  expect("https://youtube.com/watch?v=".match(YOUTUBE_ID_REGEX)).toBeNull();
+  expect("https://youtu.be/".match(YOUTUBE_ID_REGEX)).toBeNull();
 });
