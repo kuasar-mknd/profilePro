@@ -1,6 +1,7 @@
 ---
 import { getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import type { ImageMetadata } from "astro";
 import { Icon } from "astro-icon/components";
 import logo from "../../../assets/logo.avif";
 import { limitConcurrency } from "../../../utils/async";
@@ -20,7 +21,7 @@ const projects = initialProjects || (await getSortedProjects());
 // We extract only the required fields directly into the slides array during the O(K) loop.
 // This prevents creating N intermediate objects and drastically reduces memory overhead during build.
 const limit = Math.min(15, projects.length);
-const slides: { src: any; alt: string }[] = [];
+const slides: { src: ImageMetadata | undefined; alt: string }[] = [];
 const indices = Array.from({ length: projects.length }, (_, i) => i);
 
 for (let i = 0; i < limit; i++) {
