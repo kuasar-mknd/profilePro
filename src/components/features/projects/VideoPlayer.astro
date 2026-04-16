@@ -155,10 +155,6 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
   // Reduces listener count from N (videos) to 1 (document)
   // Handles initializing new players on interaction instead of on load
 
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
   async function handleVideoClick(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const playBtn = target.closest("button[id^='play-btn-']");

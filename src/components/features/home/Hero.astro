@@ -515,7 +515,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   });
 
   // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
-  const pointerCoarseQuery = window.matchMedia("(pointer: coarse)");
   const prefersReducedMotionQuery = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   );

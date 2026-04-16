@@ -47,10 +47,6 @@
    * ⚡ Bolt: HamburgerButton Performance Optimization
    * Added initialization guard to prevent duplicate observers and handlers
    */
-  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
 
   let cleanupMenu: (() => void) | null = null;
 

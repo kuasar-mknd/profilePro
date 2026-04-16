@@ -267,21 +267,21 @@ import { Icon } from "astro-icon/components";
             data.t = new Date().getTime();
             try {
               localStorage.setItem(cacheKey, JSON.stringify(data));
-            } catch (_e) {}
+            } catch {}
           })
           .catch((_error) => {
             clearTimeout(timeoutId);
             wcb.textContent = "Pas de résultat";
             try {
               localStorage.removeItem(cacheKey);
-            } catch (_e) {}
+            } catch {}
           });
       };
 
       let cached: string | null = null;
       try {
         cached = localStorage.getItem(cacheKey);
-      } catch (_e) {}
+      } catch {}
       let isValidCache = false;
 
       if (cached) {
@@ -295,13 +295,13 @@ import { Icon } from "astro-icon/components";
             // Data is expired or malformed
             try {
               localStorage.removeItem(cacheKey);
-            } catch (_e) {}
+            } catch {}
           }
         } catch {
           // 🛡️ Sentinel: Handle corrupted JSON in localStorage to prevent unhandled exceptions
           try {
             localStorage.removeItem(cacheKey);
-          } catch (_e) {}
+          } catch {}
         }
       }
 

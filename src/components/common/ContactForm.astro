@@ -808,7 +808,7 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
             );
             return;
           }
-        } catch (_e) {
+        } catch {
           // Ignore localStorage errors
         }
 
@@ -885,7 +885,7 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
                 "contact_form_last_submission",
                 Date.now().toString(),
               );
-            } catch (_e) {
+            } catch {
               // Ignore localStorage errors
             }
             this.form.reset();
