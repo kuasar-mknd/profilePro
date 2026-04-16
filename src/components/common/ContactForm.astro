@@ -805,7 +805,7 @@ import { Icon } from "astro-icon/components";
             );
             return;
           }
-        } catch (_e) {
+        } catch {
           // Ignore localStorage errors
         }
 
@@ -890,7 +890,7 @@ import { Icon } from "astro-icon/components";
                 "contact_form_last_submission",
                 Date.now().toString(),
               );
-            } catch (_e) {
+            } catch {
               // Ignore localStorage errors
             }
             this.form.reset();

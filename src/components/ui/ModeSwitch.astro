@@ -53,11 +53,6 @@ import { Icon } from "astro-icon/components";
    * - Handles View Transitions properly
    */
 
-  // ⚡ Bolt: Cache matchMedia to avoid re-parsing inside event listener
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
   const handleThemeToggle = (e: Event) => {
     e.preventDefault();
     const element = document.documentElement;
@@ -66,7 +61,7 @@ import { Icon } from "astro-icon/components";
     const isDarkNow = element.classList.contains("dark");
     try {
       localStorage.setItem("theme", isDarkNow ? "dark" : "light");
-    } catch (_e) {
+    } catch {
       // Ignore localStorage errors
     }
 
@@ -109,7 +104,7 @@ import { Icon } from "astro-icon/components";
       const isDarkNow = element.classList.contains("dark");
       try {
         localStorage.setItem("theme", isDarkNow ? "dark" : "light");
-      } catch (_e) {
+      } catch {
         // Ignore localStorage errors
       }
 

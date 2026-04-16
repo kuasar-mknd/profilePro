@@ -26,7 +26,7 @@ describe("Submit Cloudflare Function", () => {
   });
 
   const createMockContext = (
-    payload: any,
+    payload: unknown,
     origin: string = "http://localhost:4321",
   ) => {
     return {
@@ -52,7 +52,7 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload);
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(200);
     const data = await response.json();
@@ -60,7 +60,7 @@ describe("Submit Cloudflare Function", () => {
 
     // Verify fetch was called with sanitized/expected data
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown).mock.calls[0];
     const fetchBody = JSON.parse(fetchCall[1].body);
 
     expect(fetchBody.name).toBe("John Doe");
@@ -71,15 +71,15 @@ describe("Submit Cloudflare Function", () => {
 
   it("should handle null and invalid payloads gracefully", async () => {
     const nullContext = createMockContext(null);
-    const nullResponse = await onRequestPost(nullContext as any);
+    const nullResponse = await onRequestPost(nullContext as unknown);
     expect(nullResponse.status).toBe(400);
 
     const arrayContext = createMockContext(["not", "an", "object"]);
-    const arrayResponse = await onRequestPost(arrayContext as any);
+    const arrayResponse = await onRequestPost(arrayContext as unknown);
     expect(arrayResponse.status).toBe(400);
 
     const stringContext = createMockContext("just a string");
-    const stringResponse = await onRequestPost(stringContext as any);
+    const stringResponse = await onRequestPost(stringContext as unknown);
     expect(stringResponse.status).toBe(400);
   });
 
@@ -91,7 +91,7 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload);
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(400);
     const data = await response.json();
@@ -108,11 +108,11 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload);
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(200);
 
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown).mock.calls[0];
     const fetchBody = JSON.parse(fetchCall[1].body);
 
     expect(fetchBody.isAdmin).toBeUndefined();
@@ -127,11 +127,11 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload);
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(200);
 
-    const fetchCall = (global.fetch as any).mock.calls[0];
+    const fetchCall = (global.fetch as unknown).mock.calls[0];
     const fetchBody = JSON.parse(fetchCall[1].body);
 
     expect(fetchBody.name).not.toContain("<script>");
@@ -149,7 +149,7 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload);
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(400);
     const data = await response.json();
@@ -168,7 +168,7 @@ describe("Submit Cloudflare Function", () => {
     };
 
     const context = createMockContext(payload, "https://malicious.com");
-    const response = await onRequestPost(context as any);
+    const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(403);
     const data = await response.json();

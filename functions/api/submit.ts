@@ -50,7 +50,7 @@ export async function onRequestPost(context: {
       );
     }
 
-    const data: Record<string, any> = {};
+    const data: Record<string, unknown> = {};
 
     // Define exact expected types
     const schema: Record<string, string> = {
@@ -126,7 +126,7 @@ export async function onRequestPost(context: {
       status: response.status,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (_error) {
+  } catch {
     return new Response(
       JSON.stringify({ success: false, message: "Internal server error" }),
       {
