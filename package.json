@@ -59,7 +59,8 @@
     "typecheck": "astro check",
     "test:e2e": "playwright test",
     "prepare": "husky || true",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "bun test src/ tests/"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",

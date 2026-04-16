@@ -36,6 +36,14 @@ jobs:
         env:
           HUSKY: 0
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Run Unit Tests
+        run: pnpm run test
+
       - name: Run Prisma Generate (Placeholder)
         run: echo "No Prisma database exists in this Astro SSG repository. Skipping Prisma generation."
 
