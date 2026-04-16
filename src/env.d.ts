@@ -24,6 +24,7 @@ interface Window {
   __lightboxInitHandler?: () => void;
   __lightboxListenerAttached?: boolean;
   __contactInitHandler?: () => void;
+  __contactScrollHandler?: (e: MouseEvent) => void;
   __mobileMenuInitHandler?: () => void;
   __carbonBadgeInitHandler?: () => void;
   __menuInitHandler?: () => void;
