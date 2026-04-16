@@ -395,6 +395,7 @@ import { Icon } from "astro-icon/components";
   const prefersReducedMotionQuery = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   );
+  const isMobileQuery = window.matchMedia("(pointer: coarse)");
 
   class ContactFormController {
     private form: HTMLFormElement;
@@ -951,7 +952,7 @@ import { Icon } from "astro-icon/components";
         e.preventDefault();
 
         // Device detection (coarse pointer = touch/mobile)
-        const isMobile = window.matchMedia("(pointer: coarse)").matches;
+        const isMobile = isMobileQuery.matches;
 
         if (isMobile) {
           // Mobile: Focus container to avoid keyboard jump

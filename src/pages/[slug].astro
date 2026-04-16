@@ -150,6 +150,11 @@ const readingTime = getReadingTime(entry.body);
 </Base>
 
 <script>
+  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing
+  const prefersReducedMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   const shareBtn = document.getElementById("share-btn");
   const announcer = document.getElementById("share-announcer");
 
@@ -184,10 +189,6 @@ const readingTime = getReadingTime(entry.body);
   }
   window.__articleKeydownHandler = handleArticleKeydown;
   document.addEventListener("keydown", window.__articleKeydownHandler);
-
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
 
   if (shareBtn) {
     shareBtn.addEventListener("click", async () => {
