@@ -375,6 +375,20 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
   .animate-fade-in-up {
     animation: fadeInUp 0.4s ease-out forwards;
   }
+
+  @keyframes highlightGlow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(190, 18, 60, 0);
+    }
+    50% {
+      box-shadow: 0 0 30px 10px rgba(190, 18, 60, 0.3);
+    }
+  }
+
+  .form-highlight {
+    animation: highlightGlow 1.5s ease-in-out;
+  }
 </style>
 
 <script>
@@ -910,10 +924,60 @@ const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY;
   }
 
   function initContactForm() {
-    const form = document.getElementById("contact-form") as HTMLFormElement;
-    if (form) {
-      new ContactFormController(form);
+    const formElement = document.getElementById(
+      "contact-form",
+    ) as HTMLFormElement;
+    if (formElement) {
+      new ContactFormController(formElement);
     }
+
+    // 🎨 Palette: Centralized Smart Scroll & Highlight for Contact Form
+    const handleSmartScroll = (e: MouseEvent | KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest(
+        'a[href="#contact-form"], a[href="#cta-section"]',
+      );
+
+      // Re-query elements inside the listener to avoid stale references in SPA
+      const form = document.getElementById("contact-form") as HTMLFormElement;
+      const nameInput = document.getElementById("name") as HTMLInputElement;
+
+      if (link && form) {
+        e.preventDefault();
+
+        // Device detection (coarse pointer = touch/mobile)
+        const isMobile = window.matchMedia("(pointer: coarse)").matches;
+
+        if (isMobile) {
+          // Mobile: Focus container to avoid keyboard jump
+          form.setAttribute("tabindex", "-1");
+          form.focus({ preventScroll: true });
+          form.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          // Desktop: Focus input for immediate typing
+          if (nameInput) {
+            nameInput.focus({ preventScroll: true });
+            nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
+          } else {
+            form.setAttribute("tabindex", "-1");
+            form.focus({ preventScroll: true });
+            form.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
+
+        // Add highlight animation
+        form.classList.remove("form-highlight");
+        void form.offsetWidth; // Force reflow
+        form.classList.add("form-highlight");
+        setTimeout(() => form.classList.remove("form-highlight"), 2000);
+      }
+    };
+
+    if (window.__contactScrollHandler) {
+      document.removeEventListener("click", window.__contactScrollHandler);
+    }
+    window.__contactScrollHandler = handleSmartScroll as EventListener;
+    document.addEventListener("click", window.__contactScrollHandler);
   }
 
   initContactForm();
