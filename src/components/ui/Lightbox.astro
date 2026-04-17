@@ -189,6 +189,11 @@
     transform: scale(1.1);
   }
 
+  .lightbox-close:active {
+    transform: scale(0.95);
+    transition-duration: 75ms;
+  }
+
   .lightbox-content {
     position: relative;
     z-index: 5;
@@ -234,6 +239,11 @@
   .lightbox-nav:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-50%) scale(1.1);
+  }
+
+  .lightbox-nav:active {
+    transform: translateY(-50%) scale(0.95);
+    transition-duration: 75ms;
   }
 
   .lightbox-prev {
