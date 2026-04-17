@@ -122,7 +122,7 @@ Workflows are defined in `.github/workflows/`:
 - **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
 - **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
 - **Content Collections**: Type-safe content management for Markdown/MDX.
-<!-- Verified: DocOps 2026-04-07 -->
+<!-- Verified: DocOps 2026-04-17 -->
 
 ### Hono + Prisma Integration (Hypothetical)
 While this project is currently an Astro SSG, if a Hono + Prisma backend were to be implemented:

@@ -42,7 +42,7 @@ If AI integration is added, the expected JSON schema for a project summary might
 
 - All AI-generated content must be reviewed by a human before publishing.
 - No user data is sent to AI endpoints.
-<!-- Verified: DocOps 2026-04-07 -->
+<!-- Verified: DocOps 2026-04-17 -->
 
 ### Expected JSON Schema from AI Adapter
 If the summarization feature is fully integrated with a hypothetical Hono backend, the expected JSON schema is:

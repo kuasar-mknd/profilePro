@@ -32,4 +32,4 @@ jobs:
             @emmetio/css-parser,
             @apideck/better-ajv-errors,
             @antfu/utils
-# Verified: DocOps 2026-04-07
+# Verified: DocOps 2026-04-17
