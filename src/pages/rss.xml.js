@@ -3,6 +3,11 @@ import config from "../config.mjs";
 import { getSortedProjects } from "../utils/projects";
 import sanitizeHtml from "sanitize-html";
 
+const SANITIZE_OPTIONS = {
+  allowedTags: [],
+  allowedAttributes: {},
+};
+
 export async function GET(_context) {
   const projects = await getSortedProjects();
   return getRss({
@@ -10,15 +15,9 @@ export async function GET(_context) {
     description: config.description,
     site: config.url,
     items: projects.map((post) => ({
-      title: sanitizeHtml(post.data.title, {
-        allowedTags: [],
-        allowedAttributes: {},
-      }),
+      title: sanitizeHtml(post.data.title, SANITIZE_OPTIONS),
       pubDate: post.data.pubDate,
-      description: sanitizeHtml(post.data.intro, {
-        allowedTags: [],
-        allowedAttributes: {},
-      }),
+      description: sanitizeHtml(post.data.intro, SANITIZE_OPTIONS),
       link: `/project/${post.slug}/`,
     })),
     customData: `<language>fr-ch</language>`,
