@@ -15,3 +15,8 @@
 **Vulnerability:** The Cloudflare Pages Function proxy (`functions/api/submit.ts`) forwarded JSON payloads to the Web3Forms API without server-side allowlisting, sanitization, or validation, relying solely on client-side logic. This created a Mass Assignment vulnerability (where arbitrary properties could be added) and potentially allowed Server-Side Request Forgery or XSS.
 **Learning:** Client-side validation in Astro/React components is easily bypassed. Any serverless function acting as a proxy for secrets must validate and sanitize all incoming payloads before forwarding them, implementing a defense-in-depth approach.
 **Prevention:** Always implement an explicit `Set` or `Array` of allowed keys, strongly type and validate fields (e.g., email), and strip/sanitize string inputs on the server-side before attaching secrets and proxying to external services.
+
+## 2024-04-17 - API Key Exposure via Dev Endpoint
+**Vulnerability:** The Web3Forms API key was exposed to the client in the development environment via the `/api/dev-key` endpoint to bypass proxy requirements locally.
+**Learning:** Development endpoints that expose secrets break environment parity and risk accidental leakage if left active or if development code paths make their way to production or are accessible externally.
+**Prevention:** Always maintain environment parity. For external APIs requiring server-side secret injection, use local development proxies (e.g. Astro API Routes) that mirror production behavior instead of creating dev-only client-side workarounds.
