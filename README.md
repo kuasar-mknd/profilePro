@@ -131,7 +131,7 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run check` : Vérifie le code (linting + formatage + types).
 - `pnpm run lighthouse` : Lance l'audit de performance.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
-  _(Des tests unitaires existent également dans le code source mais ne disposent pas de commande npm dédiée pour le moment)._
+  - `pnpm run test` : Lance les tests unitaires avec Bun.
 
 ### API Access (Main Endpoints)
 
@@ -201,7 +201,7 @@ This project is [MIT](LICENSE) licensed.
 
 Construit avec ❤️ par Samuel Dulex
 
-<!-- Verified: DocOps 2026-04-07 -->
+<!-- Verified: DocOps 2026-04-17 -->
 
 ### Local Setup for Hono/Prisma (Hypothetical)
 While this is currently an Astro SSG, if the Hono/Prisma features are activated in the future, you would need to:
