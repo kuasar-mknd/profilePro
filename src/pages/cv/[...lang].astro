@@ -131,10 +131,11 @@ const description = data.profile.content;
       <a
         id="lang-toggle-btn"
         href={sanitizeUrl(currentLang === "fr" ? "/cv/en" : "/cv")}
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-95 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
         aria-label={currentLang === "fr"
           ? "Passer à la version anglaise"
           : "Switch to French version"}
+        data-haptic="30"
       >
         <Icon name="mdi:translate" class="w-5 h-5" aria-hidden="true" />
         {currentLang === "fr" ? "English Version" : "Version Française"}
@@ -142,11 +143,12 @@ const description = data.profile.content;
       <button
         id="print-cv-btn"
         type="button"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-95 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
         aria-label={currentLang === "fr"
           ? "Exporter le CV en PDF (Ctrl+P)"
           : "Export CV to PDF (Ctrl+P)"}
         aria-keyshortcuts="Control+P"
+        data-haptic="50"
       >
         <Icon name="mdi:printer" class="w-5 h-5" aria-hidden="true" />
         <span aria-hidden="true">
@@ -495,14 +497,9 @@ const description = data.profile.content;
 </style>
 
 <script>
-  // ⚡ Bolt: Cache MediaQueryList globally to prevent evaluating the media query string on every click or component init
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
   /**
    * 🎨 Palette: CV Page UX Improvement
-   * - Adds haptic feedback to print and language buttons
+   * - Adds active states and data-haptic to print and language buttons
    * - Handles print action and keyboard shortcuts
    * - Uses Singleton Listener Pattern for View Transitions
    */
@@ -512,48 +509,17 @@ const description = data.profile.content;
     if (!printBtn || !langBtn || printBtn.dataset.initialized === "true")
       return;
 
-    const vibrate = (ms: number) => {
-      if (navigator.vibrate && !prefersReducedMotionQuery.matches)
-        navigator.vibrate(ms);
-    };
-
-    const handleKeydown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "SELECT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        !e.altKey &&
-        !e.shiftKey &&
-        (e.key === "p" || e.key === "P")
-      )
-        vibrate(50);
-    };
-
     const handlePrint = (e: Event) => {
       e.preventDefault();
-      vibrate(50);
       window.print();
     };
 
     printBtn.addEventListener("click", handlePrint);
-    langBtn.addEventListener("click", () => vibrate(30));
-    document.addEventListener("keydown", handleKeydown);
 
     printBtn.dataset.initialized = "true";
     window.__cvCleanup = () => {
       printBtn.removeEventListener("click", handlePrint);
-      document.removeEventListener("keydown", handleKeydown);
-      if (window.__cvKeydownHandler)
-        document.removeEventListener("keydown", window.__cvKeydownHandler);
     };
-    window.__cvKeydownHandler = handleKeydown;
   }
 
   function setupCVListeners() {

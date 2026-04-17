@@ -36,7 +36,8 @@
       "minimatch": "^5.1.9",
       "yauzl": "^3.2.1",
       "fast-xml-parser": ">=5.5.7",
-      "yaml": ">=2.8.3"
+      "yaml": ">=2.8.3",
+      "basic-ftp": "^5.3.0"
     }
   },
   "scripts": {

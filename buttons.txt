@@ -1,9 +1,0 @@
-src/components/common/ContactForm.astro
-src/components/features/projects/VideoPlayer.astro
-src/components/ui/HamburgerButton.astro
-src/components/ui/ModeSwitch.astro
-src/components/ui/Lightbox.astro
-src/layouts/Base.astro
-src/pages/[slug].astro
-src/pages/project/[slug].astro
-src/pages/404.astro
