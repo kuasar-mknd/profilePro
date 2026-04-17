@@ -121,8 +121,8 @@ importers:
         version: 7.4.0
     devDependencies:
       '@happy-dom/global-registrator':
-        specifier: ^20.8.9
-        version: 20.8.9
+        specifier: ^20.9.0
+        version: 20.9.0
       '@lhci/cli':
         specifier: ^0.15.1
         version: 0.15.1
@@ -1607,8 +1607,8 @@ packages:
   '@formatjs/intl-localematcher@0.6.2':
     resolution: {integrity: sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==}
 
-  '@happy-dom/global-registrator@20.8.9':
-    resolution: {integrity: sha512-DtZeRRHY9A/bisTJziUBBPrdnPui7+R185G/hzi6/Boymhqh7/wi53AY+IvQHS1+7OPaqfO/1XNpngNwthLz+A==}
+  '@happy-dom/global-registrator@20.9.0':
+    resolution: {integrity: sha512-lBW6/m5BIFl3pMuWPNN0lIOYw9LMCmPfix53ExS3FBi4E+NELEljQ3xH6aAV9IYiQRfn9YIIgzzMrD0vIcD7tw==}
     engines: {node: '>=20.0.0'}
 
   '@humanfs/core@0.19.1':
@@ -3247,8 +3247,8 @@ packages:
     engines: {node: '>=0.10.0'}
     hasBin: true
 
-  electron-to-chromium@1.5.339:
-    resolution: {integrity: sha512-Is+0BBHJ4NrdpAYiperrmp53pLywG/yV/6lIMTAnhxvzj/Cmn5Q/ogSHC6AKe7X+8kPLxxFk0cs5oc/3j/fxIg==}
+  electron-to-chromium@1.5.340:
+    resolution: {integrity: sha512-908qahOGocRMinT2nM3ajCEM99H4iPdv84eagPP3FfZy/1ZGeOy2CZYzjhms81ckOPCXPlW7LkY4XpxD8r1DrA==}
 
   emmet@2.4.11:
     resolution: {integrity: sha512-23QPJB3moh/U9sT4rQzGgeyyGIrcM+GH5uVYg2C6wZIxAIJq7Ng3QLT79tl8FUwDXhyq9SusfknOrofAKqvgyQ==}
@@ -3753,6 +3753,10 @@ packages:
 
   happy-dom@20.8.9:
     resolution: {integrity: sha512-Tz23LR9T9jOGVZm2x1EPdXqwA37G/owYMxRwU0E4miurAtFsPMQ1d2Jc2okUaSjZqAFz2oEn3FLXC5a0a+siyA==}
+    engines: {node: '>=20.0.0'}
+
+  happy-dom@20.9.0:
+    resolution: {integrity: sha512-GZZ9mKe8r646NUAf/zemnGbjYh4Bt8/MqASJY+pSm5ZDtc3YQox+4gsLI7yi1hba6o+eCsGxpHn5+iEVn31/FQ==}
     engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
@@ -7909,10 +7913,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@happy-dom/global-registrator@20.8.9':
+  '@happy-dom/global-registrator@20.9.0':
     dependencies:
-      '@types/node': 25.5.0
-      happy-dom: 20.8.9
+      '@types/node': 25.6.0
+      happy-dom: 20.9.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8634,7 +8638,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.12.2
+      '@types/node': 25.6.0
 
   '@types/trusted-types@2.0.7': {}
 
@@ -9229,7 +9233,7 @@ snapshots:
     dependencies:
       baseline-browser-mapping: 2.10.19
       caniuse-lite: 1.0.30001788
-      electron-to-chromium: 1.5.339
+      electron-to-chromium: 1.5.340
       node-releases: 2.0.37
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
@@ -9716,7 +9720,7 @@ snapshots:
     dependencies:
       jake: 10.9.4
 
-  electron-to-chromium@1.5.339: {}
+  electron-to-chromium@1.5.340: {}
 
   emmet@2.4.11:
     dependencies:
@@ -10472,6 +10476,18 @@ snapshots:
   happy-dom@20.8.9:
     dependencies:
       '@types/node': 25.5.0
+      '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.1
+      entities: 7.0.1
+      whatwg-mimetype: 3.0.0
+      ws: 8.20.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  happy-dom@20.9.0:
+    dependencies:
+      '@types/node': 25.6.0
       '@types/whatwg-mimetype': 3.0.2
       '@types/ws': 8.18.1
       entities: 7.0.1
