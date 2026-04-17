@@ -57,3 +57,6 @@
 ## 2026-04-16 - Centralized Contact Form Navigation & Smart Focus
 **Learning:** In-page navigation to a contact form (especially from different pages or sections) can be jarring if it lacks visual feedback or causes unintended layout shifts on mobile due to automatic keyboard activation. Directing users to a form field on mobile can cover half the screen immediately, which might be undesirable if they just wanted to see the section.
 **Action:** Implement a centralized navigation handler for contact form links. Use "Smart Focus": on desktop, focus the first input to facilitate immediate typing; on mobile, focus the form container to provide visual context without triggering the virtual keyboard. Additionally, apply a temporary "highlight glow" animation to the form to clearly signal successful navigation.
+## 2026-04-17 - Tactile Feedback Snappiness
+**Learning:** The default `transition-all duration-300` combined with `active:scale-95` creates a sluggish tactile response, as the 300ms transition delays both the scale down and the release. This reduces the perceived snappiness of interactive elements.
+**Action:** Add `active:duration-75` alongside `active:scale-95` to shorten the animation curve specifically during the active (click/press) phase, making the tactile feedback feel immediate and responsive.
