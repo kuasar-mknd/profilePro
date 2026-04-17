@@ -51,9 +51,16 @@
 **Action:** Always leverage the centralized haptics management by simply adding the `data-haptic` attribute (e.g., `data-haptic="30"` or `data-haptic="50"`) directly to the HTML markup of the interactive element. No custom JS listeners are needed.
 
 ## 2026-04-14 - Pagination Accessibility & Navigation Context
+
 **Learning:** When adding keyboard shortcuts to pagination controls in a Single Page Application (SPA) utilizing View Transitions (like Astro's `astro:page-load`), global event listeners (like `document.addEventListener("keydown", ...)`) must be explicitly managed. They must be registered with a singleton pattern, where the previous instance is removed on subsequent page loads, otherwise memory leaks and duplicate trigger events will occur on every keystroke. Furthermore, when adding elements like `<kbd>` hints to Astro pagination controls, you must account for both active `<a>` tags and inactive boundary states, where the controls render as disabled `<span>` elements with `cursor-not-allowed` class.
 **Action:** Always test pagination components on both the first and last pages to ensure interactive styles (like hovers and keyboard shortcuts) don't apply to disabled states, and wrap global event listener additions in a cleanup check to ensure they survive SPA transitions intact.
 
 ## 2026-04-16 - Centralized Contact Form Navigation & Smart Focus
+
 **Learning:** In-page navigation to a contact form (especially from different pages or sections) can be jarring if it lacks visual feedback or causes unintended layout shifts on mobile due to automatic keyboard activation. Directing users to a form field on mobile can cover half the screen immediately, which might be undesirable if they just wanted to see the section.
 **Action:** Implement a centralized navigation handler for contact form links. Use "Smart Focus": on desktop, focus the first input to facilitate immediate typing; on mobile, focus the form container to provide visual context without triggering the virtual keyboard. Additionally, apply a temporary "highlight glow" animation to the form to clearly signal successful navigation.
+
+## 2026-04-17 - Tactile Feedback Snappiness
+
+**Learning:** The default `transition-all duration-300` combined with `active:scale-95` creates a sluggish tactile response, as the 300ms transition delays both the scale down and the release. This reduces the perceived snappiness of interactive elements.
+**Action:** Add `active:duration-75` alongside `active:scale-95` to shorten the animation curve specifically during the active (click/press) phase, making the tactile feedback feel immediate and responsive.

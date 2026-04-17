@@ -15,3 +15,8 @@
 **Vulnerability:** The Cloudflare Pages Function proxy (`functions/api/submit.ts`) forwarded JSON payloads to the Web3Forms API without server-side allowlisting, sanitization, or validation, relying solely on client-side logic. This created a Mass Assignment vulnerability (where arbitrary properties could be added) and potentially allowed Server-Side Request Forgery or XSS.
 **Learning:** Client-side validation in Astro/React components is easily bypassed. Any serverless function acting as a proxy for secrets must validate and sanitize all incoming payloads before forwarding them, implementing a defense-in-depth approach.
 **Prevention:** Always implement an explicit `Set` or `Array` of allowed keys, strongly type and validate fields (e.g., email), and strip/sanitize string inputs on the server-side before attaching secrets and proxying to external services.
+
+## 2026-04-17 - Sentinel: Resolve High Severity Vulnerability
+
+**Learning:** High-severity security vulnerabilities in deep transitive dependencies (e.g., `basic-ftp` inside `@lhci/cli`) should be resolved by adding explicit version overrides in the `pnpm.overrides` section of `package.json` to satisfy security audits (e.g., `pnpm audit`).
+**Action:** Replaced `basic-ftp` version using `pnpm.overrides` in `package.json`.
