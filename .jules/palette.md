@@ -60,3 +60,7 @@
 ## 2026-04-17 - Tactile Feedback Snappiness
 **Learning:** The default `transition-all duration-300` combined with `active:scale-95` creates a sluggish tactile response, as the 300ms transition delays both the scale down and the release. This reduces the perceived snappiness of interactive elements.
 **Action:** Add `active:duration-75` alongside `active:scale-95` to shorten the animation curve specifically during the active (click/press) phase, making the tactile feedback feel immediate and responsive.
+
+## 2024-05-20 - Scaled Tactile Feedback for Large Surfaces
+**Learning:** Applying the standard `active:scale-95` to large interactive elements like project cards or wide CTA buttons causes an exaggerated and jarring visual distortion.
+**Action:** Use a more subtle scale factor such as `active:scale-[0.98]` for components with large surface areas to maintain snappy tactile feedback without compromising visual stability.
