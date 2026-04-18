@@ -8,6 +8,13 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Dependabot checks for GitHub Actions dependencies
   - package-ecosystem: "github-actions"
