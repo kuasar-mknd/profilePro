@@ -64,3 +64,7 @@
 ## 2024-05-20 - Scaled Tactile Feedback for Large Surfaces
 **Learning:** Applying the standard `active:scale-95` to large interactive elements like project cards or wide CTA buttons causes an exaggerated and jarring visual distortion.
 **Action:** Use a more subtle scale factor such as `active:scale-[0.98]` for components with large surface areas to maintain snappy tactile feedback without compromising visual stability.
+
+## 2026-04-18 - Hover Elevation Consistency
+**Learning:** Interactive primary and secondary CTA elements occasionally lack the tactile `hover-lift` class despite having standard press feedback (`active:scale`). This makes hover states feel inconsistent.
+**Action:** Ensure all standard CTA buttons utilize the `hover-lift` utility class to supplement base hover styles, creating a cohesive visual response.
