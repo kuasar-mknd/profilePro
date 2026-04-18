@@ -81,7 +81,11 @@ As this is a static site, API errors are primarily HTTP-level responses served b
 
 There are no custom JSON error payloads since there are no dynamic JSON endpoints or Hono backend routing to generate them.
 
-<!-- Verified: DocOps -->
+## 🛑 Rate Limiting
+
+**Current Status:** As a static site (SSG) hosted on Cloudflare Pages, rate limiting is handled entirely at the CDN level. There are no application-level rate limits configured since there are no dynamic backend endpoints processing complex logic or database queries.
+
+<!-- Verified: DocOps 2026-04-18 -->
 
 ## Hono REST API Format (Hypothetical)
 If a dynamic REST API were implemented using Hono:

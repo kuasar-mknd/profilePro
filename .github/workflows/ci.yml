@@ -44,8 +44,13 @@ jobs:
       - name: Run Unit Tests
         run: pnpm run test
 
-      - name: Run Prisma Generate (Placeholder)
-        run: echo "No Prisma database exists in this Astro SSG repository. Skipping Prisma generation."
+      - name: Run Prisma Generate
+        run: |
+          if [ -f "prisma/schema.prisma" ]; then
+            pnpm prisma generate
+          else
+            echo "No Prisma database exists in this Astro SSG repository. Skipping Prisma generation."
+          fi
 
       - name: Verify Code (Lint + Format + Types)
         run: pnpm run check
