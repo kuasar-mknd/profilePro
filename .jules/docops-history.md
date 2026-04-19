@@ -48,3 +48,4 @@
 | 2026-04-17 | Documentation & Workflows | README.md, docs/ARCHITECTURE.md, docs/AI.md, docs/ENV.md, .github/workflows/codeql.yml, .github/workflows/dependency-review.yml | Updated verification timestamps and documented the pnpm run test command in README.md. |
 | 2026-04-18 | Audit & Verification | None | Verified documentation is accurate, complete, and perfectly mirrors the codebase capabilities and constraints. Checked CI/CD scripts. No changes needed to prevent looping and unnecessary rewrites. |
 | 2026-04-18 | Update Documentation & Workflows | docs/API.md, .github/workflows/ci.yml, .github/dependabot.yml | Added rate limiting section, dynamic Prisma CI check, and dependabot groups. |
+| 2026-04-19 | Client/Server Variables & AI Security | docs/ENV.md, docs/AI.md, .github/workflows/codeql.yml | Added explicit Astro SSG Client/Server env variable documentation, reinforced server-side AI key management, and enhanced CodeQL security rules. |
