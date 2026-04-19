@@ -14,7 +14,7 @@ If implemented, the AI adapter will require the following:
 - **Provider**: Local AI (e.g., Ollama) or Cloud API (OpenAI/Anthropic).
 - **Location**: The logic will reside in a build script or Astro integration (`src/utils/ai.ts`), not a live Hono backend.
 - **Environment Variables**:
-  - `AI_API_KEY`: The secret key to access the LLM provider.
+  - `AI_API_KEY`: The secret key to access the LLM provider. **Important:** This must never use the `PUBLIC_` prefix to ensure strict server-side management.
   - `AI_MODEL_NAME`: The model version to use (e.g., `gpt-4o-mini`, `llama3`).
   - *These variables must be added to `src/env.d.ts` and `.env.example` before use.* (Currently, they do not exist in the codebase).
 
