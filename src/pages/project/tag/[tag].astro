@@ -10,7 +10,6 @@ import EmptyState from "../../../components/ui/EmptyState.astro";
 export async function getStaticPaths() {
   const allProjects = await getSortedProjects();
 
-  // ⚡ Bolt: Replace O(T * N) map/filter loop with a single O(N) grouping pass
   // This calculates unique tags, tag counts, and pre-filters projects simultaneously,
   // preventing redundant array allocations and drastically speeding up SSG build times.
   const projectsByTag = new Map<string, typeof allProjects>();
@@ -87,30 +86,28 @@ const description = `Découvrez tous mes projets tagués avec "${tag}" en produc
       />
     </ScrollReveal>
 
-    {
-      /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
-    }
+    {}
     <div
       class="flex flex-wrap justify-center gap-8 mb-16 [content-visibility:auto] [contain-intrinsic-size:auto_2000px] contain-layout"
     >
       {
-          projects.length === 0 ? (
-            <EmptyState
-              message={`Aucun projet trouvé avec le tag "${tag}".`}
-              actionUrl="/project"
-              actionText="Voir tous les projets"
-            />
-          ) : (
-            projects.map((post, index) => (
-              <ScrollReveal
-                delay={index * 0.1}
-                class="w-full md:w-[calc(50%-1rem)]"
-              >
-                <Post postData={post} num={index} priority={index < 2} />
-              </ScrollReveal>
-            ))
-          )
-        }
+        projects.length === 0 ? (
+          <EmptyState
+            message={`Aucun projet trouvé avec le tag "${tag}".`}
+            actionUrl="/project"
+            actionText="Voir tous les projets"
+          />
+        ) : (
+          projects.map((post, index) => (
+            <ScrollReveal
+              delay={index * 0.1}
+              class="w-full md:w-[calc(50%-1rem)]"
+            >
+              <Post postData={post} num={index} priority={index < 2} />
+            </ScrollReveal>
+          ))
+        )
+      }
     </div>
   </section>
 </Base>
