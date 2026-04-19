@@ -131,7 +131,7 @@ const description = data.profile.content;
       <a
         id="lang-toggle-btn"
         href={sanitizeUrl(currentLang === "fr" ? "/cv/en" : "/cv")}
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-95 active:duration-75 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-secondary text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-[0.98] active:duration-75 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
         aria-label={currentLang === "fr"
           ? "Passer à la version anglaise"
           : "Switch to French version"}
@@ -143,7 +143,7 @@ const description = data.profile.content;
       <button
         id="print-cv-btn"
         type="button"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-95 active:duration-75 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift active:scale-[0.98] active:duration-75 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
         aria-label={currentLang === "fr"
           ? "Exporter le CV en PDF (Ctrl+P)"
           : "Export CV to PDF (Ctrl+P)"}
