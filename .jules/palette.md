@@ -72,3 +72,7 @@
 ## 2026-05-20 - Global Anchor Link Highlight
 **Learning:** In-page navigation via anchor links (hashes) can be disorienting as the scroll jump often happens instantaneously, leaving the user to scan the page for their intended target.
 **Action:** Implement a site-wide anchor highlight listener in the base layout that applies a temporary visual "glow" animation to any element targeted by a hash link, providing immediate visual confirmation.
+
+## 2026-04-20 - Toggle Button State Communication
+**Learning:** Toggle buttons (like the Dark/Light Mode switch) that rely purely on `aria-label` updates to communicate state changes can be less robust than standard ARIA states, especially if the `aria-label` content relies on complex text that screen readers might interpret differently.
+**Action:** When implementing a toggle button, always utilize the `aria-pressed` attribute (dynamically updating between "true" and "false") alongside `aria-label` changes to provide explicit, standardized state feedback to assistive technologies.
