@@ -598,6 +598,57 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         });
       }
 
+      /**
+       * 🎨 Palette: Global Anchor Link Highlight
+       * Provides visual feedback when navigating to an anchor on the same page.
+       */
+      function initAnchorHighlight() {
+        const highlight = (id: string) => {
+          const targetEl = document.getElementById(id.replace("#", ""));
+          if (!targetEl) return;
+
+          targetEl.classList.remove("highlight-glow");
+          void (targetEl as HTMLElement).offsetWidth; // Force reflow
+          targetEl.classList.add("highlight-glow");
+
+          setTimeout(() => {
+            targetEl.classList.remove("highlight-glow");
+          }, 2000);
+        };
+
+        const handleAnchorClick = (e: MouseEvent) => {
+          const target = e.target as HTMLElement;
+          const link = target.closest('a[href*="#"]');
+          if (!link) return;
+
+          try {
+            const url = new URL((link as HTMLAnchorElement).href);
+            if (url.pathname !== window.location.pathname) return;
+
+            const hash = url.hash;
+            if (!hash || hash === "#") return;
+
+            highlight(hash);
+          } catch {
+            // Ignore invalid URLs
+          }
+        };
+
+        if (window.__anchorHighlightHandler) {
+          document.removeEventListener(
+            "click",
+            window.__anchorHighlightHandler,
+          );
+        }
+        window.__anchorHighlightHandler = handleAnchorClick as EventListener;
+        document.addEventListener("click", window.__anchorHighlightHandler);
+
+        // Also highlight on page load if hash exists
+        if (window.location.hash) {
+          setTimeout(() => highlight(window.location.hash), 800);
+        }
+      }
+
       function secureLink(link: Element) {
         if (link.tagName !== "A" || link.getAttribute("target") !== "_blank")
           return;
@@ -666,6 +717,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
           initHaptics();
           secureLinks();
           initThemeObserver();
+          initAnchorHighlight();
         };
 
         if (window.__baseInitHandler) {

@@ -68,3 +68,7 @@
 ## 2026-04-18 - Hover Elevation Consistency
 **Learning:** Interactive primary and secondary CTA elements occasionally lack the tactile `hover-lift` class despite having standard press feedback (`active:scale`). This makes hover states feel inconsistent.
 **Action:** Ensure all standard CTA buttons utilize the `hover-lift` utility class to supplement base hover styles, creating a cohesive visual response.
+
+## 2026-05-20 - Global Anchor Link Highlight
+**Learning:** In-page navigation via anchor links (hashes) can be disorienting as the scroll jump often happens instantaneously, leaving the user to scan the page for their intended target.
+**Action:** Implement a site-wide anchor highlight listener in the base layout that applies a temporary visual "glow" animation to any element targeted by a hash link, providing immediate visual confirmation.
