@@ -31,7 +31,7 @@ To add a "new endpoint" (a new page route) or "use-case", you must define the ro
 
 - **Astro 5**: Core framework.
 - **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **npm**: Package Manager.
+- **pnpm**: Package Manager.
 - **Node.js**: Runtime.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
