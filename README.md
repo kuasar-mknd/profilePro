@@ -13,7 +13,7 @@
 [![Built with Astro](https://img.shields.io/badge/Astro-5.16-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![npm](https://img.shields.io/badge/pnpm-8.0%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://npm.sh)
+[![npm](https://img.shields.io/badge/pnpm-10.0%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
 <!-- Code Quality -->
@@ -99,7 +99,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 ### Prérequis
 
 - Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- pnpm 8+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
+- pnpm 10 (Requis pour l'exécution des scripts et le gestionnaire de paquets)
 
 ### Installation
 
@@ -129,7 +129,9 @@ Le site sera accessible sur `http://localhost:4321`.
 - `pnpm run dev` : Optimise les images et lance le serveur de développement.
 - `pnpm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
 - `pnpm run check` : Vérifie le code (linting + formatage + types).
+- `pnpm run format` : Formate le code (Prettier).
 - `pnpm run lighthouse` : Lance l'audit de performance.
+- `pnpm run analyze` : Génère le build de production et ouvre le rapport d'analyse de bundle.
 - `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
   - `pnpm run test` : Lance les tests unitaires avec Bun.
 
