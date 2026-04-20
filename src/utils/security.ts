@@ -115,6 +115,7 @@ const EMAIL_PATTERN =
  */
 export function isValidEmail(email: string): boolean {
   if (!email || typeof email !== "string") return false;
+  if (email.length > 254) return false;
   return EMAIL_PATTERN.test(email);
 }
 
@@ -225,6 +226,7 @@ export function isValidUrl(
   } = {},
 ): boolean {
   if (!url || typeof url !== "string") return false;
+  if (url.length > 2048) return false;
 
   // 🛡️ Sentinel: Check ORIGINAL string for control characters or dangerous patterns
   // BEFORE trimming. Trimming hides trailing/leading control chars that might be malicious

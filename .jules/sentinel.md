@@ -26,3 +26,9 @@
 **Vulnerability:** A denial of service via unbounded memory consumption in Client.list() in basic-ftp version <=5.2.2. A transitive dependency coming from @lhci/cli.
 **Learning:** High-severity security vulnerabilities in deep transitive dependencies should be resolved by adding explicit version overrides in the `pnpm.overrides` section of `package.json` to satisfy security audits (e.g., `pnpm audit`).
 **Prevention:** Added `"basic-ftp": ">=5.3.0"` to the `pnpm.overrides` block in `package.json` to enforce a non-vulnerable version, preventing Denial of Service through unbounded memory growth.
+
+## 2026-04-17 - Add explicit input length limits to input validators
+
+**Vulnerability:** Denial of Service via Regular Expression Denial of Service (ReDoS) or memory exhaustion when excessively large strings are passed to regular expressions without length limits.
+**Learning:** Even well-crafted regex patterns can suffer performance degradation with extremely long inputs, and parsing/validating massive inputs consumes unnecessary CPU and memory.
+**Prevention:** Implemented strict, standards-based length limits BEFORE executing regex validation. Added `email.length > 254` (RFC 5321) to `isValidEmail` and `url.length > 2048` to `isValidUrl` as a defense-in-depth measure.
