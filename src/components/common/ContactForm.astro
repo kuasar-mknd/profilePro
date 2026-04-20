@@ -372,20 +372,6 @@ import { Icon } from "astro-icon/components";
   .animate-fade-in-up {
     animation: fadeInUp 0.4s ease-out forwards;
   }
-
-  @keyframes highlightGlow {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgba(190, 18, 60, 0);
-    }
-    50% {
-      box-shadow: 0 0 30px 10px rgba(190, 18, 60, 0.3);
-    }
-  }
-
-  .form-highlight {
-    animation: highlightGlow 1.5s ease-in-out;
-  }
 </style>
 
 <script>
@@ -957,10 +943,10 @@ import { Icon } from "astro-icon/components";
         }
 
         // Add highlight animation
-        form.classList.remove("form-highlight");
+        form.classList.remove("highlight-glow");
         void form.offsetWidth; // Force reflow
-        form.classList.add("form-highlight");
-        setTimeout(() => form.classList.remove("form-highlight"), 2000);
+        form.classList.add("highlight-glow");
+        setTimeout(() => form.classList.remove("highlight-glow"), 2000);
       }
     };
 

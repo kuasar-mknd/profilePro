@@ -74,4 +74,5 @@ interface Window {
 interface Window {
   __paginationKeydownHandler?: (e: KeyboardEvent) => void;
   __paginationInteractionsInitHandler?: () => void;
+  __anchorHighlightHandler?: EventListener;
 }

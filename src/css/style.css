@@ -570,6 +570,21 @@
   animation: shimmer 4s linear infinite;
 }
 
+  @keyframes highlight-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(190 18 60 / 0%);
+    }
+
+    50% {
+      box-shadow: 0 0 30px 10px rgb(190 18 60 / 30%);
+    }
+  }
+
+  .highlight-glow {
+    animation: highlight-glow 1.5s ease-in-out;
+  }
+
 @keyframes float {
   0%,
   100% {
