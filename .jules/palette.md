@@ -80,3 +80,8 @@
 ## 2026-05-22 - Scroll Accessibility for Fixed Headers
 **Learning:** Fixed headers (e.g., `h-20` / 80px) often obscure the target of in-page anchor links, as the browser scrolls to the top of the viewport by default. This forces users to manually scroll up to see the targeted content.
 **Action:** Apply `scroll-pt-[header_height + buffer]` (e.g., `scroll-pt-24`) to the `<html>` element to ensure all anchor targets are cleared from the fixed header, maintaining context and accessibility.
+
+## 2024-04-21 - Form Submission Loading State Visibility & Accessibility
+
+**Learning:** When a full-width submit button enters a loading state, replacing the button text with a single, small centered spinner creates an unbalanced, ambiguous visual state. Additionally, relying on `aria-live` directly on a button that simultaneously receives `aria-busy="true"` can suppress the loading announcement for screen readers.
+**Action:** Always include descriptive text (e.g., "Envoi en cours...") alongside the spinner in the button's loading state to maintain visual weight and clarity. Use a separate, dedicated `sr-only` live region outside the button to guarantee the loading state is announced to assistive technologies.

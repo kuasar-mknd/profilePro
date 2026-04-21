@@ -228,11 +228,11 @@ import { Icon } from "astro-icon/components";
         aria-hidden="true"
       />
       <span
-        class="btn-loading hidden absolute inset-0 items-center justify-center"
-        aria-label="Envoi en cours..."
+        class="btn-loading hidden absolute inset-0 items-center justify-center gap-2"
+        aria-hidden="true"
       >
         <svg
-          class="animate-spin h-6 w-6 text-white"
+          class="animate-spin h-5 w-5 text-white"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -251,6 +251,7 @@ import { Icon } from "astro-icon/components";
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
+        <span class="font-medium">Envoi en cours...</span>
       </span>
       <span
         class="btn-success hidden absolute inset-0 items-center justify-center gap-2"
@@ -262,6 +263,15 @@ import { Icon } from "astro-icon/components";
       <!-- Ripple effect container -->
       <div class="btn-ripple absolute inset-0 pointer-events-none"></div>
     </button>
+
+    <!-- 🎨 Palette: Dedicated SR-only live region for form status updates -->
+    <div
+      id="form-status-announcer"
+      class="sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+    </div>
 
     <!-- Inline Error Message -->
     <div
@@ -802,6 +812,11 @@ import { Icon } from "astro-icon/components";
           this.submitButton.setAttribute("aria-busy", "true");
         }
 
+        const announcer = document.getElementById("form-status-announcer");
+        if (announcer) {
+          announcer.textContent = "Envoi du message en cours...";
+        }
+
         try {
           const formData = new FormData(this.form);
           const data: Record<string, string> = {};
@@ -849,6 +864,12 @@ import { Icon } from "astro-icon/components";
 
             this.errorMessage?.classList.add("hidden");
             this.form.removeAttribute("aria-describedby");
+
+            const announcer = document.getElementById("form-status-announcer");
+            if (announcer) {
+              announcer.textContent = "Message envoyé avec succès.";
+            }
+
             const successMessage = document.getElementById(
               "form-success-message",
             ) as HTMLElement;
@@ -889,6 +910,12 @@ import { Icon } from "astro-icon/components";
             this.submitButton.removeAttribute("aria-disabled");
             this.submitButton.removeAttribute("aria-busy");
           }
+
+          const announcer = document.getElementById("form-status-announcer");
+          if (announcer) {
+            announcer.textContent = "";
+          }
+
           this.showError(
             isAbortError
               ? "Le serveur met trop de temps à répondre. Veuillez réessayer."
