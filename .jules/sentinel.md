@@ -32,3 +32,8 @@
 **Vulnerability:** Denial of Service via Regular Expression Denial of Service (ReDoS) or memory exhaustion when excessively large strings are passed to regular expressions without length limits.
 **Learning:** Even well-crafted regex patterns can suffer performance degradation with extremely long inputs, and parsing/validating massive inputs consumes unnecessary CPU and memory.
 **Prevention:** Implemented strict, standards-based length limits BEFORE executing regex validation. Added `email.length > 254` (RFC 5321) to `isValidEmail` and `url.length > 2048` to `isValidUrl` as a defense-in-depth measure.
+
+## 2025-04-20 - Prevent Resource Exhaustion in Serverless Functions via Finally Blocks
+**Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
+**Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
+**Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.
