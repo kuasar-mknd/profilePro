@@ -37,3 +37,8 @@
 **Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
 **Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
 **Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.
+
+## 2024-04-21 - Prevent Resource Exhaustion in Serverless Functions via Finally Blocks
+**Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
+**Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
+**Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.

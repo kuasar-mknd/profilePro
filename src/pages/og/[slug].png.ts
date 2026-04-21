@@ -27,12 +27,13 @@ export const GET: APIRoute = async ({ props }) => {
       { signal: controller.signal },
     )
       .then((res) => {
-        clearTimeout(timeoutId);
         return res.arrayBuffer();
       })
       .catch((e) => {
-        clearTimeout(timeoutId);
         throw e;
+      })
+      .finally(() => {
+        clearTimeout(timeoutId);
       });
   }
   const fontData = await fontPromise;
