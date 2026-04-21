@@ -40,42 +40,44 @@ import { Icon } from "astro-icon/components";
 
     <!-- Column 2: Socials & Copyright (Centered) -->
     <div class="flex flex-col items-center justify-center space-y-6">
-      <ul class="flex flex-wrap justify-center gap-4">
-        {
-          config?.social?.github && (
-            <li>
-              <SocialIcon
-                url={config.social.github}
-                icon="mdi:github"
-                label="GitHub"
-              />
-            </li>
-          )
-        }
-        {
-          config?.social?.instagram && (
-            <li>
-              <SocialIcon
-                url={config.social.instagram}
-                icon="mdi:instagram"
-                label="Instagram"
-              />
-            </li>
-          )
-        }
+      <nav aria-label="Réseaux sociaux">
+        <ul class="flex flex-wrap justify-center gap-4">
+          {
+            config?.social?.github && (
+              <li>
+                <SocialIcon
+                  url={config.social.github}
+                  icon="mdi:github"
+                  label="GitHub"
+                />
+              </li>
+            )
+          }
+          {
+            config?.social?.instagram && (
+              <li>
+                <SocialIcon
+                  url={config.social.instagram}
+                  icon="mdi:instagram"
+                  label="Instagram"
+                />
+              </li>
+            )
+          }
 
-        {
-          config?.social?.youtube && (
-            <li>
-              <SocialIcon
-                url={config.social.youtube}
-                icon="mdi:youtube"
-                label="YouTube"
-              />
-            </li>
-          )
-        }
-      </ul>
+          {
+            config?.social?.youtube && (
+              <li>
+                <SocialIcon
+                  url={config.social.youtube}
+                  icon="mdi:youtube"
+                  label="YouTube"
+                />
+              </li>
+            )
+          }
+        </ul>
+      </nav>
       <div
         class="text-sm text-pacamara-primary/80 dark:text-white/80 text-center"
       >
