@@ -1,5 +1,13 @@
 import { sanitizeInput, isValidEmail } from "../../src/utils/security.ts";
 
+// 🛡️ Sentinel: Centralized security headers to prevent MIME sniffing, clickjacking, and enforce HSTS
+const securityHeaders = {
+  "Content-Type": "application/json",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+};
+
 export async function onRequestPost(context: {
   request: Request;
   env: { WEB3FORMS_ACCESS_KEY: string };
@@ -21,7 +29,7 @@ export async function onRequestPost(context: {
         }),
         {
           status: 403,
-          headers: { "Content-Type": "application/json" },
+          headers: securityHeaders,
         },
       );
     }
@@ -34,7 +42,7 @@ export async function onRequestPost(context: {
         JSON.stringify({ success: false, message: "Invalid JSON" }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: securityHeaders,
         },
       );
     }
@@ -45,7 +53,7 @@ export async function onRequestPost(context: {
         JSON.stringify({ success: false, message: "Invalid payload format" }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: securityHeaders,
         },
       );
     }
@@ -77,7 +85,7 @@ export async function onRequestPost(context: {
                 }),
                 {
                   status: 400,
-                  headers: { "Content-Type": "application/json" },
+                  headers: securityHeaders,
                 },
               );
             }
@@ -96,7 +104,7 @@ export async function onRequestPost(context: {
             }),
             {
               status: 400,
-              headers: { "Content-Type": "application/json" },
+              headers: securityHeaders,
             },
           );
         }
@@ -109,29 +117,32 @@ export async function onRequestPost(context: {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(data),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
+    let response;
+    try {
+      response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     const result = await response.json();
     return new Response(JSON.stringify(result), {
       status: response.status,
-      headers: { "Content-Type": "application/json" },
+      headers: securityHeaders,
     });
   } catch {
     return new Response(
       JSON.stringify({ success: false, message: "Internal server error" }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: securityHeaders,
       },
     );
   }

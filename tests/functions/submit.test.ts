@@ -4,6 +4,13 @@ import { onRequestPost } from "../../functions/api/submit.ts";
 describe("Submit Cloudflare Function", () => {
   let originalFetch: typeof fetch;
 
+  const securityHeaders = {
+    "Content-Type": "application/json",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+  };
+
   beforeEach(() => {
     originalFetch = global.fetch;
     // Mock the global fetch to avoid real network requests
@@ -15,7 +22,7 @@ describe("Submit Cloudflare Function", () => {
         }),
         {
           status: 200,
-          headers: { "Content-Type": "application/json" },
+          headers: securityHeaders,
         },
       );
     });
@@ -73,6 +80,7 @@ describe("Submit Cloudflare Function", () => {
     const nullContext = createMockContext(null);
     const nullResponse = await onRequestPost(nullContext as unknown);
     expect(nullResponse.status).toBe(400);
+    expect(nullResponse.headers.get("X-Content-Type-Options")).toBe("nosniff");
 
     const arrayContext = createMockContext(["not", "an", "object"]);
     const arrayResponse = await onRequestPost(arrayContext as unknown);
@@ -94,6 +102,8 @@ describe("Submit Cloudflare Function", () => {
     const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(400);
+    expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
+    expect(response.headers.get("X-Frame-Options")).toBe("DENY");
     const data = await response.json();
     expect(data.message).toBe("Bad Request: Invalid type for name");
   });
@@ -171,6 +181,8 @@ describe("Submit Cloudflare Function", () => {
     const response = await onRequestPost(context as unknown);
 
     expect(response.status).toBe(403);
+    expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
+    expect(response.headers.get("X-Frame-Options")).toBe("DENY");
     const data = await response.json();
     expect(data.success).toBe(false);
     expect(data.message).toBe("Forbidden: Invalid origin");
