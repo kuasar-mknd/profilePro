@@ -66,7 +66,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
 ---
 
 <!doctype html>
-<html lang={lang} class="scroll-smooth">
+<html lang={lang} class="scroll-smooth scroll-pt-24">
   <head>
     <meta charset="UTF-8" />
     <!-- ⚡ Preconnect hints FIRST for maximum early connection (190ms+ LCP savings) -->
@@ -260,14 +260,14 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     <div class="absolute z-100 top-0 left-0 pointer-events-none">
       <a
         href="#main-content"
-        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto active:scale-95 active:duration-75"
         data-haptic="30"
       >
         {t.skipContent}
       </a>
       <a
         href="#main-footer"
-        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto"
+        class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto active:scale-95 active:duration-75"
         data-haptic="30"
       >
         {t.skipFooter}
