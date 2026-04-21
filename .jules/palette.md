@@ -85,3 +85,6 @@
 
 **Learning:** When a full-width submit button enters a loading state, replacing the button text with a single, small centered spinner creates an unbalanced, ambiguous visual state. Additionally, relying on `aria-live` directly on a button that simultaneously receives `aria-busy="true"` can suppress the loading announcement for screen readers.
 **Action:** Always include descriptive text (e.g., "Envoi en cours...") alongside the spinner in the button's loading state to maintain visual weight and clarity. Use a separate, dedicated `sr-only` live region outside the button to guarantee the loading state is announced to assistive technologies.
+## 2026-05-24 - Tactile Feedback Consistency
+**Learning:** Applying the standard `active:scale-95` to large interactive elements like project cards or wide CTA buttons causes an exaggerated and jarring visual distortion.
+**Action:** Use a more subtle scale factor such as `active:scale-[0.98]` for components with large surface areas to maintain snappy tactile feedback without compromising visual stability. Always pair it with `active:duration-75`.
