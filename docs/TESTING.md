@@ -9,14 +9,31 @@ Unit tests are written using `bun:test` and `@happy-dom/global-registrator` for 
 To run the unit tests:
 
 ```bash
-bun test src/ tests/
+pnpm run test
 ```
 
 To run tests with coverage reporting:
 
 ```bash
-bun test --coverage src/ tests/
+pnpm run test --coverage
 ```
+
+## Quality Checks
+
+Before committing code, ensure all static analysis and code formatting rules are met:
+
+- Format code (Prettier):
+  ```bash
+  pnpm format
+  ```
+- Lint code (ESLint & Stylelint):
+  ```bash
+  pnpm lint
+  ```
+- Typecheck and Verify everything:
+  ```bash
+  pnpm run check
+  ```
 
 ## End-to-End (E2E) Testing
 
@@ -33,4 +50,4 @@ To run the E2E tests:
     pnpm run test:e2e
     ```
 
-*Note: The development server is generally expected to be running for local E2E testing unless the Playwright configuration handles starting it automatically.*
+_Note: The development server is generally expected to be running for local E2E testing unless the Playwright configuration handles starting it automatically._

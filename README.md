@@ -178,7 +178,7 @@ Le workflow assure :
 
 1. Vérification de la qualité (`check`).
 2. Tests End-to-End (`test:e2e`).
-3. Scan de sécurité (`CodeQL`, `Dependency Review`).
+3. Scan de sécurité (`CodeQL` pour JS/TS, et `Dependency Review` pour bloquer les dépendances à risque sur les PRs).
 4. Build et déploiement via Wrangler.
 
 Pour plus de détails sur le pipeline, voir [ARCHITECTURE.md](docs/ARCHITECTURE.md#cicd-pipeline).
@@ -204,7 +204,9 @@ Construit avec ❤️ par Samuel Dulex
 <!-- Verified: DocOps 2026-04-17 -->
 
 ### Local Setup for Hono/Prisma (Hypothetical)
+
 While this is currently an Astro SSG, if the Hono/Prisma features are activated in the future, you would need to:
+
 1. Ensure a local database (e.g., PostgreSQL) is running.
 2. Provide a valid `DATABASE_URL` in `.env`.
 3. Run `pnpm prisma generate` and `pnpm prisma db push` to initialize the database schema.
