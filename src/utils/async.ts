@@ -52,16 +52,18 @@ export async function fetchVimeoPosterWithCache(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const response = await fetch(
-      `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
-      { signal: controller.signal },
-    );
+    try {
+      const response = await fetch(
+        `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(videoUrl)}`,
+        { signal: controller.signal },
+      );
 
-    clearTimeout(timeoutId);
-
-    const data = await response.json();
-    vimeoPosterCache.set(videoUrl, data.thumbnail_url);
-    return data.thumbnail_url;
+      const data = await response.json();
+      vimeoPosterCache.set(videoUrl, data.thumbnail_url);
+      return data.thumbnail_url;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   } catch (e) {
     vimeoPosterCache.set(videoUrl, null);
     throw e;
