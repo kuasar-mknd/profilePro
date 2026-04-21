@@ -76,3 +76,7 @@
 ## 2026-04-20 - Toggle Button State Communication
 **Learning:** Toggle buttons (like the Dark/Light Mode switch) that rely purely on `aria-label` updates to communicate state changes can be less robust than standard ARIA states, especially if the `aria-label` content relies on complex text that screen readers might interpret differently.
 **Action:** When implementing a toggle button, always utilize the `aria-pressed` attribute (dynamically updating between "true" and "false") alongside `aria-label` changes to provide explicit, standardized state feedback to assistive technologies.
+
+## 2026-05-22 - Scroll Accessibility for Fixed Headers
+**Learning:** Fixed headers (e.g., `h-20` / 80px) often obscure the target of in-page anchor links, as the browser scrolls to the top of the viewport by default. This forces users to manually scroll up to see the targeted content.
+**Action:** Apply `scroll-pt-[header_height + buffer]` (e.g., `scroll-pt-24`) to the `<html>` element to ensure all anchor targets are cleared from the fixed header, maintaining context and accessibility.
