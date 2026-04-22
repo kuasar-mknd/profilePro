@@ -25,7 +25,7 @@ mock.module("@resvg/resvg-js", () => ({
 // Mock utils/projects
 const mockProjects = [
   {
-    slug: "test-project-1",
+    id: "test-project-1",
     data: {
       title: "Test Project 1",
       intro: "Test Intro",
@@ -35,7 +35,7 @@ const mockProjects = [
     },
   },
   {
-    slug: "test-project-2",
+    id: "test-project-2",
     data: {
       title: "Test Project 2",
       description: "Fallback Description",
