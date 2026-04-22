@@ -491,7 +491,7 @@ const jsonLd = {
           <a
             id="prev-project-link"
             href={sanitizeUrl(`/project/${nextPost.slug}/`)}
-            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5"
+            class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
             data-haptic="50"
             aria-label={`Projet précédent : ${nextPost.data.title} (${nextPost.data.tag}) ([)`}
             aria-keyshortcuts="["
@@ -505,7 +505,7 @@ const jsonLd = {
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet précédent • {nextPost.data.tag}
                 <kbd
-                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
                   aria-hidden="true"
                 >
                   [
@@ -526,7 +526,7 @@ const jsonLd = {
           <a
             id="next-project-link"
             href={sanitizeUrl(`/project/${prevPost.slug}/`)}
-            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5"
+            class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
             data-haptic="50"
             aria-label={`Projet suivant : ${prevPost.data.title} (${prevPost.data.tag}) (])`}
             aria-keyshortcuts="]"
@@ -535,7 +535,7 @@ const jsonLd = {
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
                 Projet suivant • {prevPost.data.tag}
                 <kbd
-                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
+                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
                   aria-hidden="true"
                 >
                   ]
