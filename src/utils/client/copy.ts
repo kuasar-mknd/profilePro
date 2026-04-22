@@ -126,7 +126,7 @@ export function initCopyButtons() {
   if (window.__copyBtnClickHandler) {
     document.removeEventListener("click", window.__copyBtnClickHandler);
   }
-  window.__copyBtnClickHandler = handleCopyClick as EventListener;
+  window.__copyBtnClickHandler = handleCopyClick as unknown as EventListener;
   document.addEventListener("click", window.__copyBtnClickHandler);
 
   addCopyButtons();
