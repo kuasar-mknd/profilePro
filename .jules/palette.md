@@ -88,3 +88,7 @@
 ## 2026-05-24 - Tactile Feedback Consistency
 **Learning:** Applying the standard `active:scale-95` to large interactive elements like project cards or wide CTA buttons causes an exaggerated and jarring visual distortion.
 **Action:** Use a more subtle scale factor such as `active:scale-[0.98]` for components with large surface areas to maintain snappy tactile feedback without compromising visual stability. Always pair it with `active:duration-75`.
+
+## 2026-04-22 - Contextual Keyboard Shortcut Reveal
+**Learning:** Displaying keyboard shortcuts (like `[` and `]`) permanently on navigation links can clutter a minimalist UI, yet they are vital for power users.
+**Action:** Use a "Contextual Reveal" pattern by setting the `<kbd>` element to `opacity-0` by default and `group-hover:opacity-100 group-focus-visible:opacity-100` with a smooth transition. This rewards exploration without penalizing casual users with extra visual noise.
