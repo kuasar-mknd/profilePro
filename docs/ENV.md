@@ -6,16 +6,17 @@
 
 The following variables must be set in your `.env` file (locally) or in your CI/Deployment environment.
 
-| Variable                    | Description                             | Required | Example   |
-| :-------------------------- | :-------------------------------------- | :------- | :-------- |
-| `WEB3FORMS_ACCESS_KEY`      | Public key for Web3Forms (Contact Form) | Yes      | `abc-123` |
-| `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics      | No       | `abc-123` |
+| Variable                    | Description                             | Required | Example                   |
+| :-------------------------- | :-------------------------------------- | :------- | :------------------------ |
+| `WEB3FORMS_ACCESS_KEY`      | Public key for Web3Forms (Contact Form) | Yes      | `YOUR_WEB3FORMS_KEY`      |
+| `PUBLIC_CF_ANALYTICS_TOKEN` | Token for Cloudflare Web Analytics      | No       | `YOUR_CF_ANALYTICS_TOKEN` |
 
 _(Note: No Prisma `DATABASE_URL` or Hono backend environment variables are required as this is a fully static frontend application built on Astro. There is no Hono framework used in this repository. The Cloudflare analytics token is strictly optional)._
 
 ## 🔒 Client vs Server Variables (Astro SSG)
 
 In Astro, environment variables must be prefixed with `PUBLIC_` to be accessible on the client-side (browser).
+
 - **Server-side only**: `WEB3FORMS_ACCESS_KEY`
 - **Client-side**: `PUBLIC_CF_ANALYTICS_TOKEN`
 
@@ -36,6 +37,8 @@ PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
 <!-- Verified: DocOps 2026-04-17 -->
 
 ## Hono + Prisma Variables (Hypothetical)
+
 If a dynamic backend were added, the following would be required:
+
 - `DATABASE_URL`: Connection string for Prisma.
 - `JWT_SECRET`: Secret key for authentication.

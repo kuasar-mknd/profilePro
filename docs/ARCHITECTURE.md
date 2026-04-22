@@ -17,7 +17,7 @@ To maintain a scalable and testable codebase, the project structure maps to Clea
 **Where to add new endpoints/use-cases:**
 As an Astro static site generator (SSG), there is no dynamic backend routing (e.g. Hono) or Prisma database layer.
 To add a "new endpoint" (a new page route) or "use-case", you must define the routing in the **Application/Pages Layer** (`src/pages/`) by creating a new `.astro` file. The underlying business logic or data schema should be implemented in the **Domain/Content Layer** (`src/content/`) via Markdown/MDX content collections.
-*Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the future, it should ideally be deployed independently or placed in a dedicated `api/` directory so it doesn't pollute the SSG routing. Currently, this repository relies entirely on the file system for data storage and does not execute database queries.*
+_Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the future, it should ideally be deployed independently or placed in a dedicated `api/` directory so it doesn't pollute the SSG routing. Currently, this repository relies entirely on the file system for data storage and does not execute database queries._
 
 ### 2. Data Flow & State Management
 
@@ -31,7 +31,7 @@ To add a "new endpoint" (a new page route) or "use-case", you must define the ro
 
 - **Astro 5**: Core framework.
 - **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **npm**: Package Manager.
+- **pnpm**: Package Manager.
 - **Node.js**: Runtime.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
@@ -125,7 +125,9 @@ Workflows are defined in `.github/workflows/`:
 <!-- Verified: DocOps 2026-04-17 -->
 
 ### Hono + Prisma Integration (Hypothetical)
+
 While this project is currently an Astro SSG, if a Hono + Prisma backend were to be implemented:
+
 - **Clean Architecture:** Hono routes would map to the Application Layer, while Prisma schemas would define the Domain Layer.
 - **Where to add new endpoints:** New endpoints would be added in a hypothetical `api/` directory using Hono syntax (e.g., `app.get('/new-route', (c) => ...)`).
 - **Prisma:** A real database would be queried inside these Hono routes. Since this is currently a static portfolio, `prisma generate` and dynamic database queries are not required.
