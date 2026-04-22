@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 const { entry, prevPost, nextPost, allProjects } = Astro.props;
 
 // Calculate reading time
-const readingTime = getReadingTime(entry.body);
+const readingTime = getReadingTime(entry.body || "");
 
 // ⚡ Bolt: Execute render, getEntry, and all getImage calls concurrently via Promise.all
 // This eliminates sequential blocking during SSG builds.

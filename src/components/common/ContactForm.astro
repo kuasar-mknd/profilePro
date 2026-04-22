@@ -395,17 +395,17 @@ import { Icon } from "astro-icon/components";
 
   class ContactFormController {
     private form: HTMLFormElement;
-    private timestampInput: HTMLInputElement;
-    private submitButton: HTMLButtonElement;
-    private resetBtn: HTMLButtonElement;
-    private errorResetBtn: HTMLButtonElement;
-    private errorMessage: HTMLElement;
-    private errorText: HTMLParagraphElement;
-    private nameInput: HTMLInputElement;
-    private emailInput: HTMLInputElement;
-    private messageInput: HTMLTextAreaElement;
-    private messageCounter: HTMLElement;
-    private messageCounterSr: HTMLElement;
+    private timestampInput!: HTMLInputElement;
+    private submitButton!: HTMLButtonElement;
+    private resetBtn!: HTMLButtonElement;
+    private errorResetBtn!: HTMLButtonElement;
+    private errorMessage!: HTMLElement;
+    private errorText!: HTMLParagraphElement;
+    private nameInput!: HTMLInputElement;
+    private emailInput!: HTMLInputElement;
+    private messageInput!: HTMLTextAreaElement;
+    private messageCounter!: HTMLElement;
+    private messageCounterSr!: HTMLElement;
 
     private maxMessageLength: number = 5000;
     private resizeRaf: number | null = null;
