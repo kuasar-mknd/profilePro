@@ -92,3 +92,7 @@
 ## 2026-04-22 - Contextual Keyboard Shortcut Reveal
 **Learning:** Displaying keyboard shortcuts (like `[` and `]`) permanently on navigation links can clutter a minimalist UI, yet they are vital for power users.
 **Action:** Use a "Contextual Reveal" pattern by setting the `<kbd>` element to `opacity-0` by default and `group-hover:opacity-100 group-focus-visible:opacity-100` with a smooth transition. This rewards exploration without penalizing casual users with extra visual noise.
+
+## 2026-05-25 - Contextual Keyboard Shortcuts for Primary Branding Links
+**Learning:** Main branding links (like the site logo) are frequently used by keyboard users to quickly navigate back to the home page, but they often lack explicit keyboard shortcuts, requiring manual tabbing.
+**Action:** Always provide explicit keyboard shortcuts (e.g., `Alt+H`) for primary navigational elements and reveal them using the consistent `<kbd>` contextual reveal pattern (`opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100`) so they are discoverable without cluttering the interface.
