@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
 import { limitConcurrency } from "../../utils/async";
+import { render } from "astro:content";
 const STRONG_TAG_REGEX = /(<strong>.*?<\/strong>)/g;
 
 export function getStaticPaths() {
@@ -90,7 +91,7 @@ const renderedExperiences = await limitConcurrency(
   experiences,
   2,
   async (exp) => {
-    const { Content } = await exp.render();
+    const { Content } = await render(exp);
     return { exp, Content };
   },
 );
@@ -99,7 +100,7 @@ const renderedEducations = await limitConcurrency(
   educations,
   2,
   async (edu) => {
-    const { Content } = await edu.render();
+    const { Content } = await render(edu);
     return { edu, Content };
   },
 );

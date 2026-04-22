@@ -6,7 +6,7 @@ import { Resvg } from "@resvg/resvg-js";
 export async function getStaticPaths() {
   const projects = await getSortedProjects();
   return projects.map((project) => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: { project },
   }));
 }

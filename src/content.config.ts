@@ -1,7 +1,9 @@
-import { defineCollection, reference, z } from "astro:content";
+import { defineCollection, reference } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 const authorCollection = defineCollection({
-  type: "data", // v2.5.0 and later
+  loader: glob({ pattern: "**/*.json", base: "./src/content/author" }),
   schema: ({ image }) =>
     z.object({
       displayName: z.string().min(1).max(50),
@@ -11,7 +13,7 @@ const authorCollection = defineCollection({
 });
 
 const projectCollection = defineCollection({
-  type: "content", // v2.5.0 and later
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/project" }),
   schema: ({ image }) =>
     z.object({
       title: z.string().min(1).max(100),
@@ -32,7 +34,10 @@ const projectCollection = defineCollection({
 });
 
 const cvExperienceCollection = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/cvExperience",
+  }),
   schema: z.object({
     role: z.string().min(1).max(100),
     company: z.string().min(1).max(100),
@@ -44,7 +49,7 @@ const cvExperienceCollection = defineCollection({
 });
 
 const cvEducationCollection = defineCollection({
-  type: "content",
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/cvEducation" }),
   schema: z.object({
     degree: z.string().min(1).max(100),
     school: z.string().min(1).max(150),

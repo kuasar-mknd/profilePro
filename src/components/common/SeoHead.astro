@@ -11,8 +11,8 @@ const description = postData?.data?.description
   ? postData.data.description
   : config.description;
 const permalink = new URL(Astro.url.pathname, Astro.url);
-const image = postData?.slug
-  ? `/og/${postData.slug}.png`
+const image = postData?.id
+  ? `/og/${postData.id}.png`
   : postData?.data?.image
     ? postData.data.image.src
     : config.defaultOgImage;

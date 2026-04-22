@@ -14,7 +14,7 @@ import VideoPlayer from "../../components/features/projects/VideoPlayer.astro";
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
-import { getEntry } from "astro:content";
+import { getEntry, render } from "astro:content";
 import { getReadingTime } from "../../utils/readingTime";
 import { getSortedProjects } from "../../utils/projects";
 
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
   const projectEntries = allProjects;
 
   return projectEntries.map((entry, index) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: {
       entry,
       prevPost:
@@ -91,7 +91,7 @@ if (entry.data.image) {
 
 const [{ Content, headings }, author, posterImg, w640, w960, w1280, w1600] =
   await Promise.all([
-    entry.render(),
+    render(entry),
     getEntry(entry.data.author),
     optimizedPosterPromise,
     ...heroImagesPromises,
@@ -154,7 +154,7 @@ const jsonLd = {
               width={w1600.attributes.width}
               height={w1600.attributes.height}
               class="w-full h-full object-cover"
-              transition:name={`project-image-${entry.slug}`}
+              transition:name={`project-image-${entry.id}`}
               loading="eager"
               fetchpriority="high"
             />
@@ -490,7 +490,7 @@ const jsonLd = {
         nextPost ? (
           <a
             id="prev-project-link"
-            href={sanitizeUrl(`/project/${nextPost.slug}/`)}
+            href={sanitizeUrl(`/project/${nextPost.id}/`)}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
             data-haptic="50"
             aria-label={`Projet précédent : ${nextPost.data.title} (${nextPost.data.tag}) ([)`}
@@ -525,7 +525,7 @@ const jsonLd = {
         prevPost ? (
           <a
             id="next-project-link"
-            href={sanitizeUrl(`/project/${prevPost.slug}/`)}
+            href={sanitizeUrl(`/project/${prevPost.id}/`)}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
             data-haptic="50"
             aria-label={`Projet suivant : ${prevPost.data.title} (${prevPost.data.tag}) (])`}

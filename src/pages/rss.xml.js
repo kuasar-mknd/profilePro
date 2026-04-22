@@ -18,7 +18,7 @@ export async function GET(_context) {
       title: sanitizeHtml(post.data.title, SANITIZE_OPTIONS),
       pubDate: post.data.pubDate,
       description: sanitizeHtml(post.data.intro, SANITIZE_OPTIONS),
-      link: `/project/${post.slug}/`,
+      link: `/project/${post.id}/`,
     })),
     customData: `<language>fr-ch</language>`,
   });

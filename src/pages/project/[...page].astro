@@ -74,7 +74,7 @@ const collectionJsonLd = {
     itemListElement: page.data.map((project, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: siteUrl + `/project/${project.slug}/`,
+      url: siteUrl + `/project/${project.id}/`,
       name: project.data.title,
     })),
   },
