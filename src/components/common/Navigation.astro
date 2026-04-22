@@ -97,6 +97,9 @@ const currentPath = normalizePath(pathname);
       } else if (e.key === "3") {
         e.preventDefault();
         navigate("/about/");
+      } else if (e.key === "h" || e.key === "H") {
+        e.preventDefault();
+        navigate("/");
       }
     }
   };
