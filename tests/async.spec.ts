@@ -77,7 +77,7 @@ describe("fetchVimeoPosterWithCache", () => {
     };
     fetchSpy.mockResolvedValue({
       json: async () => mockResponseData,
-    } as any);
+    } as unknown as Response);
 
     const url = "https://vimeo.com/1234567";
 
@@ -110,7 +110,7 @@ describe("fetchVimeoPosterWithCache", () => {
   it("should clear timeout on success", async () => {
     fetchSpy.mockResolvedValue({
       json: async () => ({ thumbnail_url: "https://example.com/poster2.jpg" }),
-    } as any);
+    } as unknown as Response);
 
     const url = "https://vimeo.com/timeout-case-2";
     await fetchVimeoPosterWithCache(url);
