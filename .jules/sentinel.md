@@ -17,6 +17,7 @@
 **Prevention:** Always implement an explicit `Set` or `Array` of allowed keys, strongly type and validate fields (e.g., email), and strip/sanitize string inputs on the server-side before attaching secrets and proxying to external services.
 
 ## 2024-04-17 - API Key Exposure via Dev Endpoint
+
 **Vulnerability:** The Web3Forms API key was exposed to the client in the development environment via the `/api/dev-key` endpoint to bypass proxy requirements locally.
 **Learning:** Development endpoints that expose secrets break environment parity and risk accidental leakage if left active or if development code paths make their way to production or are accessible externally.
 **Prevention:** Always maintain environment parity. For external APIs requiring server-side secret injection, use local development proxies (e.g. Astro API Routes) that mirror production behavior instead of creating dev-only client-side workarounds.
@@ -34,11 +35,19 @@
 **Prevention:** Implemented strict, standards-based length limits BEFORE executing regex validation. Added `email.length > 254` (RFC 5321) to `isValidEmail` and `url.length > 2048` to `isValidUrl` as a defense-in-depth measure.
 
 ## 2025-04-20 - Prevent Resource Exhaustion in Serverless Functions via Finally Blocks
+
 **Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
 **Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
 **Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.
 
+## 2026-04-24 - Add explicit version override for uuid
+
+**Vulnerability:** Missing buffer bounds check in v3/v5/v6 when buf is provided in uuid <14.0.0. A transitive dependency coming from @lhci/cli.
+**Learning:** Moderate-severity security vulnerabilities in transitive dependencies should be resolved by adding explicit version overrides in the `pnpm.overrides` section of `package.json` to satisfy security audits (e.g., `pnpm audit`).
+**Prevention:** Added `"uuid": ">=14.0.0"` to the `pnpm.overrides` block in `package.json` to enforce a non-vulnerable version, preventing buffer bounds check vulnerabilities.
+
 ## 2024-04-21 - Prevent Resource Exhaustion in Serverless Functions via Finally Blocks
+
 **Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
 **Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
 **Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.
