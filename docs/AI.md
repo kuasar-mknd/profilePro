@@ -16,7 +16,7 @@ If implemented, the AI adapter will require the following:
 - **Environment Variables**:
   - `AI_API_KEY`: The secret key to access the LLM provider. **Important:** This must never use the `PUBLIC_` prefix to ensure strict server-side management.
   - `AI_MODEL_NAME`: The model version to use (e.g., `gpt-4o-mini`, `llama3`).
-  - *These variables must be added to `src/env.d.ts` and `.env.example` before use.* (Currently, they do not exist in the codebase).
+  - _These variables must be added to `src/env.d.ts` and `.env.example` before use._ (Currently, they do not exist in the codebase).
 
 ## 📋 Data Schemas (Expected)
 
@@ -30,22 +30,24 @@ If AI integration is added, the expected JSON schema for a project summary might
 }
 ```
 
-*(Note: This project currently has no active AI or adapter implementation. The schema above is strictly aspirational and serves as a placeholder for future iterations.)*
+_(Note: This project currently has no active AI or adapter implementation. The schema above is strictly aspirational and serves as a placeholder for future iterations.)_
 
 ## 🫰 Cost-Control Guidance & Limits
 
 - **Static Generation Strategy**: Since this is an Astro SSG project without a Hono backend or Prisma DB, AI model execution is restricted strictly to **build time** (e.g., inside `getStaticPaths` or an integration script). There are **no runtime AI costs** and no serverless latency for users.
-- **Caching**: AI responses *must* be heavily cached locally (e.g., in `.astro/cache` or a `src/data/ai-cache.json` flat file). This ensures the model is not re-queried during redundant CI builds unless the source Markdown actually changes.
+- **Caching**: AI responses _must_ be heavily cached locally (e.g., in `.astro/cache` or a `src/data/ai-cache.json` flat file). This ensures the model is not re-queried during redundant CI builds unless the source Markdown actually changes.
 - **Rate Limit Management**: The build script adapter must implement a queue or concurrency limiter (like `p-limit`) to prevent exceeding API rate limits when statically generating metadata for many projects simultaneously.
 
 ## 🛡 Policy
 
 - All AI-generated content must be reviewed by a human before publishing.
 - No user data is sent to AI endpoints.
-<!-- Verified: DocOps 2026-04-17 -->
+<!-- Verified: DocOps 2026-04-24 -->
 
 ### Expected JSON Schema from AI Adapter
+
 If the summarization feature is fully integrated with a hypothetical Hono backend, the expected JSON schema is:
+
 ```json
 {
   "summary": "String representing the short text summary.",
@@ -53,4 +55,5 @@ If the summarization feature is fully integrated with a hypothetical Hono backen
   "sentiment": "String (positive, neutral, negative)"
 }
 ```
+
 **Cost-control guidance**: Local caching of responses and strict rate-limiting must be enforced within the Hono routes or Astro integrations to prevent runaway API costs.

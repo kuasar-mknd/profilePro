@@ -16,6 +16,7 @@ _(Note: No Prisma `DATABASE_URL` or Hono backend environment variables are requi
 ## 🔒 Client vs Server Variables (Astro SSG)
 
 In Astro, environment variables must be prefixed with `PUBLIC_` to be accessible on the client-side (browser).
+
 - **Server-side only**: `WEB3FORMS_ACCESS_KEY`
 - **Client-side**: `PUBLIC_CF_ANALYTICS_TOKEN`
 
@@ -33,9 +34,11 @@ WEB3FORMS_ACCESS_KEY="YOUR_WEB3FORMS_KEY"
 PUBLIC_CF_ANALYTICS_TOKEN="YOUR_CF_ANALYTICS_TOKEN"
 ```
 
-<!-- Verified: DocOps 2026-04-17 -->
+<!-- Verified: DocOps 2026-04-24 -->
 
 ## Hono + Prisma Variables (Hypothetical)
+
 If a dynamic backend were added, the following would be required:
+
 - `DATABASE_URL`: Connection string for Prisma.
 - `JWT_SECRET`: Secret key for authentication.

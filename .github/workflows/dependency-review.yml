@@ -32,5 +32,5 @@ jobs:
             @emmetio/css-parser,
             @apideck/better-ajv-errors,
             @antfu/utils
-# Verified: DocOps 2026-04-17
+# Verified: DocOps 2026-04-24
 # Part of DocOps batch

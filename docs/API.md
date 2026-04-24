@@ -68,7 +68,7 @@ Directives for search engine crawlers.
 
 **No authentication is required.**
 
-**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases (Prisma), or user sessions exposed to the client. All endpoints are public and read-only. *If a dynamic backend (such as Hono) were ever added, it would be expected to implement its own standard authentication expectations (like API keys or Bearer tokens).*
+**Auth expectations:** No authentication is required or expected for this static setup. Since this is a fully static portfolio generated at build time (SSG), there are no dynamic APIs, databases (Prisma), or user sessions exposed to the client. All endpoints are public and read-only. _If a dynamic backend (such as Hono) were ever added, it would be expected to implement its own standard authentication expectations (like API keys or Bearer tokens)._
 
 ## ❌ Error Format
 
@@ -85,10 +85,12 @@ There are no custom JSON error payloads since there are no dynamic JSON endpoint
 
 **Current Status:** As a static site (SSG) hosted on Cloudflare Pages, rate limiting is handled entirely at the CDN level. There are no application-level rate limits configured since there are no dynamic backend endpoints processing complex logic or database queries.
 
-<!-- Verified: DocOps 2026-04-18 -->
+<!-- Verified: DocOps 2026-04-24 -->
 
 ## Hono REST API Format (Hypothetical)
+
 If a dynamic REST API were implemented using Hono:
+
 - **Request Format:** JSON bodies for `POST`/`PUT` requests.
 - **Error Format:** `{ "error": "Message", "status": 400 }`
 - **Auth Expectations:** Bearer tokens (JWT) in the `Authorization` header would be expected for protected endpoints.
