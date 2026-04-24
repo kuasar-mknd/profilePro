@@ -51,3 +51,9 @@
 **Vulnerability:** Uncaught fetch exceptions or early returns leaving setTimeout callbacks pending indefinitely.
 **Learning:** In Cloudflare Workers and similar serverless environments, pending timeouts left by AbortControllers that aren't properly cleared when fetch throws an error can lead to memory leaks, concurrency limit exhaustion, or unnecessary compute time.
 **Prevention:** Always wrap fetch calls utilizing AbortController timeouts inside a `try...finally` block to ensure `clearTimeout(timeoutId)` is executed regardless of success, network failure, or other exceptions.
+
+## 2026-04-24 - Server-Side Honeypot Trap Deception
+
+**Vulnerability:** Automated spam bots repeatedly triggering API endpoints, bypassing client-side checks, and consuming downstream service quotas (e.g. Web3Forms) because they receive explicit error responses that allow them to retry or adapt.
+**Learning:** Returning explicit HTTP 400 errors or failing validation for honeypot traps allows automated bots to detect their failure and adjust their payloads or retry continuously. Deceiving them with a fake HTTP 200 OK success response is a more effective defense-in-depth strategy because it tricks the bot into believing the submission succeeded, causing them to move on without consuming actual downstream API quota.
+**Prevention:** Implement server-side honeypot validation that silently drops the malicious payload but returns a structurally identical success response to the client/bot.

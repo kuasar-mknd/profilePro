@@ -6,6 +6,7 @@ const securityHeaders = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none';",
 };
 
 export async function onRequestPost(context: {
@@ -60,6 +61,23 @@ export async function onRequestPost(context: {
 
     const data: Record<string, unknown> = {};
 
+    // 🛡️ Sentinel: Honeypot trap to deceive automated spam bots.
+    // If botcheck is true, silently drop the request and return a fake success response.
+    // This prevents bots from retrying and saves downstream API quota.
+    const rawDataRecord = rawData as Record<string, unknown>;
+    if (rawDataRecord.botcheck === true || rawDataRecord.botcheck === "true") {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Success",
+        }),
+        {
+          status: 200,
+          headers: securityHeaders,
+        },
+      );
+    }
+
     // Define exact expected types
     const schema: Record<string, string> = {
       name: "string",
@@ -67,12 +85,12 @@ export async function onRequestPost(context: {
       message: "string",
       access_key: "string",
       subject: "string",
-      botcheck: "boolean",
       "form-load-timestamp": "string",
     };
 
     // 🛡️ Sentinel: Strict schema validation
     for (const [key, value] of Object.entries(rawData)) {
+      if (key === "botcheck") continue; // Already handled by honeypot
       const expectedType = schema[key];
       if (expectedType) {
         if (typeof value === expectedType) {
