@@ -86,7 +86,7 @@
     "husky": "^9.1.7",
     "iconify-icon": "^3.0.2",
     "js-yaml": "^4.1.1",
-    "lint-staged": "^16.4.0",
+    "lint-staged": "^17.0.2",
     "plyr": "^3.8.4",
     "rehype-external-links": "^3.0.0",
     "rollup-plugin-visualizer": "^7.0.1",
