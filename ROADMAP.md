@@ -168,6 +168,7 @@ Ce schéma permet : filtres par pilier, badge de rôle sur les cartes, fiche tec
 - [ ] Supprimer les fonts mortes (`inter-v12-*`, `space-grotesk-v15-*`) et les deps `@fontsource/*` inutilisées.
 - [ ] Corriger README (Node 22, licence unique, retirer les sections Hono/Prisma) et `agent.md` (Astro 6, pas de React, pnpm).
 - [ ] Micro-fixes : `og:type` (`website` / `video.other`), token `--aspect-9-10`, `latestPosts`/`postsPerPage` cohérents avec l'usage réel, `homepage` de `package.json`.
+- [ ] **Traiter les vulnérabilités de dépendances** : `pnpm audit` échoue actuellement sur toutes les PRs (16 vulnérabilités au 11.07.2026 : 7 high / 6 moderate / 3 low, ex. `undici` < 7.28.0 via `cheerio`). Mettre à jour l'override `undici` dans `package.json`, merger les PRs Dependabot en attente, régénérer le lockfile.
 - [ ] Recadrer ou suspendre les bots Jules le temps de la refonte (ils génèrent des dizaines de PRs dupliquées — cf. `PR_AUDIT_REPORT.md` : 100 PRs fermées en un jour).
 
 ### 🎯 Phase 1 — Rééquilibrer le contenu (1–2 semaines) — *le cœur de votre demande*
