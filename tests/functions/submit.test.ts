@@ -170,6 +170,40 @@ describe("Submit Cloudflare Function", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
+  it("should accept the production origin (portfolio.kuasar.xyz)", async () => {
+    const payload = {
+      name: "John Doe",
+      email: "test@example.com",
+      message: "Hello world!",
+    };
+
+    const context = createMockContext(payload, "https://portfolio.kuasar.xyz");
+    const response = await onRequestPost(context as unknown);
+
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data.success).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("should short-circuit honeypot submissions without calling Web3Forms", async () => {
+    const payload = {
+      name: "Bot",
+      email: "bot@example.com",
+      message: "spam",
+      botcheck: true,
+    };
+
+    const context = createMockContext(payload, "https://portfolio.kuasar.xyz");
+    const response = await onRequestPost(context as unknown);
+
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data.success).toBe(true);
+    // The upstream API must never be called for honeypot traffic
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
   it("should return 403 for invalid origin", async () => {
     const payload = {
       name: "John Doe",

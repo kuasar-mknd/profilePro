@@ -15,7 +15,11 @@ export async function onRequestPost(context: {
 }) {
   try {
     const origin = context.request.headers.get("Origin") || "";
-    const allowedOrigins = ["https://kuasar.xyz", "https://www.kuasar.xyz"];
+    const allowedOrigins = [
+      "https://portfolio.kuasar.xyz",
+      "https://kuasar.xyz",
+      "https://www.kuasar.xyz",
+    ];
 
     // 🛡️ Sentinel: Enforce strict validation of localhost origins to prevent bypasses
     // using maliciously crafted domains like "http://localhost:8080.evil.com"

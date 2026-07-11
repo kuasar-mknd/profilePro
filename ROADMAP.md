@@ -25,15 +25,15 @@ Le site est techniquement solide (Astro 6, Tailwind 4, CI complète, accessibili
 
 Inventaire des 18 projets (`src/content/project/`) :
 
-| Tag actuel | Nb | Projets |
-| --- | --- | --- |
-| clip musical | 6 | frencha, izia-proudRebel, jimmy-cpdv, lamia, lola, xxcent-sourire |
-| court-métrage | 5 | 48h-geneve-2024, 48h-geneve-2025, 48h-lausanne-2024, 48h-vevey-2025, nuage |
-| communication | 2 | paternelle-2024, paternelle-2025 |
-| événementiel | 2 | paternelle, larev |
-| photo | 1 | izia-fete-musique |
-| documentaire | 1 | corps-et-ame |
-| production | 1 | producteur (page fourre-tout) |
+| Tag actuel    | Nb  | Projets                                                                    |
+| ------------- | --- | -------------------------------------------------------------------------- |
+| clip musical  | 6   | frencha, izia-proudRebel, jimmy-cpdv, lamia, lola, xxcent-sourire          |
+| court-métrage | 5   | 48h-geneve-2024, 48h-geneve-2025, 48h-lausanne-2024, 48h-vevey-2025, nuage |
+| communication | 2   | paternelle-2024, paternelle-2025                                           |
+| événementiel  | 2   | paternelle, larev                                                          |
+| photo         | 1   | izia-fete-musique                                                          |
+| documentaire  | 1   | corps-et-ame                                                               |
+| production    | 1   | producteur (page fourre-tout)                                              |
 
 Constats :
 
@@ -46,10 +46,10 @@ Constats :
 
 ### 2.2 Bugs critiques (confirmés en production)
 
-| # | Problème | Preuve | Impact |
-| --- | --- | --- | --- |
-| B1 | **Formulaire de contact HS** | `POST https://portfolio.kuasar.xyz/api/submit` → `405` (function non déployée). Second verrou : `functions/api/submit.ts` n'autorise que les origines `kuasar.xyz` / `www.kuasar.xyz`, jamais `portfolio.kuasar.xyz` (le domaine réel, cf. `public/CNAME`). | Perte de 100 % des leads du site |
-| B2 | **Routes dupliquées** | `/48h-geneve-2024/` et `/project/48h-geneve-2024/` répondent tous deux `200`, chacun avec un canonical auto-référent ; le sitemap liste **les deux** séries d'URLs (`src/pages/[slug].astro` duplique `src/pages/project/[slug].astro`) | SEO dilué, contenu dupliqué, maintenance double |
+| #   | Problème                     | Preuve                                                                                                                                                                                                                                                      | Impact                                          |
+| --- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| B1  | **Formulaire de contact HS** | `POST https://portfolio.kuasar.xyz/api/submit` → `405` (function non déployée). Second verrou : `functions/api/submit.ts` n'autorise que les origines `kuasar.xyz` / `www.kuasar.xyz`, jamais `portfolio.kuasar.xyz` (le domaine réel, cf. `public/CNAME`). | Perte de 100 % des leads du site                |
+| B2  | **Routes dupliquées**        | `/48h-geneve-2024/` et `/project/48h-geneve-2024/` répondent tous deux `200`, chacun avec un canonical auto-référent ; le sitemap liste **les deux** séries d'URLs (`src/pages/[slug].astro` duplique `src/pages/project/[slug].astro`)                     | SEO dilué, contenu dupliqué, maintenance double |
 
 ### 2.3 Code — forces et dettes
 
@@ -57,18 +57,18 @@ Constats :
 
 **Dettes :**
 
-| # | Problème | Localisation |
-| --- | --- | --- |
-| C1 | Page projet dupliquée (cause de B2) : deux templates à maintenir, styles divergents | `src/pages/[slug].astro` vs `src/pages/project/[slug].astro` |
-| C2 | Deux workflows CI quasi identiques (double coût, dont un step Prisma sans objet dans un repo sans Prisma) | `.github/workflows/ci.yml` + `pipeline.yml` |
-| C3 | Deux lockfiles (`bun.lock` + `pnpm-lock.yaml`) → installations non reproductibles selon l'outil | racine |
-| C4 | Fichiers morts / reliquats à la racine : `PR_AUDIT_REPORT.md`, `format2.mjs`, `update_palette.cjs`, `analyze_lighthouse.cjs`, `src/components/common/Header.astro.orig` | racine, `src/components` |
-| C5 | Docs contradictoires : README (Node 20 vs `engines >=22` ; licence « MIT » vs `UNLICENSED` vs badge « All Rights Reserved » ; sections Hono/Prisma hypothétiques), `agent.md` (annonce Astro v5 + React 19 + bun — faux sur les trois points) | `README.md`, `agent.md`, `.github/workflows/ci.yml` |
-| C6 | Fonts inutilisées : Inter et Space Grotesk v15 préchargées dans `public/fonts/` sans `@font-face`, et 3 dépendances `@fontsource/*` jamais importées | `public/fonts/`, `package.json` |
-| C7 | Sur-ingénierie de bots : commentaires ⚡🛡️🎨 justificatifs omniprésents, `crypto.getRandomValues` pour mélanger un carrousel, pattern `window.__*` répété 8 fois pour dédupliquer des listeners | diffus (`Hero.astro` est le pire cas) |
-| C8 | Incohérences de config : `og:type` invalide (`video`/`photo`/`general` ne sont pas des types Open Graph) ; token `--aspect-9-10: 9/16` (nom ≠ valeur) ; `latestPosts: 5` vs `postLimit={7}` ; `postsPerPage: 20` pour 18 projets ; `homepage: kuasar.xyz` vs site `portfolio.kuasar.xyz` | `SeoHead.astro`, `style.css`, `config.mjs`, `package.json` |
-| C9 | 83 Mo / 778 images versionnées ; les galeries 48h embarquent ~54 photos chacune | `src/assets/` |
-| C10 | Schéma de contenu trop pauvre pour un portfolio : `tag` libre unique + `type` redondant ; pas de `role`, `client`, `featured`, `skills`, `metrics` | `src/content.config.ts` |
+| #   | Problème                                                                                                                                                                                                                                                                                 | Localisation                                                 |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| C1  | Page projet dupliquée (cause de B2) : deux templates à maintenir, styles divergents                                                                                                                                                                                                      | `src/pages/[slug].astro` vs `src/pages/project/[slug].astro` |
+| C2  | Deux workflows CI quasi identiques (double coût, dont un step Prisma sans objet dans un repo sans Prisma)                                                                                                                                                                                | `.github/workflows/ci.yml` + `pipeline.yml`                  |
+| C3  | Deux lockfiles (`bun.lock` + `pnpm-lock.yaml`) → installations non reproductibles selon l'outil                                                                                                                                                                                          | racine                                                       |
+| C4  | Fichiers morts / reliquats à la racine : `PR_AUDIT_REPORT.md`, `format2.mjs`, `update_palette.cjs`, `analyze_lighthouse.cjs`, `src/components/common/Header.astro.orig`                                                                                                                  | racine, `src/components`                                     |
+| C5  | Docs contradictoires : README (Node 20 vs `engines >=22` ; licence « MIT » vs `UNLICENSED` vs badge « All Rights Reserved » ; sections Hono/Prisma hypothétiques), `agent.md` (annonce Astro v5 + React 19 + bun — faux sur les trois points)                                            | `README.md`, `agent.md`, `.github/workflows/ci.yml`          |
+| C6  | Fonts inutilisées : Inter et Space Grotesk v15 préchargées dans `public/fonts/` sans `@font-face`, et 3 dépendances `@fontsource/*` jamais importées                                                                                                                                     | `public/fonts/`, `package.json`                              |
+| C7  | Sur-ingénierie de bots : commentaires ⚡🛡️🎨 justificatifs omniprésents, `crypto.getRandomValues` pour mélanger un carrousel, pattern `window.__*` répété 8 fois pour dédupliquer des listeners                                                                                          | diffus (`Hero.astro` est le pire cas)                        |
+| C8  | Incohérences de config : `og:type` invalide (`video`/`photo`/`general` ne sont pas des types Open Graph) ; token `--aspect-9-10: 9/16` (nom ≠ valeur) ; `latestPosts: 5` vs `postLimit={7}` ; `postsPerPage: 20` pour 18 projets ; `homepage: kuasar.xyz` vs site `portfolio.kuasar.xyz` | `SeoHead.astro`, `style.css`, `config.mjs`, `package.json`   |
+| C9  | 83 Mo / 778 images versionnées ; les galeries 48h embarquent ~54 photos chacune                                                                                                                                                                                                          | `src/assets/`                                                |
+| C10 | Schéma de contenu trop pauvre pour un portfolio : `tag` libre unique + `type` redondant ; pas de `role`, `client`, `featured`, `skills`, `metrics`                                                                                                                                       | `src/content.config.ts`                                      |
 
 ### 2.4 Visuel — diagnostic
 
@@ -91,11 +91,11 @@ Le design (thème « Pacamara » adapté) est cohérent en mode clair/sombre et 
 
 Trois piliers visibles (au lieu de 4 services vagues), chacun **prouvé** par des projets :
 
-| Pilier | Catégories de contenu | Preuves existantes | Preuves à créer |
-| --- | --- | --- | --- |
-| 🎬 **Image** | `video`, `photo` | 48h (3 prix !), clips, docu, reportages | Showreel 90 s |
-| 💻 **Web** | `web` | — | Ce portfolio, projets HEIG-VD/stage, app perso |
-| 📣 **Communication** | `communication` | La Paternelle (8 000 spectateurs), Les Insomniaques | Étude de cas Paternelle chiffrée |
+| Pilier               | Catégories de contenu | Preuves existantes                                  | Preuves à créer                                |
+| -------------------- | --------------------- | --------------------------------------------------- | ---------------------------------------------- |
+| 🎬 **Image**         | `video`, `photo`      | 48h (3 prix !), clips, docu, reportages             | Showreel 90 s                                  |
+| 💻 **Web**           | `web`                 | —                                                   | Ce portfolio, projets HEIG-VD/stage, app perso |
+| 📣 **Communication** | `communication`       | La Paternelle (8 000 spectateurs), Les Insomniaques | Étude de cas Paternelle chiffrée               |
 
 ### 3.2 Nouveau modèle de contenu (`src/content.config.ts`)
 
@@ -107,18 +107,20 @@ const projectCollection = defineCollection({
       intro: z.string().max(300),
       // — Taxonomie éditoriale —
       category: z.enum(["video", "photo", "web", "communication"]),
-      tags: z.array(z.string()).default([]),        // secondaire, libre
-      role: z.string(),                              // "Gaffer & DIT", "Développeur fullstack"…
-      client: z.string().optional(),                 // "La Paternelle", "48H Film Project"…
-      featured: z.number().int().min(0).default(0),  // poids éditorial (0 = non mis en avant)
-      awards: z.array(z.string()).default([]),       // "Prix du Meilleur Film 2024"
-      metrics: z.array(z.object({ label: z.string(), value: z.string() })).default([]),
-      skills: z.array(z.string()).default([]),       // outils/stack : "DaVinci", "Astro", "Meta Ads"
+      tags: z.array(z.string()).default([]), // secondaire, libre
+      role: z.string(), // "Gaffer & DIT", "Développeur fullstack"…
+      client: z.string().optional(), // "La Paternelle", "48H Film Project"…
+      featured: z.number().int().min(0).default(0), // poids éditorial (0 = non mis en avant)
+      awards: z.array(z.string()).default([]), // "Prix du Meilleur Film 2024"
+      metrics: z
+        .array(z.object({ label: z.string(), value: z.string() }))
+        .default([]),
+      skills: z.array(z.string()).default([]), // outils/stack : "DaVinci", "Astro", "Meta Ads"
       // — Médias & liens —
       image: image(),
       videoUrl: z.string().url().optional(),
       gallery: z.array(image()).optional(),
-      liveUrl: z.string().url().optional(),          // pour les projets web
+      liveUrl: z.string().url().optional(), // pour les projets web
       repoUrl: z.string().url().optional(),
       pubDate: z.date(),
       author: reference("author"),
@@ -141,37 +143,37 @@ Ce schéma permet : filtres par pilier, badge de rôle sur les cartes, fiche tec
 /contact/                (nouveau, optionnel) formulaire réparé + délais de réponse + réseaux
 ```
 
-*(Garder `/project/` comme base d'URL est acceptable pour limiter les redirections — dans ce cas ne créer que les 301 des routes racine dupliquées.)*
+_(Garder `/project/` comme base d'URL est acceptable pour limiter les redirections — dans ce cas ne créer que les 301 des routes racine dupliquées.)_
 
 ---
 
 ## 4. Roadmap
 
-### 🚨 Phase 0 — Réparer & assainir (1–2 jours) — *avant tout le reste*
+### 🚨 Phase 0 — Réparer & assainir (1–2 jours) — _avant tout le reste_
 
 **0.1 Réparer le formulaire de contact (B1)** — `functions/api/submit.ts`, `.github/workflows/pipeline.yml`
 
-- [ ] Ajouter `https://portfolio.kuasar.xyz` (et le futur domaine) à `allowedOrigins`.
-- [ ] Corriger le déploiement pour que `functions/` soit réellement publié : `wrangler pages deploy` sans argument (utilise `pages_build_output_dir` de `wrangler.toml` et embarque `functions/`), ou vérifier la version de `wrangler-action`. Alternative plus simple : poster directement sur `https://api.web3forms.com/submit` en prod (la clé est déjà côté client en dev) et supprimer la function.
-- [ ] Ajouter un test e2e Playwright qui vérifie que `/api/submit` ne répond pas `405` (smoke post-deploy).
+- [x] Ajouter `https://portfolio.kuasar.xyz` (et le futur domaine) à `allowedOrigins`.
+- [x] Corriger le déploiement pour que `functions/` soit réellement publié : `wrangler pages deploy` sans argument (utilise `pages_build_output_dir` de `wrangler.toml` et embarque `functions/`).
+- [x] Ajouter un smoke test post-deploy dans le job `deploy` : `POST /api/submit` avec payload honeypot doit répondre `200` (sinon le déploiement échoue). **→ À surveiller au premier déploiement sur `master` : si le smoke test échoue encore, inspecter les logs wrangler (« Compiled Worker successfully ») et la config du projet Pages.**
 
 **0.2 Éliminer les routes dupliquées (B2)** — `src/pages/[slug].astro`, `public/_redirects`
 
-- [ ] Supprimer `src/pages/[slug].astro`.
-- [ ] Créer `public/_redirects` avec les 18 redirections explicites `/<slug>/ → /project/<slug>/ 301` (liste explicite, pas de placeholder `/:slug` qui capturerait `/about/`).
-- [ ] Vérifier que le sitemap ne liste plus qu'une URL par projet.
+- [x] Supprimer `src/pages/[slug].astro`.
+- [x] Créer `public/_redirects` avec les redirections explicites `/<slug>[/] → /project/<slug>/ 301` (liste explicite, pas de placeholder `/:slug` qui capturerait `/about/`).
+- [x] Vérifier que le sitemap ne liste plus qu'une URL par projet.
 
 **0.3 Nettoyage du dépôt** —
 
-- [ ] Supprimer : `PR_AUDIT_REPORT.md`, `format2.mjs`, `update_palette.cjs`, `analyze_lighthouse.cjs`, `src/components/common/Header.astro.orig`, `bun.lock` (pnpm est le gestionnaire de fait ; sinon migrer les scripts à bun et supprimer `pnpm-lock.yaml` — un seul lockfile).
-- [ ] Fusionner `ci.yml` dans `pipeline.yml` (supprimer le step Prisma), un seul workflow de test + deploy.
-- [ ] Supprimer les fonts mortes (`inter-v12-*`, `space-grotesk-v15-*`) et les deps `@fontsource/*` inutilisées.
-- [ ] Corriger README (Node 22, licence unique, retirer les sections Hono/Prisma) et `agent.md` (Astro 6, pas de React, pnpm).
-- [ ] Micro-fixes : `og:type` (`website` / `video.other`), token `--aspect-9-10`, `latestPosts`/`postsPerPage` cohérents avec l'usage réel, `homepage` de `package.json`.
-- [ ] **Traiter les vulnérabilités de dépendances** : `pnpm audit` échoue actuellement sur toutes les PRs (16 vulnérabilités au 11.07.2026 : 7 high / 6 moderate / 3 low, ex. `undici` < 7.28.0 via `cheerio`). Mettre à jour l'override `undici` dans `package.json`, merger les PRs Dependabot en attente, régénérer le lockfile.
+- [x] Supprimer : `PR_AUDIT_REPORT.md`, `format2.mjs`, `update_palette.cjs`, `analyze_lighthouse.cjs`, `src/components/common/Header.astro.orig`, `bun.lock` (pnpm est le gestionnaire de fait — un seul lockfile).
+- [x] Fusionner `ci.yml` dans `pipeline.yml` (le step Prisma disparaît) : `ci.yml` supprimé, `pipeline.yml` reste l'unique workflow test + deploy (aucun check requis par une protection de branche n'était lié à `ci.yml`).
+- [x] Supprimer les fonts mortes (`inter-v12-*`, `space-grotesk-v15-*`) et les deps `@fontsource/*` inutilisées.
+- [x] Corriger README (Node 22, licence MIT alignée sur le fichier `LICENSE`, retrait de la section Hono/Prisma, badge CI → `pipeline.yml`) et `agent.md` (Astro 6, pas de React, pnpm).
+- [x] Micro-fixes : `og:type` (`website` / `article` / `video.other`), token `--aspect-9-10` → `--aspect-9-16`, `homepage` et `license` de `package.json`. (`latestPosts`/`postsPerPage` : laissés en l'état, revus en Phase 1 avec la home éditoriale.)
+- [x] **Traiter les vulnérabilités de dépendances** : overrides pnpm mis à jour (`undici ^7.28.0`, `tmp ^0.2.6`, `basic-ftp >=5.3.1`, `qs >=6.15.2`, `tar >=7.5.16`, `esbuild` scopé vite/astro `>=0.28.1`), `vite ^7.3.5`, lockfile régénéré → `pnpm audit` : **0 vulnérabilité** (contre 16). Les PRs Dependabot redondantes peuvent être fermées.
 - [ ] Recadrer ou suspendre les bots Jules le temps de la refonte (ils génèrent des dizaines de PRs dupliquées — cf. `PR_AUDIT_REPORT.md` : 100 PRs fermées en un jour).
 
-### 🎯 Phase 1 — Rééquilibrer le contenu (1–2 semaines) — *le cœur de votre demande*
+### 🎯 Phase 1 — Rééquilibrer le contenu (1–2 semaines) — _le cœur de votre demande_
 
 **1.1 Nouvelle taxonomie** — `src/content.config.ts`
 
@@ -181,7 +183,7 @@ Ce schéma permet : filtres par pilier, badge de rôle sur les cartes, fiche tec
   - `photo` : **frencha, izia-proudRebel, lamia, lola, xxcent-sourire** (photographie de plateau = travail photo !), izia-fete-musique.
   - `communication` : paternelle (fiche mère, `featured` élevé, metrics « 8 000 spectateurs · guichets fermés »), paternelle-2024, paternelle-2025, larev.
   - Supprimer `producteur.mdx` (doublon de vidéo avec jimmy-cpdv, contenu générique) ou le transformer en page Services/Showreel.
-- [ ] Réécrire chaque `title`/`intro` pour mettre **le rôle en premier** (ex. « Gaffer sur *Gamines* — court-métrage primé, 48H Genève 2025 »).
+- [ ] Réécrire chaque `title`/`intro` pour mettre **le rôle en premier** (ex. « Gaffer sur _Gamines_ — court-métrage primé, 48H Genève 2025 »).
 
 **1.2 Créer les projets manquants (4–6 études de cas)**
 
@@ -250,13 +252,13 @@ Ce schéma permet : filtres par pilier, badge de rôle sur les cartes, fiche tec
 
 ## 6. Ordre d'exécution suggéré
 
-| Sprint | Contenu | Livrable visible |
-| --- | --- | --- |
-| S1 | Phase 0 complète | Formulaire fonctionnel, URLs uniques, repo propre |
-| S2 | 1.1 taxonomie + migration MDX | Filtres par pilier en ligne |
-| S3 | 1.2 nouveaux projets (web + Paternelle 360°) | Le pilier web existe enfin |
-| S4 | 1.3 home éditoriale + 2.4 navigation | La home raconte le profil hybride |
-| S5–S6 | 2.1 → 2.3 refonte visuelle | Nouveau look calme et pro |
-| Continu | Phase 3 | Témoignages, SEO local, mesure |
+| Sprint  | Contenu                                      | Livrable visible                                  |
+| ------- | -------------------------------------------- | ------------------------------------------------- |
+| S1      | Phase 0 complète                             | Formulaire fonctionnel, URLs uniques, repo propre |
+| S2      | 1.1 taxonomie + migration MDX                | Filtres par pilier en ligne                       |
+| S3      | 1.2 nouveaux projets (web + Paternelle 360°) | Le pilier web existe enfin                        |
+| S4      | 1.3 home éditoriale + 2.4 navigation         | La home raconte le profil hybride                 |
+| S5–S6   | 2.1 → 2.3 refonte visuelle                   | Nouveau look calme et pro                         |
+| Continu | Phase 3                                      | Témoignages, SEO local, mesure                    |
 
 Chaque sprint est déployable indépendamment : le site reste en ligne et s'améliore par incréments.

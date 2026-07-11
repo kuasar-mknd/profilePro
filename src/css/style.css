@@ -38,7 +38,7 @@
   --shadow-glass: 0 8px 32px 0 rgb(0 0 0 / 30%);
   --shadow-glow: 0 0 20px rgb(99 102 241 / 50%);
   --shadow-glow-accent: 0 0 20px rgb(244 63 94 / 50%);
-  --aspect-9-10: 9 / 16;
+  --aspect-9-16: 9 / 16;
 }
 
 /* Hero Gradient Text - Progressive Enhancement */
@@ -570,20 +570,20 @@
   animation: shimmer 4s linear infinite;
 }
 
-  @keyframes highlight-glow {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgb(190 18 60 / 0%);
-    }
-
-    50% {
-      box-shadow: 0 0 30px 10px rgb(190 18 60 / 30%);
-    }
+@keyframes highlight-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(190 18 60 / 0%);
   }
 
-  .highlight-glow {
-    animation: highlight-glow 1.5s ease-in-out;
+  50% {
+    box-shadow: 0 0 30px 10px rgb(190 18 60 / 30%);
   }
+}
+
+.highlight-glow {
+  animation: highlight-glow 1.5s ease-in-out;
+}
 
 @keyframes float {
   0%,

@@ -149,4 +149,21 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=profilepro --branch=master
+          # Sans argument : wrangler lit pages_build_output_dir dans wrangler.toml
+          # et embarque le dossier functions/ (Pages Functions, dont /api/submit).
+          command: pages deploy --branch=master
+
+      - name: Smoke test — Pages Function /api/submit
+        run: |
+          sleep 20
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://portfolio.kuasar.xyz/api/submit" \
+            -H "Origin: https://portfolio.kuasar.xyz" \
+            -H "Content-Type: application/json" \
+            -d '{"botcheck": true}')
+          echo "POST /api/submit -> HTTP $STATUS"
+          # Le payload honeypot (botcheck) répond 200 sans transmettre à Web3Forms.
+          # 404/405 = function non déployée ; 403 = allowlist d'origines cassée.
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::La Pages Function /api/submit ne répond pas correctement (HTTP $STATUS) — formulaire de contact hors service."
+            exit 1
+          fi
