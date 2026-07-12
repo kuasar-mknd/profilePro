@@ -16,7 +16,6 @@ import ImageGallery from "../../components/ui/ImageGallery.astro";
 import Breadcrumbs from "../../components/ui/Breadcrumbs.astro";
 
 import { getEntry, render } from "astro:content";
-import { getReadingTime } from "../../utils/readingTime";
 import { getSortedProjects } from "../../utils/projects";
 
 export async function getStaticPaths() {
@@ -35,9 +34,6 @@ export async function getStaticPaths() {
   }));
 }
 const { entry, prevPost, nextPost, allProjects } = Astro.props;
-
-// Calculate reading time
-const readingTime = getReadingTime(entry.body || "");
 
 // ⚡ Bolt: Execute render, getEntry, and all getImage calls concurrently via Promise.all
 // This eliminates sequential blocking during SSG builds.
@@ -172,15 +168,6 @@ const jsonLd = {
       >
         <CategoryBadge category={entry.data.category} />
         <PublishDate date={entry.data.pubDate} />
-
-        <span
-          class="text-pacamara-primary/60 dark:text-white/60"
-          aria-hidden="true">•</span
-        >
-        <span
-          class="text-pacamara-primary/60 dark:text-white/60 text-sm font-outfit uppercase tracking-wider"
-          >{readingTime} min de lecture</span
-        >
       </div>
       <p
         class="text-sm md:text-base font-outfit uppercase tracking-widest text-pacamara-accent font-bold mb-6 animate-fade-in opacity-0 delay-300"

@@ -1,22 +1,24 @@
 # Samuel Dulex — Portfolio
 
-> Créateur de contenu visuel et développeur web freelance basé à Lausanne, Suisse romande.
-> Spécialisé en production vidéo (clips musicaux, aftermovies, films corporate),
-> photographie (portraits, événementiel, lifestyle), développement web fullstack
-> (React, Laravel, Astro, Next.js) et stratégie digitale (SEO, Social Ads, CRM).
+> Créateur hybride basé à Lausanne, Suisse romande. Trois piliers :
+> création de contenu (vidéo, photographie), développement web
+> (Astro, Vue.js, Laravel, TypeScript) et communication (stratégie,
+> campagnes, promotion d'événements).
 
 ## Pages principales
 
 - [Accueil](https://portfolio.kuasar.xyz/): Page d'accueil du portfolio avec les projets récents
 - [À propos](https://portfolio.kuasar.xyz/about/): Parcours, compétences et philosophie de travail
 - [Projets](https://portfolio.kuasar.xyz/project/): Catalogue complet des réalisations
+- [Création de contenu](https://portfolio.kuasar.xyz/project/categorie/creation-de-contenu/): Projets vidéo et photographie
+- [Développement web](https://portfolio.kuasar.xyz/project/categorie/developpement-web/): Projets web
+- [Communication](https://portfolio.kuasar.xyz/project/categorie/communication/): Études de cas communication
 
 ## Services proposés
 
-- Production Vidéo : clips musicaux, aftermovies, vidéos corporate, captation événementielle
-- Photographie : portraits, photographie événementielle, lifestyle, photographie de plateau
-- Développement Web : applications fullstack, plateformes SaaS, sites vitrines, e-commerce
-- Stratégie Digitale : optimisation SEO, campagnes Social Ads, email marketing, CRM
+- Création de contenu : clips, courts-métrages, reportages, photographie de plateau et d'événement
+- Développement web : sites, applications et plateformes — performants, accessibles, sécurisés
+- Communication : stratégie, campagnes, relations presse et promotion d'événements
 
 ## Informations de contact
 

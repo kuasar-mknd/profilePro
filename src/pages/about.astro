@@ -10,7 +10,7 @@ import TiltCard from "../components/ui/TiltCard.astro";
 
 const title = "À propos de moi";
 const description =
-  "Vidéaste, Photographe & Développeur Web. Je crée des expériences visuelles et digitales uniques.";
+  "Créateur hybride à Lausanne : création de contenu (vidéo, photo), développement web et communication.";
 
 const [w350, w700] = await Promise.all([
   getImage({ src: logo, width: 350, format: "webp", quality: 75 }),
@@ -19,34 +19,26 @@ const [w350, w700] = await Promise.all([
 
 const services = [
   {
-    title: "Production Vidéo",
+    title: "Création de contenu",
     description:
-      "Clips musicaux, aftermovies captivants et vidéos corporate dynamiques. Je mets un point d'honneur à retranscrire l'énergie brute de l'instant à travers une direction artistique et direction photo authentique au rendu esthétique.",
-    icon: "mdi:video-vintage",
+      "Vidéo et photographie : clips, courts-métrages, reportages et photo de plateau. Sur un tournage comme en post-production, l'objectif est le même — des images fortes, au service de votre histoire.",
+    icon: "mdi:movie-open",
     color: "text-purple-500",
     gradient: "from-purple-500/20 to-purple-600/10",
   },
   {
-    title: "Développement Web",
+    title: "Développement web",
     description:
-      "Applications web complexes, plateformes SaaS interactives et sites vitrines de pointe. Je conçois des écosystèmes fluides, rapides et sécurisés, conçus pour offrir la meilleure expérience utilisateur possible dès la première seconde.",
+      "Sites, applications et plateformes : des écosystèmes rapides, accessibles et sécurisés, conçus, développés et exploités de bout en bout — comme ce portfolio.",
     icon: "mdi:code-tags",
     color: "text-blue-500",
     gradient: "from-blue-500/20 to-blue-600/10",
   },
   {
-    title: "Photographie",
+    title: "Communication",
     description:
-      "Portraits de caractère, photographie événementielle et lifestyle. Derrière chaque prise de vue, l'objectif est de capturer des images fortes qui racontent une histoire viscérale et subliment durablement votre image de marque.",
-    icon: "mdi:camera",
-    color: "text-pink-500",
-    gradient: "from-pink-500/20 to-pink-600/10",
-  },
-  {
-    title: "Stratégie Digitale",
-    description:
-      "Optimisation SEO, campagnes publicitaires, Social Ads percutants. Je booste votre visibilité en ligne au moyen de stratégies d'acquisition ciblées afin de convertir votre audience en clientèle engagée sur le long terme.",
-    icon: "mdi:google-analytics",
+      "Stratégie, campagnes et promotion d'événements : de la création de l'affiche aux relations presse et aux réseaux sociaux, jusqu'à la salle comble.",
+    icon: "mdi:bullhorn-outline",
     color: "text-orange-500",
     gradient: "from-orange-500/20 to-orange-600/10",
   },
@@ -140,7 +132,7 @@ const faqJsonLd = {
       name: "Quels services propose Samuel Dulex ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Samuel Dulex propose quatre services principaux : la production vidéo (clips musicaux, aftermovies, vidéos corporate), la photographie (portraits, événementiel, lifestyle), le développement web fullstack (React, Laravel, Astro, SaaS) et la stratégie digitale (SEO, Social Ads, email marketing).",
+        text: "Samuel Dulex travaille autour de trois piliers : la création de contenu (vidéo et photographie : clips, courts-métrages, reportages, photo de plateau), le développement web (sites, applications et plateformes en Astro, Vue.js, Laravel, TypeScript) et la communication (stratégie, campagnes, relations presse et promotion d'événements).",
       },
     },
     {
@@ -256,8 +248,8 @@ const faqJsonLd = {
             <h1
               class="font-pacamara-space font-bold text-5xl md:text-6xl mb-8 text-pacamara-dark dark:text-white leading-tight"
             >
-              Créateur Visuel & <br />
-              <span class="text-shimmer">Stratège Digital.</span>
+              Créateur hybride : <br />
+              <span class="text-shimmer">contenu, web & communication.</span>
             </h1>
           </ScrollReveal>
 
@@ -367,7 +359,7 @@ const faqJsonLd = {
         </p>
       </ScrollReveal>
 
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0">
+      <ul class="grid grid-cols-1 md:grid-cols-3 gap-8 list-none p-0">
         {
           services.map((service, index) => (
             <li class="h-full">

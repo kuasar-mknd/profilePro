@@ -1,8 +1,8 @@
 export default {
   title: "Samuel Dulex",
-  titleSuffix: " | Connecter, Communiquer, Captiver",
+  titleSuffix: " | Création de contenu, web & communication",
   description:
-    "Créateur de contenu visuel et développeur web à Lausanne, Suisse romande. Vidéo, photographie, développement fullstack et stratégie digitale.",
+    "Création de contenu (vidéo, photo), développement web et communication à Lausanne, Suisse romande. Des contenus qui racontent, des plateformes qui diffusent, des stratégies qui performent.",
   location: "Lausanne, Suisse romande",
   catchmentArea: ["Lausanne", "Vaud", "Suisse romande", "Genève", "Fribourg"],
   defaultOgImage: "./defaultog.jpg",

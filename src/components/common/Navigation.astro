@@ -54,6 +54,16 @@ const currentPath = normalizePath(pathname);
         À propos</a
       >
     </li>
+    <li class="nav-item">
+      <a
+        href="/#contact-form"
+        class="group transition-all duration-300 link-animated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 rounded-lg px-2 -mx-2 active:scale-95 active:duration-75 opacity-60 text-pacamara-primary hover:opacity-100 hover:text-pacamara-accent dark:text-white dark:hover:text-pacamara-accent focus-visible:opacity-100 focus-visible:text-pacamara-accent dark:focus-visible:text-pacamara-accent"
+        aria-label="Contact (Alt+4)"
+        aria-keyshortcuts="Alt+4"
+      >
+        Contact</a
+      >
+    </li>
   </ul>
 </nav>
 
@@ -85,6 +95,9 @@ const currentPath = normalizePath(pathname);
       } else if (e.key === "3") {
         e.preventDefault();
         navigate("/about/");
+      } else if (e.key === "4") {
+        e.preventDefault();
+        navigate("/#contact-form");
       } else if (e.key === "h" || e.key === "H") {
         e.preventDefault();
         navigate("/");
