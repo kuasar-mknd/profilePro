@@ -1,0 +1,63 @@
+---
+title: "Portfolio kuasar.xyz"
+pubDate: 2026-07-11
+intro: "Conception et développement de ce portfolio : un site statique Astro pensé pour la performance, l'accessibilité et la sécurité, déployé en continu sur Cloudflare Pages."
+seoDescription: "Étude de cas développement web : portfolio statique Astro 6, Tailwind CSS 4, CI/CD GitHub Actions, tests automatisés et déploiement Cloudflare Pages."
+tag: "développement web"
+author: "samuel"
+image: "../../assets/portfolio-kuasar/projets.avif"
+type: "general"
+category: "web"
+role: "Conception, développement & exploitation"
+featured: 88
+liveUrl: "https://portfolio.kuasar.xyz"
+repoUrl: "https://github.com/kuasar-mknd/profilePro"
+skills:
+  - "Astro"
+  - "TypeScript"
+  - "Tailwind CSS"
+  - "Cloudflare Pages"
+  - "GitHub Actions"
+  - "Playwright"
+metrics:
+  - label: "Performance Lighthouse"
+    value: "100/100"
+  - label: "Vulnérabilités (pnpm audit)"
+    value: "0"
+  - label: "Pages statiques générées"
+    value: "31"
+---
+
+import ImageGallery from "../../components/ui/ImageGallery.astro";
+
+Ce site est lui-même un projet de développement web à part entière : je l'ai conçu, développé et je l'exploite en continu. L'objectif était double — présenter mon travail, et démontrer concrètement ma façon de construire un produit web : performant, accessible, sécurisé et industrialisé.
+
+## Architecture & choix techniques
+
+Le site est un **site statique généré (SSG)** avec **Astro 6** : zéro JavaScript superflu côté client, HTML pré-rendu au build, transitions de pages natives (View Transitions API). Le style repose sur **Tailwind CSS 4** avec un design system à thèmes clair/sombre, et l'ensemble est écrit en **TypeScript**.
+
+Quelques choix structurants :
+
+- **Contenu en collections typées** : chaque projet est un fichier MDX validé par un schéma (zod) — titres, rôles, catégories et métadonnées SEO sont contrôlés au build.
+- **Pipeline d'images** : conversion et redimensionnement automatiques en AVIF/WebP via Sharp, avec `srcset` responsive généré pour chaque carte et galerie.
+- **PWA** : manifest et service worker (vite-plugin-pwa) pour le mode hors-ligne et l'installation.
+- **Hébergement edge** : déploiement sur **Cloudflare Pages**, formulaire de contact servi par une Pages Function avec validation stricte, honeypot anti-spam et allowlist d'origines.
+
+## Qualité : tests, sécurité, automatisation
+
+Chaque commit passe par un pipeline **GitHub Actions** complet avant d'atteindre la production :
+
+1. **Vérifications statiques** : Prettier, ESLint, Stylelint et typecheck Astro.
+2. **Tests** : suite unitaire (bun test) sur les utilitaires et la fonction de contact, tests end-to-end **Playwright** sur le site construit.
+3. **Sécurité** : analyse **CodeQL**, revue automatique des dépendances, audit pnpm sans vulnérabilité connue, en-têtes durcis et **CSP stricte générée au build** (hashes calculés sur chaque script et style inline).
+4. **Déploiement** : build et publication via Wrangler, suivi d'un smoke test qui vérifie que l'API de contact répond réellement en production.
+
+L'accessibilité est traitée comme une exigence de base : navigation clavier complète avec raccourcis, attributs ARIA, respect de `prefers-reduced-motion`, contrastes et textes alternatifs vérifiés par Lighthouse CI à chaque déploiement.
+
+## Résultats
+
+Un site rapide (score Lighthouse maximal en performance et accessibilité), sobre à exploiter (statique, CDN edge, coût d'hébergement nul) et maintenable : le contenu s'édite en Markdown, la CI empêche les régressions, et l'empreinte carbone de chaque page est mesurée et affichée dans le pied de page.
+
+## Captures
+
+<ImageGallery folder="portfolio-kuasar" />

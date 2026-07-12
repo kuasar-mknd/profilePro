@@ -6,6 +6,7 @@ import { Icon } from "astro-icon/components";
 import logo from "../../../assets/logo.avif";
 import { limitConcurrency } from "../../../utils/async";
 import { getSortedProjects } from "../../../utils/projects";
+import { selectFeaturedBalanced } from "../../../utils/featured";
 import BackgroundAnimation from "./BackgroundAnimation.astro";
 
 interface Props {
@@ -17,29 +18,14 @@ const { projects: initialProjects } = Astro.props;
 // Fetch all project images
 const projects = initialProjects || (await getSortedProjects());
 
-// ⚡ Bolt: Eliminate O(N) array allocation from .map() and O(N) shuffle
-// We extract only the required fields directly into the slides array during the O(K) loop.
-// This prevents creating N intermediate objects and drastically reduces memory overhead during build.
+// Sélection éditoriale : projets `featured` en alternant les piliers,
+// au lieu d'un tirage aléatoire qui sur-représentait la vidéo.
 const limit = Math.min(15, projects.length);
-const slides: { src: ImageMetadata | undefined; alt: string }[] = [];
-const indices = Array.from({ length: projects.length }, (_, i) => i);
-
-for (let i = 0; i < limit; i++) {
-  // 🛡️ Sentinel: Replace weak Math.random() with cryptographically secure PRNG
-  // Ensures unpredictable distribution of hero images
-  const randomBuffer = new Uint32Array(1);
-  crypto.getRandomValues(randomBuffer);
-  const randomFloat = randomBuffer[0] / (0xffffffff + 1);
-  const randomIndex = i + Math.floor(randomFloat * (indices.length - i));
-
-  // Swap the picked index to the current position 'i'
-  [indices[i], indices[randomIndex]] = [indices[randomIndex], indices[i]];
-  const selectedProject = projects[indices[i]];
-  slides.push({
-    src: selectedProject.data.image,
-    alt: selectedProject.data.title,
-  });
-}
+const slides: { src: ImageMetadata | undefined; alt: string }[] =
+  selectFeaturedBalanced(projects, limit).map((project) => ({
+    src: project.data.image,
+    alt: project.data.title,
+  }));
 
 // ⚡ Bolt: Optimize carousel images
 // Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).

@@ -12,6 +12,16 @@ const authorCollection = defineCollection({
     }),
 });
 
+// Piliers éditoriaux du portfolio — pilotent les filtres, l'équilibre de la
+// home et (à terme) les pages services. Complémentaire de `type` qui ne
+// détermine que le média affiché (player vidéo vs galerie).
+export const PROJECT_CATEGORIES = [
+  "video",
+  "photo",
+  "web",
+  "communication",
+] as const;
+
 const projectCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/project" }),
   schema: ({ image }) =>
@@ -25,6 +35,21 @@ const projectCollection = defineCollection({
       type: z.enum(["video", "photo", "general"]).optional().default("general"),
       videoUrl: z.string().url().optional(), // For video projects (YouTube/Vimeo ID or URL)
       gallery: z.array(image()).optional(), // For photo projects
+
+      // Taxonomie éditoriale
+      category: z.enum(PROJECT_CATEGORIES),
+      role: z.string().min(1).max(100),
+      client: z.string().max(100).optional(),
+      featured: z.number().int().min(0).max(100).default(0), // poids éditorial, 0 = non mis en avant
+      awards: z.array(z.string().max(120)).default([]),
+      metrics: z
+        .array(
+          z.object({ label: z.string().max(60), value: z.string().max(40) }),
+        )
+        .default([]),
+      skills: z.array(z.string().max(40)).default([]),
+      liveUrl: z.string().url().optional(), // projets web : démo/production
+      repoUrl: z.string().url().optional(), // projets web : code source
 
       // SEO Fields
       seoTitle: z.string().max(70).optional(), // Google truncation limit approx 60-70 chars

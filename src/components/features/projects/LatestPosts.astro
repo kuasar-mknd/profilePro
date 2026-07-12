@@ -15,6 +15,7 @@ interface Props {
   subtitle?: string;
   lazyLoadImages?: boolean;
   allPosts?: CollectionEntry<"project">[];
+  posts?: CollectionEntry<"project">[]; // sélection pré-calculée (ex. featured équilibrés) — court-circuite le tri par date
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
   allPosts: initialAllPosts,
+  posts: preselectedPosts,
 } = Astro.props;
 
 // Handle potential string input for postLimit
@@ -35,8 +37,10 @@ const allPosts = initialAllPosts || (await getSortedProjects());
 // ⚡ Bolt: Replace O(N) filter and slice with O(limit) early exit loop
 // This prevents iterating over all projects unnecessarily, especially during
 // SSG where LatestPosts is called for every single project page.
-const posts: typeof allPosts = [];
-if (limit > 0) {
+let posts: typeof allPosts = [];
+if (preselectedPosts) {
+  posts = preselectedPosts.slice(0, limit > 0 ? limit : undefined);
+} else if (limit > 0) {
   for (let i = 0; i < allPosts.length; i++) {
     if (allPosts[i].data.title !== skipPost) {
       posts.push(allPosts[i]);

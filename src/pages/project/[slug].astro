@@ -167,7 +167,7 @@ const jsonLd = {
 
     <div class="relative z-10 container mx-auto px-7 text-center max-w-5xl">
       <div
-        class="inline-flex items-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
+        class="inline-flex flex-wrap items-center justify-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
       >
         <Tag tag={entry.data.tag} />
         <PublishDate date={entry.data.pubDate} />
@@ -181,6 +181,11 @@ const jsonLd = {
           >{readingTime} min de lecture</span
         >
       </div>
+      <p
+        class="text-sm md:text-base font-outfit uppercase tracking-widest text-pacamara-accent font-bold mb-6 animate-fade-in opacity-0 delay-300"
+      >
+        {entry.data.role}{entry.data.client && ` — ${entry.data.client}`}
+      </p>
       <h1
         class="font-pacamara-space font-bold text-5xl md:text-7xl lg:text-8xl mb-6 text-pacamara-dark dark:text-white animate-slide-up opacity-0 leading-tight tracking-tight drop-shadow-sm dark:drop-shadow-lg delay-400"
       >

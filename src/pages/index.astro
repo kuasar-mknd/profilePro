@@ -1,5 +1,6 @@
 ---
 import { getSortedProjects } from "../utils/projects";
+import { selectFeaturedBalanced } from "../utils/featured";
 import Base from "../layouts/Base.astro";
 import Hero from "../components/features/home/Hero.astro";
 import ServicesPreview from "../components/features/home/ServicesPreview.astro";
@@ -8,6 +9,11 @@ import CTASection from "../components/common/CTASection.astro";
 import config from "../config.mjs";
 
 const allProjects = await getSortedProjects();
+
+// Sélection éditoriale équilibrée entre les piliers (vidéo, photo, web,
+// communication) plutôt que les 7 plus récents — qui étaient presque
+// toujours des projets vidéo.
+const featuredSelection = selectFeaturedBalanced(allProjects, 7);
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -83,7 +89,14 @@ const jsonLd = {
     <Hero projects={allProjects} />
     <ServicesPreview />
     {/* ⚡ Bolt: Lazy load below-the-fold images to prioritize Hero LCP */}
-    <LatestPosts postLimit={7} allPosts={allProjects} lazyLoadImages={true} />
+    <LatestPosts
+      postLimit={7}
+      posts={featuredSelection}
+      allPosts={allProjects}
+      title="Projets sélectionnés"
+      subtitle="Vidéo, photographie, web et communication : une sélection représentative de mes réalisations."
+      lazyLoadImages={true}
+    />
     <CTASection />
   </main>
 </Base>

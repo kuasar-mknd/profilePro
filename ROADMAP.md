@@ -177,8 +177,8 @@ _(Garder `/project/` comme base d'URL est acceptable pour limiter les redirectio
 
 **1.1 Nouvelle taxonomie** — `src/content.config.ts`
 
-- [ ] Implémenter le schéma §3.2 (catégorie, rôle, client, featured, awards, metrics, skills, liveUrl/repoUrl).
-- [ ] Migrer les 18 fichiers MDX. Recatégorisation proposée :
+- [x] Implémenter le schéma §3.2 (catégorie, rôle, client, featured, awards, metrics, skills, liveUrl/repoUrl). _Note : `tag` est conservé pour ne pas casser les URLs de filtres existantes — la bascule des filtres vers `category` se fera avec la Phase 2._
+- [x] Migrer les 18 fichiers MDX (frontmatter uniquement, textes intacts ; cover de `jimmy-cpdv` remplacée par une photo de tournage). Recatégorisation appliquée :
   - `video` : 48h ×4 (avec `awards`), nuage, corps-et-ame, jimmy-cpdv (réalisation — remplacer la cover).
   - `photo` : **frencha, izia-proudRebel, lamia, lola, xxcent-sourire** (photographie de plateau = travail photo !), izia-fete-musique.
   - `communication` : paternelle (fiche mère, `featured` élevé, metrics « 8 000 spectateurs · guichets fermés »), paternelle-2024, paternelle-2025, larev.
@@ -187,7 +187,7 @@ _(Garder `/project/` comme base d'URL est acceptable pour limiter les redirectio
 
 **1.2 Créer les projets manquants (4–6 études de cas)**
 
-- [ ] 💻 **Ce portfolio** : Astro 6, Lighthouse 100, PWA, CI/CD, pipeline images — votre meilleure preuve web est déjà en ligne.
+- [x] 💻 **Ce portfolio** : Astro 6, Lighthouse 100, PWA, CI/CD, pipeline images — votre meilleure preuve web est déjà en ligne. _Fait : `portfolio-kuasar.mdx` (category `web`, featured 88, liens live/repo, captures d'écran générées)._
 - [ ] 💻 1–2 projets dev (HEIG-VD, stage becash, app Laravel/Vue perso) : contexte, stack, captures, liens live/repo.
 - [ ] 📣 **La Paternelle — étude de cas 360°** : problème → stratégie → dispositifs (affichage, presse, réseaux) → résultats chiffrés. C'est le projet qui prouve « stratégie digitale ».
 - [ ] 📷 1 série photo autonome (portraits ou événement) pour ancrer le pilier photo au-delà du plateau.
@@ -196,15 +196,15 @@ _(Garder `/project/` comme base d'URL est acceptable pour limiter les redirectio
 
 **1.3 Reprendre le contrôle éditorial de la home** — `src/pages/index.astro`, `Hero.astro`, `LatestPosts.astro`
 
-- [ ] Remplacer le tirage aléatoire du carrousel par la liste des projets `featured` (triés par poids), en garantissant la mixité des piliers.
-- [ ] « Projets récents » → « Projets sélectionnés » : 6 cartes pilotées par `featured` (2 image / 2 web / 2 communication), le bento mettant la plus grande carte sur le projet phare.
+- [x] Remplacer le tirage aléatoire du carrousel par la liste des projets `featured` (triés par poids), en garantissant la mixité des piliers (`src/utils/featured.ts` + tests).
+- [x] « Projets récents » → « Projets sélectionnés » : 7 cartes pilotées par `featured` en alternant les piliers, le bento mettant la plus grande carte sur le projet phare. Les cartes affichent désormais **le rôle** à la place du temps de lecture, et la page projet affiche rôle + client sous le titre.
 - [ ] Ajouter une section preuve sociale : 3 prix 48h, 8 000 spectateurs Paternelle, prix HEIG-VD/hackdays (déjà dans `cv-basics.yml`).
 
 ### 🎨 Phase 2 — Refonte visuelle (2–3 semaines)
 
 **2.1 Apaiser le système** — `src/css/style.css`, `Hero.astro`
 
-- [ ] Supprimer : animation lettre par lettre, `text-shimmer` permanent (le réserver éventuellement à un seul élément du hero, statique au repos), vibrations haptiques, hints `<kbd>` visibles (garder les raccourcis fonctionnels), neons inutilisés.
+- [ ] Supprimer : animation lettre par lettre, `text-shimmer` permanent (le réserver éventuellement à un seul élément du hero, statique au repos), vibrations haptiques, hints `<kbd>` visibles (garder les raccourcis fonctionnels), neons inutilisés. _Constat aggravant (captures headless du 11.07.2026) : le titre « Connecter. Captiver. » est pratiquement **invisible dans les deux thèmes** (dégradé blanc 60-80 % sur fond clair ; opacité 0.25 en sombre) — le H1 principal de la home n'apporte actuellement rien visuellement._
 - [ ] Réduire les blobs/glows d'arrière-plan à un seul élément discret par page ; limiter TiltCard aux cartes services.
 - [ ] Palette : 1 accent principal + 4 **couleurs de catégorie** signifiantes (réutiliser purple/blue/pink/orange déjà définies dans `ServicesPreview`) appliquées aux badges de pilier partout (cartes, filtres, pages projet).
 - [ ] Typo : officialiser le duo Space Grotesk (titres) / Outfit (texte) — c'est déjà l'usage réel.
