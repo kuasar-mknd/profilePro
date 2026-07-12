@@ -30,7 +30,7 @@ const mockProjects = [
       title: "Test Project 1",
       intro: "Test Intro",
       description: "Test Description",
-      tag: "test",
+      role: "Rôle de test",
       pubDate: new Date("2023-01-01"),
     },
   },
@@ -39,7 +39,7 @@ const mockProjects = [
     data: {
       title: "Test Project 2",
       description: "Fallback Description",
-      tag: "test2",
+      role: "Rôle de test 2",
       pubDate: new Date("2023-01-02"),
     },
   },
@@ -112,7 +112,7 @@ describe("OG Image Generation", () => {
       const jsonString = JSON.stringify(satoriElement);
       expect(jsonString).toContain("Test Project 1");
       expect(jsonString).toContain("Test Intro");
-      expect(jsonString).toContain("test"); // Tag
+      expect(jsonString).toContain("Rôle de test"); // Badge = rôle
       expect(jsonString).toContain("Samuel Dulex | Portfolio");
 
       // Verify satori options

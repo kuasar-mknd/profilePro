@@ -36,7 +36,6 @@ import { Icon } from "astro-icon/components";
         href="/"
         aria-label="Retour à l'accueil"
         class="group inline-flex items-center gap-2 bg-pacamara-secondary text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover-lift active:scale-[0.98] active:duration-75 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-        data-haptic="50"
       >
         <Icon
           name="mdi:home"
@@ -50,19 +49,13 @@ import { Icon } from "astro-icon/components";
         class="group inline-flex items-center gap-2 bg-transparent border-2 border-pacamara-secondary text-pacamara-secondary dark:text-white font-bold py-3 px-8 rounded-full hover:bg-pacamara-secondary/10 hover-lift active:scale-[0.98] active:duration-75 transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
         aria-label="Retourner à la page précédente (Backspace)"
         aria-keyshortcuts="Backspace"
-        data-haptic="50"
       >
         <Icon
           name="mdi:arrow-left"
           class="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1 group-focus-visible:-translate-x-1"
           aria-hidden="true"
         />
-        <span aria-hidden="true"
-          >Page précédente<kbd
-            class="font-sans ml-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-secondary/10 dark:bg-white/10 px-1.5 py-0.5 rounded"
-            >(Backspace)</kbd
-          ></span
-        >
+        <span aria-hidden="true">Page précédente</span>
       </button>
     </div>
   </section>
@@ -118,13 +111,6 @@ import { Icon } from "astro-icon/components";
 
       if (e.key === "Backspace") {
         e.preventDefault();
-        // Provide haptic feedback if available and not reduced motion
-        if (
-          navigator.vibrate &&
-          !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-          navigator.vibrate(50);
-        }
         btn.click();
       }
     };

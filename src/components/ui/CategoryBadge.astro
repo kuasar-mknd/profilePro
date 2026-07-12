@@ -1,0 +1,32 @@
+---
+import { CATEGORY_META, pillarOfCategory } from "../../utils/pillars";
+import { sanitizeUrl } from "../../utils/security";
+
+interface Props {
+  category: keyof typeof CATEGORY_META;
+  link?: boolean;
+}
+
+const { category, link = true } = Astro.props;
+const meta = CATEGORY_META[category];
+const pillar = pillarOfCategory(category);
+const href = link
+  ? sanitizeUrl(`/project/categorie/${pillar.slug}/`)
+  : undefined;
+const Element = href ? "a" : "span";
+---
+
+<Element
+  href={href}
+  aria-label={href
+    ? `${meta.label} (voir le pilier ${pillar.label})`
+    : undefined}
+  class:list={[
+    "text-[13px] leading-none rounded-full inline-flex items-center h-[28px] px-3 font-medium text-white border backdrop-blur-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]",
+    meta.badgeClass,
+    href &&
+      "relative z-20 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+  ]}
+>
+  <span aria-hidden={href ? "true" : undefined}>{meta.label}</span>
+</Element>

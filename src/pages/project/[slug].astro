@@ -5,7 +5,8 @@ import Base from "../../layouts/Base.astro";
 import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
 import LatestPosts from "../../components/features/projects/LatestPosts.astro";
 import PublishDate from "../../components/features/projects/PublishDate.astro";
-import Tag from "../../components/ui/Tag.astro";
+import CategoryBadge from "../../components/ui/CategoryBadge.astro";
+import { CATEGORY_META, pillarOfCategory } from "../../utils/pillars";
 import { sanitizeUrl } from "../../utils/security";
 import TableOfContents from "../../components/features/projects/TableOfContents.astro";
 
@@ -169,7 +170,7 @@ const jsonLd = {
       <div
         class="inline-flex flex-wrap items-center justify-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
       >
-        <Tag tag={entry.data.tag} />
+        <CategoryBadge category={entry.data.category} />
         <PublishDate date={entry.data.pubDate} />
 
         <span
@@ -202,6 +203,126 @@ const jsonLd = {
   </section>
 
   <article class="container mx-auto max-w-5xl px-7 -mt-32 relative z-10">
+    <!-- Fiche projet -->
+    <div
+      class="bg-white/90 dark:bg-pacamara-dark/90 backdrop-blur-xl rounded-3xl p-6 md:p-8 mt-12 mb-8 shadow-glass border border-white/20 dark:border-white/5 animate-slide-up opacity-0 delay-500"
+    >
+      <dl class="grid grid-cols-2 md:grid-cols-4 gap-6 text-left">
+        <div>
+          <dt
+            class="text-xs uppercase tracking-wider text-pacamara-primary/50 dark:text-white/50 font-outfit mb-1"
+          >
+            Rôle
+          </dt>
+          <dd
+            class="font-pacamara-space font-bold text-pacamara-dark dark:text-white"
+          >
+            {entry.data.role}
+          </dd>
+        </div>
+        {
+          entry.data.client && (
+            <div>
+              <dt class="text-xs uppercase tracking-wider text-pacamara-primary/50 dark:text-white/50 font-outfit mb-1">
+                Client
+              </dt>
+              <dd class="font-pacamara-space font-bold text-pacamara-dark dark:text-white">
+                {entry.data.client}
+              </dd>
+            </div>
+          )
+        }
+        <div>
+          <dt
+            class="text-xs uppercase tracking-wider text-pacamara-primary/50 dark:text-white/50 font-outfit mb-1"
+          >
+            Année
+          </dt>
+          <dd
+            class="font-pacamara-space font-bold text-pacamara-dark dark:text-white"
+          >
+            {entry.data.pubDate.getFullYear()}
+          </dd>
+        </div>
+        {
+          entry.data.skills.length > 0 && (
+            <div class="col-span-2 md:col-span-1">
+              <dt class="text-xs uppercase tracking-wider text-pacamara-primary/50 dark:text-white/50 font-outfit mb-2">
+                Outils & compétences
+              </dt>
+              <dd class="flex flex-wrap gap-1.5">
+                {entry.data.skills.map((skill) => (
+                  <span class="text-xs px-2 py-1 rounded-full bg-pacamara-primary/5 dark:bg-white/10 text-pacamara-primary/80 dark:text-white/80 font-outfit">
+                    {skill}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+      {
+        entry.data.awards.length > 0 && (
+          <ul class="flex flex-wrap gap-3 mt-6 pt-6 border-t border-pacamara-secondary/10 dark:border-white/10 list-none p-0">
+            {entry.data.awards.map((award) => (
+              <li class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-sm font-bold font-outfit">
+                <Icon name="mdi:trophy" class="w-4 h-4" aria-hidden="true" />
+                {award}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        entry.data.metrics.length > 0 && (
+          <dl class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-pacamara-secondary/10 dark:border-white/10">
+            {entry.data.metrics.map((metric) => (
+              <div class="text-center bg-pacamara-primary/[0.03] dark:bg-white/5 rounded-2xl px-3 py-4">
+                <dd class="text-2xl font-pacamara-space font-bold text-pacamara-accent">
+                  {metric.value}
+                </dd>
+                <dt class="text-xs text-pacamara-primary/60 dark:text-white/60 font-outfit mt-1">
+                  {metric.label}
+                </dt>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+      {
+        (entry.data.liveUrl || entry.data.repoUrl) && (
+          <div class="flex flex-wrap gap-4 mt-6 pt-6 border-t border-pacamara-secondary/10 dark:border-white/10">
+            {entry.data.liveUrl && (
+              <a
+                href={entry.data.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              >
+                <Icon
+                  name="mdi:open-in-new"
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                />
+                Voir le site
+              </a>
+            )}
+            {entry.data.repoUrl && (
+              <a
+                href={entry.data.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 py-3 border border-pacamara-primary/20 dark:border-white/20 text-pacamara-primary dark:text-white rounded-full font-bold hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              >
+                <Icon name="mdi:github" class="w-5 h-5" aria-hidden="true" />
+                Code source
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+
     <!-- Video Player -->
     {
       entry.data.type === "video" && entry.data.videoUrl && (
@@ -244,8 +365,8 @@ const jsonLd = {
           { label: "Accueil", href: "/" },
           { label: "Projets", href: "/project/" },
           {
-            label: entry.data.tag,
-            href: `/project/tag/${encodeURIComponent(entry.data.tag)}/`,
+            label: pillarOfCategory(entry.data.category).label,
+            href: `/project/categorie/${pillarOfCategory(entry.data.category).slug}/`,
           },
           { label: entry.data.title },
         ]}
@@ -278,12 +399,7 @@ const jsonLd = {
                 class="w-5 h-5"
                 aria-hidden="true"
               />
-              <span class="font-medium"
-                >Partager ce projet <kbd
-                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true">(S)</kbd
-                ></span
-              >
+              <span class="font-medium">Partager ce projet </span>
             </div>
             <!-- Copied State -->
             <div
@@ -303,11 +419,6 @@ const jsonLd = {
 
       <!-- Script for interactions -->
       <script>
-        // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing
-        const prefersReducedMotionQuery = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        );
-
         // Reading Progress
         const progressBar = document.getElementById("scroll-progress");
 
@@ -379,11 +490,6 @@ const jsonLd = {
               // Fallback: Copy to clipboard
               try {
                 await navigator.clipboard.writeText(window.location.href);
-
-                // 🎨 Palette: Visual, Audible, and Haptic Feedback
-                // Vibrate for 50ms on mobile devices
-                if (navigator.vibrate && !prefersReducedMotionQuery.matches)
-                  navigator.vibrate([50]);
 
                 if (!shareBtn.classList.contains("copied")) {
                   shareBtn.classList.add("copied");
@@ -497,8 +603,7 @@ const jsonLd = {
             id="prev-project-link"
             href={sanitizeUrl(`/project/${nextPost.id}/`)}
             class="group flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
-            data-haptic="50"
-            aria-label={`Projet précédent : ${nextPost.data.title} (${nextPost.data.tag}) ([)`}
+            aria-label={`Projet précédent : ${nextPost.data.title} (${CATEGORY_META[nextPost.data.category].label}) ([)`}
             aria-keyshortcuts="["
           >
             <Icon
@@ -508,13 +613,7 @@ const jsonLd = {
             />
             <div class="flex-1 text-left" aria-hidden="true">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
-                Projet précédent • {nextPost.data.tag}
-                <kbd
-                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  [
-                </kbd>
+                Projet précédent • {CATEGORY_META[nextPost.data.category].label}
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {nextPost.data.title}
@@ -532,19 +631,12 @@ const jsonLd = {
             id="next-project-link"
             href={sanitizeUrl(`/project/${prevPost.id}/`)}
             class="group flex items-center justify-end gap-4 p-4 rounded-2xl bg-white dark:bg-pacamara-dark border border-pacamara-secondary/10 hover:border-pacamara-accent/50 focus-visible:border-pacamara-accent/50 transition-all duration-300 w-full md:w-1/2 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 hover-lift hover:bg-pacamara-accent/5 dark:hover:bg-pacamara-accent/5 active:scale-[0.98] active:duration-75"
-            data-haptic="50"
-            aria-label={`Projet suivant : ${prevPost.data.title} (${prevPost.data.tag}) (])`}
+            aria-label={`Projet suivant : ${prevPost.data.title} (${CATEGORY_META[prevPost.data.category].label}) (])`}
             aria-keyshortcuts="]"
           >
             <div class="flex-1 text-right" aria-hidden="true">
               <span class="block text-xs text-pacamara-primary/50 dark:text-white/50 mb-1 uppercase tracking-wider">
-                Projet suivant • {prevPost.data.tag}
-                <kbd
-                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  ]
-                </kbd>
+                Projet suivant • {CATEGORY_META[prevPost.data.category].label}
               </span>
               <span class="text-lg font-bold font-pacamara-space text-pacamara-dark dark:text-white group-hover:text-pacamara-accent group-focus-visible:text-pacamara-accent transition-colors line-clamp-1">
                 {prevPost.data.title}
@@ -582,7 +674,6 @@ const jsonLd = {
       <a
         href="/#cta-section"
         class="group inline-flex items-center gap-2 px-8 py-4 bg-pacamara-accent text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-[0.98] active:duration-75 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-secondary focus-visible:ring-offset-2"
-        data-haptic="50"
       >
         <span>Discuter de votre projet</span>
         <Icon

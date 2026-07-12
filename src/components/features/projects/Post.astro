@@ -2,7 +2,7 @@
 const { postData, bentoSize = "", priority = false } = Astro.props;
 import { getImage } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
-import Tag from "../../ui/Tag.astro";
+import CategoryBadge from "../../ui/CategoryBadge.astro";
 import { sanitizeUrl } from "../../../utils/security";
 
 const isLarge = bentoSize === "bento-item-large";
@@ -51,7 +51,6 @@ const optimizedImage = {
     href={sanitizeUrl(`/project/${postData.id}/`)}
     aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Rôle : ${postData.data.role}.)`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-[0.98] active:duration-75 transition-all"
-    data-haptic="50"
   >
   </a>
 
@@ -96,19 +95,12 @@ const optimizedImage = {
         isLarge ? "min-h-[160px] pb-12" : "min-h-[110px]",
       ]}
     >
-      <!-- Tags - slides up on hover -->
-      <!-- 🎨 Palette: Tag is now clickable and sits above the card link -->
+      <!-- Catégorie - slides up on hover -->
       <div
         class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
-        aria-label="Tags du projet"
+        aria-label="Catégorie du projet"
       >
-        <Tag
-          tag={postData.data.tag}
-          variant="dark"
-          href={sanitizeUrl(
-            `/project/tag/${encodeURIComponent(postData.data.tag)}`,
-          )}
-        />
+        <CategoryBadge category={postData.data.category} />
       </div>
 
       <!-- Title - slides up on hover -->

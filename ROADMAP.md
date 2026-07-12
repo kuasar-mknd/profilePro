@@ -182,8 +182,8 @@ _(Garder `/project/` comme base d'URL est acceptable pour limiter les redirectio
   - `video` : 48h ×4 (avec `awards`), nuage, corps-et-ame, jimmy-cpdv (réalisation — remplacer la cover).
   - `photo` : **frencha, izia-proudRebel, lamia, lola, xxcent-sourire** (photographie de plateau = travail photo !), izia-fete-musique.
   - `communication` : paternelle (fiche mère, `featured` élevé, metrics « 8 000 spectateurs · guichets fermés »), paternelle-2024, paternelle-2025, larev.
-  - Supprimer `producteur.mdx` (doublon de vidéo avec jimmy-cpdv, contenu générique) ou le transformer en page Services/Showreel.
-- [ ] Réécrire chaque `title`/`intro` pour mettre **le rôle en premier** (ex. « Gaffer sur _Gamines_ — court-métrage primé, 48H Genève 2025 »).
+  - ✅ `producteur.mdx` supprimé (redirection 301 vers `/project/`) et **les 3 pages Paternelle fusionnées** en une étude de cas 360° (`paternelle.mdx`, éditions 2024/2025 en sections, metrics consolidées, redirections 301).
+- [x] Réécrire chaque `title`/`intro` pour mettre **le rôle en premier** (14 projets réécrits, corps des textes intacts).
 
 **1.2 Créer les projets manquants (4–6 études de cas)**
 
@@ -204,30 +204,30 @@ _(Garder `/project/` comme base d'URL est acceptable pour limiter les redirectio
 
 **2.1 Apaiser le système** — `src/css/style.css`, `Hero.astro`
 
-- [ ] Supprimer : animation lettre par lettre, `text-shimmer` permanent (le réserver éventuellement à un seul élément du hero, statique au repos), vibrations haptiques, hints `<kbd>` visibles (garder les raccourcis fonctionnels), neons inutilisés. _Constat aggravant (captures headless du 11.07.2026) : le titre « Connecter. Captiver. » est pratiquement **invisible dans les deux thèmes** (dégradé blanc 60-80 % sur fond clair ; opacité 0.25 en sombre) — le H1 principal de la home n'apporte actuellement rien visuellement._
+- [x] Supprimer : animation lettre par lettre, `text-shimmer` permanent (devenu un dégradé **statique**), vibrations haptiques (handler global + 10 blocs `navigator.vibrate` + 39 attributs `data-haptic`), hints `<kbd>` fantômes sur les liens (les légendes clavier des tooltips Lightbox/ModeSwitch sont conservées, ainsi que tous les raccourcis fonctionnels), couleurs neon et styles morts (`hero-text-subtle`, `gradient-mesh`). _Constat aggravant (captures headless du 11.07.2026) : le titre « Connecter. Captiver. » est pratiquement **invisible dans les deux thèmes** (dégradé blanc 60-80 % sur fond clair ; opacité 0.25 en sombre) — le H1 principal de la home n'apporte actuellement rien visuellement._
 - [ ] Réduire les blobs/glows d'arrière-plan à un seul élément discret par page ; limiter TiltCard aux cartes services.
 - [ ] Palette : 1 accent principal + 4 **couleurs de catégorie** signifiantes (réutiliser purple/blue/pink/orange déjà définies dans `ServicesPreview`) appliquées aux badges de pilier partout (cartes, filtres, pages projet).
 - [ ] Typo : officialiser le duo Space Grotesk (titres) / Outfit (texte) — c'est déjà l'usage réel.
 
 **2.2 Cartes & grilles orientées preuve** — `Post.astro`, `ProjectFilter.astro`, `project/[...page].astro`
 
-- [ ] Carte projet : badge catégorie coloré + **rôle** + client/année ; supprimer « min de lecture » et la date brute (l'année suffit).
-- [ ] Filtres par pilier (4 boutons + « Tous ») au lieu des 7 tags libres ; tags relégués en filtre secondaire ou supprimés de l'UI.
+- [x] Carte projet : badge catégorie coloré (violet/rose/bleu/orange) + **rôle** ; « min de lecture » supprimé des cartes.
+- [x] Filtres par pilier (3 piliers + « Tous ») au lieu des 7 tags libres ; pages `/project/categorie/<pilier>/`, anciennes URLs de tags redirigées en 301, champ `tag` conservé dans le frontmatter mais retiré de l'UI.
 - [ ] Tri : featured d'abord, puis chronologie.
 
 **2.3 Page projet « étude de cas »** — `project/[slug].astro`
 
-- [ ] En-tête structuré sous le titre : Rôle · Client · Année · Outils · Prix (données du frontmatter, fini les fiches techniques en prose).
-- [ ] Bloc « Résultats » (metrics) mis en forme quand présent.
+- [x] En-tête structuré : **fiche projet** (rôle, client, année, outils) en tête d'article + rôle—client sous le titre du hero.
+- [x] Bloc « Résultats » (metrics) en tuiles chiffrées + badges 🏆 pour les prix + boutons Voir le site/Code source pour les projets web.
 - [ ] Variante de mise en page par catégorie : player pour `video`, galerie plein écran pour `photo`, captures + boutons Live/Repo pour `web`, chiffres en avant pour `communication`.
 - [ ] « D'autres projets » : proposer en priorité des projets du même pilier.
 
 **2.4 Navigation & structure** — `Navigation.astro`, `Footer.astro`, nouvelle page `services.astro`
 
-- [ ] Nav : Accueil · Réalisations · Services · À propos · Contact.
+- [ ] Nav : Accueil · Réalisations · Services · À propos · Contact. _(reporté : la nav reste à 3 entrées ; les piliers sont accessibles depuis la home et les filtres)_
 - [ ] Créer `/services/` (3 piliers, process, FAQ — recycler le JSON-LD FAQ existant).
-- [ ] Footer : liens vers CV (fr/en), services, réalisations par pilier, réseaux, mention légale.
-- [ ] Hero : nouvelle tagline hybride (§3.1) ; les 3 piliers cliquables vers leurs filtres.
+- [x] Footer : liens Réalisations / À propos / CV (fr+en) / Contact ajoutés, baseline mise à jour.
+- [x] Hero : titre lisible construit sur les 3 piliers (fini le titre invisible), sous-titre orienté clients, CTA « Discuter de votre projet » ; cartes services cliquables vers les pages de piliers.
 
 ### 📈 Phase 3 — Croissance (en continu, après la refonte)
 

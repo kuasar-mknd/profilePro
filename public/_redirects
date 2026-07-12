@@ -26,13 +26,39 @@
 /lola-clip/ /project/lola-clip/ 301
 /nuage /project/nuage/ 301
 /nuage/ /project/nuage/ 301
-/paternelle-2024 /project/paternelle-2024/ 301
-/paternelle-2024/ /project/paternelle-2024/ 301
-/paternelle-2025 /project/paternelle-2025/ 301
-/paternelle-2025/ /project/paternelle-2025/ 301
+/paternelle-2024 /project/paternelle/ 301
+/paternelle-2024/ /project/paternelle/ 301
+/paternelle-2025 /project/paternelle/ 301
+/paternelle-2025/ /project/paternelle/ 301
 /paternelle /project/paternelle/ 301
 /paternelle/ /project/paternelle/ 301
-/producteur /project/producteur/ 301
-/producteur/ /project/producteur/ 301
+/producteur /project/ 301
+/producteur/ /project/ 301
 /xxcent-sourire /project/xxcent-sourire/ 301
 /xxcent-sourire/ /project/xxcent-sourire/ 301
+
+# Pages retirées lors de la refonte (fusion Paternelle, suppression Production)
+/project/producteur /project/ 301
+/project/producteur/ /project/ 301
+/project/paternelle-2024 /project/paternelle/ 301
+/project/paternelle-2024/ /project/paternelle/ 301
+/project/paternelle-2025 /project/paternelle/ 301
+/project/paternelle-2025/ /project/paternelle/ 301
+
+# Anciennes pages de tags -> pages de piliers (filtres refondus)
+/project/tag/communication /project/categorie/communication/ 301
+/project/tag/communication/ /project/categorie/communication/ 301
+/project/tag/%C3%A9v%C3%A9nementiel /project/categorie/communication/ 301
+/project/tag/%C3%A9v%C3%A9nementiel/ /project/categorie/communication/ 301
+/project/tag/court-m%C3%A9trage /project/categorie/creation-de-contenu/ 301
+/project/tag/court-m%C3%A9trage/ /project/categorie/creation-de-contenu/ 301
+/project/tag/clip%20musical /project/categorie/creation-de-contenu/ 301
+/project/tag/clip%20musical/ /project/categorie/creation-de-contenu/ 301
+/project/tag/documentaire /project/categorie/creation-de-contenu/ 301
+/project/tag/documentaire/ /project/categorie/creation-de-contenu/ 301
+/project/tag/photo /project/categorie/creation-de-contenu/ 301
+/project/tag/photo/ /project/categorie/creation-de-contenu/ 301
+/project/tag/production /project/categorie/creation-de-contenu/ 301
+/project/tag/production/ /project/categorie/creation-de-contenu/ 301
+/project/tag/d%C3%A9veloppement%20web /project/categorie/developpement-web/ 301
+/project/tag/d%C3%A9veloppement%20web/ /project/categorie/developpement-web/ 301

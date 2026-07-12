@@ -9,8 +9,9 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
 
     // Verify Hero title parts (Specific to main content h1)
     const mainH1 = page.locator("main h1").first();
-    await expect(mainH1).toContainText(/Connecter/i);
-    await expect(mainH1).toContainText(/Captiver/i);
+    await expect(mainH1).toContainText(/Création de contenu/i);
+    await expect(mainH1).toContainText(/Développement web/i);
+    await expect(mainH1).toContainText(/Communication/i);
 
     // Verify Navigation exists (use first() for dual nav)
     await expect(page.locator("header#main-header")).toBeVisible();

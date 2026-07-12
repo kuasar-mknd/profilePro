@@ -89,60 +89,24 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     </div>
 
     <h1
-      class="font-pacamara-space font-bold text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight hero-title"
+      class="font-pacamara-space font-bold text-4xl md:text-6xl lg:text-7xl mb-6 tracking-tight leading-[1.08] text-pacamara-dark dark:text-white hero-title"
     >
-      <span class="sr-only">Connecter.</span>
-      <span
-        class="hero-text-subtle text-pacamara-primary/60 dark:text-white/60 inline-block"
-        aria-hidden="true"
+      Création de contenu<span class="text-purple-500" aria-hidden="true"
+        >.</span
       >
-        <span class="letter-animate">C</span><span class="letter-animate"
-          >o</span
-        ><span class="letter-animate">n</span><span class="letter-animate"
-          >n</span
-        ><span class="letter-animate">e</span><span class="letter-animate"
-          >c</span
-        ><span class="letter-animate">t</span><span class="letter-animate"
-          >e</span
-        ><span class="letter-animate">r</span><span class="letter-animate"
-          >.</span
-        >
-      </span>
-      <br class="md:hidden" />
-      <span class="sr-only">Captiver.</span>
-      <span class="text-shimmer inline-block" aria-hidden="true">
-        <span class="letter-animate delay-100">C</span><span
-          class="letter-animate delay-150">a</span
-        ><span class="letter-animate delay-200">p</span><span
-          class="letter-animate delay-250">t</span
-        ><span class="letter-animate delay-300">i</span><span
-          class="letter-animate delay-350">v</span
-        ><span class="letter-animate delay-400">e</span><span
-          class="letter-animate delay-450">r</span
-        ><span class="letter-animate delay-500">.</span>
-      </span>
+      <br />
+      Développement web<span class="text-blue-500" aria-hidden="true">.</span>
+      <br />
+      Communication<span class="text-orange-500" aria-hidden="true">.</span>
     </h1>
 
     <p
-      class="text-xl md:text-2xl text-pacamara-primary dark:text-white max-w-2xl mx-auto mb-6 font-outfit font-light hero-subtitle text-balance"
+      class="text-xl md:text-2xl text-pacamara-primary/90 dark:text-white/90 max-w-3xl mx-auto mb-8 font-outfit font-light hero-subtitle text-balance"
     >
-      L'Art de transformer chaque événement en <span
-        class="text-pacamara-accent font-semibold">Histoire</span
-      >.
+      Je crée les contenus qui racontent votre histoire, les plateformes qui les
+      diffusent et les stratégies qui les font performer. Basé à Lausanne, actif
+      dans toute la Suisse romande.
     </p>
-
-    <!-- ⚡ Bolt: Simple services summary -->
-    <ul
-      class="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-10 text-[10px] md:text-xs font-pacamara-space font-bold uppercase tracking-widest text-pacamara-primary/80 dark:text-white/80 hero-services"
-    >
-      <li>Production Vidéo</li>
-      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
-      <li>Développement Web</li>
-      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
-      <li>Photographie</li>
-      <li class="text-pacamara-accent/30" aria-hidden="true">•</li>
-      <li>Stratégie Digitale</li>
-    </ul>
 
     <div
       class="flex flex-col md:flex-row gap-4 justify-center items-center hero-buttons"
@@ -151,9 +115,8 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         href="/project/"
         class="group relative inline-flex items-center gap-2 justify-center px-8 py-4 bg-pacamara-primary dark:bg-white text-white dark:text-pacamara-primary rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift overflow-hidden active:scale-[0.98] active:duration-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-primary"
-        data-haptic="50"
       >
-        <span class="relative z-10">Voir mes projets</span>
+        <span class="relative z-10">Voir mes réalisations</span>
         <Icon
           name="mdi:arrow-right"
           class="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -169,14 +132,13 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
         href="#contact-form"
         class="group inline-flex items-center gap-2 justify-center px-8 py-4 bg-pacamara-secondary text-white rounded-full font-bold text-lg shadow-lg hover:shadow-glow hover-lift active:scale-[0.98] active:duration-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-pacamara-accent"
         id="hero-cta-secondary"
-        data-haptic="50"
       >
         <Icon
           name="mdi:email-outline"
           class="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110"
           aria-hidden="true"
         />
-        Me contacter
+        Discuter de votre projet
       </a>
     </div>
   </div>
@@ -216,56 +178,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 </section>
 
 <style>
-  /* Letter Animation - GPU-composited */
-  @keyframes letter-appear {
-    0% {
-      opacity: 0;
-      transform: translateY(20px) scale(0.8);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  .letter-animate {
-    display: inline-block;
-    opacity: 0;
-    animation: letter-appear 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    will-change: transform, opacity;
-  }
-
-  .hero-title .letter-animate:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  .hero-title .letter-animate:nth-child(2) {
-    animation-delay: 0.15s;
-  }
-  .hero-title .letter-animate:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-  .hero-title .letter-animate:nth-child(4) {
-    animation-delay: 0.25s;
-  }
-  .hero-title .letter-animate:nth-child(5) {
-    animation-delay: 0.3s;
-  }
-  .hero-title .letter-animate:nth-child(6) {
-    animation-delay: 0.35s;
-  }
-  .hero-title .letter-animate:nth-child(7) {
-    animation-delay: 0.4s;
-  }
-  .hero-title .letter-animate:nth-child(8) {
-    animation-delay: 0.45s;
-  }
-  .hero-title .letter-animate:nth-child(9) {
-    animation-delay: 0.5s;
-  }
-  .hero-title .letter-animate:nth-child(10) {
-    animation-delay: 0.55s;
-  }
-
   /* Hero elements entrance animations */
   /* Note: hero-logo has NO initial opacity:0 to ensure LCP is visible immediately */
   .hero-logo {
@@ -283,11 +195,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
   .hero-subtitle {
     opacity: 0;
     animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
-  }
-
-  .hero-services {
-    opacity: 0;
-    animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
   }
 
   .hero-buttons {
@@ -343,11 +250,6 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .letter-animate {
-      opacity: 1;
-      animation: none;
-      transform: none;
-    }
     .hero-logo,
     .hero-subtitle,
     .hero-buttons,
@@ -501,45 +403,12 @@ const optimizedLogo = await getImage({ src: logo, width: 360, format: "avif" });
     }
   });
 
-  // ⚡ Bolt: Cache matchMedia globally at module scope to avoid re-parsing on component load/instantiation
-  const prefersReducedMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-
-  /**
-   * 🎨 Palette: Hero CTA Haptics
-   * Tactile feedback for primary navigation buttons
-   */
-  function initHeroCTA() {
-    const primaryCta = document.getElementById("hero-cta-primary");
-    const secondaryCta = document.getElementById("hero-cta-secondary");
-
-    if (primaryCta && primaryCta.dataset.initialized !== "true") {
-      primaryCta.dataset.initialized = "true";
-      primaryCta.addEventListener("click", () => {
-        // 🎨 Palette: Tactile feedback for primary action
-        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
-          navigator.vibrate(50);
-      });
-    }
-
-    if (secondaryCta && secondaryCta.dataset.initialized !== "true") {
-      secondaryCta.dataset.initialized = "true";
-      secondaryCta.addEventListener("click", () => {
-        // 🎨 Palette: Tactile feedback for primary action
-        if (navigator.vibrate && !prefersReducedMotionQuery.matches)
-          navigator.vibrate(50);
-      });
-    }
-  }
-
   // ⚡ Bolt: Singleton Listener Pattern
   // Consolidates initialization logic and prevents listener accumulation
   function setupHeroListeners() {
     const initAll = () => {
       initCarouselTouch();
       initCarouselObserver();
-      initHeroCTA();
     };
 
     if (window.__heroInitHandler) {

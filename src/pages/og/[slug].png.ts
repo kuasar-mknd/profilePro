@@ -109,7 +109,7 @@ export const GET: APIRoute = async ({ props }) => {
                       textTransform: "uppercase",
                       letterSpacing: "2px",
                     },
-                    children: project.data.tag,
+                    children: project.data.role,
                   },
                 },
               ],

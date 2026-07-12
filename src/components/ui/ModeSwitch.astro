@@ -4,7 +4,6 @@ import { Icon } from "astro-icon/components";
 
 <button
   type="button"
-  data-haptic="50"
   style="contain: layout;"
   class="theme-toggle-btn group relative ml-4 flex h-9 w-9 items-center justify-center rounded-lg bg-pacamara-primary/5 text-pacamara-secondary transition-all hover:w-40 hover:bg-pacamara-accent hover:text-white focus-visible:w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-95 active:duration-75 dark:bg-pacamara-white/10 dark:text-pacamara-accent dark:hover:bg-pacamara-accent dark:hover:text-white"
   aria-label="Lune (Activer le mode sombre) (Shift+T)"
@@ -30,19 +29,13 @@ import { Icon } from "astro-icon/components";
     <span
       aria-hidden="true"
       class="hidden text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:inline-block whitespace-nowrap"
-      >Soleil <kbd
-        class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-        >(Shift+T)</kbd
-      ></span
-    >
+      >Soleil
+    </span>
     <span
       aria-hidden="true"
       class="text-sm w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-auto group-hover:opacity-100 group-focus-visible:ml-2 group-focus-visible:w-auto group-focus-visible:opacity-100 dark:hidden whitespace-nowrap"
-      >Lune <kbd
-        class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-        >(Shift+T)</kbd
-      ></span
-    >
+      >Lune
+    </span>
   </div>
   <span class="sr-only theme-live-region" aria-live="polite"></span>
 </button>
