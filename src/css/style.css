@@ -397,10 +397,10 @@
 /* ENHANCED UX ANIMATIONS */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(16px);
   transition:
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-on-scroll.visible {
@@ -409,7 +409,7 @@
 }
 
 .reveal-on-scroll.from-left {
-  transform: translateX(-60px);
+  transform: translateX(-24px);
 }
 
 .reveal-on-scroll.from-left.visible {
@@ -417,7 +417,7 @@
 }
 
 .reveal-on-scroll.from-right {
-  transform: translateX(60px);
+  transform: translateX(24px);
 }
 
 .reveal-on-scroll.from-right.visible {
@@ -574,32 +574,6 @@
 
   /* ⚡ Bolt: CSS containment for layout optimization */
   contain: layout style;
-}
-
-.card-glow::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(
-    135deg,
-    var(--color-pacamara-secondary),
-    var(--color-pacamara-accent),
-    var(--color-pacamara-secondary)
-  );
-  border-radius: inherit;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.3s ease;
-  filter: blur(8px);
-
-  /* ⚡ Bolt: Removed permanent will-change to save memory on lists */
-
-  /* Browser heuristics are sufficient for opacity transitions here */
-}
-
-.card-glow:hover::before,
-.card-glow:focus-within::before {
-  opacity: 0.15;
 }
 
 .bento-grid {

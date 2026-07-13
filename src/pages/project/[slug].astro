@@ -35,6 +35,28 @@ export async function getStaticPaths() {
 }
 const { entry, prevPost, nextPost, allProjects } = Astro.props;
 
+// « D'autres projets » : privilégier le même pilier, par poids éditorial
+// puis par date ; compléter avec les plus récents si nécessaire.
+const entryPillar = pillarOfCategory(entry.data.category);
+const relatedProjects = allProjects
+  .filter(
+    (project) =>
+      project.id !== entry.id &&
+      entryPillar.categories.includes(project.data.category),
+  )
+  .sort(
+    (a, b) =>
+      b.data.featured - a.data.featured ||
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  )
+  .slice(0, 2);
+for (const project of allProjects) {
+  if (relatedProjects.length >= 2) break;
+  if (project.id !== entry.id && !relatedProjects.includes(project)) {
+    relatedProjects.push(project);
+  }
+}
+
 // ⚡ Bolt: Execute render, getEntry, and all getImage calls concurrently via Promise.all
 // This eliminates sequential blocking during SSG builds.
 let optimizedPosterPromise: Promise<Awaited<
@@ -685,7 +707,7 @@ const jsonLd = {
       {/* ⚡ Bolt: Lazy load footer images to prioritize LCP */}
       <LatestPosts
         postLimit={2}
-        skipPost={entry.data.title}
+        posts={relatedProjects}
         lazyLoadImages={true}
         allPosts={allProjects}
       />
