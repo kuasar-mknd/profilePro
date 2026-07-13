@@ -21,7 +21,6 @@ const jsonLd = {
   },
   address: {
     "@type": "PostalAddress",
-    streetAddress: "",
     addressLocality: "Lausanne",
     postalCode: "1000",
     addressRegion: "VD",
@@ -55,36 +54,27 @@ const jsonLd = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Production Vidéo",
+          name: "Création de contenu",
           description:
-            "Clips musicaux, aftermovies, vidéos corporate et captation événementielle à Lausanne et en Suisse romande.",
+            "Vidéo et photographie : clips, courts-métrages, reportages, photographie de plateau et d'événement, à Lausanne et en Suisse romande.",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Développement Web",
+          name: "Développement web",
           description:
-            "Applications web fullstack, plateformes SaaS, sites vitrines performants avec React, Laravel et Astro.",
+            "Sites, applications et plateformes performants, accessibles et sécurisés (Astro, Vue.js, Laravel, TypeScript).",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Photographie",
+          name: "Communication",
           description:
-            "Portraits, photographie événementielle et lifestyle. Direction artistique et photographie de plateau.",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Stratégie Digitale",
-          description:
-            "Optimisation SEO, campagnes Social Ads, email marketing et CRM pour booster votre visibilité en ligne.",
+            "Stratégie, campagnes, relations presse et promotion d'événements, de l'affiche aux réseaux sociaux.",
         },
       },
     ],
@@ -104,7 +94,6 @@ const jsonLd = {
   priceRange: "$$",
   paymentAccepted: "Virement bancaire, TWINT",
   currenciesAccepted: "CHF, EUR",
-  openingHours: "Mo-Fr 09:00-18:00",
   sameAs: [
     config.social.instagram || "",
     config.social.github || "",
