@@ -33,5 +33,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      # `pnpm audit` repose sur des endpoints npm retirés (HTTP 410) ;
+      # ce script interroge le bulk advisory endpoint de remplacement.
       - name: Run Audit
-        run: pnpm audit --audit-level=high
+        run: pnpm run audit
