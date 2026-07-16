@@ -37,6 +37,7 @@ export default {
     facebook: false,
     github: "https://github.com/kuasar-mknd",
     instagram: "https://www.instagram.com/kuasar.mknd",
+    linkedin: "https://linkedin.com/in/samuel-dulex",
     mastodon: false,
     pinterest: false,
     skype: false,

@@ -31,11 +31,31 @@
 - [Instagram](https://www.instagram.com/kuasar.mknd)
 - [YouTube](https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w)
 - [GitHub](https://github.com/kuasar-mknd)
+- [LinkedIn](https://linkedin.com/in/samuel-dulex)
 
 ## Projets notables
 
-- [Production Vidéo](https://portfolio.kuasar.xyz/project/producteur/): Showreel et portfolio vidéo complet
-- [La Rev](https://portfolio.kuasar.xyz/project/larev/): Aftermovie événementiel
-- [Paternelle](https://portfolio.kuasar.xyz/project/paternelle/): Direction artistique et production
-- [Jimmy CPDV](https://portfolio.kuasar.xyz/project/jimmy-cpdv/): Clip musical et direction photo
-- [IZIA - Proud Rebel](https://portfolio.kuasar.xyz/project/izia-proudRebel/): Photographe de plateau
+- [La Paternelle](https://portfolio.kuasar.xyz/project/paternelle/): Responsable communication depuis 2019 — 8 000 spectateurs par édition au Théâtre de Beaulieu (Lausanne), édition 2025 à guichets fermés
+- [CHUV — blocs opératoires](https://portfolio.kuasar.xyz/project/chuv-blocs-operatoires/): Travail de bachelor HEIG-VD 2024 — UX research et conception d'une application mobile pour l'installation des équipements biomédicaux
+- [Portfolio kuasar.xyz](https://portfolio.kuasar.xyz/project/portfolio-kuasar/): Conception et développement de ce site (Astro, TypeScript, score Lighthouse 100 en performance)
+- [Songe — 48H Genève 2024](https://portfolio.kuasar.xyz/project/48h-geneve-2024/): Prix du Meilleur Film, rôle électro, DIT et photographe de plateau
+- [Après l'averse. — 48H Lausanne 2024](https://portfolio.kuasar.xyz/project/48h-lausanne-2024/): Prix de la Meilleure Image, rôle électro, machiniste et DIT
+- [YouPlantes](https://portfolio.kuasar.xyz/project/youplantes/): Stratégie et conception d'une boutique e-commerce WooCommerce (HEIG-VD)
+
+## Faits vérifiables
+
+- Samuel Dulex est diplômé en Ingénierie des médias (HEIG-VD, travail de bachelor 2024 pour le CHUV).
+- Responsable communication de La Paternelle (Lausanne) depuis 2019 : 8 000 spectateurs par édition, 200+ bénévoles, budget de CHF 300 000.
+- Films primés aux 48H Film Project : Meilleur Film (Genève 2024), Meilleure Image (Lausanne 2024), court-métrage primé (Genève 2025, gaffer).
+- Stack web principale : Astro, TypeScript, Tailwind CSS, Vue.js, Laravel.
+
+## Questions fréquentes
+
+**Quels services propose Samuel Dulex ?**
+Trois piliers : création de contenu (vidéo et photographie), développement web (sites, applications, plateformes) et communication (stratégie, campagnes, relations presse, promotion d'événements).
+
+**Où travaille Samuel Dulex ?**
+Basé à Lausanne (1004, Vaud), actif dans toute la Suisse romande : Genève, Fribourg, Neuchâtel, Sion, Vevey, Montreux, Yverdon-les-Bains, Nyon, Morges.
+
+**Comment contacter Samuel Dulex ?**
+Par email à hello@kuasar.xyz ou via le formulaire de contact du site.

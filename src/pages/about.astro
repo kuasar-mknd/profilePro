@@ -116,47 +116,42 @@ const jsonLd = {
       "https://www.instagram.com/kuasar.mknd",
       "https://github.com/kuasar-mknd",
       "https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w",
+      "https://linkedin.com/in/samuel-dulex",
     ],
   },
 };
 
+const faq = [
+  {
+    question: "Quels services propose Samuel Dulex ?",
+    answer:
+      "Trois piliers : la création de contenu (vidéo et photographie — clips, courts-métrages, reportages, photo de plateau), le développement web (sites, applications et plateformes en Astro, Vue.js, Laravel, TypeScript) et la communication (stratégie, campagnes, relations presse et promotion d'événements).",
+  },
+  {
+    question: "Où est basé Samuel Dulex ?",
+    answer:
+      "À Lausanne (1004), dans le canton de Vaud, en Suisse romande. Contact : hello@kuasar.xyz.",
+  },
+  {
+    question: "Dans quelles régions Samuel Dulex intervient-il ?",
+    answer:
+      "Dans toute la Suisse romande : Lausanne, Genève, Fribourg, Neuchâtel, Sion, Vevey, Montreux, Yverdon-les-Bains, Nyon et Morges. Déplacements possibles dans toute la Suisse et à l'international.",
+  },
+  {
+    question: "Quelles sont les compétences techniques de Samuel Dulex ?",
+    answer:
+      "En développement web : Astro, Vue.js, React, Laravel, TypeScript, Tailwind CSS. En création visuelle : DaVinci Resolve, Adobe Lightroom, Figma, photographie et direction artistique. En communication : SEO, Google Ads, Meta Ads, email marketing et CRM.",
+  },
+];
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Quels services propose Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex travaille autour de trois piliers : la création de contenu (vidéo et photographie : clips, courts-métrages, reportages, photo de plateau), le développement web (sites, applications et plateformes en Astro, Vue.js, Laravel, TypeScript) et la communication (stratégie, campagnes, relations presse et promotion d'événements).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Où est basé Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex est basé à Lausanne, dans le canton de Vaud en Suisse romande. Il intervient dans toute la Suisse romande.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Dans quelles régions Samuel Dulex intervient-il ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex intervient dans toute la Suisse romande : Lausanne, Vaud, Genève, Fribourg, Neuchâtel, Valais, Montreux, Nyon et Yverdon-les-Bains. Il se déplace également pour des projets dans toute la Suisse et à l'international.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Quelles sont les compétences techniques de Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "En développement web : React, Vue.js, Laravel, Astro, TypeScript, Tailwind CSS. En création visuelle : DaVinci Resolve, Adobe Lightroom, Figma, photographie et direction artistique. En stratégie digitale : SEO, Google Ads, Meta Ads, email marketing et CRM.",
-      },
-    },
-  ],
+  mainEntity: faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
 };
 ---
 
@@ -384,6 +379,43 @@ const faqJsonLd = {
           ))
         }
       </ul>
+    </div>
+  </section>
+
+  <!-- FAQ visible (source du FAQPage JSON-LD) -->
+  <section
+    class="py-20 [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
+    aria-labelledby="faq-title"
+  >
+    <div class="container mx-auto px-7 max-w-3xl">
+      <ScrollReveal class="text-center mb-12">
+        <h2
+          id="faq-title"
+          class="text-3xl md:text-4xl font-pacamara-space font-bold text-pacamara-dark dark:text-white"
+        >
+          Questions fréquentes
+        </h2>
+      </ScrollReveal>
+      <div class="space-y-4">
+        {
+          faq.map(({ question, answer }) => (
+            <details class="group bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/10 rounded-2xl px-6 py-4">
+              <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-pacamara-space font-bold text-pacamara-dark dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded">
+                {question}
+                <span
+                  class="text-pacamara-accent transition-transform duration-300 group-open:rotate-45 text-2xl leading-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </summary>
+              <p class="mt-3 text-pacamara-primary/80 dark:text-white/80 font-outfit leading-relaxed">
+                {answer}
+              </p>
+            </details>
+          ))
+        }
+      </div>
     </div>
   </section>
 

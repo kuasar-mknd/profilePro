@@ -122,6 +122,17 @@ import { Icon } from "astro-icon/components";
               </li>
             )
           }
+          {
+            config?.social?.linkedin && (
+              <li>
+                <SocialIcon
+                  url={config.social.linkedin}
+                  icon="mdi:linkedin"
+                  label="LinkedIn"
+                />
+              </li>
+            )
+          }
         </ul>
       </nav>
       <div
