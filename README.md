@@ -5,15 +5,15 @@
 <!-- Status & Build -->
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fportfolio.kuasar.xyz&label=portfolio.kuasar.xyz)](https://portfolio.kuasar.xyz)
-[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
-[![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/kuasar-mknd/profilePro/actions/workflows/pipeline.yml/badge.svg)](https://github.com/kuasar-mknd/profilePro/actions/workflows/pipeline.yml)
 
 <!-- Tech Stack -->
 
 [![Built with Astro](https://img.shields.io/badge/Astro-6.1.9-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![npm](https://img.shields.io/badge/pnpm-8.0%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://npm.sh)
+[![pnpm](https://img.shields.io/badge/pnpm-10%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
 <!-- Code Quality -->
@@ -38,14 +38,14 @@
 Si vous rencontrez des problèmes lors de l'installation ou du lancement :
 
 1.  **Erreur `sharp` ou optimisation d'images** :
-    - Assurez-vous d'utiliser **Node.js 20** (requis pour `sharp` précompilé).
+    - Assurez-vous d'utiliser **Node.js 22+** (requis pour `sharp` précompilé, cf. `engines` du `package.json`).
     - Si l'erreur persiste :
       ```bash
-      rm -rf node_modules package-lock.json
+      rm -rf node_modules
       pnpm install
       ```
 2.  **Erreur `pnpm run` introuvable** :
-    - Installez npm via Node.js installer.
+    - Installez pnpm : `corepack enable pnpm` (ou `npm install -g pnpm`).
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
@@ -98,8 +98,8 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 
 ### Prérequis
 
-- Node.js 20 (Requis pour l'optimisation des images via `sharp`)
-- pnpm 8+ (Requis pour l'exécution des scripts et le gestionnaire de paquets)
+- Node.js 22+ (Requis pour l'optimisation des images via `sharp`)
+- pnpm 10 (Gestionnaire de paquets utilisé par les scripts et la CI)
 
 ### Installation
 
@@ -200,13 +200,3 @@ This project is [MIT](LICENSE) licensed.
 ---
 
 Construit avec ❤️ par Samuel Dulex
-
-<!-- Verified: DocOps 2026-04-17 -->
-
-### Local Setup for Hono/Prisma (Hypothetical)
-
-While this is currently an Astro SSG, if the Hono/Prisma features are activated in the future, you would need to:
-
-1. Ensure a local database (e.g., PostgreSQL) is running.
-2. Provide a valid `DATABASE_URL` in `.env`.
-3. Run `pnpm prisma generate` and `pnpm prisma db push` to initialize the database schema.

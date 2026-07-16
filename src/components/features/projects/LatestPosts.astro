@@ -15,6 +15,7 @@ interface Props {
   subtitle?: string;
   lazyLoadImages?: boolean;
   allPosts?: CollectionEntry<"project">[];
+  posts?: CollectionEntry<"project">[]; // sélection pré-calculée (ex. featured équilibrés) — court-circuite le tri par date
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   subtitle = "Découvrez mes dernières réalisations en production vidéo, photographie et développement web.",
   lazyLoadImages = false,
   allPosts: initialAllPosts,
+  posts: preselectedPosts,
 } = Astro.props;
 
 // Handle potential string input for postLimit
@@ -35,8 +37,10 @@ const allPosts = initialAllPosts || (await getSortedProjects());
 // ⚡ Bolt: Replace O(N) filter and slice with O(limit) early exit loop
 // This prevents iterating over all projects unnecessarily, especially during
 // SSG where LatestPosts is called for every single project page.
-const posts: typeof allPosts = [];
-if (limit > 0) {
+let posts: typeof allPosts = [];
+if (preselectedPosts) {
+  posts = preselectedPosts.slice(0, limit > 0 ? limit : undefined);
+} else if (limit > 0) {
   for (let i = 0; i < allPosts.length; i++) {
     if (allPosts[i].data.title !== skipPost) {
       posts.push(allPosts[i]);
@@ -116,7 +120,6 @@ const remainingCount = allPosts.length - limit;
         href="/project/"
         class="group relative h-full min-h-[280px] rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 text-center bg-linear-to-br from-pacamara-secondary/10 via-pacamara-accent/10 to-pacamara-secondary/10 dark:from-pacamara-secondary/20 dark:via-pacamara-accent/20 dark:to-pacamara-secondary/20 border-2 border-dashed border-pacamara-secondary/30 dark:border-white/20 hover:border-pacamara-accent hover:bg-pacamara-accent/5 transition-all duration-500 card-glow focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-[0.98] active:duration-75"
         aria-label={`Voir tous les projets${remainingCount > 0 ? ` (${remainingCount} autres réalisations)` : ""}`}
-        data-haptic-card
       >
         <div
           class="absolute inset-0 bg-linear-to-br from-pacamara-accent/0 to-pacamara-secondary/0 group-hover:from-pacamara-accent/10 group-focus-visible:from-pacamara-accent/10 group-hover:to-pacamara-secondary/10 group-focus-visible:to-pacamara-secondary/10 transition-all duration-500"

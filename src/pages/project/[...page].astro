@@ -3,6 +3,7 @@ import type { Page, PaginateFunction } from "astro";
 import type { CollectionEntry } from "astro:content";
 import config from "../../config.mjs";
 import { getSortedProjects } from "../../utils/projects";
+import { pillarCounts } from "../../utils/pillars";
 
 import Base from "../../layouts/Base.astro";
 import { safeJson } from "../../utils/security";
@@ -21,43 +22,22 @@ export async function getStaticPaths({
 }) {
   const allProjects = await getSortedProjects();
 
-  // ⚡ Bolt: Calculate unique tags and tag counts in a single O(N) pass
-  // This avoids redundant array allocations from .map().flat() and O(P*N) calculations
-  const tagCounts: Record<string, number> = {};
-  const uniqueTagsSet = new Set<string>();
-
-  for (let i = 0; i < allProjects.length; i++) {
-    const projectTags = allProjects[i].data.tag;
-    if (Array.isArray(projectTags)) {
-      for (let j = 0; j < projectTags.length; j++) {
-        const tag = projectTags[j];
-        uniqueTagsSet.add(tag);
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-      }
-    } else {
-      const tag = projectTags as string;
-      uniqueTagsSet.add(tag);
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    }
-  }
-
-  const uniqueTags = Array.from(uniqueTagsSet);
-  const projectEntries = allProjects;
-
-  return paginate(projectEntries, {
+  return paginate(allProjects, {
     pageSize: config.postsPerPage,
-    props: { allTags: uniqueTags, tagCounts, totalCount: allProjects.length },
+    props: {
+      counts: pillarCounts(allProjects),
+      totalCount: allProjects.length,
+    },
   });
 }
 
 export interface Props {
   page: Page<CollectionEntry<"project">>;
-  allTags: string[];
-  tagCounts: Record<string, number>;
+  counts: Record<string, number>;
   totalCount: number;
 }
 
-const { page, allTags, tagCounts, totalCount } = Astro.props;
+const { page, counts, totalCount } = Astro.props;
 
 const siteUrl = "https://portfolio.kuasar.xyz";
 const collectionJsonLd = {
@@ -111,11 +91,7 @@ const collectionJsonLd = {
       >
         Une collection de mes projets récents en vidéo, photo et développement.
       </p>
-      <ProjectFilter
-        tags={allTags}
-        tagCounts={tagCounts}
-        totalCount={totalCount}
-      />
+      <ProjectFilter counts={counts} totalCount={totalCount} />
     </ScrollReveal>
     {
       /* ⚡ Bolt: Performance Optimization - content-visibility skips rendering when off-screen */
@@ -159,7 +135,6 @@ const collectionJsonLd = {
                 class="group flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-95 active:duration-75"
                 aria-label={`Précédent (page ${page.currentPage - 1}) ([)`}
                 aria-keyshortcuts="["
-                data-haptic="30"
               >
                 <Icon
                   name="mdi:arrow-left"
@@ -167,12 +142,6 @@ const collectionJsonLd = {
                   aria-hidden="true"
                 />
                 <span>Précédent</span>
-                <kbd
-                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  [
-                </kbd>
               </a>
             ) : (
               <span
@@ -185,12 +154,6 @@ const collectionJsonLd = {
                   aria-hidden="true"
                 />
                 <span>Précédent</span>
-                <kbd
-                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  [
-                </kbd>
               </span>
             )}
 
@@ -201,15 +164,9 @@ const collectionJsonLd = {
                 class="group flex items-center gap-2 text-base bg-transparent border border-pacamara-secondary leading-none rounded-full py-3 px-6 text-pacamara-secondary hover:bg-pacamara-accent hover:border-pacamara-accent hover:text-pacamara-white transition-all duration-300 font-pacamara-space font-bold hover-scale-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-95 active:duration-75"
                 aria-label={`Suivant (page ${page.currentPage + 1}) (])`}
                 aria-keyshortcuts="]"
-                data-haptic="30"
               >
                 <span>Suivant</span>
-                <kbd
-                  class="font-sans ml-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  ]
-                </kbd>
+
                 <Icon
                   name="mdi:arrow-right"
                   class="w-5 h-5 transition-transform group-hover:translate-x-1 group-focus-visible:translate-x-1"
@@ -222,12 +179,7 @@ const collectionJsonLd = {
                 aria-disabled="true"
               >
                 <span>Suivant</span>
-                <kbd
-                  class="font-sans ml-1 opacity-70 hidden sm:inline-block text-[10px] bg-pacamara-primary/5 dark:bg-white/10 px-1.5 py-0.5 rounded"
-                  aria-hidden="true"
-                >
-                  ]
-                </kbd>
+
                 <Icon
                   name="mdi:arrow-right"
                   class="w-5 h-5 opacity-50"

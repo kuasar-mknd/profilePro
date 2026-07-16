@@ -46,7 +46,6 @@ interface Window {
   __themeKeydownHandler?: (e: KeyboardEvent) => void;
   __postHapticsInitHandler?: () => void;
   __postHapticsInitialized?: boolean;
-  __hapticsInitialized?: boolean;
   __copyBtnClickHandler?: (e: MouseEvent) => void;
   __handleThemeChange?: (e: Event) => void;
   __emptyStateHapticsInitialized?: boolean;

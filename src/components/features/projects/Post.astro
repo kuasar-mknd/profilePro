@@ -2,15 +2,11 @@
 const { postData, bentoSize = "", priority = false } = Astro.props;
 import { getImage } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
-import Tag from "../../ui/Tag.astro";
-import { getReadingTime } from "../../../utils/readingTime";
+import CategoryBadge from "../../ui/CategoryBadge.astro";
 import { sanitizeUrl } from "../../../utils/security";
 
 const isLarge = bentoSize === "bento-item-large";
 const isWide = bentoSize === "bento-item-wide";
-
-// 🎨 Palette: Calculate reading time for better UX
-const readingTime = getReadingTime(postData.body);
 
 // ⚡ Bolt: Pre-generate optimized WebP assets to avoid using <Picture> (which creates multiple <source> tags).
 // This reduces DOM nodes per Post card, significantly speeding up frontend parsing time when displaying many projects.
@@ -53,9 +49,8 @@ const optimizedImage = {
   <!-- 1. The Main Link (Stretched) - Covers the card but sits below interactive elements -->
   <a
     href={sanitizeUrl(`/project/${postData.id}/`)}
-    aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Lecture estimée ${readingTime} minutes.)`}
+    aria-label={`${postData.data.title} (Voir le projet. ${postData.data.intro}. Rôle : ${postData.data.role}.)`}
     class="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 active:scale-[0.98] active:duration-75 transition-all"
-    data-haptic="50"
   >
   </a>
 
@@ -100,19 +95,12 @@ const optimizedImage = {
         isLarge ? "min-h-[160px] pb-12" : "min-h-[110px]",
       ]}
     >
-      <!-- Tags - slides up on hover -->
-      <!-- 🎨 Palette: Tag is now clickable and sits above the card link -->
+      <!-- Catégorie - slides up on hover -->
       <div
         class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
-        aria-label="Tags du projet"
+        aria-label="Catégorie du projet"
       >
-        <Tag
-          tag={postData.data.tag}
-          variant="dark"
-          href={sanitizeUrl(
-            `/project/tag/${encodeURIComponent(postData.data.tag)}`,
-          )}
-        />
+        <CategoryBadge category={postData.data.category} />
       </div>
 
       <!-- Title - slides up on hover -->
@@ -133,43 +121,29 @@ const optimizedImage = {
         aria-hidden="true"
         class:list={[
           "transition-all duration-300 ease-out",
-          isLarge
-            ? ""
-            : "overflow-hidden max-h-0 group-hover:max-h-20 group-focus-within:max-h-20",
+          isLarge ? "" : "overflow-hidden",
         ]}
       >
         <p
           class:list={[
             "font-outfit text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-out",
-            isLarge
-              ? "text-sm line-clamp-3"
-              : "text-xs line-clamp-2 transform translate-y-2 group-hover:translate-y-0 group-focus-within:translate-y-0",
+            isLarge ? "text-sm line-clamp-3" : "text-xs line-clamp-2",
           ]}
         >
           {postData.data.intro}
         </p>
       </div>
 
-      <!-- Date & Reading Time - slight scale on hover -->
+      <!-- Date & Rôle - slight scale on hover -->
       <div
         aria-hidden="true"
-        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 group-focus-within:scale-105 origin-left flex items-center gap-2"
+        class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 group-focus-within:scale-105 origin-left flex items-center gap-2 min-w-0"
       >
         <PublishDate date={postData.data.pubDate} />
-        {
-          readingTime > 0 && (
-            <>
-              <span class="opacity-60" aria-hidden="true">
-                •
-              </span>
-              <span class="opacity-90 font-medium">
-                <span class="sr-only">Temps de lecture estimé : </span>
-                {readingTime} <span aria-hidden="true">min</span>
-                <span class="sr-only">minutes</span>
-              </span>
-            </>
-          )
-        }
+        <span class="opacity-60" aria-hidden="true">•</span>
+        <span class="opacity-90 font-medium truncate">
+          {postData.data.role}
+        </span>
       </div>
     </div>
   </div>

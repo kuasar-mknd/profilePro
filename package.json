@@ -8,12 +8,12 @@
     "name": "Samuel Dulex",
     "url": "https://kuasar.xyz"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/kuasar-mknd/profilePro.git"
   },
-  "homepage": "https://kuasar.xyz",
+  "homepage": "https://portfolio.kuasar.xyz",
   "keywords": [
     "portfolio",
     "astro",
@@ -30,18 +30,23 @@
       "@isaacs/brace-expansion": "5.0.1",
       "serialize-javascript": "^7.0.3",
       "lodash": "^4.18.1",
-      "tmp": "^0.2.4",
+      "tmp": "^0.2.6",
       "flatted": "^3.4.0",
-      "undici": "^7.24.0",
+      "undici": "^7.28.0",
       "minimatch": "^5.1.9",
       "yauzl": "^3.2.1",
       "fast-xml-parser": ">=5.5.7",
       "yaml": ">=2.8.3",
-      "basic-ftp": ">=5.3.0",
-      "uuid": ">=14.0.0"
+      "basic-ftp": ">=5.3.1",
+      "uuid": ">=14.0.0",
+      "qs": ">=6.15.2",
+      "tar": ">=7.5.16",
+      "vite>esbuild": ">=0.28.1",
+      "astro>esbuild": ">=0.28.1"
     }
   },
   "scripts": {
+    "audit": "node scripts/audit-bulk.mjs --level=high",
     "images": "node scripts/optimize-images.js",
     "dev": "pnpm run images && astro dev",
     "start": "pnpm run images && astro dev",
@@ -69,9 +74,6 @@
     "@astrojs/mdx": "^6.0.3",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@fontsource/inter": "^5.2.8",
-    "@fontsource/outfit": "^5.2.8",
-    "@fontsource/space-grotesk": "^5.2.10",
     "@iconify-json/mdi": "^1.2.3",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/typography": "^0.5.20",
@@ -115,9 +117,10 @@
     "playwright": "^1.61.1",
     "prettier": "^3.9.5",
     "prettier-plugin-astro": "^0.14.1",
+    "semver": "^7.8.5",
     "stylelint": "^17.14.0",
     "stylelint-config-standard": "^40.0.0",
-    "vite": "^7.3.2",
+    "vite": "^7.3.5",
     "wrangler": "^4.110.0"
   }
 }

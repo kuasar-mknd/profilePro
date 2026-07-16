@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import config from "../config.mjs";
 import { safeJson } from "../utils/security";
 import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
@@ -10,7 +11,7 @@ import TiltCard from "../components/ui/TiltCard.astro";
 
 const title = "À propos de moi";
 const description =
-  "Vidéaste, Photographe & Développeur Web. Je crée des expériences visuelles et digitales uniques.";
+  "Créateur hybride à Lausanne : création de contenu (vidéo, photo), développement web et communication.";
 
 const [w350, w700] = await Promise.all([
   getImage({ src: logo, width: 350, format: "webp", quality: 75 }),
@@ -19,34 +20,26 @@ const [w350, w700] = await Promise.all([
 
 const services = [
   {
-    title: "Production Vidéo",
+    title: "Création de contenu",
     description:
-      "Clips musicaux, aftermovies captivants et vidéos corporate dynamiques. Je mets un point d'honneur à retranscrire l'énergie brute de l'instant à travers une direction artistique et direction photo authentique au rendu esthétique.",
-    icon: "mdi:video-vintage",
+      "Vidéo et photographie : clips, courts-métrages, reportages et photo de plateau. Sur un tournage comme en post-production, l'objectif est le même — des images fortes, au service de votre histoire.",
+    icon: "mdi:movie-open",
     color: "text-purple-500",
     gradient: "from-purple-500/20 to-purple-600/10",
   },
   {
-    title: "Développement Web",
+    title: "Développement web",
     description:
-      "Applications web complexes, plateformes SaaS interactives et sites vitrines de pointe. Je conçois des écosystèmes fluides, rapides et sécurisés, conçus pour offrir la meilleure expérience utilisateur possible dès la première seconde.",
+      "Sites, applications et plateformes : des écosystèmes rapides, accessibles et sécurisés, conçus, développés et exploités de bout en bout — comme ce portfolio.",
     icon: "mdi:code-tags",
     color: "text-blue-500",
     gradient: "from-blue-500/20 to-blue-600/10",
   },
   {
-    title: "Photographie",
+    title: "Communication",
     description:
-      "Portraits de caractère, photographie événementielle et lifestyle. Derrière chaque prise de vue, l'objectif est de capturer des images fortes qui racontent une histoire viscérale et subliment durablement votre image de marque.",
-    icon: "mdi:camera",
-    color: "text-pink-500",
-    gradient: "from-pink-500/20 to-pink-600/10",
-  },
-  {
-    title: "Stratégie Digitale",
-    description:
-      "Optimisation SEO, campagnes publicitaires, Social Ads percutants. Je booste votre visibilité en ligne au moyen de stratégies d'acquisition ciblées afin de convertir votre audience en clientèle engagée sur le long terme.",
-    icon: "mdi:google-analytics",
+      "Stratégie, campagnes et promotion d'événements : de la création de l'affiche aux relations presse et aux réseaux sociaux, jusqu'à la salle comble.",
+    icon: "mdi:bullhorn-outline",
     color: "text-orange-500",
     gradient: "from-orange-500/20 to-orange-600/10",
   },
@@ -90,7 +83,7 @@ const jsonLd = {
     jobTitle: "Créateur de contenu visuel & Développeur Web",
     description:
       "Vidéaste, photographe et développeur web freelance basé à Lausanne, Suisse romande.",
-    email: "samuel@edulex.ch",
+    email: config.email,
     knowsAbout: [
       "Production vidéo",
       "Clips musicaux",
@@ -110,64 +103,55 @@ const jsonLd = {
     address: {
       "@type": "PostalAddress",
       addressLocality: "Lausanne",
-      postalCode: "1000",
+      postalCode: config.postalCode,
       addressRegion: "Vaud",
       addressCountry: "CH",
     },
     areaServed: [
-      { "@type": "City", name: "Lausanne" },
-      { "@type": "State", name: "Vaud" },
-      { "@type": "State", name: "Genève" },
-      { "@type": "State", name: "Fribourg" },
-      { "@type": "State", name: "Neuchâtel" },
-      { "@type": "State", name: "Valais" },
+      ...config.catchmentCities.map((name) => ({ "@type": "City", name })),
+      ...config.catchmentRegions.map((name) => ({ "@type": "State", name })),
       { "@type": "AdministrativeArea", name: "Suisse romande" },
     ],
     sameAs: [
       "https://www.instagram.com/kuasar.mknd",
       "https://github.com/kuasar-mknd",
       "https://www.youtube.com/channel/UCLPJkiQD8VAJSV3k3gSml4w",
+      "https://linkedin.com/in/samuel-dulex",
     ],
   },
 };
 
+const faq = [
+  {
+    question: "Quels services propose Samuel Dulex ?",
+    answer:
+      "Trois piliers : la création de contenu (vidéo et photographie — clips, courts-métrages, reportages, photo de plateau), le développement web (sites, applications et plateformes en Astro, Vue.js, Laravel, TypeScript) et la communication (stratégie, campagnes, relations presse et promotion d'événements).",
+  },
+  {
+    question: "Où est basé Samuel Dulex ?",
+    answer:
+      "À Lausanne (1004), dans le canton de Vaud, en Suisse romande. Contact : hello@kuasar.xyz.",
+  },
+  {
+    question: "Dans quelles régions Samuel Dulex intervient-il ?",
+    answer:
+      "Dans toute la Suisse romande : Lausanne, Genève, Fribourg, Neuchâtel, Sion, Vevey, Montreux, Yverdon-les-Bains, Nyon et Morges. Déplacements possibles dans toute la Suisse et à l'international.",
+  },
+  {
+    question: "Quelles sont les compétences techniques de Samuel Dulex ?",
+    answer:
+      "En développement web : Astro, Vue.js, React, Laravel, TypeScript, Tailwind CSS. En création visuelle : DaVinci Resolve, Adobe Lightroom, Figma, photographie et direction artistique. En communication : SEO, Google Ads, Meta Ads, email marketing et CRM.",
+  },
+];
+
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Quels services propose Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex propose quatre services principaux : la production vidéo (clips musicaux, aftermovies, vidéos corporate), la photographie (portraits, événementiel, lifestyle), le développement web fullstack (React, Laravel, Astro, SaaS) et la stratégie digitale (SEO, Social Ads, email marketing).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Où est basé Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex est basé à Lausanne, dans le canton de Vaud en Suisse romande. Il intervient dans toute la Suisse romande.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Dans quelles régions Samuel Dulex intervient-il ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Samuel Dulex intervient dans toute la Suisse romande : Lausanne, Vaud, Genève, Fribourg, Neuchâtel, Valais, Montreux, Nyon et Yverdon-les-Bains. Il se déplace également pour des projets dans toute la Suisse et à l'international.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Quelles sont les compétences techniques de Samuel Dulex ?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "En développement web : React, Vue.js, Laravel, Astro, TypeScript, Tailwind CSS. En création visuelle : DaVinci Resolve, Adobe Lightroom, Figma, photographie et direction artistique. En stratégie digitale : SEO, Google Ads, Meta Ads, email marketing et CRM.",
-      },
-    },
-  ],
+  mainEntity: faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
 };
 ---
 
@@ -175,14 +159,10 @@ const faqJsonLd = {
   <script type="application/ld+json" is:inline set:html={safeJson(faqJsonLd)} />
   <!-- Hero Section -->
   <section class="relative pt-32 pb-20 overflow-hidden">
-    <!-- Animated background elements -->
-    <div class="absolute inset-0 -z-10 motion-reduce:hidden">
+    <!-- Halo décoratif statique -->
+    <div class="absolute inset-0 -z-10">
       <div
-        class="absolute top-20 right-1/4 w-64 h-64 bg-pacamara-secondary/20 rounded-full blur-3xl floating"
-      >
-      </div>
-      <div
-        class="absolute bottom-20 left-1/4 w-96 h-96 bg-pacamara-accent/20 rounded-full blur-3xl floating-slow floating-delayed"
+        class="absolute bottom-20 left-1/4 w-96 h-96 bg-pacamara-secondary/15 rounded-full blur-3xl"
       >
       </div>
     </div>
@@ -256,8 +236,8 @@ const faqJsonLd = {
             <h1
               class="font-pacamara-space font-bold text-5xl md:text-6xl mb-8 text-pacamara-dark dark:text-white leading-tight"
             >
-              Créateur Visuel & <br />
-              <span class="text-shimmer">Stratège Digital.</span>
+              Créateur hybride : <br />
+              <span class="text-shimmer">contenu, web & communication.</span>
             </h1>
           </ScrollReveal>
 
@@ -308,7 +288,6 @@ const faqJsonLd = {
               <a
                 href="#contact-form"
                 class="group inline-flex items-center gap-2 px-6 py-3 bg-pacamara-accent text-white rounded-full font-bold shadow-lg hover:shadow-glow hover-lift transition-all duration-300 active:scale-[0.98] active:duration-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-                data-haptic="50"
               >
                 <Icon
                   name="mdi:email-outline"
@@ -320,7 +299,6 @@ const faqJsonLd = {
               <a
                 href="/project/"
                 class="group inline-flex items-center gap-2 px-8 py-4 border border-pacamara-primary/20 dark:border-white/20 text-pacamara-primary dark:text-white rounded-full font-bold text-lg hover:bg-pacamara-primary/5 dark:hover:bg-white/10 transition-all duration-300 hover-lift active:scale-[0.98] active:duration-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
-                data-haptic="50"
               >
                 Voir mon portfolio
                 <Icon
@@ -369,7 +347,7 @@ const faqJsonLd = {
         </p>
       </ScrollReveal>
 
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none p-0">
+      <ul class="grid grid-cols-1 md:grid-cols-3 gap-8 list-none p-0">
         {
           services.map((service, index) => (
             <li class="h-full">
@@ -401,6 +379,43 @@ const faqJsonLd = {
           ))
         }
       </ul>
+    </div>
+  </section>
+
+  <!-- FAQ visible (source du FAQPage JSON-LD) -->
+  <section
+    class="py-20 [content-visibility:auto] [contain-intrinsic-size:auto_600px]"
+    aria-labelledby="faq-title"
+  >
+    <div class="container mx-auto px-7 max-w-3xl">
+      <ScrollReveal class="text-center mb-12">
+        <h2
+          id="faq-title"
+          class="text-3xl md:text-4xl font-pacamara-space font-bold text-pacamara-dark dark:text-white"
+        >
+          Questions fréquentes
+        </h2>
+      </ScrollReveal>
+      <div class="space-y-4">
+        {
+          faq.map(({ question, answer }) => (
+            <details class="group bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/10 rounded-2xl px-6 py-4">
+              <summary class="cursor-pointer list-none flex items-center justify-between gap-4 font-pacamara-space font-bold text-pacamara-dark dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded">
+                {question}
+                <span
+                  class="text-pacamara-accent transition-transform duration-300 group-open:rotate-45 text-2xl leading-none"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </summary>
+              <p class="mt-3 text-pacamara-primary/80 dark:text-white/80 font-outfit leading-relaxed">
+                {answer}
+              </p>
+            </details>
+          ))
+        }
+      </div>
     </div>
   </section>
 

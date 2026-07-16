@@ -29,13 +29,59 @@ import { Icon } from "astro-icon/components";
       <p
         class="text-pacamara-primary/80 dark:text-white/80 text-sm max-w-sm leading-relaxed"
       >
-        Connecter, Communiquer, Captiver. <br />
-        Créateur de contenu visuel et digital.
+        Création de contenu, développement web & communication.
       </p>
       <div class="flex items-center gap-2 text-sm text-pacamara-accent">
         <span class="text-lg">📍</span>
         <span class="font-medium">Lausanne, Suisse romande</span>
       </div>
+      <a
+        href={`mailto:${config.email}`}
+        class="text-sm text-pacamara-primary/80 dark:text-white/80 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+      >
+        {config.email}
+      </a>
+      <nav aria-label="Liens du site">
+        <ul
+          class="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-sm list-none p-0"
+        >
+          <li>
+            <a
+              href="/project/"
+              class="text-pacamara-primary/70 dark:text-white/70 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+              >Réalisations</a
+            >
+          </li>
+          <li>
+            <a
+              href="/about/"
+              class="text-pacamara-primary/70 dark:text-white/70 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+              >À propos</a
+            >
+          </li>
+          <li>
+            <a
+              href="/cv/"
+              class="text-pacamara-primary/70 dark:text-white/70 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+              >CV</a
+            >
+          </li>
+          <li>
+            <a
+              href="/cv/en/"
+              class="text-pacamara-primary/70 dark:text-white/70 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+              hreflang="en">CV (EN)</a
+            >
+          </li>
+          <li>
+            <a
+              href="/#contact-form"
+              class="text-pacamara-primary/70 dark:text-white/70 hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+              >Contact</a
+            >
+          </li>
+        </ul>
+      </nav>
     </div>
 
     <!-- Column 2: Socials & Copyright (Centered) -->
@@ -76,6 +122,17 @@ import { Icon } from "astro-icon/components";
               </li>
             )
           }
+          {
+            config?.social?.linkedin && (
+              <li>
+                <SocialIcon
+                  url={config.social.linkedin}
+                  icon="mdi:linkedin"
+                  label="LinkedIn"
+                />
+              </li>
+            )
+          }
         </ul>
       </nav>
       <div
@@ -110,7 +167,6 @@ import { Icon } from "astro-icon/components";
           rel="noopener noreferrer"
           referrerpolicy="strict-origin-when-cross-origin"
           class="font-medium hover:text-pacamara-accent focus-visible:text-pacamara-accent transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2 inline-flex items-center gap-1 active:scale-95 active:duration-75"
-          data-haptic="30"
           aria-label="Astro (ouvre un nouvel onglet)"
           >Astro<Icon
             name="mdi:open-in-new"

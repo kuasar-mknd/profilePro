@@ -1,5 +1,6 @@
 ---
 import { getSortedProjects } from "../utils/projects";
+import { selectFeaturedBalanced } from "../utils/featured";
 import Base from "../layouts/Base.astro";
 import Hero from "../components/features/home/Hero.astro";
 import ServicesPreview from "../components/features/home/ServicesPreview.astro";
@@ -9,6 +10,11 @@ import config from "../config.mjs";
 
 const allProjects = await getSortedProjects();
 
+// Sélection éditoriale équilibrée entre les piliers (vidéo, photo, web,
+// communication) plutôt que les 7 plus récents — qui étaient presque
+// toujours des projets vidéo.
+const featuredSelection = selectFeaturedBalanced(allProjects, 7);
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -16,10 +22,12 @@ const jsonLd = {
   name: config.title,
   url: "https://portfolio.kuasar.xyz",
   image: "https://portfolio.kuasar.xyz/defaultog.jpg",
+  email: config.email,
   sameAs: [
     config.social.instagram,
     config.social.github,
     config.social.youtube,
+    config.social.linkedin,
   ].filter(Boolean),
   jobTitle: "Créateur de contenu & Développeur Web",
   description:
@@ -62,17 +70,13 @@ const jsonLd = {
   address: {
     "@type": "PostalAddress",
     addressLocality: "Lausanne",
-    postalCode: "1000",
+    postalCode: config.postalCode,
     addressRegion: "Vaud",
     addressCountry: "CH",
   },
   areaServed: [
-    { "@type": "City", name: "Lausanne" },
-    { "@type": "State", name: "Vaud" },
-    { "@type": "State", name: "Genève" },
-    { "@type": "State", name: "Fribourg" },
-    { "@type": "State", name: "Neuchâtel" },
-    { "@type": "State", name: "Valais" },
+    ...config.catchmentCities.map((name) => ({ "@type": "City", name })),
+    ...config.catchmentRegions.map((name) => ({ "@type": "State", name })),
     { "@type": "AdministrativeArea", name: "Suisse romande" },
   ],
 };
@@ -83,7 +87,14 @@ const jsonLd = {
     <Hero projects={allProjects} />
     <ServicesPreview />
     {/* ⚡ Bolt: Lazy load below-the-fold images to prioritize Hero LCP */}
-    <LatestPosts postLimit={7} allPosts={allProjects} lazyLoadImages={true} />
+    <LatestPosts
+      postLimit={7}
+      posts={featuredSelection}
+      allPosts={allProjects}
+      title="Projets sélectionnés"
+      subtitle="Vidéo, photographie, web et communication : une sélection représentative de mes réalisations."
+      lazyLoadImages={true}
+    />
     <CTASection />
   </main>
 </Base>

@@ -261,14 +261,12 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       <a
         href="#main-content"
         class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto active:scale-95 active:duration-75"
-        data-haptic="30"
       >
         {t.skipContent}
       </a>
       <a
         href="#main-footer"
         class="skip-link absolute left-4 top-4 -translate-y-[150%] focus-visible:translate-y-0 transition-transform duration-300 ease-out px-6 py-3 bg-white text-pacamara-primary font-bold rounded-full shadow-lg border border-pacamara-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 pointer-events-auto active:scale-95 active:duration-75"
-        data-haptic="30"
       >
         {t.skipFooter}
       </a>
@@ -296,7 +294,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       class="fixed bottom-6 right-6 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-pacamara-secondary/90 text-white shadow-lg hover:bg-pacamara-accent transition-all duration-300 opacity-0 invisible translate-y-4 hover-lift active:scale-95 active:duration-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 group cursor-pointer"
       aria-label={`${t.backToTop} (T)`}
       aria-keyshortcuts="T"
-      data-haptic="50"
       tabindex="-1"
     >
       <span
@@ -574,31 +571,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       const warning = " (ouvre un nouvel onglet)";
 
       /**
-       * 🎨 Palette: Global Haptic Feedback
-       * Centrally manages tactile feedback for interactive elements with data-haptic.
-       */
-      function initHaptics() {
-        if (window.__hapticsInitialized) return;
-        window.__hapticsInitialized = true;
-
-        document.addEventListener("click", (e) => {
-          const target = e.target as HTMLElement;
-          const hapticEl = target.closest("[data-haptic]");
-          if (
-            hapticEl &&
-            navigator.vibrate &&
-            !prefersReducedMotionQuery.matches
-          ) {
-            const duration = parseInt(
-              hapticEl.getAttribute("data-haptic") || "30",
-              10,
-            );
-            navigator.vibrate(duration);
-          }
-        });
-      }
-
-      /**
        * 🎨 Palette: Global Anchor Link Highlight
        * Provides visual feedback when navigating to an anchor on the same page.
        */
@@ -714,7 +686,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
         const initAll = () => {
           initGlobalResizeObserver();
           initBackToTop();
-          initHaptics();
           secureLinks();
           initThemeObserver();
           initAnchorHighlight();

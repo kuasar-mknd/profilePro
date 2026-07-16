@@ -16,7 +16,13 @@ const image = postData?.id
   : postData?.data?.image
     ? postData.data.image.src
     : config.defaultOgImage;
-const type = postData?.data?.type ? postData.data.type : "website";
+// og:type n'accepte que des valeurs du protocole Open Graph (pas "photo"/"general")
+const type =
+  postData?.data?.type === "video"
+    ? "video.other"
+    : postData?.data?.pubDate
+      ? "article"
+      : "website";
 ---
 
 <title>{title}</title>

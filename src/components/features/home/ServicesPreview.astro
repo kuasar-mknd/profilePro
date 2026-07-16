@@ -2,36 +2,34 @@
 import { Icon } from "astro-icon/components";
 import ScrollReveal from "../../ui/ScrollReveal.astro";
 import TiltCard from "../../ui/TiltCard.astro";
+import { sanitizeUrl } from "../../../utils/security";
 
+// Les trois piliers du site (cf. src/utils/pillars.ts pour la taxonomie).
 const services = [
   {
-    title: "Production Vidéo",
+    title: "Création de contenu",
+    href: "/project/categorie/creation-de-contenu/",
     description:
-      "Clips, aftermovies, corporate. Une esthétique cinématographique.",
-    icon: "mdi:video-vintage",
+      "Vidéo et photographie : clips, courts-métrages, reportages et photo de plateau. Une esthétique cinématographique au service de votre histoire.",
+    icon: "mdi:movie-open",
     color: "text-purple-500",
     gradient: "from-purple-500/20 to-purple-600/10",
   },
   {
-    title: "Développement Web",
+    title: "Développement web",
+    href: "/project/categorie/developpement-web/",
     description:
-      "Applications Fullstack, SaaS & Sites vitrines. Performants et évolutifs.",
+      "Sites, applications et plateformes : performants, accessibles et sécurisés, du design à l'exploitation.",
     icon: "mdi:code-tags",
     color: "text-blue-500",
     gradient: "from-blue-500/20 to-blue-600/10",
   },
   {
-    title: "Photographie",
+    title: "Communication",
+    href: "/project/categorie/communication/",
     description:
-      "Portraits & événements. Des images qui racontent une histoire.",
-    icon: "mdi:camera",
-    color: "text-pink-500",
-    gradient: "from-pink-500/20 to-pink-600/10",
-  },
-  {
-    title: "Stratégie Digitale",
-    description: "SEO & Social Ads. Boostez votre visibilité en ligne.",
-    icon: "mdi:google-analytics",
+      "Stratégies, campagnes et promotion d'événements : de l'affiche aux réseaux sociaux, jusqu'à la salle comble.",
+    icon: "mdi:bullhorn-outline",
     color: "text-orange-500",
     gradient: "from-orange-500/20 to-orange-600/10",
   },
@@ -43,14 +41,9 @@ const services = [
   style="content-visibility: auto; contain-intrinsic-size: auto 600px;"
 >
   <!-- ⚡ Bolt: content-visibility: auto skips rendering off-screen content -->
-  <!-- Animated background gradient -->
   <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20">
     <div
       class="absolute top-1/4 left-1/4 w-96 h-96 bg-pacamara-secondary/30 rounded-full blur-3xl floating"
-    >
-    </div>
-    <div
-      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pacamara-accent/30 rounded-full blur-3xl floating-slow floating-delayed"
     >
     </div>
   </div>
@@ -60,17 +53,18 @@ const services = [
       <h2
         class="text-3xl md:text-5xl font-pacamara-space font-bold mb-6 text-pacamara-dark dark:text-white"
       >
-        Mes <span class="text-shimmer">Expertises</span>
+        Trois <span class="text-shimmer">piliers</span>
       </h2>
       <p
         class="text-lg md:text-xl text-pacamara-primary/70 dark:text-white/70 font-outfit"
       >
-        Une approche globale pour votre communication visuelle et digitale.
+        Des contenus qui racontent, des plateformes qui diffusent, des
+        stratégies qui performent.
       </p>
     </ScrollReveal>
 
     <ul
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 list-none p-0"
+      class="grid grid-cols-1 md:grid-cols-3 gap-6 list-none p-0 max-w-5xl mx-auto"
     >
       {
         services.map((service, index) => (
@@ -80,24 +74,36 @@ const services = [
                 class={`h-full bg-white dark:bg-pacamara-dark/80 border border-pacamara-secondary/10 dark:border-white/5 rounded-2xl shadow-sm card-glow group`}
               >
                 <div
-                  class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500 rounded-2xl`}
+                  class={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-50 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-500 rounded-2xl`}
                 />
-                <div class="relative z-10 p-6">
+                <div class="relative z-10 p-6 flex flex-col h-full">
                   <div
-                    class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 group-focus-visible:scale-110 transition-transform duration-300`}
+                    class={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${service.color} bg-current/10 group-hover:scale-110 group-focus-within:scale-110 transition-transform duration-300`}
                   >
                     <Icon
                       name={service.icon}
-                      class="w-8 h-8 icon-animate"
+                      class="w-8 h-8"
                       aria-hidden="true"
                     />
                   </div>
                   <h3 class="text-xl font-bold font-pacamara-space mb-3 text-pacamara-dark dark:text-white">
-                    {service.title}
+                    <a
+                      href={sanitizeUrl(service.href)}
+                      class="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg after:absolute after:inset-0 after:rounded-2xl"
+                    >
+                      {service.title}
+                    </a>
                   </h3>
-                  <p class="text-sm text-pacamara-primary/70 dark:text-white/70 font-outfit leading-relaxed">
+                  <p class="text-sm text-pacamara-primary/70 dark:text-white/70 font-outfit leading-relaxed mb-4">
                     {service.description}
                   </p>
+                  <span
+                    class={`mt-auto inline-flex items-center gap-2 text-sm font-bold ${service.color} group-hover:gap-3 transition-all duration-300`}
+                    aria-hidden="true"
+                  >
+                    Voir les projets
+                    <Icon name="mdi:arrow-right" class="w-4 h-4" />
+                  </span>
                 </div>
               </TiltCard>
             </ScrollReveal>
@@ -110,7 +116,6 @@ const services = [
       <a
         href="/about/"
         class="inline-flex items-center gap-2 text-pacamara-accent font-bold hover:gap-4 transition-all duration-300 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded-lg p-2 -m-2 hover-lift active:scale-95 active:duration-75"
-        data-haptic="50"
       >
         <span>Découvrir mon parcours complet</span>
         <Icon

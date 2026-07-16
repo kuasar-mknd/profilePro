@@ -19,8 +19,6 @@
   --color-pacamara-white: #f8fafc;
   --color-glass-white: rgb(255 255 255 / 5%);
   --color-glass-black: rgb(0 0 0 / 40%);
-  --color-neon-blue: #00f3ff;
-  --color-neon-purple: #bc13fe;
   --font-pacamara-space: "Space Grotesk", sans-serif;
   --font-outfit: "Outfit", sans-serif;
   --animate-fade-in: fade-in 0.5s ease-out forwards;
@@ -38,49 +36,7 @@
   --shadow-glass: 0 8px 32px 0 rgb(0 0 0 / 30%);
   --shadow-glow: 0 0 20px rgb(99 102 241 / 50%);
   --shadow-glow-accent: 0 0 20px rgb(244 63 94 / 50%);
-  --aspect-9-10: 9 / 16;
-}
-
-/* Hero Gradient Text - Progressive Enhancement */
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-  .hero-text-subtle {
-    background: linear-gradient(
-      to right,
-      rgb(255 255 255 / 60%),
-      rgb(255 255 255 / 80%),
-      #4f46e5
-    );
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .dark .hero-text-subtle {
-    background: linear-gradient(to right, #6366f1, #8b5cf6);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    opacity: 0.25;
-    text-shadow: 0 0 30px rgb(255 255 255 / 15%);
-  }
-
-  .hero-gradient-vibrant {
-    background: linear-gradient(135deg, #4f46e5, #be123c, #a855f7, #ec4899);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradient-hue-shift 5s ease infinite;
-    will-change: filter;
-  }
-}
-
-/* GPU-accelerated animation using filter instead of background-position */
-@keyframes gradient-hue-shift {
-  0%,
-  100% {
-    filter: hue-rotate(0deg);
-  }
-
-  50% {
-    filter: hue-rotate(30deg);
-  }
+  --aspect-9-16: 9 / 16;
 }
 
 /* Keyframes */
@@ -441,10 +397,10 @@
 /* ENHANCED UX ANIMATIONS */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(16px);
   transition:
-    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-on-scroll.visible {
@@ -453,7 +409,7 @@
 }
 
 .reveal-on-scroll.from-left {
-  transform: translateX(-60px);
+  transform: translateX(-24px);
 }
 
 .reveal-on-scroll.from-left.visible {
@@ -461,7 +417,7 @@
 }
 
 .reveal-on-scroll.from-right {
-  transform: translateX(60px);
+  transform: translateX(24px);
 }
 
 .reveal-on-scroll.from-right.visible {
@@ -545,45 +501,31 @@
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-
-  100% {
-    background-position: 200% center;
-  }
-}
-
 .text-shimmer {
   background: linear-gradient(
-    90deg,
+    100deg,
     var(--color-pacamara-secondary) 0%,
-    var(--color-pacamara-accent) 25%,
-    #a855f7 50%,
-    var(--color-pacamara-accent) 75%,
-    var(--color-pacamara-secondary) 100%
+    #a855f7 55%,
+    var(--color-pacamara-accent) 100%
   );
-  background-size: 200% auto;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 4s linear infinite;
 }
 
-  @keyframes highlight-glow {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 rgb(190 18 60 / 0%);
-    }
-
-    50% {
-      box-shadow: 0 0 30px 10px rgb(190 18 60 / 30%);
-    }
+@keyframes highlight-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(190 18 60 / 0%);
   }
 
-  .highlight-glow {
-    animation: highlight-glow 1.5s ease-in-out;
+  50% {
+    box-shadow: 0 0 30px 10px rgb(190 18 60 / 30%);
   }
+}
+
+.highlight-glow {
+  animation: highlight-glow 1.5s ease-in-out;
+}
 
 @keyframes float {
   0%,
@@ -612,29 +554,6 @@
   animation-delay: 2s;
 }
 
-@keyframes gradient-mesh {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.gradient-mesh-bg {
-  background: linear-gradient(
-    -45deg,
-    var(--color-pacamara-secondary),
-    var(--color-pacamara-accent),
-    #a855f7,
-    var(--color-neon-blue)
-  );
-  background-size: 400% 400%;
-  animation: gradient-mesh 15s ease infinite;
-}
-
 @keyframes icon-bounce {
   0%,
   100% {
@@ -655,32 +574,6 @@
 
   /* ⚡ Bolt: CSS containment for layout optimization */
   contain: layout style;
-}
-
-.card-glow::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(
-    135deg,
-    var(--color-pacamara-secondary),
-    var(--color-pacamara-accent),
-    var(--color-pacamara-secondary)
-  );
-  border-radius: inherit;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.3s ease;
-  filter: blur(8px);
-
-  /* ⚡ Bolt: Removed permanent will-change to save memory on lists */
-
-  /* Browser heuristics are sufficient for opacity transitions here */
-}
-
-.card-glow:hover::before,
-.card-glow:focus-within::before {
-  opacity: 0.15;
 }
 
 .bento-grid {

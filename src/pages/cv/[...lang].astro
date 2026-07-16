@@ -136,7 +136,6 @@ const description = data.profile.content;
         aria-label={currentLang === "fr"
           ? "Passer à la version anglaise"
           : "Switch to French version"}
-        data-haptic="30"
       >
         <Icon name="mdi:translate" class="w-5 h-5" aria-hidden="true" />
         {currentLang === "fr" ? "English Version" : "Version Française"}
@@ -149,7 +148,6 @@ const description = data.profile.content;
           ? "Exporter le CV en PDF (Ctrl+P)"
           : "Export CV to PDF (Ctrl+P)"}
         aria-keyshortcuts="Control+P"
-        data-haptic="50"
       >
         <Icon name="mdi:printer" class="w-5 h-5" aria-hidden="true" />
         <span aria-hidden="true">
@@ -500,7 +498,7 @@ const description = data.profile.content;
 <script>
   /**
    * 🎨 Palette: CV Page UX Improvement
-   * - Adds active states and data-haptic to print and language buttons
+   * - Adds active states and to print and language buttons
    * - Handles print action and keyboard shortcuts
    * - Uses Singleton Listener Pattern for View Transitions
    */
