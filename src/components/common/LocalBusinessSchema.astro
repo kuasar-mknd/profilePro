@@ -13,7 +13,7 @@ const jsonLd = {
   description: config.description,
   image: siteUrl + "/defaultog.jpg",
   url: siteUrl,
-  email: "samuel@edulex.ch",
+  email: config.email,
   founder: {
     "@type": "Person",
     "@id": siteUrl + "/#person",
@@ -22,7 +22,7 @@ const jsonLd = {
   address: {
     "@type": "PostalAddress",
     addressLocality: "Lausanne",
-    postalCode: "1000",
+    postalCode: config.postalCode,
     addressRegion: "VD",
     addressCountry: "CH",
   },
@@ -32,19 +32,9 @@ const jsonLd = {
     longitude: 6.632273,
   },
   areaServed: [
-    { "@type": "City", name: "Lausanne" },
-    { "@type": "City", name: "Montreux" },
-    { "@type": "City", name: "Nyon" },
-    { "@type": "City", name: "Yverdon-les-Bains" },
-    { "@type": "State", name: "Vaud" },
-    { "@type": "State", name: "Genève" },
-    { "@type": "State", name: "Fribourg" },
-    { "@type": "State", name: "Neuchâtel" },
-    { "@type": "State", name: "Valais" },
-    {
-      "@type": "AdministrativeArea",
-      name: "Suisse romande",
-    },
+    ...config.catchmentCities.map((name) => ({ "@type": "City", name })),
+    ...config.catchmentRegions.map((name) => ({ "@type": "State", name })),
+    { "@type": "AdministrativeArea", name: "Suisse romande" },
   ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",

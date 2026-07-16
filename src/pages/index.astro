@@ -22,6 +22,7 @@ const jsonLd = {
   name: config.title,
   url: "https://portfolio.kuasar.xyz",
   image: "https://portfolio.kuasar.xyz/defaultog.jpg",
+  email: config.email,
   sameAs: [
     config.social.instagram,
     config.social.github,
@@ -68,17 +69,13 @@ const jsonLd = {
   address: {
     "@type": "PostalAddress",
     addressLocality: "Lausanne",
-    postalCode: "1000",
+    postalCode: config.postalCode,
     addressRegion: "Vaud",
     addressCountry: "CH",
   },
   areaServed: [
-    { "@type": "City", name: "Lausanne" },
-    { "@type": "State", name: "Vaud" },
-    { "@type": "State", name: "Genève" },
-    { "@type": "State", name: "Fribourg" },
-    { "@type": "State", name: "Neuchâtel" },
-    { "@type": "State", name: "Valais" },
+    ...config.catchmentCities.map((name) => ({ "@type": "City", name })),
+    ...config.catchmentRegions.map((name) => ({ "@type": "State", name })),
     { "@type": "AdministrativeArea", name: "Suisse romande" },
   ],
 };

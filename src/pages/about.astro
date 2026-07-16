@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import config from "../config.mjs";
 import { safeJson } from "../utils/security";
 import { getImage } from "astro:assets";
 import logo from "../assets/logo.avif";
@@ -82,7 +83,7 @@ const jsonLd = {
     jobTitle: "Créateur de contenu visuel & Développeur Web",
     description:
       "Vidéaste, photographe et développeur web freelance basé à Lausanne, Suisse romande.",
-    email: "samuel@edulex.ch",
+    email: config.email,
     knowsAbout: [
       "Production vidéo",
       "Clips musicaux",
@@ -102,17 +103,13 @@ const jsonLd = {
     address: {
       "@type": "PostalAddress",
       addressLocality: "Lausanne",
-      postalCode: "1000",
+      postalCode: config.postalCode,
       addressRegion: "Vaud",
       addressCountry: "CH",
     },
     areaServed: [
-      { "@type": "City", name: "Lausanne" },
-      { "@type": "State", name: "Vaud" },
-      { "@type": "State", name: "Genève" },
-      { "@type": "State", name: "Fribourg" },
-      { "@type": "State", name: "Neuchâtel" },
-      { "@type": "State", name: "Valais" },
+      ...config.catchmentCities.map((name) => ({ "@type": "City", name })),
+      ...config.catchmentRegions.map((name) => ({ "@type": "State", name })),
       { "@type": "AdministrativeArea", name: "Suisse romande" },
     ],
     sameAs: [
