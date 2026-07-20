@@ -12,17 +12,18 @@ category: "web"
 secondaryCategories:
   - "communication"
   - "video"
+  - "photo"
 role: "Chef de projet — coordination & gestion (équipe de 13)"
 client: "Ville d'Yverdon-les-Bains"
 figmaUrl: "https://www.figma.com/file/vqRj0CRQy1yHd74vzSTLpZ/Cr%C3%A9ation-de-parcours?type=whiteboard&node-id=0-1&t=JR73IKbvNTD13LsP-0"
 featured: 82
 skills:
+  - "Gestion de projet"
   - "UX/UI"
   - "Design d'application mobile"
   - "Storytelling"
   - "Branding & direction artistique"
   - "Stratégie marketing"
-  - "Prototypage Figma"
 metrics:
   - label: "Équipe"
     value: "13 personnes"
@@ -36,39 +37,67 @@ metrics:
 
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 
-**APPY** est le projet interdisciplinaire de 3ᵉ année de bachelor en Ingénierie des médias (HEIG-VD), mené par une équipe de 13 personnes pour une mandante réelle : la ville d'**Yverdon-les-Bains**. La commande — revitaliser l'image de la ville et valoriser ses atouts auprès des familles. Un projet volontairement transverse, qui mêle **développement d'application, création de contenu, communication et stratégie marketing**.
+**APPY** est le projet interdisciplinaire (PI) de 3ᵉ année du bachelor en Ingénierie des médias de la HEIG-VD : une équipe de **13 personnes** et une mandante réelle, la ville d'**Yverdon-les-Bains**. La commande — revitaliser l'image de la ville et valoriser ses atouts auprès des **familles**. Un projet résolument transverse, à la croisée du **développement, de l'UX, de la création de contenu, de la communication et du marketing**.
 
-J'y étais **chef de projet** : j'ai assuré la coordination et la gestion de l'équipe de 13, en prêtant main-forte sur tous les postes — du développement à la communication, du marketing à la création de contenu.
+## Le défi
 
-## Il était une fois, le brouillard d'Yverdon
+Yverdon-les-Bains est régulièrement noyée sous un brouillard qui pèse sur le moral et sur l'image de la ville. Comment, dans ce contexte, donner aux familles l'envie de (re)découvrir le patrimoine local — sans coller les enfants à un écran, et en soutenant au passage les commerces de proximité ? C'était la problématique à résoudre : d'abord par la recherche, ensuite par le design.
 
-Tout part d'un récit. Yverdon-les-Bains est régulièrement recouverte d'un brouillard qui rend les journées moroses. **Brumus**, un sorcier bienveillant, tente d'aider les habitants… mais ses sorts ratés provoquent des catastrophes cocasses : des lampadaires qui dansent, des bancs qui racontent des blagues, des fontaines qui crachent du chocolat chaud. Heureusement, la **professeure Violette la Castorette**, magicienne respectée, fait appel aux familles pour réparer les erreurs de Brumus — et c'est là que l'aventure commence.
+## Mon rôle
 
-Ce **storytelling** est le cœur du produit : ce sont les personnages, autant que les lieux, qui donnent envie d'aller au poste suivant, puis de revenir pour le parcours d'après. La narration suit la **courbe du suspense**, un principe pédagogique adapté aux activités pour enfants.
+J'étais **chef de projet**. J'ai assuré la **coordination et la gestion** de l'équipe de 13 — planification, rituels agiles (dailies, sprints, PV), suivi des livrables et lien avec la mandante — tout en **prêtant main-forte sur tous les postes** : conception UX, communication, marketing et création de contenu.
 
-## Le concept : la ville comme terrain de jeu
+## La démarche
 
-APPY transforme une balade en aventure. À chaque poste, un simple **scan de QR code** débloque un défi porté par un dialogue audio : observation de la faune, énigme, rébus, mini-jeu. Au bout du parcours, les familles récoltent des **bons à faire valoir chez les commerçants locaux** — un cercle vertueux entre découverte culturelle et économie de proximité.
+Le projet a été mené comme une véritable démarche de **design produit**, ancrée dans la recherche avant chaque décision :
+
+- **Comprendre** — un benchmark des solutions de balades existantes, une étude de marché **B2C** (questionnaire quantitatif + entretiens qualitatifs auprès de parents d'enfants de 4 à 10 ans) et un volet **B2B** (une trentaine de commerçants rencontrés).
+- **Cadrer** — personas, empathy maps, modèle de représentation et matrice _must-have_ pour dégager les fonctionnalités prioritaires ; puis un travail d'**ontologie et de taxonomie** pour structurer l'architecture de l'information de l'application.
+- **Concevoir** — itérations successives : maquettes papier, prototype _low-fi_, versions _middle-fi_ corrigées par des tests utilisateurs et des retours d'expert, jusqu'à une **maquette interactive haute-fidélité** sur Figma.
+- **Arbitrer** — l'équipe a fait le choix assumé de concentrer l'effort sur un **livrable de conception complet** (réflexion UX, prototype interactif, branding et stratégie marketing) plutôt que sur le développement, afin de remettre à la ville un dossier directement actionnable.
+
+## La solution : la ville comme terrain de jeu
+
+Le produit repose sur un **récit**. Brumus, un sorcier bienveillant, tente d'aider les habitants d'Yverdon… mais ses sorts ratés provoquent des catastrophes cocasses — lampadaires qui dansent, fontaines qui crachent du chocolat chaud. La professeure **Violette la Castorette**, magicienne respectée, appelle alors les familles à la rescousse pour réparer ses bêtises. Ce sont les personnages, autant que les lieux, qui donnent envie d'aller au poste suivant : la narration suit la **courbe du suspense**, un principe pédagogique adapté aux enfants.
+
+Concrètement, APPY transforme une balade en aventure. À chaque poste, un simple **scan de QR code** débloque un défi porté par un dialogue audio — observation de la faune, énigme, rébus, mini-jeu. Au bout du parcours, les familles récoltent des **bons à faire valoir chez les commerçants locaux** : un cercle vertueux entre découverte culturelle et économie de proximité.
 
 Deux parcours ont été conçus de bout en bout :
 
 - 🏛 **« La Pierre de Joie »** (urbain, 8–12 ans, ~2,5 km) — de la Place d'Armes au Château, avec Piou-Piou et Picatso le chat-artiste.
 - 🌿 **« Le marais oublié »** (nature, 6–10 ans, ~4 km) — les menhirs de Clendy et la faune du marais, avec Splash le canard, Juliette la mouette et Igor le castor.
 
-## Une démarche produit complète
+## L'expérience pensée dans le détail
 
-- **Analyse** : benchmark des solutions existantes, étude de marché B2C (questionnaire quantitatif + entretiens qualitatifs auprès de parents d'enfants de 4 à 10 ans) et volet B2B (une trentaine de commerçants rencontrés).
-- **UX** : personas, empathy maps, tests utilisateurs et architecture de l'information, consolidés dans un [espace de conception Figma](https://www.figma.com/file/vqRj0CRQy1yHd74vzSTLpZ/Cr%C3%A9ation-de-parcours?type=whiteboard&node-id=0-1&t=JR73IKbvNTD13LsP-0) partagé.
-- **Choix techniques assumés** : le **QR code** a été retenu contre le NFC et le Bluetooth pour son universalité et son accessibilité (aucun matériel spécifique, compatible avec tous les smartphones) ; l'application est pensée pour **fonctionner hors-ligne**, les parcours traversant des zones à faible couverture réseau.
-- **Branding & univers visuel** : charte graphique, création des personnages, panneaux de parcours et un **prototype physique** — un livre « La Pierre de Joie » peint à la main pour l'immersion.
+La recherche a directement nourri l'application :
 
-## Une stratégie marketing clé en main
+- une **architecture claire** en quatre onglets — _balades, histoires, bons, compte_ — avec des filtres (popularité, proximité, longueur, durée, nombre d'activités…) ;
+- des **interactions non-visuelles** pour sortir les enfants de l'écran : le texte est joué en **audio** (lu par le parent ou par l'application) et, à l'approche d'un poste, une **vibration et une sonnerie** invitent à sortir le téléphone ;
+- un **compteur d'activité** affichant le nombre de familles sur le parcours en cours, pour recréer un sentiment de communauté sans forcer le contact ;
+- un **mode hors-ligne**, les parcours traversant des zones à faible couverture réseau ;
+- une progression **ludifiée** (XP, succès, parrainage) côté compte.
 
-Le dossier livré à la ville comprend une stratégie de communication multicanale complète, structurée autour de quatre valeurs — **familial, bienveillant, drôle, proche** — et d'une vision à cinq ans : que les enfants de Suisse romande connaissent Violette et Brumus. Guidelines déclinées par canal (affichage, **flocage de bus**, print, TikTok, TV/radio, merchandising, événementiel), calendrier éditorial et budget chiffré (CHF 138 435/an) accompagnent le lancement.
+Côté technique, le **QR code** a été retenu contre le NFC et le Bluetooth pour son universalité : aucun matériel spécifique, compatible avec tous les smartphones.
+
+## Univers visuel & branding
+
+En parallèle de l'application, l'équipe a produit une **identité complète** : charte graphique, création des personnages, panneaux de parcours pensés pour l'installation en situation — et un **prototype physique**, un livre « La Pierre de Joie » **peint à la main** pour donner à toucher l'univers du projet.
+
+## Stratégie marketing
+
+Le dossier remis à la ville inclut une **stratégie de communication multicanale**, structurée autour de quatre valeurs — **familial, bienveillant, drôle, proche** — et d'une vision à cinq ans : que les enfants de Suisse romande connaissent Violette et Brumus. Guidelines par canal (affichage, **flocage de bus**, print, TikTok, TV/radio, merchandising, événementiel), calendrier éditorial et **budget chiffré (CHF 138 435/an)** accompagnent le lancement.
+
+## Le livrable
+
+Au terme du projet, la ville d'Yverdon-les-Bains a reçu un **dossier clé en main** : recherche utilisateur, architecture de l'information, maquette interactive haute-fidélité, univers de marque et plan marketing budgété — de quoi porter APPY jusqu'à une éventuelle réalisation.
+
+## Ce que j'en retire
+
+Coordonner **13 personnes** sur un projet aussi transverse — développement, UX, contenu, communication, marketing — m'a appris à faire converger des métiers très différents vers un même livrable, à **arbitrer** (concentrer l'effort sur la conception plutôt que le code, choisir le QR contre le NFC) et à tenir le cap produit du premier atelier jusqu'au dossier final.
 
 ## Démo
 
-La vidéo ci-dessus présente le parcours urbain « La Pierre de Joie » tel qu'il se déroule dans l'application.
+La vidéo ci-dessus présente le parcours urbain « La Pierre de Joie » tel qu'il se déroule dans la maquette interactive.
 
 ## Galerie
 
