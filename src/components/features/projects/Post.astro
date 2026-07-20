@@ -3,6 +3,7 @@ const { postData, bentoSize = "", priority = false } = Astro.props;
 import { getImage } from "astro:assets";
 import PublishDate from "./PublishDate.astro";
 import CategoryBadge from "../../ui/CategoryBadge.astro";
+import { projectCategories } from "../../../utils/pillars";
 import { sanitizeUrl } from "../../../utils/security";
 
 const isLarge = bentoSize === "bento-item-large";
@@ -82,7 +83,7 @@ const optimizedImage = {
 
   <!-- 3. Gradient Overlay - smooth transition on hover -->
   <div
-    class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 via-50% to-transparent group-hover:from-black/90 group-hover:via-black/50 group-focus-within:from-black/90 group-focus-within:via-black/50 transition-all duration-500 ease-out rounded-2xl pointer-events-none"
+    class="absolute inset-0 bg-linear-to-t from-black/85 via-black/45 via-45% to-black/15 group-hover:from-black/90 group-hover:via-black/55 group-focus-within:from-black/90 group-focus-within:via-black/55 transition-all duration-500 ease-out rounded-2xl pointer-events-none"
   >
   </div>
 
@@ -98,9 +99,13 @@ const optimizedImage = {
       <!-- Catégorie - slides up on hover -->
       <div
         class="flex flex-wrap gap-2 mb-2 transform translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-transform duration-300 ease-out pointer-events-auto"
-        aria-label="Catégorie du projet"
+        aria-label="Catégories du projet"
       >
-        <CategoryBadge category={postData.data.category} />
+        {
+          projectCategories(postData).map((cat) => (
+            <CategoryBadge category={cat} />
+          ))
+        }
       </div>
 
       <!-- Title - slides up on hover -->
@@ -139,9 +144,11 @@ const optimizedImage = {
         aria-hidden="true"
         class="mt-2 text-xs text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] transition-transform duration-300 ease-out group-hover:scale-105 group-focus-within:scale-105 origin-left flex items-center gap-2 min-w-0"
       >
-        <PublishDate date={postData.data.pubDate} />
-        <span class="opacity-60" aria-hidden="true">•</span>
-        <span class="opacity-90 font-medium truncate">
+        <span class="shrink-0">
+          <PublishDate date={postData.data.pubDate} />
+        </span>
+        <span class="opacity-60 shrink-0" aria-hidden="true">•</span>
+        <span class="opacity-90 font-medium truncate min-w-0">
           {postData.data.role}
         </span>
       </div>
