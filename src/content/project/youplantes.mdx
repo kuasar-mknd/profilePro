@@ -13,32 +13,96 @@ client: "HEIG-VD — cours E-Commerce"
 featured: 50
 skills:
   - "Stratégie e-commerce"
+  - "Personas & benchmark"
   - "WooCommerce"
   - "SEO"
   - "Emailing (Mailchimp)"
+  - "Web analytics (GA4)"
   - "Wireframing"
+metrics:
+  - label: "Équipe"
+    value: "3 personnes"
+  - label: "Cible"
+    value: "18–35 ans (CH-FR)"
+  - label: "Plateforme"
+    value: "WooCommerce"
 ---
 
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 
-**YouPlantes** est un projet e-commerce complet mené dans le cadre du cours E-Commerce de la HEIG-VD (Ingénierie des médias) : imaginer, positionner et construire une boutique en ligne de plantes d'intérieur, du plan stratégique jusqu'aux conditions générales de vente.
+**YouPlantes** est un projet e-commerce complet mené dans le cadre du cours E-Commerce de la HEIG-VD (Ingénierie des médias) : imaginer, positionner et construire une boutique en ligne de plantes d'intérieur, **du plan stratégique jusqu'aux conditions générales de vente**. Un projet mené à trois, où j'ai touché à toute la chaîne — stratégie, conception, intégration WooCommerce, SEO, analytics et cadre juridique.
 
-## De la stratégie au produit
+## Le cadre et l'objectif
 
-Le projet couvre toute la chaîne d'un lancement e-commerce :
+L'exercice ne se limitait pas à monter une boutique : il fallait penser une **entreprise** de bout en bout. Nous avons donc défini une marque, YouPlantes, avec des **objectifs ambitieux et datés** — un processus 100 % écoresponsable, une communication inclusive, la neutralité carbone à deux ans, la certification **B Corporation** dès la première année et un partenariat éthique (type TooGoodToGo) pour écouler les invendus végétaux. Quatre valeurs guident l'ensemble : **écoresponsabilité, équité & inclusivité, tolérance et transparence**.
 
-- **Stratégie** : objectifs, cibles, positionnement et personas, appuyés par un benchmark de la concurrence.
-- **Identité visuelle** : création de la marque YouPlantes, déclinée sur l'ensemble des supports.
-- **Conception** : wireframes **mobile-first** (l'essentiel du trafic visé), architecture du site (boutique, magazine, à propos, contact) puis déclinaison desktop.
+## Stratégie : cibles, positionnement, personas
 
-## Une boutique opérationnelle
+La cible : les **18–35 ans de Suisse romande**, qui s'intéressent aux plantes d'intérieur pour eux-mêmes ou à offrir. À partir de là, nous avons construit des **personas** pour incarner ces profils et guider chaque arbitrage de conception, du ton éditorial aux fonctionnalités prioritaires.
 
-La plateforme repose sur **WooCommerce**, intégrée à un écosystème complet : catalogue relié à **Facebook**, service client via **WhatsApp**, campagnes d'**emailing Mailchimp**, canaux de vente complémentaires (Amazon, Printful), stratégie **SEO** et plan de contenu éditorial (magazine). Le dossier traite aussi la logistique, la définition des prix, les moyens de paiement suisses et les **indicateurs de performance** à suivre, jusqu'aux questions juridiques (CGV, protection des données).
+L'assortiment a été structuré en deux familles : des **produits simples** (terre, billes d'argile, arrosoirs, tabliers, tabourets de jardinage, cartes-cadeaux garnies de graines) et des **kits** clés en main (kit débutant, kit bouture, kit adapté à une plante précise), complétés par une sélection de **littérature** en affiliation.
 
-## Des choix assumés
+## Benchmark
 
-- **Écoresponsabilité** : envois « Proclimat » de La Poste par défaut et emballages issus de matières recyclées.
-- **Inclusivité** : l'ensemble des contenus du site est rédigé en écriture inclusive, avec une réflexion documentée sur ses impacts SEO.
+Deux concurrents ont servi de boussole :
+
+- **GardenCenter** — un bon design, de belles images, des articles de blog-conseil, une carte de fidélité et des bons-cadeaux… mais aucun programme de parrainage ni ciblage des jeunes (pas de TikTok ni de YouTube).
+- **MyLubie** — très fort sur l'acquisition jeune (TikTok, YouTube Shorts, parrainage, forte interaction Instagram via quiz et FAQ)… mais une mécanique agressive qui force l'abonnement newsletter pour accéder aux guides.
+
+La leçon : combiner le **sérieux éditorial** du premier avec l'**énergie sociale** du second, sans les travers de chacun.
+
+## Conception : wireframes mobile-first
+
+L'essentiel du trafic visé étant mobile, la conception a été **mobile-first**, puis déclinée sur desktop. Nous avons cartographié l'architecture (boutique, magazine, à propos, contact) et les parcours avant de dessiner les écrans, en documentant au passage les outils utilisés pour les schémas et les graphes.
+
+## La boutique WooCommerce
+
+La plateforme repose sur **WooCommerce**. Le thème retenu n'intégrant pas de blog, il a fallu l'**ajouter et l'adapter à la main** pour porter le volet éditorial (magazine). Autour du cœur boutique, nous avons connecté tout un **écosystème** :
+
+### Facebook & l'API Conversions de Meta
+
+La boutique est reliée à la suite **Meta Business** : au-delà du catalogue Facebook, c'est surtout l'**API Conversions** qui nous intéressait — faire le lien entre les visiteurs du site et les audiences Meta pour **optimiser le ciblage publicitaire, réduire le coût par action et mieux mesurer les résultats**.
+
+### Service client via WhatsApp
+
+Pour un SAV léger, un simple bouton **« Click To Chat »** ouvre WhatsApp avec un message prédéfini. Une solution pragmatique dont nous avons aussi documenté les **limites** (nécessite que le client possède WhatsApp ; à faire évoluer vers WhatsApp Business en cas de montée en charge).
+
+### Emailing avec Mailchimp
+
+Les campagnes passent par **Mailchimp** (plug-in WooCommerce), avec suivi du **panier abandonné**. Point de vigilance relevé et corrigé : la case d'opt-in **précochée par défaut** — illégale au regard du RGPD — a été **décochée**. La newsletter a été intégrée au pied de page, avec un CSS retravaillé pour coller à l'identité.
+
+### Canaux de vente complémentaires
+
+- **Amazon** en affiliation (produits de type « externe/affiliation », descriptions réécrites au ton de la marque) pour la littérature.
+- **Printful** en print-on-demand pour le merchandising, choisi pour son **écoresponsabilité** (production européenne), chaque visuel décliné en version claire et sombre.
+
+## Des fiches produit pensées pour les plantes
+
+Au-delà des standards (galerie, titre, prix, description, sélecteur de quantité, ajout au panier), les fiches intègrent les **informations vitales d'une plante** : ensoleillement, humidité, arrosage, floraison, taille et **toxicité** — présentées de façon lisible, là où les sites concurrents les noient dans des tableaux indigestes. Deux pistes d'amélioration documentées pour une future PWA : des **notifications push** de rappel d'arrosage, et la **reconnaissance photo** d'une plante renvoyant directement vers sa fiche.
+
+## Logistique écoresponsable
+
+Le fournisseur retenu, **Emballages Ross SA** (entreprise suisse, partenaires locaux, emballages recyclés), colle aux valeurs de la marque. Les envois utilisent l'option **« Proclimat »** de La Poste par défaut. Le dimensionnement des emballages et la commande par lots ont été pensés pour **maîtriser les coûts** tout en restant responsables.
+
+## Prix, taxes & paiements
+
+Le modèle économique a été chiffré : **marge cible de 20 %**, **livraison offerte au-dessus de 100 CHF** de panier, et des frais de port différenciés selon le produit (des billes d'argile aux plantes de moins de 2 kg avec envoi fragile assuré). La **TVA suisse** est correctement ventilée — 2,5 % sur les plantes vivantes et semences, 7,7 % sur le reste. Côté encaissement, trois moyens : **PayPal** (testé en sandbox, commission documentée), **virement bancaire** et **Twint**, partenaire de WooCommerce et gage de confiance local.
+
+## Mesurer la performance (GA4)
+
+Le dossier détaille les **indicateurs à suivre** et comment les obtenir dans **Google Analytics 4** : nombre de visites, **taux de conversion** (événement `purchase`), **panier moyen**, chiffre d'affaires, **tunnel d'achat** (rapport funnel), meilleures ventes et récapitulatif hebdomadaire. Nous avons aussi pointé les **limites de GA4** (rapports non préfaits, export contraint) et les contournements possibles.
+
+## Écoresponsabilité & inclusivité
+
+Deux partis pris assumés et transverses : l'**écoresponsabilité** (envois Proclimat, emballages recyclés, production Printful européenne) et l'**inclusivité** — l'ensemble des contenus est rédigé en **écriture inclusive**, avec une réflexion documentée sur ses **impacts SEO**.
+
+## Cadre juridique
+
+Le projet va jusqu'au bout de la logique « vraie boutique » : rédaction des **conditions générales de vente** (inspirées de CGV suisses romandes, gestion des bons-cadeaux, livraison limitée à la Suisse, droit suisse) et d'une **politique de protection des données** (collecte, usage, cookies, gestion des abus).
+
+## Ce que j'en retire
+
+YouPlantes est le projet qui m'a fait toucher **toute la largeur d'un lancement e-commerce** : de la stratégie de marque au calcul de la TVA, en passant par l'intégration technique, l'acquisition et le juridique. J'en retiens la valeur d'une conception **cohérente de bout en bout**, où chaque décision (un mode de livraison, une case à cocher, un taux de marge) engage à la fois l'utilisateur, la loi et le modèle économique.
 
 Projet réalisé en équipe avec **Asia Picasso** et **Daniel Mendes Gonçalves**.
 

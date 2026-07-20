@@ -14,35 +14,82 @@ featured: 45
 skills:
   - "Architecture de l'information"
   - "Personas"
+  - "LATCH & taxonomie"
   - "User flows"
   - "Wireframing"
   - "Figma"
+metrics:
+  - label: "Équipe"
+    value: "3 personnes"
+  - label: "Personas"
+    value: "2"
+  - label: "Navigation"
+    value: "façon Tinder"
 ---
 
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 
-Le défi du cours **ArchInfoUX** (HEIG-VD, Ingénierie des médias) : financer la création d'un espace « chill-out » pour les étudiant·e·s de Saint-Roch en utilisant uniquement les ressources disponibles dans la classe. Notre réponse : concevoir une **plateforme de vente en ligne de vêtements et d'accessoires de seconde main** appartenant aux étudiant·e·s.
+Le défi du cours **ArchInfoUX** (HEIG-VD, Ingénierie des médias) : financer la création d'un espace « chill-out » pour les étudiant·e·s de Saint-Roch en utilisant **uniquement les ressources disponibles dans la classe**. Notre réponse : concevoir une **plateforme de vente en ligne de vêtements et d'accessoires de seconde main** appartenant aux étudiant·e·s — où chaque achat finance concrètement le projet commun. Ce projet est avant tout un exercice d'**architecture de l'information** : structurer avant de dessiner.
+
+## Deux personas pour cadrer les décisions
+
+Toute la conception a été guidée par deux profils opposés mais complémentaires.
+
+### Isabelle — « l'amie éco-shoppeuse »
+
+35 ans, conseillère en gestion de patrimoine, mère de deux enfants, habitant près de l'école. **Technophile** et adepte des applications de shopping, elle valorise la **durabilité et l'économie circulaire**. Ses attentes ont poussé vers une navigation intuitive, des **filtres** efficaces, des **descriptions détaillées de l'état** des articles, un **paiement sécurisé** — et une **barre de progression** qui rend visible l'impact de chaque achat sur le financement.
+
+### Laurent — « l'étudiant stylé »
+
+24 ans, étudiant en lettres, budget limité mais goût affirmé, **éco-conscient** et actif sur Instagram. Il attend un **design moderne et épuré**, un **filtrage par gamme de prix**, de l'**interaction sociale** (partage, lien vers Instagram) et une **personnalisation** selon ses préférences — sans renoncer à contribuer à la cause.
 
 ## Structurer l'information avant de dessiner
 
-Tout le travail repose sur une architecture de l'information rigoureuse :
+### Le champ d'information
 
-- **Inventaire des contenus et attributs** : catégorie, taille, genre, prix, état — le champ d'information complet de chaque article.
-- **Classification LATCH** (tri par lieu, alphabet, temps, catégorie, hiérarchie) et définition de l'**ontologie, de la taxonomie et de la chorégraphie** de la plateforme.
-- **Personas** : Isabelle, « l'amie éco-shoppeuse », et Laurent, « l'étudiant stylé » — deux profils qui ont guidé chaque décision de conception.
+Nous avons d'abord défini, pour chaque article, son **champ d'information** : contenus (photo, description avec état, prix, taille) et **attributs** clés — catégorie, taille, genre, prix. Les articles ont été répartis en grandes familles (Bijoux & accessoires, Vêtements, Chaussures) puis en sous-catégories précises, avec un principe fort : la **taille est filtrée automatiquement** selon les préférences de l'utilisateur, et un **toggle** ajuste le genre affiché.
 
-## Des choix de conception au service de l'objectif
+### LATCH : choisir le bon axe de tri
 
-La plateforme ne vend pas seulement des habits : elle finance un projet. L'interface le raconte :
+Nous avons passé l'information au crible de la méthode **LATCH** (Location, Alphabet, Time, Category, Hierarchy). Chaque axe a été évalué — la localisation, l'ordre alphabétique, l'ancienneté, la popularité auraient tous pu structurer le catalogue — avant de retenir la **catégorie** comme axe principal, le plus naturel pour une navigation vestimentaire, décliné en sous-catégories fines (« Hauts » → t-shirts, pulls, chemises…).
 
-- **Barre de progression du financement** toujours visible (« Les meubles sont commandés ! »), qui transforme chaque achat en contribution concrète ;
-- **Affichage aléatoire pondéré** sur la page d'accueil pour donner leur chance à tous les articles ;
-- **Personnalisation dès le premier lancement** (tailles préférées filtrées d'office) ;
-- **Filtrage par catégorie** pour une navigation ciblée, avec gestion des catégories épuisées.
+### Ontologie, taxonomie & chorégraphie
 
-## Des wireframes à la maquette
+- **Ontologie** — définir le sens et les relations : chaque produit est un jeu d'attributs, les articles se relient par catégorie, et **chaque vente se rattache à l'objectif de financement**.
+- **Taxonomie** — trois catégories principales, leurs sous-catégories et leurs attributs, pour une classification logique et prévisible.
+- **Chorégraphie** — la façon dont on interagit avec l'information : navigation par **cartes façon Tinder**, filtre par catégorie, personnalisation initiale (taille + genre) et toggle de genre.
 
-Le parcours complet — sitemap, user flows, wireframes low-fi puis **maquette Figma** — aboutit à une interface de découverte par **swipe**, aux teintes volontairement vintage pour évoquer l'esprit friperie sans sacrifier la lisibilité.
+### Le soin porté aux labels
+
+Un travail spécifique a porté sur l'**étiquetage** : des labels **descriptifs mais concis** (« Hauts » plutôt que « Vêtements pour le haut du corps »), universellement compris, avec une attention aux nuances culturelles et linguistiques en cas d'extension.
+
+## Des fonctionnalités au service de l'objectif
+
+La plateforme ne vend pas seulement des habits : elle finance un projet. L'interface le raconte à chaque écran.
+
+### Une barre de progression du financement
+
+Toujours visible, elle remplit trois rôles : **transparence** (ce que chaque achat rapporte au projet), **engagement** (au clic, la liste des objets restants à financer) et **reconnaissance** (la liste des contributeurs). Chaque achat devient une **contribution**, pas une simple transaction.
+
+### Un affichage aléatoire pondéré
+
+Plutôt qu'un tri figé, la page d'accueil présente les articles de façon **aléatoire mais pondérée** par le stock restant de chaque catégorie. Résultat : de la **découverte**, de l'**équité** entre articles et une expérience renouvelée à chaque visite.
+
+### La personnalisation dès le premier lancement
+
+Dès l'ouverture, l'application demande **taille et genre** pour filtrer d'emblée le contenu pertinent — moins de bruit, plus de confort, et la flexibilité d'ajuster le genre à tout moment.
+
+### Le filtrage par catégorie, façon Tinder
+
+Au-delà de la découverte aléatoire, un **filtrage par catégorie** sous forme de cartes empilées (façon Tinder) permet des recherches ciblées et tactiles. L'ensemble équilibre **surprise et intentionnalité**.
+
+## De l'architecture aux wireframes
+
+Le parcours complet a été formalisé — **sitemap**, parcours souhaitables, orientation de l'utilisateur, task/user flows et **wireflow** — avant d'aboutir aux **wireframes** puis à une **maquette Figma** : une interface de découverte par **swipe**, aux teintes volontairement vintage pour évoquer l'esprit friperie sans sacrifier la lisibilité.
+
+## Ce que j'en retire
+
+Vide dressing est l'exercice qui m'a appris à **structurer l'information avant de dessiner** : sans un champ d'information clair, une taxonomie assumée et des labels soignés, aucune interface n'est vraiment intuitive. C'est aussi un bel exemple de design **au service d'un objectif** — ici, transformer chaque achat en contribution visible à un projet collectif.
 
 Projet réalisé en équipe avec **Catherine Mauron** et **Nicolas Wunderle**.
 
