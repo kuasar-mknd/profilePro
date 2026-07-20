@@ -1,0 +1,77 @@
+---
+title: "GymTracker — application de suivi de musculation"
+pubDate: 2026-05-04
+intro: "Une application web de suivi de musculation, mobile-first et pensée comme un vrai produit : séances et modèles, détection automatique des records, statistiques de progression, suivi santé et OAuth social — le tout porté par une exigence d'ingénierie élevée (PHPStan niveau 9, 750+ tests)."
+seoDescription: "App de suivi de musculation (Laravel 12, Vue 3, Inertia, PWA) : séances, records, stats et suivi santé — 750+ tests, PHPStan niveau 9."
+tag: "application web"
+author: "samuel"
+image: "../../assets/gym-tracker/apercu.avif"
+type: "general"
+category: "web"
+role: "Conception & développement full-stack (projet personnel)"
+client: "Projet personnel"
+featured: 60
+skills:
+  - "Laravel"
+  - "Vue 3 / Inertia.js"
+  - "Tailwind CSS"
+  - "PWA"
+  - "Tests (Pest / Dusk)"
+  - "PHPStan (typage strict)"
+repoUrl: "https://github.com/kuasar-mknd/gym-tracker"
+metrics:
+  - label: "Tests"
+    value: "750+"
+  - label: "Analyse statique"
+    value: "PHPStan L9"
+  - label: "Nature"
+    value: "PWA mobile-first"
+---
+
+**GymTracker** est une application web de suivi de musculation que j'ai conçue et développée de bout en bout, comme un **vrai produit** plutôt qu'un exercice : une expérience mobile-first soignée (« Liquid Glass UI »), adossée à un back-end robuste et à des standards d'ingénierie très élevés.
+
+## Suivre ses entraînements
+
+Le cœur du produit, c'est la séance :
+
+- **Séances & modèles** — démarrer vite depuis ses routines favorites, ou créer une séance libre ;
+- **Records personnels (PR)** — détection **automatique** des nouveaux records (poids, 1RM estimé, volume) ;
+- **Streak counter** — le suivi des jours consécutifs pour entretenir la motivation ;
+- **Calculateurs** — estimation du 1RM et aide au chargement des plaques.
+
+## Statistiques & santé
+
+GymTracker va au-delà du carnet d'entraînement pour suivre la progression dans la durée :
+
+- **graphiques de progression** interactifs (volume, charges maximales) ;
+- **suivi d'habitudes** (créatine, méditation, sommeil…) ;
+- **constantes & composition corporelle** — tension, fréquence cardiaque, estimation du taux de masse grasse (méthode US Navy) ;
+- **mesures corporelles** pour visualiser l'évolution physique.
+
+## Sécurité & authentification
+
+- **OAuth social** (Google, GitHub, Apple) pour une connexion sans friction ;
+- **sécurité renforcée** — throttling des API, **CSP stricte** et protection par nonce.
+
+## Une vraie exigence d'ingénierie
+
+Ce qui distingue GymTracker, c'est le niveau de qualité de code visé — celui d'un projet professionnel :
+
+- **PHP 8.5 en typage strict**, analyse statique **PHPStan niveau 9** ;
+- **PHP Insights** : score de 100 % en architecture et complexité ;
+- une suite de **plus de 750 tests automatisés** (Pest & Laravel Dusk), unitaires comme end-to-end ;
+- des optimisations de performance (invalidation de cache chirurgicale).
+
+## Stack technique
+
+| Couche                  | Technologies                                                    |
+| ----------------------- | --------------------------------------------------------------- |
+| **Back-end**            | Laravel 12, PHP 8.5, MySQL                                      |
+| **Front-end**           | Vue 3, Inertia.js 2, Tailwind CSS 4                             |
+| **PWA**                 | Workbox (precaching, routing, stratégies)                       |
+| **Tests**               | Pest 4, PHPUnit 12, Laravel Dusk 8                              |
+| **DevOps & monitoring** | Laravel Sail (Docker), GitHub Actions, Pulse, Sentry, Telescope |
+
+## Ce que j'en retire
+
+GymTracker est le projet où je pousse le plus loin l'**exigence full-stack** : conjuguer une interface mobile agréable et un back-end tenu par des tests et une analyse statique sans compromis. C'est ma démonstration qu'un projet personnel peut viser — et tenir — des standards de production.
