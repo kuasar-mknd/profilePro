@@ -6,7 +6,11 @@ import AuthorInfo from "../../components/features/projects/AuthorInfo.astro";
 import LatestPosts from "../../components/features/projects/LatestPosts.astro";
 import PublishDate from "../../components/features/projects/PublishDate.astro";
 import CategoryBadge from "../../components/ui/CategoryBadge.astro";
-import { CATEGORY_META, pillarOfCategory } from "../../utils/pillars";
+import {
+  CATEGORY_META,
+  pillarOfCategory,
+  projectCategories,
+} from "../../utils/pillars";
 import { sanitizeUrl } from "../../utils/security";
 import TableOfContents from "../../components/features/projects/TableOfContents.astro";
 
@@ -188,7 +192,11 @@ const jsonLd = {
       <div
         class="inline-flex flex-wrap items-center justify-center gap-3 mb-6 animate-fade-in opacity-0 delay-200"
       >
-        <CategoryBadge category={entry.data.category} />
+        {
+          projectCategories(entry).map((cat) => (
+            <CategoryBadge category={cat} />
+          ))
+        }
         <PublishDate date={entry.data.pubDate} />
       </div>
       <p

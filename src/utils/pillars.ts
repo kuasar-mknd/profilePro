@@ -72,23 +72,46 @@ export function pillarOfCategory(category: Category): Pillar {
   );
 }
 
+/**
+ * Toutes les catégories d'un projet : la principale plus les secondaires
+ * (projets transverses). Dédupliquées, la principale en tête.
+ */
+export function projectCategories(project: Project): Category[] {
+  const secondary = project.data.secondaryCategories ?? [];
+  return [...new Set([project.data.category, ...secondary])];
+}
+
+/** Piliers auxquels un projet appartient (via toutes ses catégories). */
+export function pillarsOfProject(project: Project): Pillar[] {
+  const slugs = new Set(
+    projectCategories(project).map((c) => pillarOfCategory(c).slug),
+  );
+  return PILLARS.filter((pillar) => slugs.has(pillar.slug));
+}
+
 export function projectsOfPillar(
   projects: Project[],
   pillar: Pillar,
 ): Project[] {
   return projects.filter((project) =>
-    pillar.categories.includes(project.data.category),
+    projectCategories(project).some((c) => pillar.categories.includes(c)),
   );
 }
 
-/** Nombre de projets par pilier, pour les compteurs de filtres. */
+/**
+ * Nombre de projets par pilier, pour les compteurs de filtres. Un projet
+ * transverse compte dans chacun de ses piliers, donc la somme peut dépasser
+ * le nombre total de projets (attendu).
+ */
 export function pillarCounts(projects: Project[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const pillar of PILLARS) {
     counts[pillar.slug] = 0;
   }
   for (const project of projects) {
-    counts[pillarOfCategory(project.data.category).slug]++;
+    for (const pillar of pillarsOfProject(project)) {
+      counts[pillar.slug]++;
+    }
   }
   return counts;
 }

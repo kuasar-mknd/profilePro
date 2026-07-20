@@ -37,7 +37,8 @@ const projectCollection = defineCollection({
       gallery: z.array(image()).optional(), // For photo projects
 
       // Taxonomie éditoriale
-      category: z.enum(PROJECT_CATEGORIES),
+      category: z.enum(PROJECT_CATEGORIES), // pilier principal (cover, OG, tri home)
+      secondaryCategories: z.array(z.enum(PROJECT_CATEGORIES)).default([]), // projets transverses présents dans plusieurs piliers
       role: z.string().min(1).max(100),
       client: z.string().max(100).optional(),
       featured: z.number().int().min(0).max(100).default(0), // poids éditorial, 0 = non mis en avant
