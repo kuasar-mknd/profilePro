@@ -307,7 +307,7 @@ const jsonLd = {
         )
       }
       {
-        (entry.data.liveUrl || entry.data.repoUrl) && (
+        (entry.data.liveUrl || entry.data.repoUrl || entry.data.figmaUrl) && (
           <div class="flex flex-wrap gap-4 mt-6 pt-6 border-t border-pacamara-secondary/10 dark:border-white/10">
             {entry.data.liveUrl && (
               <a
@@ -333,6 +333,21 @@ const jsonLd = {
               >
                 <Icon name="mdi:github" class="w-5 h-5" aria-hidden="true" />
                 Code source
+              </a>
+            )}
+            {entry.data.figmaUrl && (
+              <a
+                href={entry.data.figmaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 py-3 border border-pacamara-primary/20 dark:border-white/20 text-pacamara-primary dark:text-white rounded-full font-bold hover-lift transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2"
+              >
+                <Icon
+                  name="mdi:palette-swatch-outline"
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                />
+                Voir le Figma
               </a>
             )}
           </div>

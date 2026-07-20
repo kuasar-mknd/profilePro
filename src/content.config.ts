@@ -51,6 +51,7 @@ const projectCollection = defineCollection({
       skills: z.array(z.string().max(40)).default([]),
       liveUrl: z.string().url().optional(), // projets web : démo/production
       repoUrl: z.string().url().optional(), // projets web : code source
+      figmaUrl: z.string().url().optional(), // projets design : maquettes / espace Figma
 
       // SEO Fields
       seoTitle: z.string().max(70).optional(), // Google truncation limit approx 60-70 chars
