@@ -52,6 +52,12 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: "hover",
   },
+  // Speculation Rules API : prérend les liens survolés/prefetchés dans les
+  // navigateurs compatibles (sinon fallback vers le prefetch classique) —
+  // navigation quasi instantanée. Sûr pour un site statique (GET only).
+  experimental: {
+    clientPrerender: true,
+  },
   vite: {
     plugins: [
       tailwindcss(),
