@@ -8,6 +8,12 @@ import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+// Date de génération du site, utilisée comme `lastmod` dans le sitemap.
+// Le portfolio est régénéré à chaque déploiement : la date de build reflète
+// donc fidèlement la dernière mise à jour et fournit à Google un signal de
+// fraîcheur pour recrawler les pages.
+const BUILD_DATE = new Date().toISOString();
+
 // https://astro.build/config
 export default defineConfig({
   trailingSlash: "always",
@@ -46,7 +52,17 @@ export default defineConfig({
       ],
     }),
   },
-  integrations: [mdx(), sitemap(), icon()],
+  integrations: [
+    mdx(),
+    sitemap({
+      // `lastmod` sur chaque URL : signal de fraîcheur pour les moteurs.
+      serialize(item) {
+        item.lastmod = BUILD_DATE;
+        return item;
+      },
+    }),
+    icon(),
+  ],
   site: "https://portfolio.kuasar.xyz",
   // Prefetch géré par Astro : tous les liens internes sont préchargés au
   // survol. Couplé à `clientPrerender`, ils sont prérendus via la Speculation
