@@ -48,13 +48,13 @@ export default defineConfig({
   },
   integrations: [mdx(), sitemap(), icon()],
   site: "https://portfolio.kuasar.xyz",
+  // Prefetch géré par Astro : tous les liens internes sont préchargés au
+  // survol. Couplé à `clientPrerender`, ils sont prérendus via la Speculation
+  // Rules API (navigateurs compatibles), sinon repli sur un prefetch classique.
   prefetch: {
-    prefetchAll: false,
+    prefetchAll: true,
     defaultStrategy: "hover",
   },
-  // Speculation Rules API : prérend les liens survolés/prefetchés dans les
-  // navigateurs compatibles (sinon fallback vers le prefetch classique) —
-  // navigation quasi instantanée. Sûr pour un site statique (GET only).
   experimental: {
     clientPrerender: true,
   },
