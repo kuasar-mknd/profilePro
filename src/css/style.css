@@ -36,7 +36,6 @@
   --shadow-glass: 0 8px 32px 0 rgb(0 0 0 / 30%);
   --shadow-glow: 0 0 20px rgb(99 102 241 / 50%);
   --shadow-glow-accent: 0 0 20px rgb(244 63 94 / 50%);
-  --aspect-9-16: 9 / 16;
 }
 
 /* Keyframes */
@@ -107,7 +106,6 @@
   header,
   footer,
   .hero-buttons,
-  .hero-carousel,
   #lightbox,
   #back-to-top,
   .group.mode-switch-btn {
@@ -484,23 +482,6 @@
   opacity: 1;
 }
 
-.infinite-scroll {
-  display: flex;
-  width: max-content;
-  animation: scroll-infinite 30s linear infinite;
-  will-change: transform;
-}
-
-@keyframes scroll-infinite {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
 .text-shimmer {
   background: linear-gradient(
     100deg,
@@ -662,10 +643,6 @@
     transform: none;
   }
 
-  .infinite-scroll {
-    animation: none;
-  }
-
   .tilt-card:hover {
     transform: scale(1.02);
   }
@@ -759,10 +736,6 @@
   /* Animation Durations */
   .duration-4s {
     animation-duration: 4s;
-  }
-
-  .duration-120s {
-    animation-duration: 120s;
   }
 
   /* Masks */

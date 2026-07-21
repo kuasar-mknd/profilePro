@@ -18,7 +18,6 @@ interface Window {
   __baseInitHandler?: () => void;
   __heroInitHandler?: () => void;
   __animationObserver?: IntersectionObserver | null;
-  __carouselObserver?: IntersectionObserver | null;
   __animInitHandler?: () => void;
   __lightboxInstance?: { destroy: () => void } | null;
   __lightboxInitHandler?: () => void;
