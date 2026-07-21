@@ -10,7 +10,7 @@
  *   --level : sévérité minimale provoquant un échec (low|moderate|high|critical).
  */
 import fs from "node:fs";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import semver from "semver";
 
 const LEVELS = ["low", "moderate", "high", "critical"];

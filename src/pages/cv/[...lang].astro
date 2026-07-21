@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import ScrollReveal from "../../components/ui/ScrollReveal.astro";
 import { Icon } from "astro-icon/components";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import { sanitizeUrl } from "../../utils/security";
 import { getCvExperiences, getCvEducations } from "../../utils/cv";
 import { limitConcurrency } from "../../utils/async";
