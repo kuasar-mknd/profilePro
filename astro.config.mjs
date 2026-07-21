@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import rehypeExternalLinks from "rehype-external-links";
 import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
@@ -22,8 +23,10 @@ export default defineConfig({
     },
     formats: ["webp"],
   },
-  integrations: [
-    mdx({
+  // Astro 7 : le pipeline remark/rehype passe désormais par un processeur
+  // `unified()` de @astrojs/markdown-remark, dont l'intégration MDX hérite.
+  markdown: {
+    processor: unified({
       rehypePlugins: [
         [
           rehypeExternalLinks,
@@ -42,13 +45,18 @@ export default defineConfig({
         ],
       ],
     }),
-    sitemap(),
-    icon(),
-  ],
+  },
+  integrations: [mdx(), sitemap(), icon()],
   site: "https://portfolio.kuasar.xyz",
+  // Prefetch géré par Astro : tous les liens internes sont préchargés au
+  // survol. Couplé à `clientPrerender`, ils sont prérendus via la Speculation
+  // Rules API (navigateurs compatibles), sinon repli sur un prefetch classique.
   prefetch: {
-    prefetchAll: false,
+    prefetchAll: true,
     defaultStrategy: "hover",
+  },
+  experimental: {
+    clientPrerender: true,
   },
   vite: {
     plugins: [

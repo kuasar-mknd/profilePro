@@ -18,9 +18,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm run dev",
+    // Astro 7's `astro dev` daemonizes in non-TTY contexts (CI, Playwright),
+    // so it can't be used as a foreground webServer. Serve the built site via
+    // `astro preview`, which stays in the foreground.
+    command: "pnpm run build && pnpm run preview",
     url: "http://localhost:4321",
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 240 * 1000,
   },
 });
