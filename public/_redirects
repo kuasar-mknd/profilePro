@@ -1,5 +1,5 @@
 # Redirections 301 : les projets vivaient historiquement à la racine ET sous /project/.
-# La route racine (src/pages/[slug].astro) a été supprimée — on préserve les anciens liens.
+# La route racine (src/pages/[slug].astro) a été supprimée, on préserve les anciens liens.
 /48h-geneve-2024 /project/48h-geneve-2024/ 301
 /48h-geneve-2024/ /project/48h-geneve-2024/ 301
 /48h-geneve-2025 /project/48h-geneve-2025/ 301

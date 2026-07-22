@@ -29,7 +29,7 @@ export async function getStaticPaths() {
 
 const { pillar, projects, counts, totalCount } = Astro.props;
 
-const title = `${pillar.label} — Réalisations`;
+const title = `Réalisations en ${pillar.label.toLowerCase()}`;
 const description = pillar.description;
 ---
 

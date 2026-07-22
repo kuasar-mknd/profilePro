@@ -29,7 +29,7 @@ export const PILLARS: Pillar[] = [
     label: "Développement web",
     categories: ["web"],
     description:
-      "Sites, applications et plateformes — conçus, développés et exploités.",
+      "Sites, applications et plateformes, conçus, développés et exploités.",
   },
   {
     slug: "communication",

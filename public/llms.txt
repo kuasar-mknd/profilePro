@@ -1,4 +1,4 @@
-# Samuel Dulex — Portfolio
+# Samuel Dulex, Portfolio
 
 > Créateur hybride basé à Lausanne, Suisse romande. Trois piliers :
 > création de contenu (vidéo, photographie), développement web
@@ -17,7 +17,7 @@
 ## Services proposés
 
 - Création de contenu : clips, courts-métrages, reportages, photographie de plateau et d'événement
-- Développement web : sites, applications et plateformes — performants, accessibles, sécurisés
+- Développement web : sites, applications et plateformes, performants, accessibles, sécurisés
 - Communication : stratégie, campagnes, relations presse et promotion d'événements
 
 ## Informations de contact
@@ -35,11 +35,11 @@
 
 ## Projets notables
 
-- [La Paternelle](https://portfolio.kuasar.xyz/project/paternelle/): Responsable communication depuis 2019 — 8 000 spectateurs par édition au Théâtre de Beaulieu (Lausanne), édition 2025 à guichets fermés
-- [CHUV — blocs opératoires](https://portfolio.kuasar.xyz/project/chuv-blocs-operatoires/): Travail de bachelor HEIG-VD 2024 — UX research et conception d'une application mobile pour l'installation des équipements biomédicaux
+- [La Paternelle](https://portfolio.kuasar.xyz/project/paternelle/): Responsable communication depuis 2019, 8 000 spectateurs par édition au Théâtre de Beaulieu (Lausanne), édition 2025 à guichets fermés
+- [CHUV, blocs opératoires](https://portfolio.kuasar.xyz/project/chuv-blocs-operatoires/): Travail de bachelor HEIG-VD 2024, UX research et conception d'une application mobile pour l'installation des équipements biomédicaux
 - [Portfolio kuasar.xyz](https://portfolio.kuasar.xyz/project/portfolio-kuasar/): Conception et développement de ce site (Astro, TypeScript, score Lighthouse 100 en performance)
-- [Songe — 48H Genève 2024](https://portfolio.kuasar.xyz/project/48h-geneve-2024/): Prix du Meilleur Film, rôle électro, DIT et photographe de plateau
-- [Après l'averse. — 48H Lausanne 2024](https://portfolio.kuasar.xyz/project/48h-lausanne-2024/): Prix de la Meilleure Image, rôle électro, machiniste et DIT
+- [Songe, 48H Genève 2024](https://portfolio.kuasar.xyz/project/48h-geneve-2024/): Prix du Meilleur Film, rôle électro, DIT et photographe de plateau
+- [Après l'averse., 48H Lausanne 2024](https://portfolio.kuasar.xyz/project/48h-lausanne-2024/): Prix de la Meilleure Image, rôle électro, machiniste et DIT
 - [YouPlantes](https://portfolio.kuasar.xyz/project/youplantes/): Stratégie et conception d'une boutique e-commerce WooCommerce (HEIG-VD)
 
 ## Faits vérifiables

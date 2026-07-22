@@ -83,7 +83,7 @@ export default defineConfig({
           name: "Samuel Dulex | Portfolio",
           short_name: "Samuel Dulex",
           description:
-            "Portfolio de Samuel Dulex — Création de contenu, développement web & communication",
+            "Portfolio de Samuel Dulex : création de contenu, développement web & communication",
           theme_color: "#0f172a",
           background_color: "#0f172a",
           display: "standalone",
