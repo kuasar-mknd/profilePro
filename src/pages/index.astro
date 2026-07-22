@@ -11,7 +11,7 @@ import config from "../config.mjs";
 const allProjects = await getSortedProjects();
 
 // Sélection éditoriale équilibrée entre les piliers (vidéo, photo, web,
-// communication) plutôt que les 7 plus récents — qui étaient presque
+// communication) plutôt que les 7 plus récents, qui étaient presque
 // toujours des projets vidéo.
 const featuredSelection = selectFeaturedBalanced(allProjects, 7);
 
@@ -84,7 +84,7 @@ const jsonLd = {
 
 <Base jsonLd={jsonLd}>
   <main>
-    <Hero projects={allProjects} />
+    <Hero />
     <ServicesPreview />
     {/* ⚡ Bolt: Lazy load below-the-fold images to prioritize Hero LCP */}
     <LatestPosts

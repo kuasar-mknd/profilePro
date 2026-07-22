@@ -15,7 +15,7 @@ interface Props {
   subtitle?: string;
   lazyLoadImages?: boolean;
   allPosts?: CollectionEntry<"project">[];
-  posts?: CollectionEntry<"project">[]; // sélection pré-calculée (ex. featured équilibrés) — court-circuite le tri par date
+  posts?: CollectionEntry<"project">[]; // sélection pré-calculée (ex. featured équilibrés), court-circuite le tri par date
 }
 
 const {

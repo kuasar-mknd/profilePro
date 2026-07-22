@@ -30,7 +30,7 @@ metrics:
 
 import ImageGallery from "../../components/ui/ImageGallery.astro";
 
-Ce site est lui-même un projet de développement web à part entière : je l'ai conçu, développé et je l'exploite en continu. L'objectif était double — présenter mon travail, et démontrer concrètement ma façon de construire un produit web : performant, accessible, sécurisé et industrialisé.
+Ce site est lui-même un projet de développement web à part entière : je l'ai conçu, développé et je l'exploite en continu. L'objectif était double : présenter mon travail, et démontrer concrètement ma façon de construire un produit web : performant, accessible, sécurisé et industrialisé.
 
 ## Architecture & choix techniques
 
@@ -38,7 +38,7 @@ Le site est un **site statique généré (SSG)** avec **Astro 6** : zéro JavaSc
 
 Quelques choix structurants :
 
-- **Contenu en collections typées** : chaque projet est un fichier MDX validé par un schéma (zod) — titres, rôles, catégories et métadonnées SEO sont contrôlés au build.
+- **Contenu en collections typées** : chaque projet est un fichier MDX validé par un schéma (zod) : titres, rôles, catégories et métadonnées SEO sont contrôlés au build.
 - **Pipeline d'images** : conversion et redimensionnement automatiques en AVIF/WebP via Sharp, avec `srcset` responsive généré pour chaque carte et galerie.
 - **PWA** : manifest et service worker (vite-plugin-pwa) pour le mode hors-ligne et l'installation.
 - **Hébergement edge** : déploiement sur **Cloudflare Pages**, formulaire de contact servi par une Pages Function avec validation stricte, honeypot anti-spam et allowlist d'origines.

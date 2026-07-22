@@ -158,7 +158,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     }
 
     <!-- Prérendu via la Speculation Rules API géré par Astro (prefetch +
-         experimental.clientPrerender) — voir astro.config.mjs. -->
+         experimental.clientPrerender), voir astro.config.mjs. -->
     <style is:global>
       /* Manual Font Face Definitions */
       @font-face {
@@ -698,7 +698,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
        * ⚡ Bolt: Global Background Animation Optimizer
        * Pauses infinite CSS animations (.floating, .floating-slow) when elements
        * are off-screen to save GPU memory and CPU cycles.
-       * ⚡ Bolt: Centralized .infinite-scroll (carousel) and .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
+       * ⚡ Bolt: Centralized .hero-gradient-vibrant to reuse a single observer instead of creating multiple instances across components.
        */
       function initAnimationOptimizer() {
         // Disconnect previous observer
@@ -709,7 +709,7 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
 
         // Select all floating elements
         const animatedElements = document.querySelectorAll(
-          ".floating, .floating-slow, .floating-delayed, .infinite-scroll, .hero-gradient-vibrant",
+          ".floating, .floating-slow, .floating-delayed, .hero-gradient-vibrant",
         );
 
         if (animatedElements.length === 0) return;

@@ -5,7 +5,7 @@ type Project = CollectionEntry<"project">;
 /**
  * Sélection éditoriale de la home : retient les projets mis en avant
  * (`featured` > 0) en alternant les piliers (`category`) pour qu'aucun
- * ne domine — le tri par date brute favorisait mécaniquement la vidéo.
+ * ne domine (le tri par date brute favorisait mécaniquement la vidéo).
  *
  * Les piliers sont visités par poids décroissant de leur meilleur projet,
  * un projet par pilier et par tour. Si la sélection est plus courte que

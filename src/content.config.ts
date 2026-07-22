@@ -12,7 +12,7 @@ const authorCollection = defineCollection({
     }),
 });
 
-// Piliers éditoriaux du portfolio — pilotent les filtres, l'équilibre de la
+// Piliers éditoriaux du portfolio : pilotent les filtres, l'équilibre de la
 // home et (à terme) les pages services. Complémentaire de `type` qui ne
 // détermine que le média affiché (player vidéo vs galerie).
 export const PROJECT_CATEGORIES = [
