@@ -214,6 +214,41 @@ import { Icon } from "astro-icon/components";
       </div>
     </div>
 
+    <!-- 🛡️ RGPD / nLPD: Consentement au traitement des données -->
+    <div class="form-group">
+      <label
+        for="consent"
+        class="flex items-start gap-3 text-sm text-pacamara-primary/80 dark:text-white/80 cursor-pointer select-none"
+      >
+        <input
+          type="checkbox"
+          name="consent"
+          id="consent"
+          required
+          aria-required="true"
+          aria-describedby="consent-hint"
+          class="consent-checkbox mt-0.5 h-5 w-5 shrink-0 rounded border-2 border-pacamara-secondary/30 bg-white dark:bg-pacamara-dark accent-pacamara-accent cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-pacamara-dark"
+        />
+        <span>
+          J'accepte que mes données soient traitées pour répondre à ma demande,
+          conformément à la <a
+            href="/politique-de-confidentialite/"
+            class="text-pacamara-accent hover:text-pacamara-secondary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pacamara-accent rounded"
+            >politique de confidentialité</a
+          >.<span class="sr-only"> (obligatoire)</span><span
+            aria-hidden="true"
+            class="text-pacamara-accent"
+          >
+            *</span
+          >
+        </span>
+      </label>
+      <p id="consent-hint" class="sr-only">
+        Vous devez accepter la politique de confidentialité pour envoyer votre
+        message.
+      </p>
+    </div>
+
     <!-- Submit Button -->
     <button
       type="submit"
@@ -403,6 +438,7 @@ import { Icon } from "astro-icon/components";
     private messageInput!: HTMLTextAreaElement;
     private messageCounter!: HTMLElement;
     private messageCounterSr!: HTMLElement;
+    private consentInput!: HTMLInputElement;
 
     private maxMessageLength: number = 5000;
     private resizeRaf: number | null = null;
@@ -450,6 +486,9 @@ import { Icon } from "astro-icon/components";
       this.messageCounterSr = document.getElementById(
         "message-counter-sr",
       ) as HTMLElement;
+      this.consentInput = this.form.querySelector(
+        'input[name="consent"]',
+      ) as HTMLInputElement;
 
       if (this.messageInput && this.messageCounter) {
         const maxLength = this.messageInput.getAttribute("maxlength") || "5000";
@@ -524,7 +563,8 @@ import { Icon } from "astro-icon/components";
       if (
         this.nameInput?.value.trim().length >= 2 &&
         isValidEmail(this.emailInput?.value || "") &&
-        this.messageInput?.value.trim().length >= 10
+        this.messageInput?.value.trim().length >= 10 &&
+        (!this.consentInput || this.consentInput.checked)
       ) {
         this.errorMessage?.classList.add("hidden");
       }
@@ -631,6 +671,15 @@ import { Icon } from "astro-icon/components";
             currentDesc.replace("form-error-message", "").trim(),
           );
         }
+        if (this.consentInput) {
+          this.consentInput.removeAttribute("aria-invalid");
+          const currentDesc =
+            this.consentInput.getAttribute("aria-describedby") || "";
+          this.consentInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
+        }
         (this.form.querySelector("input") as HTMLInputElement)?.focus();
       });
 
@@ -683,6 +732,22 @@ import { Icon } from "astro-icon/components";
           const currentDesc =
             this.emailInput.getAttribute("aria-describedby") || "";
           this.emailInput.setAttribute(
+            "aria-describedby",
+            currentDesc.replace("form-error-message", "").trim(),
+          );
+          this.hideErrorIfFormIsValid();
+        }
+      });
+
+      this.consentInput?.addEventListener("change", () => {
+        if (
+          this.consentInput.checked &&
+          this.consentInput.hasAttribute("aria-invalid")
+        ) {
+          this.consentInput.removeAttribute("aria-invalid");
+          const currentDesc =
+            this.consentInput.getAttribute("aria-describedby") || "";
+          this.consentInput.setAttribute(
             "aria-describedby",
             currentDesc.replace("form-error-message", "").trim(),
           );
@@ -759,6 +824,25 @@ import { Icon } from "astro-icon/components";
           this.showError(
             "Veuillez entrer un message d'au moins 10 caractères.",
             this.messageInput,
+          );
+          return;
+        }
+
+        if (this.consentInput && !this.consentInput.checked) {
+          this.consentInput.setAttribute("aria-invalid", "true");
+          const currentDesc =
+            this.consentInput.getAttribute("aria-describedby") || "";
+          if (!currentDesc.includes("form-error-message")) {
+            this.consentInput.setAttribute(
+              "aria-describedby",
+              currentDesc
+                ? `${currentDesc} form-error-message`
+                : "form-error-message",
+            );
+          }
+          this.showError(
+            "Veuillez accepter la politique de confidentialité pour envoyer votre message.",
+            this.consentInput,
           );
           return;
         }

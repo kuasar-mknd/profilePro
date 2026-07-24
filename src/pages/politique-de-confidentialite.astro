@@ -1,0 +1,154 @@
+---
+import Base from "../layouts/Base.astro";
+import config from "../config.mjs";
+
+const title = "Politique de confidentialité";
+const description =
+  "Comment sont collectées, utilisées et protégées vos données lorsque vous me contactez via ce site. Responsable, finalités, sous-traitants, durée de conservation et vos droits.";
+
+// Dernière révision de cette politique (à mettre à jour en cas de changement réel).
+const lastUpdated = "Juillet 2026";
+---
+
+<Base postData={{ data: { title, description } }}>
+  <section class="container mx-auto max-w-3xl px-7 pt-16 pb-20">
+    <header class="mb-10">
+      <h1
+        class="font-pacamara-space font-bold text-4xl md:text-5xl mb-4 text-pacamara-dark dark:text-white"
+      >
+        Politique de confidentialité
+      </h1>
+      <p
+        class="text-sm text-pacamara-primary/60 dark:text-white/60 font-outfit"
+      >
+        Dernière mise à jour : {lastUpdated}
+      </p>
+    </header>
+
+    <article
+      class="prose max-w-none
+        prose-headings:font-pacamara-space prose-headings:font-bold prose-headings:text-pacamara-dark dark:prose-headings:text-white
+        prose-p:text-pacamara-primary/80 dark:prose-p:text-white/80 prose-p:font-outfit prose-p:leading-relaxed
+        prose-li:text-pacamara-primary/80 dark:prose-li:text-white/80 prose-li:font-outfit
+        prose-strong:text-pacamara-dark dark:prose-strong:text-white
+        prose-a:text-pacamara-accent hover:prose-a:text-pacamara-secondary prose-a:transition-colors"
+    >
+      <p>
+        Cette politique explique quelles données personnelles je collecte
+        lorsque vous utilisez ce site, en particulier son formulaire de contact,
+        pourquoi je les traite, avec qui elles sont partagées et quels sont vos
+        droits. Elle s'applique dans le respect de la Loi fédérale suisse sur la
+        protection des données (nLPD) et, pour les personnes concernées dans
+        l'Union européenne, du Règlement général sur la protection des données
+        (RGPD).
+      </p>
+
+      <h2>Responsable du traitement</h2>
+      <p>
+        Le responsable du traitement de vos données est <strong
+          >Samuel Dulex</strong
+        >, basé à Lausanne ({config.postalCode}), Suisse. Pour toute question
+        relative à vos données, vous pouvez me contacter à l'adresse{" "}
+        <a href={`mailto:${config.email}`}>{config.email}</a>.
+      </p>
+
+      <h2>Quelles données je collecte</h2>
+      <p>
+        Je ne collecte que les données que vous me transmettez volontairement
+        via le <strong>formulaire de contact</strong> :
+      </p>
+      <ul>
+        <li><strong>votre nom</strong> ;</li>
+        <li><strong>votre adresse e-mail</strong> ;</li>
+        <li><strong>le contenu de votre message</strong>.</li>
+      </ul>
+      <p>
+        Lors de l'envoi, mon prestataire de formulaire (voir plus bas) peut
+        aussi enregistrer des <strong>métadonnées techniques</strong> telles que votre
+        adresse IP, l'horodatage de l'envoi et la page d'origine, à des fins de sécurité
+        et de lutte contre le spam.
+      </p>
+
+      <h2>Pourquoi je traite ces données</h2>
+      <p>Vos données servent uniquement à :</p>
+      <ul>
+        <li>
+          <strong>répondre à votre demande</strong> et échanger avec vous à son sujet
+          ;
+        </li>
+        <li>
+          <strong>prévenir les abus</strong> (spam, envois automatisés) et assurer
+          la sécurité du site.
+        </li>
+      </ul>
+      <p>
+        La base légale de ce traitement est votre <strong>consentement</strong>
+        (la case que vous cochez avant l'envoi) ainsi que mon <strong
+          >intérêt légitime</strong
+        > à répondre aux personnes qui me sollicitent. Je n'utilise jamais ces données
+        pour de la prospection non sollicitée et je ne les revends pas.
+      </p>
+
+      <h2>Sous-traitant et transfert de données</h2>
+      <p>
+        L'acheminement des messages du formulaire est assuré par <strong
+          >Web3Forms</strong
+        > (exploité par Web3Creative), qui agit comme sous-traitant : il reçoit, valide,
+        stocke temporairement et me transmet vos soumissions par e-mail. Ce traitement
+        est encadré par un <strong>contrat de sous-traitance (DPA)</strong>.
+      </p>
+      <p>
+        Web3Forms opère depuis l'Inde et vos données peuvent donc être <strong
+          >transférées et traitées hors de Suisse et de l'Union européenne</strong
+        >. Ce transfert est encadré par les <strong
+          >Clauses Contractuelles Types</strong
+        > (Standard Contractual Clauses) prévues à cet effet, qui garantissent un
+        niveau de protection approprié.
+      </p>
+
+      <h2>Hébergement et mesure d'audience</h2>
+      <p>
+        Le site est hébergé sur <strong>Cloudflare Pages</strong>. La
+        fréquentation est mesurée avec <strong>Cloudflare Web Analytics</strong
+        >, un outil respectueux de la vie privée qui <strong
+          >n'utilise pas de cookies</strong
+        > et ne cherche pas à vous identifier ni à vous suivre entre les sites. Ce
+        site n'utilise donc pas de cookies publicitaires ni de traceurs tiers.
+      </p>
+
+      <h2>Durée de conservation</h2>
+      <p>
+        Je conserve le contenu de nos échanges le temps nécessaire au traitement
+        de votre demande et à un éventuel suivi. Côté prestataire, les
+        soumissions stockées par Web3Forms ont une durée de vie maximale de
+        <strong>trois ans</strong>, après quoi elles sont supprimées.
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>
+        Conformément à la nLPD et au RGPD, vous disposez d'un droit d'<strong
+          >accès</strong
+        >, de <strong>rectification</strong>, d'<strong>effacement</strong>, de
+        <strong>limitation</strong> et d'<strong>opposition</strong> au traitement
+        de vos données, ainsi que d'un droit à la <strong>portabilité</strong>.
+        Vous pouvez à tout moment retirer votre consentement.
+      </p>
+      <p>
+        Pour exercer ces droits, écrivez-moi à <a
+          href={`mailto:${config.email}`}>{config.email}</a
+        >. Vous avez également le droit d'introduire une réclamation auprès
+        d'une autorité de contrôle : le <strong
+          >Préposé fédéral à la protection des données et à la transparence
+          (PFPDT)</strong
+        > en Suisse, ou l'autorité compétente de votre pays au sein de l'Union européenne.
+      </p>
+
+      <h2>Modifications</h2>
+      <p>
+        Cette politique peut être mise à jour pour refléter des évolutions du
+        site ou de la réglementation. La date de dernière mise à jour est
+        indiquée en haut de cette page.
+      </p>
+    </article>
+  </section>
+</Base>
