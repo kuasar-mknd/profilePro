@@ -22,10 +22,10 @@ skills:
 metrics:
   - label: "Performance Lighthouse"
     value: "100/100"
-  - label: "Vulnérabilités (pnpm audit)"
+  - label: "Vulnérabilités (bun audit)"
     value: "0"
   - label: "Pages statiques générées"
-    value: "31"
+    value: "33"
 ---
 
 import ImageGallery from "../../components/ui/ImageGallery.astro";
@@ -34,7 +34,7 @@ Ce site est lui-même un projet de développement web à part entière : je l'ai
 
 ## Architecture & choix techniques
 
-Le site est un **site statique généré (SSG)** avec **Astro 6** : zéro JavaScript superflu côté client, HTML pré-rendu au build, transitions de pages natives (View Transitions API). Le style repose sur **Tailwind CSS 4** avec un design system à thèmes clair/sombre, et l'ensemble est écrit en **TypeScript**.
+Le site est un **site statique généré (SSG)** avec **Astro 7** : zéro JavaScript superflu côté client, HTML pré-rendu au build, transitions de pages natives (View Transitions API). Le style repose sur **Tailwind CSS 4** avec un design system à thèmes clair/sombre, et l'ensemble est écrit en **TypeScript**.
 
 Quelques choix structurants :
 
@@ -49,7 +49,7 @@ Chaque commit passe par un pipeline **GitHub Actions** complet avant d'atteindre
 
 1. **Vérifications statiques** : Prettier, ESLint, Stylelint et typecheck Astro.
 2. **Tests** : suite unitaire (bun test) sur les utilitaires et la fonction de contact, tests end-to-end **Playwright** sur le site construit.
-3. **Sécurité** : analyse **CodeQL**, revue automatique des dépendances, audit pnpm sans vulnérabilité connue, en-têtes durcis et **CSP stricte générée au build** (hashes calculés sur chaque script et style inline).
+3. **Sécurité** : analyse **CodeQL**, revue automatique des dépendances, audit bun sans vulnérabilité connue, en-têtes durcis et **CSP stricte générée au build** (hashes calculés sur chaque script et style inline).
 4. **Déploiement** : build et publication via Wrangler, suivi d'un smoke test qui vérifie que l'API de contact répond réellement en production.
 
 L'accessibilité est traitée comme une exigence de base : navigation clavier complète avec raccourcis, attributs ARIA, respect de `prefers-reduced-motion`, contrastes et textes alternatifs vérifiés par Lighthouse CI à chaque déploiement.

@@ -20,6 +20,7 @@ stats.html
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+bun.lock
 
 # Cache
 .eslintcache

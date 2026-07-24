@@ -9,13 +9,13 @@ Unit tests are written using `bun:test` and `@happy-dom/global-registrator` for 
 To run the unit tests:
 
 ```bash
-pnpm run test
+bun run test
 ```
 
 To run tests with coverage reporting:
 
 ```bash
-pnpm run test --coverage
+bun run test --coverage
 ```
 
 ## Quality Checks
@@ -24,15 +24,15 @@ Before committing code, ensure all static analysis and code formatting rules are
 
 - Format code (Prettier):
   ```bash
-  pnpm format
+  bun run format
   ```
 - Lint code (ESLint & Stylelint):
   ```bash
-  pnpm lint
+  bun run lint
   ```
 - Typecheck and Verify everything:
   ```bash
-  pnpm run check
+  bun run check
   ```
 
 ## End-to-End (E2E) Testing
@@ -43,11 +43,11 @@ To run the E2E tests:
 
 1.  Ensure you have the required browsers installed (first-time setup only):
     ```bash
-    npx playwright install --with-deps
+    bunx playwright install --with-deps
     ```
 2.  Run the tests using the script defined in `package.json`:
     ```bash
-    pnpm run test:e2e
+    bun run test:e2e
     ```
 
-_Note: The development server is generally expected to be running for local E2E testing unless the Playwright configuration handles starting it automatically._
+_Note: The Playwright configuration builds and serves the site automatically (`bun run build && bun run preview`), so no separate dev server is required._

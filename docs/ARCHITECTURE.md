@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-> **Note:** This project is a statically generated site (SSG) built with **Astro 6**.
+> **Note:** This project is a statically generated site (SSG) built with **Astro 7**.
 
 ## 🏗 High-Level Architecture
 
@@ -29,10 +29,10 @@ _Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the futur
 
 ### 3. Key Technologies
 
-- **Astro 6**: Core framework.
+- **Astro 7**: Core framework.
 - **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **npm**: Package Manager.
-- **Node.js**: Runtime.
+- **Bun**: Package manager, script runner, and unit-test runner.
+- **Node.js 22+**: Runtime for `sharp` image optimization and build scripts.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
 
@@ -100,13 +100,13 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 
 Workflows are defined in `.github/workflows/`:
 
-1.  **CI (`ci.yml`)**:
+1.  **CI (`pipeline.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20.
-    - Installs dependencies (`pnpm install`).
-    - Runs `pnpm run check` (Lint + Types + Format).
-    - Runs `pnpm run test:e2e` (Playwright).
-    - Builds the site `pnpm run build`.
+    - Sets up Bun.
+    - Installs dependencies (`bun install --frozen-lockfile`).
+    - Runs `bun run check` (Lint + Types + Format).
+    - Runs `bun run test:e2e` (Playwright).
+    - Builds the site `bun run build`.
 
 2.  **Security**:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
@@ -122,6 +122,7 @@ Workflows are defined in `.github/workflows/`:
 - **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
 - **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
 - **Content Collections**: Type-safe content management for Markdown/MDX.
+
 <!-- Verified: DocOps 2026-04-17 -->
 
 ### Hono + Prisma Integration (Hypothetical)
