@@ -84,13 +84,14 @@ const embedId = provider === "vimeo" && hash ? `${videoId}?h=${hash}` : videoId;
           id={`poster-${videoId}`}
         >
           {/* ⚡ Bolt: Using <img> tag instead of background-image for better LCP/loading performance */}
+          {/* ⚡ Mobile Perf: Changed to eager loading for faster perceived performance */}
           <img
             src={posterUrl}
             alt={`Aperçu de ${videoTitle}`}
             class="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
+            loading="eager"
             decoding="async"
-            fetchpriority="low"
+            fetchpriority="auto"
             width="1280"
             height="720"
           />

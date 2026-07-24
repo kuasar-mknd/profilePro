@@ -755,3 +755,22 @@
     will-change: auto !important;
   }
 }
+
+/* ⚡ Mobile Performance: Remove animation delays on mobile to improve perceived speed */
+@media (width <= 768px) {
+  .delay-200,
+  .delay-300,
+  .delay-400,
+  .delay-500,
+  .delay-600,
+  .delay-800,
+  .delay-1000 {
+    animation-delay: 0ms !important;
+  }
+
+  /* Faster View Transitions on mobile */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 150ms !important;
+  }
+}
