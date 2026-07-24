@@ -33,37 +33,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install
-        env:
-          HUSKY: 0
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          HUSKY: 0
+
       - name: Run Unit Tests
-        run: pnpm run test
+        run: bun run test
 
       - name: Verify Code (Lint + Format + Types)
-        run: pnpm run check
+        run: bun run check
 
       - name: Get Playwright version
         id: playwright-version
         run: |
-          PLAYWRIGHT_VERSION=$(pnpm list --depth 0 @playwright/test --json | jq -r '.[0].devDependencies["@playwright/test"].version')
+          PLAYWRIGHT_VERSION=$(bun pm ls @playwright/test 2>/dev/null | grep -oP '@playwright/test@\K[0-9.]+' || echo "latest")
           echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Cache Playwright browsers
@@ -77,13 +66,13 @@ jobs:
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: bunx playwright install --with-deps
 
       - name: Run E2E Tests
-        run: pnpm run test:e2e
+        run: bun run test:e2e
 
       - name: Build Check (Dry Run)
-        run: pnpm run build
+        run: bun run build
         env:
           WEB3FORMS_ACCESS_KEY: "dry_run"
           PUBLIC_CF_ANALYTICS_TOKEN: "dry_run"
@@ -106,29 +95,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install
-        env:
-          HUSKY: 0
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+        env:
+          HUSKY: 0
+
       - name: Run Unit Tests
-        run: pnpm run test
+        run: bun run test
 
       - name: Cache Astro Generated Images
         uses: actions/cache@v6
@@ -139,7 +117,7 @@ jobs:
             ${{ runner.os }}-astro-images-
 
       - name: Build Astro
-        run: pnpm run build
+        run: bun run build
         env:
           WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY }}
           PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.PUBLIC_CF_ANALYTICS_TOKEN }}
