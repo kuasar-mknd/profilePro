@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-> **Note:** This project is a statically generated site (SSG) built with **Astro 6**.
+> **Note:** This project is a statically generated site (SSG) built with **Astro 7**.
 
 ## 🏗 High-Level Architecture
 
@@ -29,10 +29,10 @@ _Note: If a dynamic backend (like Hono + Prisma) is ever introduced in the futur
 
 ### 3. Key Technologies
 
-- **Astro 6**: Core framework.
+- **Astro 7**: Core framework.
 - **Tailwind CSS 4**: Styling engine (via Vite plugin).
-- **npm**: Package Manager.
-- **Node.js**: Runtime.
+- **Bun**: Package manager, script runner, and unit-test runner.
+- **Node.js 22+**: Runtime for `sharp` image optimization and build scripts.
 - **Playwright**: E2E Testing.
 - **Plyr**: Video player abstraction.
 
