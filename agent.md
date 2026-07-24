@@ -6,10 +6,10 @@ Portfolio website for Samuel Dulex, focusing on video content creation and photo
 
 ## Tech Stack
 
-- **Core Framework**: Astro v6 (static SSG, no UI framework — .astro components only)
+- **Core Framework**: Astro v7 (static SSG, no UI framework — .astro components only)
 - **Styling**: Tailwind CSS v4
 - **Language**: TypeScript & JavaScript (ESM)
-- **Package Manager**: pnpm (unit tests run with `bun test`)
+- **Package Manager & Runtime**: Bun (install, scripts, and unit tests all run with Bun)
 
 ## Project Structure
 
@@ -25,12 +25,14 @@ Portfolio website for Samuel Dulex, focusing on video content creation and photo
 
 ## Key Commands
 
-- **Start Dev Server**: `pnpm run dev`
-- **Build**: `pnpm run build`
-- **Lint**: `pnpm run lint`
-- **Check**: `pnpm run check` (Format + Lint + Typecheck)
-- **Unit Tests**: `pnpm run test` (bun test)
-- **E2E Tests**: `pnpm run test:e2e` (Playwright, dev server must be running)
+- **Install**: `bun install`
+- **Start Dev Server**: `bun run dev`
+- **Build**: `bun run build`
+- **Lint**: `bun run lint`
+- **Check**: `bun run check` (Format + Lint + Typecheck)
+- **Unit Tests**: `bun run test` (bun test)
+- **E2E Tests**: `bun run test:e2e` (Playwright builds and previews the site itself)
+- **Security Audit**: `bun run audit` (`bun audit --audit-level=high`)
 
 ## Conventions
 

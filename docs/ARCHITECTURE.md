@@ -100,13 +100,13 @@ This project implements a custom, high-performance asset pipeline to ensure top-
 
 Workflows are defined in `.github/workflows/`:
 
-1.  **CI (`ci.yml`)**:
+1.  **CI (`pipeline.yml`)**:
     - Triggers on Push & PR.
-    - Sets up Node 20.
-    - Installs dependencies (`pnpm install`).
-    - Runs `pnpm run check` (Lint + Types + Format).
-    - Runs `pnpm run test:e2e` (Playwright).
-    - Builds the site `pnpm run build`.
+    - Sets up Bun.
+    - Installs dependencies (`bun install --frozen-lockfile`).
+    - Runs `bun run check` (Lint + Types + Format).
+    - Runs `bun run test:e2e` (Playwright).
+    - Builds the site `bun run build`.
 
 2.  **Security**:
     - **CodeQL**: Scans JS/TS for vulnerabilities.
@@ -122,6 +122,7 @@ Workflows are defined in `.github/workflows/`:
 - **Islands Architecture**: Keeps the site fast by stripping most JavaScript from the page, only hydrating interactive "islands".
 - **View Transitions**: Astro's `<ClientRouter />` enables SPA-like navigation while keeping the multi-page architecture.
 - **Content Collections**: Type-safe content management for Markdown/MDX.
+
 <!-- Verified: DocOps 2026-04-17 -->
 
 ### Hono + Prisma Integration (Hypothetical)

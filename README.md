@@ -10,10 +10,10 @@
 
 <!-- Tech Stack -->
 
-[![Built with Astro](https://img.shields.io/badge/Astro-6.1.9-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-10%2B-000000?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io)
+[![Built with Astro](https://img.shields.io/badge/Astro-7.1-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.3-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Bun-1.3%2B-000000?style=flat&logo=bun&logoColor=white)](https://bun.sh)
 [![MDX](https://img.shields.io/badge/MDX-Enabled-1B1F24?style=flat&logo=mdx&logoColor=white)](https://mdxjs.com/)
 
 <!-- Code Quality -->
@@ -42,16 +42,16 @@ Si vous rencontrez des problèmes lors de l'installation ou du lancement :
     - Si l'erreur persiste :
       ```bash
       rm -rf node_modules
-      pnpm install
+      bun install
       ```
-2.  **Erreur `pnpm run` introuvable** :
-    - Installez pnpm : `corepack enable pnpm` (ou `npm install -g pnpm`).
+2.  **Erreur `bun` introuvable** :
+    - Installez Bun : `curl -fsSL https://bun.sh/install | bash` (voir [bun.sh](https://bun.sh)).
 3.  **Problèmes d'environnement** :
     - Vérifiez que `.env` existe (copié depuis `.env.example`).
     - Les variables `WEB3FORMS_ACCESS_KEY` et `PUBLIC_CF_ANALYTICS_TOKEN` sont nécessaires (peuvent être "mock" pour le dev).
 4.  **Tests Playwright** :
-    - Si `pnpm run test:e2e` échoue, lancez `npx playwright install --with-deps` pour installer les navigateurs.
-    - Le serveur de dev n'est **pas** lancé automatiquement par les tests. Lancez `pnpm run dev` dans un autre terminal avant les tests.
+    - Si `bun run test:e2e` échoue, lancez `bunx playwright install --with-deps` pour installer les navigateurs.
+    - Les tests E2E construisent et servent le site automatiquement (`bun run build && bun run preview`) ; aucun serveur de dev n'a besoin d'être lancé au préalable.
 5.  **Build failed (assets)** :
     - Vérifiez que toutes les images référencées dans `src/content/project/*.mdx` existent réellement.
 
@@ -73,7 +73,7 @@ _(Note: This project is implemented purely as a static Astro SSG architecture wi
 - **Architecture responsive** optimisée (Mobile First)
 - **Animations modernes** avec View Transition API & ScrollReveal
 - **Cartes Projets 3D** avec effet Tilt et glare subtil
-- **Carousel d'accueil** intelligent
+- **Grille bento** éditoriale de projets sélectionnés, équilibrée par pilier
 - **Lecteur vidéo intégré** avec streaming optimisé
 
 ### 🚀 Performance & SEO
@@ -99,7 +99,7 @@ Une documentation détaillée est disponible dans le dossier `docs/` :
 ### Prérequis
 
 - Node.js 22+ (Requis pour l'optimisation des images via `sharp`)
-- pnpm 10 (Gestionnaire de paquets utilisé par les scripts et la CI)
+- Bun 1.3+ (Gestionnaire de paquets et runtime utilisé par les scripts, les tests et la CI)
 
 ### Installation
 
@@ -109,29 +109,29 @@ git clone https://github.com/kuasar-mknd/profilePro.git
 cd profilePro
 
 # Installer les dépendances
-pnpm install
+bun install
 
 # Configurer l'environnement
 cp .env.example .env
 
 # Installer les navigateurs pour les tests E2E
-npx playwright install --with-deps
+bunx playwright install --with-deps
 
 # Lancer le serveur de développement
-# Note: Cela lance d'abord l'optimisation des images ('pnpm run images')
-pnpm run dev
+bun run dev
 ```
 
 Le site sera accessible sur `http://localhost:4321`.
 
 ### Scripts disponibles
 
-- `pnpm run dev` : Optimise les images et lance le serveur de développement.
-- `pnpm run build` : Génère le build de production (avec optimisation d'images et génération CSP).
-- `pnpm run check` : Vérifie le code (linting + formatage + types).
-- `pnpm run lighthouse` : Lance l'audit de performance.
-- `pnpm run test:e2e` : Lance les tests end-to-end avec Playwright.
-  - `pnpm run test` : Lance les tests unitaires avec Bun.
+- `bun run dev` : Lance le serveur de développement.
+- `bun run build` : Génère le build de production (optimisation d'images + génération CSP).
+- `bun run check` : Vérifie le code (linting + formatage + types).
+- `bun run audit` : Audit de sécurité des dépendances (`bun audit --audit-level=high`).
+- `bun run lighthouse` : Lance l'audit de performance.
+- `bun run test:e2e` : Lance les tests end-to-end avec Playwright.
+- `bun run test` : Lance les tests unitaires avec Bun.
 
 ### API Access (Main Endpoints)
 
