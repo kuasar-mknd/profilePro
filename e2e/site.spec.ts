@@ -63,6 +63,50 @@ test.describe("Samuel Dulex Portfolio - E2E Tests", () => {
     await expect(page.locator("#name")).toHaveAttribute("aria-invalid", "true");
   });
 
+  test("contact form requires consent before submitting", async ({ page }) => {
+    await page.goto("/about/");
+
+    const contactForm = page.locator("#contact-form");
+    await contactForm.scrollIntoViewIfNeeded();
+
+    // Fill all fields but leave the consent checkbox unchecked.
+    await page.locator("#name").fill("Jean Test");
+    await page.locator("#email").fill("jean@example.com");
+    await page
+      .locator("#message")
+      .fill("Bonjour, ceci est un message de test suffisamment long.");
+
+    await contactForm.locator('button[type="submit"]').click();
+
+    // Submission is blocked and the consent field is flagged invalid.
+    await expect(page.locator("#form-error-message")).toBeVisible();
+    await expect(page.locator("#consent")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+
+    // Checking the box clears the invalid state.
+    await page.locator("#consent").check();
+    await expect(page.locator("#consent")).not.toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  });
+
+  test("privacy policy page loads", async ({ page }) => {
+    await page.goto("/politique-de-confidentialite/");
+    await expect(page.locator("main h1").first()).toContainText(
+      /Politique de confidentialité/i,
+    );
+    // The contact form links to this page.
+    await page.goto("/about/");
+    await expect(
+      page
+        .locator("#contact-form")
+        .getByRole("link", { name: /politique de confidentialité/i }),
+    ).toHaveAttribute("href", "/politique-de-confidentialite/");
+  });
+
   test("theme toggle should work", async ({ page }) => {
     await page.goto("/");
 
