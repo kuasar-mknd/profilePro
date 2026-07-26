@@ -15,6 +15,10 @@ on:
       - ".gitignore"
       - ".editorconfig"
       - "LICENSE"
+  # Permet de relancer un déploiement à la main quand aucun push n'a été
+  # émis sur master (typiquement après un merge automatique signé par
+  # GITHUB_TOKEN, qui ne déclenche aucun workflow).
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -88,7 +92,9 @@ jobs:
   deploy:
     name: Build & Deploy
     needs: [test]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: |
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+      && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
