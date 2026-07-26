@@ -25,7 +25,12 @@ jobs:
       - name: Enable auto-merge
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          # Un merge déclenché avec GITHUB_TOKEN ne déclenche aucun workflow
+          # (garde-fou anti-récursion de GitHub) : le push sur master passe
+          # inaperçu et le déploiement Cloudflare n'a jamais lieu. Renseigner
+          # le secret AUTOMERGE_TOKEN (PAT avec le scope contents:write) pour
+          # que le merge automatique déclenche bien Pipeline.
+          GH_TOKEN: ${{secrets.AUTOMERGE_TOKEN || secrets.GITHUB_TOKEN}}
         run: |
           for i in {1..3}; do
             gh pr merge --auto --squash "$PR_URL" && break || {
