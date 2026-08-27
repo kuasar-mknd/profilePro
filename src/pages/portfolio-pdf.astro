@@ -25,7 +25,7 @@ interface PdfConfig {
   edition: string;
   cover: string;
   intro: string;
-  imageFocus?: Record<string, "left" | "right" | "top">;
+  imageFocus?: Record<string, "left" | "right" | "top" | "contain" | "plain">;
   tools: string[];
   sections: PdfSectionConfig[];
 }
@@ -104,20 +104,36 @@ const educations = (await getCvEducations())
   .sort((a, b) => a.data.order - b.data.order);
 
 // Images optimisées (concurrence bornée : mêmes précautions que le build).
-// Format JPEG : Chromium embarque les flux JPEG tels quels dans le PDF, alors
-// que les WebP y sont ré-encodés en bitmaps beaucoup plus lourds.
-async function imagesById(entries: Project[], width: number, quality: number) {
+// Les photos passent en JPEG : Chromium embarque les flux JPEG tels quels
+// dans le PDF, alors que les WebP y sont ré-encodés en bitmaps beaucoup plus
+// lourds. Les captures d'interface passent en PNG sans perte : le chroma
+// 4:2:0 du JPEG fait baver les aplats et les éléments colorés des UI.
+const imageFocus = pdfConfig.imageFocus ?? {};
+const isContain = (p: Project) =>
+  imageFocus[p.id] === "contain" || imageFocus[p.id] === "plain";
+const isUiThumb = (p: Project) => isContain(p) || p.data.category === "web";
+
+async function imagesById(
+  entries: Project[],
+  width: number,
+  quality: number,
+  pngWhen: (p: Project) => boolean,
+) {
   const images = await limitConcurrency(entries, 2, async (p) =>
     p.data.image
-      ? getImage({ src: p.data.image, width, format: "jpg", quality })
+      ? getImage(
+          pngWhen(p)
+            ? { src: p.data.image, width, format: "png" }
+            : { src: p.data.image, width, format: "jpg", quality },
+        )
       : null,
   );
   return new Map(entries.map((p, i) => [p.id, images[i]]));
 }
 
-const coverById = await imagesById(featured, 1200, 74);
-const thumbById = await imagesById(featured, 300, 68);
-const otherThumbById = await imagesById(others, 460, 68);
+const coverById = await imagesById(featured, 1200, 74, isContain);
+const thumbById = await imagesById(featured, 300, 68, isUiThumb);
+const otherThumbById = await imagesById(others, 460, 68, isUiThumb);
 const coverEntry = projectsById.get(pdfConfig.cover);
 if (!coverEntry)
   throw new Error(
@@ -234,7 +250,6 @@ const sommaireSections = [
   { label: "Contact", page: pageContact, anchor: "#contact" },
 ];
 
-const imageFocus = pdfConfig.imageFocus ?? {};
 const personal = cvBasics.personal;
 const pageTitle = "Portfolio PDF — Samuel Dulex";
 ---
@@ -495,6 +510,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
             const link = linkById.get(p.id) ?? null;
             const cover = coverById.get(p.id);
             const qr = qrById.get(p.id);
+            const focus = imageFocus[p.id];
             return (
               <section
                 class="sheet projet"
@@ -573,13 +589,23 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
                     </a>
                   </div>
                 </div>
-                <div class="projet-media">
+                <div
+                  class:list={[
+                    "projet-media",
+                    (focus === "contain" || focus === "plain") &&
+                      "media-contain",
+                    focus === "plain" && "media-plain",
+                  ]}
+                >
                   {cover && (
                     <img
                       src={cover.src}
                       alt=""
                       class:list={[
-                        imageFocus[p.id] && `focus-${imageFocus[p.id]}`,
+                        focus &&
+                          focus !== "contain" &&
+                          focus !== "plain" &&
+                          `focus-${focus}`,
                       ]}
                     />
                   )}
@@ -1601,6 +1627,32 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .projet-media img.focus-top {
     object-position: center top;
+  }
+
+  /* Captures d'interface : montrées entières sur fond doux, jamais coupées. */
+  .projet-media.media-contain {
+    background: #eef0f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9mm 9mm 24mm;
+  }
+
+  .projet-media.media-contain img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 1.5mm 3mm rgb(15 23 42 / 22%));
+  }
+
+  /* Visuels à fond blanc : zone média blanche, sans cadre ni ombre, pour que
+     la capture se fonde dans la page au lieu de flotter dans un rectangle. */
+  .projet-media.media-plain {
+    background: #fff;
+  }
+
+  .projet-media.media-plain img {
+    filter: none;
   }
 
   .qr-projet {

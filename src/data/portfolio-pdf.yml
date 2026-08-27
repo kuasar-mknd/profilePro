@@ -8,9 +8,14 @@ edition: "Édition 2026"
 cover: paternelle
 
 # Cadrage des images en pleine page quand le recadrage automatique (centré)
-# coupe mal : left | right | top (partie de l'image à privilégier).
+# coupe mal : left | right | top (partie de l'image à privilégier),
+# contain (capture d'interface montrée entière sur fond doux, jamais coupée)
+# ou plain (capture entière sur fond blanc, sans cadre ni ombre — pour les
+# visuels dont le fond est lui-même blanc).
 imageFocus:
-  musees-pully: left
+  chuv-blocs-operatoires: plain
+  visualdon-projet: contain
+  musees-pully: contain
 
 intro: >-
   Deux fils conducteurs traversent ce dossier : concevoir des expériences
