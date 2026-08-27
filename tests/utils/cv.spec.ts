@@ -84,8 +84,11 @@ describe("cv utils", () => {
     });
 
     it("should use cache in PROD mode", async () => {
+      // `import.meta.env` est adossé à `process.env` (bun >= 1.4) : assigner
+      // `false` y stocke la chaîne "false", qui est truthy. On supprime la clé
+      // pour obtenir une valeur falsy dans toutes les versions de bun.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (import.meta.env as any).DEV = false;
+      delete (import.meta.env as any).DEV;
 
       // In production mode, since it caches the promise across the entire module lifecycle,
       // it might have been cached in a previous test run.
@@ -128,8 +131,11 @@ describe("cv utils", () => {
     });
 
     it("should use cache in PROD mode", async () => {
+      // `import.meta.env` est adossé à `process.env` (bun >= 1.4) : assigner
+      // `false` y stocke la chaîne "false", qui est truthy. On supprime la clé
+      // pour obtenir une valeur falsy dans toutes les versions de bun.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (import.meta.env as any).DEV = false;
+      delete (import.meta.env as any).DEV;
 
       const firstCall = await getCvEducations();
       const secondCall = await getCvEducations();
