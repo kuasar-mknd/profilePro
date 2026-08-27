@@ -1,5 +1,7 @@
 # build output
 dist/
+# export PDF du portfolio (bun run pdf)
+portfolio-samuel-dulex.pdf
 # generated types
 .astro/
 .frontmatter/

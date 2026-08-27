@@ -1,0 +1,107 @@
+# Configuration de l'export PDF du portfolio (`bun run pdf`).
+# La page /portfolio-pdf/ (noindex, hors sitemap) est mise en page pour
+# l'impression A4 paysage puis convertie en PDF interactif par
+# scripts/generate-portfolio-pdf.mjs.
+subtitle: "Design d'expériences interactives · Réalisation multimédia · Photographie"
+edition: "Édition 2026"
+# Projet dont l'image de couverture illustre la première page du dossier.
+cover: paternelle
+
+# Cadrage des images en pleine page quand le recadrage automatique (centré)
+# coupe mal : left | right | top (partie de l'image à privilégier).
+imageFocus:
+  musees-pully: left
+
+intro: >-
+  Deux fils conducteurs traversent ce dossier : concevoir des expériences
+  interactives centrées sur les publics, et fabriquer des images qui portent
+  un récit. Les projets présentés ici sont ceux où ces deux pratiques se
+  nourrissent l'une l'autre.
+
+# Outils mis en avant sur la page Profil (sous-ensemble de la page À propos).
+tools:
+  - Figma
+  - UX / UI Design
+  - Adobe Photoshop
+  - Lightroom
+  - DaVinci Resolve
+  - Prise de vue
+  - Astro
+  - Vue.js
+  - React
+  - TypeScript
+  - Stratégie de contenu
+  - SEO & Analytics
+
+# Chapitres du dossier : chaque chapitre ouvre sur une page de titre puis
+# présente ses projets en pleine page, dans l'ordre (id = nom du fichier dans
+# src/content/project sans extension). La « note » complète l'intro du projet
+# avec le contexte et la démarche, résumés depuis l'étude de cas du site.
+# Les projets non listés apparaissent automatiquement dans la grille
+# « Autres projets », triés par poids éditorial.
+sections:
+  - title: "Expériences interactives & design"
+    description: >-
+      Concevoir des parcours et des interfaces qui font vivre un contenu :
+      recherche utilisateur sur le terrain, prototypage, datavisualisation et
+      médiation ludique pour des publics variés.
+    projects:
+      - id: appy
+        note: >-
+          Neuf semaines, treize personnes, une mandante réelle. La recherche
+          (benchmark, questionnaires, entretiens avec des familles et une
+          trentaine de commerçants) a nourri un concept de médiation ludique :
+          des parcours contés à QR codes qui enrichissent la balade sans river
+          les enfants à l'écran.
+      - id: chuv-blocs-operatoires
+        note: >-
+          Partir du terrain plutôt que de la technique : interviews et
+          observations en salle d'opération, pour remplacer plans papier et
+          marquages au sol. Livrables : l'UX/UI complète d'une application de
+          visualisation des plans, prête à développer, et une feuille de route
+          en trois horizons jusqu'à la localisation en temps réel (UWB).
+      - id: visualdon-projet
+        note: >-
+          Un globe que l'on manipule, le classement animé des dix plus gros
+          émetteurs et une frise temporelle qui balaie 270 ans d'histoire.
+          Données du Global Carbon Budget, pipeline de traitement avec mise à
+          jour mensuelle automatisée, interface bilingue React + D3 déployée
+          en continu.
+      - id: musees-pully
+        note: >-
+          Une association fondée en 1947, trois musées et des publics très
+          différents : l'architecture de l'information concilie l'essentiel
+          pratique (statut ouvert/fermé, horaires, carte), le concours de
+          jeunes artistes et les parcours d'adhésion et de don, déclinés
+          mobile et desktop avec les mêmes composants.
+  - title: "Réalisation & image"
+    description: >-
+      Du storyboard à la post-production : réalisation, lumière, photographie
+      de plateau et communication d'événements, au service du récit et des
+      publics qui le reçoivent.
+    projects:
+      - id: jimmy-cpdv
+        note: >-
+          Tout part de l'écoute : cerner les inspirations de l'artiste avant
+          de proposer des pistes visuelles, puis un storyboard qui valide
+          chaque plan avant d'allumer la caméra. Une journée de tournage
+          planifiée au cordeau mais ouverte à l'improvisation, jusqu'à la
+          post-production.
+      - id: 48h-geneve-2024
+        note: >-
+          Écrire, tourner, monter et livrer un film d'époque de sept minutes
+          en 48 heures, avec éléments imposés par le concours. Sur le
+          plateau : sculpter la lumière, sécuriser les rushes en continu
+          (DIT) et documenter le tournage en photographie de plateau.
+      - id: 48h-lausanne-2024
+        note: >-
+          Un récit de passage à l'âge adulte de six minutes, conçu de A à Z
+          en un week-end. À la lumière et à la machinerie pour soutenir la
+          vision du chef opérateur, au DIT pour sécuriser les flux de
+          données : la rigueur technique au service de l'image.
+      - id: paternelle
+        note: >-
+          Une institution vaudoise, plus de 200 bénévoles et le Théâtre de
+          Beaulieu — la plus grande salle de Suisse romande — à remplir
+          chaque saison : stratégie, dossiers de presse, affiches et
+          programmes, réseaux sociaux et captation vidéo.

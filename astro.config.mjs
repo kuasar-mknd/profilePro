@@ -55,6 +55,9 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      // /portfolio-pdf/ est une page technique (source de l'export PDF via
+      // `bun run pdf`), déjà noindex : on la tient hors du sitemap.
+      filter: (page) => !page.includes("/portfolio-pdf/"),
       // `lastmod` sur chaque URL : signal de fraîcheur pour les moteurs.
       serialize(item) {
         item.lastmod = BUILD_DATE;
@@ -98,6 +101,9 @@ export default defineConfig({
         },
         workbox: {
           globPatterns: ["**/*.{html,js,css,png,svg,avif,webp,woff2}"],
+          // Page technique servant uniquement à l'export PDF : inutile de la
+          // faire précharger par le service worker de chaque visiteur.
+          globIgnores: ["portfolio-pdf/**"],
           navigateFallback: "/404",
         },
       }),
