@@ -28,7 +28,7 @@ mobility:
 imageFocus:
   chuv-blocs-operatoires: plain
   visualdon-projet: contain
-  musees-pully: contain
+  gym-tracker: contain
 
 intro: >-
   Deux fils conducteurs traversent ce dossier : concevoir des expériences
@@ -85,13 +85,13 @@ sections:
           Données du Global Carbon Budget, pipeline de traitement avec mise à
           jour mensuelle automatisée, interface bilingue React + D3 déployée
           en continu.
-      - id: musees-pully
+      - id: gym-tracker
         note: >-
-          Une association fondée en 1947, trois musées et des publics très
-          différents : l'architecture de l'information concilie l'essentiel
-          pratique (statut ouvert/fermé, horaires, carte), le concours de
-          jeunes artistes et les parcours d'adhésion et de don, déclinés
-          mobile et desktop avec les mêmes composants.
+          Au-delà du carnet d'entraînement : records détectés automatiquement
+          (poids, 1RM estimé, volume), compteur de jours consécutifs,
+          calculateurs de charge, suivi d'habitudes et de constantes
+          corporelles. Le tout dans une interface « Liquid Glass » pensée
+          d'abord pour le mobile, conçue et développée de bout en bout.
   - title: "Réalisation & image"
     description: >-
       Du storyboard à la post-production : réalisation, lumière, photographie
