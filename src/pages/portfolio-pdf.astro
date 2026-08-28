@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from "astro";
 import { getEntry } from "astro:content";
 import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
@@ -24,6 +25,8 @@ interface PdfConfig {
   subtitle: string;
   edition: string;
   cover: string;
+  portrait: string;
+  mobility: { title: string; short: string; note: string };
   intro: string;
   imageFocus?: Record<string, "left" | "right" | "top" | "contain" | "plain">;
   tools: string[];
@@ -147,14 +150,22 @@ const coverBg = coverEntry.data.image
       quality: 72,
     })
   : null;
-const authorPhoto = author.data.photo
-  ? await getImage({
-      src: author.data.photo,
-      width: 600,
-      format: "jpg",
-      quality: 78,
-    })
-  : null;
+// Portrait de la page Profil, choisi dans src/assets/ via portfolio-pdf.yml
+// (la photo de la fiche auteur n'est pas un portrait posé).
+const portraitModules = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/*.{avif,webp,png,jpg}",
+);
+const portraitLoader = portraitModules[`../assets/${pdfConfig.portrait}`];
+if (!portraitLoader)
+  throw new Error(
+    `Portrait introuvable dans src/assets/ : « ${pdfConfig.portrait} »`,
+  );
+const authorPhoto = await getImage({
+  src: (await portraitLoader()).default,
+  width: 600,
+  format: "jpg",
+  quality: 78,
+});
 
 // QR codes générés au build (SVG inline) : scannables depuis un PDF imprimé,
 // en complément des liens cliquables.
@@ -276,6 +287,10 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
           <h1>{personal.name}</h1>
           <div class="accent-rule"></div>
           <p class="cover-subtitle">{pdfConfig.subtitle}</p>
+          <p class="badge cover-mobility">
+            <Icon name="mdi:airplane-takeoff" class="ico" aria-hidden="true" />
+            {pdfConfig.mobility.short}
+          </p>
         </div>
         <div class="cover-footer">
           <div class="cover-contacts">
@@ -315,15 +330,11 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     <section class="sheet" id="profil" aria-label="Profil">
       <div class="profil-grid">
         <div class="profil-side">
-          {
-            authorPhoto && (
-              <img
-                class="profil-photo"
-                src={authorPhoto.src}
-                alt={`Portrait de ${author.data.displayName}`}
-              />
-            )
-          }
+          <img
+            class="profil-photo"
+            src={authorPhoto.src}
+            alt={`Portrait de ${author.data.displayName}`}
+          />
           <ul class="profil-contacts">
             <li>
               <Icon name="mdi:map-marker" class="ico" aria-hidden="true" />
@@ -367,7 +378,17 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
           <h2>{personal.title}</h2>
           <p class="lead">{author.data.bio}</p>
           <p class="muted">{cvBasics.profile.content}</p>
-          <p class="badge">{personal.badge}</p>
+          <div class="mobility-card">
+            <Icon
+              name="mdi:airplane-takeoff"
+              class="mobility-ico"
+              aria-hidden="true"
+            />
+            <div>
+              <strong>{pdfConfig.mobility.title}</strong>
+              <span>{pdfConfig.mobility.note}</span>
+            </div>
+          </div>
           <h3 class="section-label">{cvBasics.skills.title}</h3>
           <div class="skills-grid">
             {
@@ -1018,6 +1039,52 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     margin: 3mm 0 1mm;
   }
 
+  /* ── Mobilité Suisse → Canada ── */
+  .cover-mobility {
+    display: inline-flex;
+    align-items: center;
+    gap: 2mm;
+    margin-top: 2mm;
+    font-weight: 700;
+  }
+
+  .mobility-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 3.5mm;
+    background: rgb(79 70 229 / 6%);
+    border-left: 1mm solid var(--pdf-indigo);
+    border-radius: 0 2.5mm 2.5mm 0;
+    padding: 3.5mm 4.5mm;
+    margin: 3.5mm 0 1mm;
+  }
+
+  .mobility-ico {
+    width: 5.5mm;
+    height: 5.5mm;
+    flex: none;
+    color: var(--pdf-indigo);
+    margin-top: 0.5mm;
+  }
+
+  .mobility-card div {
+    display: flex;
+    flex-direction: column;
+    gap: 1mm;
+  }
+
+  .mobility-card strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 10.5pt;
+    color: var(--pdf-indigo);
+  }
+
+  .mobility-card span {
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--pdf-muted);
+  }
+
   .hint {
     display: flex;
     align-items: center;
@@ -1176,6 +1243,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
+    object-position: center 30%;
     border-radius: 3mm;
     margin-bottom: 5mm;
   }

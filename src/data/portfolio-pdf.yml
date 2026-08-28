@@ -7,6 +7,19 @@ edition: "Édition 2026"
 # Projet dont l'image de couverture illustre la première page du dossier.
 cover: paternelle
 
+# Portrait de la page Profil : nom de fichier dans src/assets/ (racine).
+# `logo.avif` est le portrait utilisé par la page « À propos » du site.
+portrait: logo.avif
+
+# Mise en avant de la mobilité Suisse → Canada (couverture + page Profil).
+mobility:
+  title: "Suisse → Canada"
+  short: "Disponible pour le Canada · permis Jeunes professionnels (EIC Canada-Suisse)"
+  note: >-
+    Basé à Lausanne, je prépare mon installation au Canada pour y poursuivre
+    ma carrière. Admissible au permis Jeunes professionnels (EIC
+    Canada-Suisse), qui facilite l'embauche par un employeur canadien.
+
 # Cadrage des images en pleine page quand le recadrage automatique (centré)
 # coupe mal : left | right | top (partie de l'image à privilégier),
 # contain (capture d'interface montrée entière sur fond doux, jamais coupée)
