@@ -847,7 +847,13 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   </body>
 </html>
 
-<style is:global>
+{
+  /* `is:inline` (et non `is:global`) : ce CSS redéfinit `body`, `*` et `@page`
+    hors de toute couche Tailwind. Bundlé globalement, il écraserait les
+    utilitaires de TOUTES les pages du site (fond, couleurs, typographie).
+    `is:inline` le laisse dans le HTML de cette seule page. */
+}
+<style is:inline>
   /* Polices locales du site (public/fonts), déclarées ici car cette page
      n'utilise pas le layout Base. */
   @font-face {
