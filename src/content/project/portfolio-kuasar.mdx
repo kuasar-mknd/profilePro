@@ -40,7 +40,7 @@ Quelques choix structurants :
 
 - **Contenu en collections typées** : chaque projet est un fichier MDX validé par un schéma (zod) : titres, rôles, catégories et métadonnées SEO sont contrôlés au build.
 - **Pipeline d'images** : conversion et redimensionnement automatiques en AVIF/WebP via Sharp, avec `srcset` responsive généré pour chaque carte et galerie.
-- **PWA** : manifest et service worker (vite-plugin-pwa) pour le mode hors-ligne et l'installation.
+- **Navigation instantanée** : préchargement des liens au survol et prérendu côté client (Speculation Rules), couplés aux View Transitions.
 - **Hébergement edge** : déploiement sur **Cloudflare Pages**, formulaire de contact servi par une Pages Function avec validation stricte, honeypot anti-spam et allowlist d'origines.
 
 ## Qualité : tests, sécurité, automatisation

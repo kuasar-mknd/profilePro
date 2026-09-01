@@ -1,6 +1,5 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
-/// <reference types="vite-plugin-pwa/client" />
 
 interface ImportMetaEnv {
   readonly WEB3FORMS_ACCESS_KEY: string;
