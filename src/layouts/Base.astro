@@ -227,7 +227,6 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
     <LocalBusinessSchema />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.json" />
     <ClientRouter />
   </head>
   <body
@@ -751,12 +750,25 @@ const t = translations[lang as keyof typeof translations] || translations.fr;
       setupAnimationListeners();
     </script>
     <script>
-      import { registerSW } from "virtual:pwa-register";
-
+      // La PWA a été retirée : un portfolio statique n'a pas besoin de mode
+      // hors ligne, et un service worker figé sert un cache mort après chaque
+      // déploiement (les fichiers /_astro/ changent de nom à chaque build).
+      // On désinscrit les service workers encore installés chez les visiteurs
+      // et on purge leurs caches. À supprimer une fois le parc assaini.
       if ("serviceWorker" in navigator) {
-        registerSW({
-          immediate: true,
-        });
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((registrations) => {
+            for (const registration of registrations) registration.unregister();
+          })
+          .catch(() => {});
+
+        if ("caches" in window) {
+          caches
+            .keys()
+            .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+            .catch(() => {});
+        }
       }
     </script>
     <!-- Cloudflare Web Analytics -->

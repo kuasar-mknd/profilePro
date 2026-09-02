@@ -6,7 +6,6 @@ import sitemap from "@astrojs/sitemap";
 import icon from "astro-icon";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
-import { VitePWA } from "vite-plugin-pwa";
 
 // Date de génération du site, utilisée comme `lastmod` dans le sitemap.
 // Le portfolio est régénéré à chaque déploiement : la date de build reflète
@@ -80,33 +79,9 @@ export default defineConfig({
   vite: {
     plugins: [
       tailwindcss(),
-      VitePWA({
-        registerType: "autoUpdate",
-        manifest: {
-          name: "Samuel Dulex | Portfolio",
-          short_name: "Samuel Dulex",
-          description:
-            "Portfolio de Samuel Dulex : création de contenu, développement web & communication",
-          theme_color: "#0f172a",
-          background_color: "#0f172a",
-          display: "standalone",
-          icons: [
-            {
-              src: "/favicon.svg",
-              sizes: "any",
-              type: "image/svg+xml",
-              purpose: "any maskable",
-            },
-          ],
-        },
-        workbox: {
-          globPatterns: ["**/*.{html,js,css,png,svg,avif,webp,woff2}"],
-          // Page technique servant uniquement à l'export PDF : inutile de la
-          // faire précharger par le service worker de chaque visiteur.
-          globIgnores: ["portfolio-pdf/**"],
-          navigateFallback: "/404",
-        },
-      }),
+      // La PWA a été retirée : un portfolio statique n'a pas d'usage hors
+      // ligne, et son service worker restait figé sur un cache périmé après
+      // chaque déploiement. Voir la désinscription dans src/layouts/Base.astro.
       process.env.ANALYZE === "true" &&
         visualizer({
           filename: "./dist/stats.html",

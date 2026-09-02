@@ -27,9 +27,6 @@ Content-Security-Policy: default-src 'self'; script-src-elem 'self' https://stat
 /apple-touch-icon.png
   Cache-Control: public, max-age=31536000, immutable
 
-/manifest.json
-  Cache-Control: public, max-age=86400
-
 /sitemap*.xml
   Cache-Control: public, max-age=86400
 
