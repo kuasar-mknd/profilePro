@@ -58,6 +58,7 @@ export default [
   {
     files: [
       "scripts/**",
+      "design/**",
       "*.config.js",
       "*.config.mjs",
       "*.config.cjs",

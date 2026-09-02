@@ -21,10 +21,25 @@ interface PdfSectionConfig {
   projects: Array<{ id: string; note: string }>;
 }
 
+interface PdfCoverSpecimen {
+  image: string;
+  label: string;
+  source: string;
+}
+
+interface PdfCoverConfig {
+  lead: string[];
+  display: string[];
+  specimens: PdfCoverSpecimen[];
+  savoirFaire: string[];
+  logiciels: string[];
+  route: { from: string; to: string };
+}
+
 interface PdfConfig {
   subtitle: string;
   edition: string;
-  cover: string;
+  cover: PdfCoverConfig;
   portrait: string;
   mobility: { title: string; short: string; note: string };
   intro: string;
@@ -137,19 +152,22 @@ async function imagesById(
 const coverById = await imagesById(featured, 1200, 74, isContain);
 const thumbById = await imagesById(featured, 300, 68, isUiThumb);
 const otherThumbById = await imagesById(others, 460, 68, isUiThumb);
-const coverEntry = projectsById.get(pdfConfig.cover);
-if (!coverEntry)
-  throw new Error(
-    `Projet de couverture inconnu dans portfolio-pdf.yml : « ${pdfConfig.cover} »`,
-  );
-const coverBg = coverEntry.data.image
-  ? await getImage({
-      src: coverEntry.data.image,
-      width: 1600,
-      format: "jpg",
-      quality: 72,
-    })
-  : null;
+// Spécimens de la couverture : images déjà tramées (trait sur fond
+// transparent), donc PNG et aucune reconversion — le chroma JPEG détruirait
+// les points d'impression.
+const specimenModules = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/portfolio-pdf/*.png",
+);
+const coverSpecimens = await Promise.all(
+  pdfConfig.cover.specimens.map(async (spec) => {
+    const loader = specimenModules[`../assets/portfolio-pdf/${spec.image}`];
+    if (!loader)
+      throw new Error(
+        `Spécimen de couverture introuvable dans src/assets/portfolio-pdf/ : « ${spec.image} »`,
+      );
+    return { ...spec, src: (await loader()).default.src };
+  }),
+);
 // Portrait de la page Profil, choisi dans src/assets/ via portfolio-pdf.yml
 // (la photo de la fiche auteur n'est pas un portrait posé).
 const portraitModules = import.meta.glob<{ default: ImageMetadata }>(
@@ -280,50 +298,112 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   <body>
     <!-- ═══════════ 1. Couverture ═══════════ -->
     <section class="sheet cover" aria-label="Couverture">
-      {coverBg && <img class="cover-bg" src={coverBg.src} alt="" />}
-      <div class="cover-left">
-        <div class="cover-content">
-          <p class="eyebrow">Portfolio — {pdfConfig.edition}</p>
-          <h1>{personal.name}</h1>
-          <div class="accent-rule"></div>
-          <p class="cover-subtitle">{pdfConfig.subtitle}</p>
-          <p class="badge cover-mobility">
-            <Icon name="mdi:airplane-takeoff" class="ico" aria-hidden="true" />
-            {pdfConfig.mobility.short}
-          </p>
-        </div>
-        <div class="cover-footer">
-          <div class="cover-contacts">
-            <span class="contact-item">
-              <Icon name="mdi:map-marker" class="ico" aria-hidden="true" />
-              {personal.location}
-            </span>
-            <a
-              class="contact-item"
-              href={sanitizeUrl(`mailto:${personal.email}`)}
+      {
+        coverSpecimens.map((spec, i) => (
+          <Fragment>
+            <figure
+              class={`cover-spec spec-${i + 1}`}
+              style={`--cover-globe: url(${spec.src})`}
             >
-              <Icon name="mdi:email" class="ico" aria-hidden="true" />
+              <img src={spec.src} alt="" />
+            </figure>
+            <p class={`cover-spec-label label-${i + 1}`}>
+              <span class="num">{pad2(i + 1)}</span> · {spec.label}
+              <span class="l2">{spec.source}</span>
+            </p>
+          </Fragment>
+        ))
+      }
+      <figure class="cover-mark" aria-hidden="true">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </figure>
+
+      <p class="cover-lead">
+        {
+          pdfConfig.cover.lead.map((line, i) => (
+            <Fragment>
+              {i > 0 && <br />}
+              {line}
+            </Fragment>
+          ))
+        }
+      </p>
+      <h1 class="cover-display">
+        {
+          pdfConfig.cover.display.map((line, i) => (
+            <Fragment>
+              {i > 0 && <br />}
+              {line}
+              <span class="point">.</span>
+            </Fragment>
+          ))
+        }
+      </h1>
+
+      <aside class="cover-col">
+        <div class="cover-block cover-block-first">
+          <p class="cover-kicker">Portfolio · {pdfConfig.edition}</p>
+          <p class="cover-name">{personal.name}</p>
+        </div>
+        <div class="cover-block">
+          <p class="cover-value">
+            <a href={sanitizeUrl(`mailto:${personal.email}`)}>
               {personal.email}
             </a>
-            <a class="contact-item" href={sanitizeUrl(personal.portfolioUrl)}>
-              <Icon name="mdi:web" class="ico" aria-hidden="true" />
+            <br />
+            <a href={sanitizeUrl(personal.portfolioUrl)}>
               {personal.portfolio}
             </a>
-            <a class="contact-item" href={sanitizeUrl(personal.linkedinUrl)}>
-              <Icon name="mdi:linkedin" class="ico" aria-hidden="true" />
-              {personal.linkedin}
-            </a>
-          </div>
-          <a
-            class="qr-card qr-cover"
-            href={sanitizeUrl(personal.portfolioUrl)}
-            aria-label="Version interactive du portfolio"
-          >
-            <span class="qr" set:html={siteQr} />
-            <span class="qr-caption">Version<br />interactive</span>
-          </a>
+            {" · "}
+            <a href={sanitizeUrl(personal.linkedinUrl)}>{personal.linkedin}</a>
+          </p>
         </div>
-      </div>
+        <div class="cover-block">
+          <p class="section-label cover-label">Savoir-faire</p>
+          <p class="cover-value cover-read">
+            {
+              pdfConfig.cover.savoirFaire.map((line, i) => (
+                <Fragment>
+                  {i > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))
+            }
+          </p>
+          <p class="cover-value cover-tools">
+            {
+              pdfConfig.cover.logiciels.map((line, i) => (
+                <Fragment>
+                  {i > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))
+            }
+          </p>
+        </div>
+      </aside>
+
+      <aside class="cover-col cover-col-foot">
+        <div class="cover-block">
+          <p class="cover-value cover-route">
+            {pdfConfig.cover.route.from} →{" "}
+            <span class="circled">
+              {pdfConfig.cover.route.to}
+              <svg viewBox="0 0 120 44" preserveAspectRatio="none" fill="none">
+                <path
+                  d="M8 24 C 6 10, 38 3, 66 4 C 96 5, 117 10, 116 21 C 115 34, 88 41, 55 40 C 28 39, 9 35, 10 26"
+                  stroke="currentColor"
+                  stroke-width="2.6"
+                  stroke-linecap="round"></path>
+              </svg>
+            </span>
+          </p>
+          <p class="cover-value cover-permis">{pdfConfig.mobility.short}</p>
+        </div>
+      </aside>
     </section>
 
     <!-- ═══════════ 2. Profil ═══════════ -->
@@ -855,7 +935,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 }
 <style is:inline>
   /* Polices locales du site (public/fonts), déclarées ici car cette page
-     n'utilise pas le layout Base. */
+         n'utilise pas le layout Base. */
   @font-face {
     font-family: "Space Grotesk";
     font-style: normal;
@@ -889,18 +969,18 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   :root {
-    /* Palette claire dérivée des jetons « pacamara » du site
-       (src/css/style.css) : privilégiée pour la lecture et l'impression. */
-    --pdf-bg: #fff;
-    --pdf-panel: rgb(15 23 42 / 4%);
-    --pdf-line: rgb(15 23 42 / 14%);
-    --pdf-text: #0f172a;
-    --pdf-muted: rgb(15 23 42 / 66%);
-    --pdf-faint: rgb(15 23 42 / 45%);
-    --pdf-indigo: #4f46e5;
-    --pdf-rose: #be123c;
-    --pdf-amber: #b45309;
-    --pdf-gradient: linear-gradient(90deg, #4f46e5, #a855f7, #be123c);
+    /* Deux encres sur papier, comme la page de garde
+           (design/garde-gsm-studios) : Electric Blue dominant, Safety Orange
+           en accent. Les nuances sont des variations de densité de la même
+           encre, jamais une troisième couleur. */
+    --pdf-bg: #fafaf7;
+    --pdf-panel: rgb(23 58 227 / 6%);
+    --pdf-line: rgb(23 58 227 / 28%);
+    --pdf-text: #173ae3;
+    --pdf-muted: rgb(23 58 227 / 82%);
+    --pdf-faint: rgb(23 58 227 / 52%);
+    --pdf-ink: #173ae3;
+    --pdf-accent: #e55d2b;
   }
 
   * {
@@ -978,24 +1058,29 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     margin-bottom: 4mm;
   }
 
+  /* Voix fonctionnelle : le mono porte les étiquettes et les données,
+         Outfit porte ce qui se lit, Space Grotesk ce qui s'affiche. */
   .eyebrow {
-    font-family: Outfit, sans-serif;
-    font-weight: 700;
-    font-size: 8pt;
-    letter-spacing: 0.22em;
+    font-family: Menlo, monospace;
+    font-weight: 400;
+    font-size: 6.5pt;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
     margin-bottom: 3mm;
   }
 
   .section-label {
-    font-size: 10.5pt;
+    font-family: Menlo, monospace;
+    font-weight: 400;
+    font-size: 6.5pt;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--pdf-text);
-    border-bottom: 0.4mm solid var(--pdf-line);
-    padding-bottom: 1.6mm;
-    margin: 5mm 0 3mm;
+    letter-spacing: 0.26em;
+    /* étiquette estompée, mais le filet reste à pleine densité */
+    color: rgb(23 58 227 / 62%);
+    border-top: 0.42mm solid var(--pdf-ink);
+    padding-top: 2.4mm;
+    margin: 5mm 0 2.6mm;
   }
 
   .muted {
@@ -1011,9 +1096,13 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .accent-rule {
     width: 42mm;
-    height: 1.4mm;
-    border-radius: 1mm;
-    background: var(--pdf-indigo);
+    height: 1.2mm;
+    /* deux encres bout à bout, pas un dégradé : arrêt net à 32 mm */
+    background: linear-gradient(
+      90deg,
+      var(--pdf-ink) 0 32mm,
+      var(--pdf-accent) 32mm
+    );
     margin: 4mm 0;
   }
 
@@ -1026,20 +1115,24 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .chip {
     display: inline-block;
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 4mm;
-    padding: 0.8mm 3mm;
-    font-size: 7.5pt;
+    font-family: Menlo, monospace;
+    font-size: 6.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--pdf-muted);
+  }
+
+  .chip + .chip::before {
+    content: "·";
+    color: var(--pdf-accent);
+    margin-right: 1.6mm;
   }
 
   .badge {
     display: inline-block;
-    background: rgb(79 70 229 / 7%);
-    border: 0.3mm solid rgb(79 70 229 / 35%);
-    color: var(--pdf-indigo);
-    border-radius: 2mm;
-    padding: 1.6mm 3.5mm;
+    border-top: 0.42mm solid var(--pdf-accent);
+    color: var(--pdf-ink);
+    padding: 2mm 0 0;
     font-size: 8.5pt;
     font-weight: 400;
     margin: 3mm 0 1mm;
@@ -1058,10 +1151,9 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     display: flex;
     align-items: flex-start;
     gap: 3.5mm;
-    background: rgb(79 70 229 / 6%);
-    border-left: 1mm solid var(--pdf-indigo);
-    border-radius: 0 2.5mm 2.5mm 0;
-    padding: 3.5mm 4.5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
+    border-bottom: 0.42mm solid var(--pdf-ink);
+    padding: 3.2mm 0;
     margin: 3.5mm 0 1mm;
   }
 
@@ -1069,7 +1161,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     width: 5.5mm;
     height: 5.5mm;
     flex: none;
-    color: var(--pdf-indigo);
+    color: var(--pdf-accent);
     margin-top: 0.5mm;
   }
 
@@ -1082,7 +1174,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   .mobility-card strong {
     font-family: "Space Grotesk", sans-serif;
     font-size: 10.5pt;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .mobility-card span {
@@ -1101,11 +1193,11 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .hint .ico {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .hint a {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   /* ── Pied de page ── */
@@ -1126,7 +1218,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .sheet-footer a {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .pageno {
@@ -1141,7 +1233,6 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     background: #fff;
     color: var(--pdf-text);
     border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
     padding: 3mm;
     width: fit-content;
   }
@@ -1166,56 +1257,306 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     text-transform: uppercase;
   }
 
-  /* ── Couverture : moitié gauche blanche, photo pleine hauteur à droite,
-     démarcation nette entre les deux ── */
+  /* ── Couverture : affiche deux encres, trois spécimens tramés.
+         Maquette éditable et scripts de trame : design/garde-gsm-studios/.
+         Les cotes ci-dessous sont en millimètres sur la page A4 paysage. ── */
   .cover {
     padding: 0;
+
+    /* spécimen 01 — le lustre */
+    --lustre-x: 22mm;
+    --lustre-y: 5mm;
+    --lustre-w: 66mm;
+    --viseur-x: 27mm;
+    --viseur-y: 8mm;
+    --viseur-w: 56mm;
+    --viseur-h: 33mm;
+    --label1-x: 34mm;
+    --label1-y: 54mm;
+
+    /* spécimen 02 — le globe, répété en cascade */
+    --globe-x: 152mm;
+    --globe-y: 46mm;
+    --globe-w: 34mm;
+    --label2-x: 96mm;
+    --label2-y: 57.5mm;
+
+    /* spécimen 03 — la caméra */
+    --camera-x: 4mm;
+    --camera-y: 151mm;
+    --camera-w: 60mm;
+    --label3-x: 60mm;
+    --label3-y: 182mm;
+
+    /* déclaration */
+    --lead-y: 80mm;
+    --titre-y: 96.5mm;
+    --titre-taille: 18.5mm;
   }
 
-  .cover-bg {
+  .cover-spec {
     position: absolute;
+  }
+
+  .cover-spec img {
+    width: 100%;
+    display: block;
+  }
+
+  .cover-spec.spec-1 {
+    left: var(--lustre-x);
+    top: var(--lustre-y);
+    width: var(--lustre-w);
+  }
+
+  .cover-spec.spec-2 {
+    left: var(--globe-x);
+    top: var(--globe-y);
+    width: var(--globe-w);
+  }
+
+  .cover-spec.spec-3 {
+    left: var(--camera-x);
+    top: var(--camera-y);
+    width: var(--camera-w);
+  }
+
+  /* Le globe se répète en diagonale : deux impressions supplémentaires,
+         de plus en plus grandes, qui se chevauchent et passent sous le titre. */
+  .cover-spec.spec-2::before,
+  .cover-spec.spec-2::after {
+    content: "";
+    position: absolute;
+    background: var(--cover-globe) center / contain no-repeat;
+  }
+
+  .cover-spec.spec-2::before {
+    left: 16mm;
+    top: -14mm;
+    width: 24mm;
+    height: 24mm;
+  }
+
+  .cover-spec.spec-2::after {
+    left: -26mm;
+    top: 18mm;
+    width: 46mm;
+    height: 46mm;
+  }
+
+  .cover-spec-label {
+    position: absolute;
+    font-family: Menlo, monospace;
+    font-size: 6pt;
+    letter-spacing: 0.2em;
+    line-height: 1.8;
+    text-transform: uppercase;
+    color: var(--pdf-ink);
+    white-space: nowrap;
+  }
+
+  .cover-spec-label .num {
+    color: var(--pdf-accent);
+  }
+
+  /* seconde ligne d'une légende : alignée après le numéro */
+  .cover-spec-label .l2 {
+    display: block;
+    padding-left: 8.4mm;
+  }
+
+  .cover-spec-label.label-1 {
+    left: var(--label1-x);
+    top: var(--label1-y);
+  }
+
+  .cover-spec-label.label-2 {
+    left: var(--label2-x);
+    top: var(--label2-y);
+    width: 50mm;
+    text-align: right;
+  }
+
+  .cover-spec-label.label-3 {
+    left: var(--label3-x);
+    top: var(--label3-y);
+  }
+
+  /* Repère de visée sur le lustre — l'unique geste manuel de la page */
+  .cover-mark {
+    position: absolute;
+    left: var(--viseur-x);
+    top: var(--viseur-y);
+    width: var(--viseur-w);
+    height: var(--viseur-h);
+  }
+
+  .cover-mark i {
+    position: absolute;
+    width: 5mm;
+    height: 5mm;
+    border: 0.55mm solid var(--pdf-ink);
+  }
+
+  .cover-mark i:nth-child(1) {
+    left: 0;
     top: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .cover-mark i:nth-child(2) {
+    right: 0;
+    top: 0;
+    border-left: 0;
+    border-bottom: 0;
+  }
+
+  .cover-mark i:nth-child(3) {
+    left: 0;
+    bottom: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+
+  .cover-mark i:nth-child(4) {
     right: 0;
     bottom: 0;
-    width: 55%;
-    height: 100%;
-    object-fit: cover;
-    border-left: 0.8mm solid var(--pdf-text);
+    border-left: 0;
+    border-top: 0;
   }
 
-  .cover-left {
+  .cover-lead {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 12mm;
-    padding: 0 12mm 0 18mm;
-  }
-
-  .cover-content h1 {
-    font-size: 38pt;
-    line-height: 1.05;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
-  .cover-subtitle {
-    font-size: 12pt;
+    left: 14mm;
+    top: var(--lead-y);
+    font-size: 11pt;
     font-weight: 400;
-    color: var(--pdf-muted);
-    max-width: 118mm;
-    text-wrap: balance;
+    line-height: 1.5;
+    color: var(--pdf-ink);
   }
 
-  .cover-footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6mm;
+  .cover-display {
+    position: absolute;
+    left: 13.4mm;
+    top: var(--titre-y);
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: var(--titre-taille);
+    line-height: 1.02;
+    letter-spacing: 0.012em;
+    text-transform: uppercase;
+    color: var(--pdf-ink);
+    white-space: nowrap;
+    /* surimpression là où la déclaration croise les globes */
+    mix-blend-mode: multiply;
+  }
+
+  .cover-display .point {
+    color: var(--pdf-accent);
+  }
+
+  /* Colonne d'informations : blocs réglés, voix mono */
+  .cover-col {
+    position: absolute;
+    left: 194mm;
+    right: 14mm;
+    top: 12mm;
+    color: var(--pdf-ink);
+    font-family: Menlo, monospace;
+  }
+
+  .cover-block {
+    border-top: 0.42mm solid var(--pdf-ink);
+    padding: 2.6mm 0 4.6mm;
+  }
+
+  .cover-block-first {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .cover-label.section-label {
+    border-top: none;
+    padding-top: 0;
+    margin: 0 0 1.8mm;
+  }
+
+  .cover-value {
+    font-size: 7pt;
+    line-height: 1.75;
+    letter-spacing: 0.05em;
+  }
+
+  /* Ce qui se lit passe en Outfit ; le mono reste aux coordonnées. */
+  .cover-read {
+    font-family: Outfit, sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+
+  /* Les logiciels : donnée technique, donc mono et discrète */
+  .cover-tools {
+    font-size: 6pt;
+    line-height: 1.7;
+    letter-spacing: 0.08em;
+    color: rgb(23 58 227 / 66%);
+    margin-top: 2.2mm;
+  }
+
+  .cover-kicker {
+    font-size: 6pt;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 2mm;
+  }
+
+  .cover-name {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 24pt;
+    line-height: 1.02;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    margin: 0.6mm 0 1.4mm;
+  }
+
+  .cover-col-foot {
+    top: auto;
+    bottom: 9mm;
+  }
+
+  .cover-col-foot .cover-block {
+    padding: 2.2mm 0 2.6mm;
+  }
+
+  .cover-route {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 14pt;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .cover-permis {
+    margin-top: 1.6mm;
+  }
+
+  /* Destination entourée à la main, à l'encre d'accent */
+  .circled {
+    position: relative;
+    display: inline-block;
+    padding: 0 1.2mm;
+    color: var(--pdf-accent);
+  }
+
+  .circled svg {
+    position: absolute;
+    inset: -2.8mm -2.4mm -3.2mm -2.6mm;
+    width: calc(100% + 5mm);
+    height: calc(100% + 6mm);
+    overflow: visible;
   }
 
   .cover-contacts {
@@ -1234,7 +1575,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .contact-item .ico {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   /* ── Profil ── */
@@ -1250,7 +1591,6 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: center 30%;
-    border-radius: 3mm;
     margin-bottom: 5mm;
   }
 
@@ -1271,7 +1611,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .profil-contacts .ico {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .profil-contacts a {
@@ -1302,10 +1642,8 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .skill-card {
-    background: var(--pdf-panel);
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
-    padding: 4.5mm 5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
+    padding: 2.6mm 0 0;
     display: flex;
     flex-direction: column;
     gap: 1.4mm;
@@ -1369,7 +1707,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .sommaire-page {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
     font-variant-numeric: tabular-nums;
   }
 
@@ -1401,7 +1739,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     font-size: 7.5pt;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .sommaire-group-grid {
@@ -1413,9 +1751,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .sommaire-card {
     display: flex;
-    background: var(--pdf-panel);
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
     overflow: hidden;
   }
 
@@ -1439,7 +1775,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     font-family: "Space Grotesk", sans-serif;
     font-weight: 700;
     font-size: 7.5pt;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
     letter-spacing: 0.15em;
   }
 
@@ -1468,7 +1804,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     font-weight: 700;
     font-size: 130pt;
     line-height: 1;
-    color: rgb(79 70 229 / 9%);
+    color: rgb(229 93 43 / 18%);
   }
 
   .chapitre-center {
@@ -1506,10 +1842,11 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .chapitre-list-num {
-    font-family: "Space Grotesk", sans-serif;
-    font-weight: 700;
-    font-size: 9.5pt;
-    color: var(--pdf-indigo);
+    font-family: Menlo, monospace;
+    font-weight: 400;
+    font-size: 8pt;
+    letter-spacing: 0.1em;
+    color: var(--pdf-accent);
   }
 
   .chapitre-list-main {
@@ -1571,21 +1908,21 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   .projet-faits {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
-    gap: 2.5mm 5mm;
-    background: var(--pdf-panel);
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
-    padding: 4mm 4.5mm;
+    gap: 2.8mm 5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
+    border-bottom: 0.42mm solid var(--pdf-ink);
+    padding: 3.2mm 0;
     margin-bottom: 4.5mm;
   }
 
   .projet-faits dt {
-    font-size: 7pt;
-    font-weight: 700;
+    font-family: Menlo, monospace;
+    font-size: 6pt;
+    font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--pdf-indigo);
-    margin-bottom: 0.6mm;
+    letter-spacing: 0.26em;
+    color: rgb(23 58 227 / 62%);
+    margin-bottom: 0.8mm;
   }
 
   .projet-faits dd {
@@ -1611,7 +1948,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .awards .ico {
-    color: var(--pdf-amber);
+    color: var(--pdf-accent);
   }
 
   .metrics {
@@ -1622,10 +1959,8 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .metric {
-    background: var(--pdf-panel);
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
-    padding: 2.5mm 3.5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
+    padding: 2mm 0 0;
     display: flex;
     flex-direction: column;
     gap: 0.5mm;
@@ -1634,12 +1969,15 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .metric strong {
     font-family: "Space Grotesk", sans-serif;
-    font-size: 11pt;
-    color: var(--pdf-indigo);
+    font-size: 12pt;
+    color: var(--pdf-accent);
   }
 
   .metric span {
-    font-size: 7pt;
+    font-family: Menlo, monospace;
+    font-size: 6pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--pdf-muted);
     line-height: 1.3;
   }
@@ -1663,17 +2001,16 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     display: inline-flex;
     align-items: center;
     gap: 2mm;
-    background: #4f46e5;
+    background: var(--pdf-ink);
     color: #fff;
     font-weight: 700;
     font-size: 9.5pt;
-    border-radius: 6mm;
     padding: 2.4mm 5mm;
   }
 
   .case-link {
     font-size: 8pt;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .projet-media {
@@ -1720,7 +2057,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   /* Visuels à fond blanc : zone média blanche, sans cadre ni ombre, pour que
-     la capture se fonde dans la page au lieu de flotter dans un rectangle. */
+         la capture se fonde dans la page au lieu de flotter dans un rectangle. */
   .projet-media.media-plain {
     background: #fff;
   }
@@ -1752,9 +2089,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   .autre-card {
     display: flex;
     flex-direction: column;
-    background: var(--pdf-panel);
-    border: 0.3mm solid var(--pdf-line);
-    border-radius: 2.5mm;
+    border-top: 0.42mm solid var(--pdf-ink);
     overflow: hidden;
   }
 
@@ -1806,7 +2141,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .autre-meta .ico {
-    color: var(--pdf-rose);
+    color: var(--pdf-accent);
     width: 3mm;
     height: 3mm;
   }
@@ -1817,18 +2152,17 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     text-align: center;
     gap: 2.5mm;
     padding: 5mm;
-    border: 0.4mm solid var(--pdf-indigo);
-    background: rgb(79 70 229 / 5%);
   }
 
   .autre-cta-ico {
+    color: var(--pdf-accent);
     width: 7mm;
     height: 7mm;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .autre-cta .autre-role {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   /* ── Parcours ── */
@@ -1867,7 +2201,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
 
   .timeline-company {
     font-size: 9pt;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .timeline-period {
@@ -1900,7 +2234,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .distinctions .ico {
-    color: var(--pdf-amber);
+    color: var(--pdf-accent);
     width: 3mm;
     height: 3mm;
   }
@@ -1936,7 +2270,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     font-family: "Space Grotesk", sans-serif;
     font-weight: 700;
     font-size: 17pt;
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
     margin-bottom: 4mm;
   }
 
@@ -1958,7 +2292,7 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
   }
 
   .contact-lines .ico {
-    color: var(--pdf-indigo);
+    color: var(--pdf-ink);
   }
 
   .qr-contact {
@@ -1975,5 +2309,50 @@ const pageTitle = "Portfolio PDF — Samuel Dulex";
     letter-spacing: 0.02em;
     font-weight: 400;
     max-width: 52mm;
+  }
+
+  /* ── Le CSS du site est bundlé en une seule feuille (cssCodeSplit:false)
+     injectée dans le <head> de toutes les pages, donc avant ce bloc. Ses
+     deux `@media print` imposeraient A4 portrait, masqueraient les <footer>
+     et repeindraient `p, h1, h2, h3` en noir : on réaffirme ci-dessous les
+     seules règles qu'ils écrasent. ── */
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  @media print {
+    body {
+      color: var(--pdf-text) !important;
+      background-color: var(--pdf-bg) !important;
+    }
+
+    /* Le site masque tous les <footer> à l'impression. */
+    .sheet-footer {
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    /* Le site force `p,h1,h2,h3{color:#000!important}` : on rétablit
+       l'encre du dossier, puis ses deux densités plus claires. */
+    .sheet p,
+    .sheet h1,
+    .sheet h2,
+    .sheet h3 {
+      color: var(--pdf-text) !important;
+    }
+
+    .sheet .muted {
+      color: var(--pdf-muted) !important;
+    }
+
+    .sheet .section-label {
+      color: rgb(23 58 227 / 62%) !important;
+    }
+
+    .sheet .cover-tools {
+      color: rgb(23 58 227 / 66%) !important;
+    }
   }
 </style>

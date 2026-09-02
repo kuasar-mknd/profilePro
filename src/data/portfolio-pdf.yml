@@ -4,8 +4,48 @@
 # scripts/generate-portfolio-pdf.mjs.
 subtitle: "Design d'expériences interactives · Réalisation multimédia · Photographie"
 edition: "Édition 2026"
-# Projet dont l'image de couverture illustre la première page du dossier.
-cover: paternelle
+# ── Couverture ────────────────────────────────────────────────────────
+# Affiche deux encres (bleu dominant, orange en accent) construite autour
+# de trois spécimens tramés — un objet par pratique. Les images vivent dans
+# src/assets/portfolio-pdf/ ; leur maquette éditable et les scripts de trame
+# sont dans design/garde-gsm-studios/ (voir le README).
+cover:
+  # Phrase d'appel, une entrée par ligne.
+  lead:
+    - "Des contenus qui racontent."
+    - "Des plateformes qui diffusent."
+    - "Des stratégies qui performent."
+  # Déclaration en très grand : une entrée par ligne, le point est ajouté
+  # automatiquement à l'encre d'accent.
+  display:
+    - "Communication"
+    - "Développement web"
+    - "Création de contenu"
+  # Les trois objets tramés, numérotés 01/02/03 dans l'ordre.
+  # `image` : nom de fichier dans src/assets/portfolio-pdf/.
+  specimens:
+    - image: spec-lustre.png
+      label: "Communication"
+      source: "La Paternelle · Théâtre"
+    - image: spec-globe.png
+      label: "Web"
+      source: "Émission de CO₂"
+    - image: spec-camera.png
+      label: "Vidéo"
+      source: "48H Film Project"
+  savoirFaire:
+    - "Direction artistique · UX/UI"
+    - "Développement fullstack"
+    - "Réalisation · Montage"
+    - "Stratégie de contenu · Réseaux"
+  # Logiciels : rendus en petit, à la voix mono.
+  logiciels:
+    - "Figma · Adobe CC · DaVinci"
+    - "Astro · React · Laravel · TypeScript"
+  # Trajectoire du pied de page ; la destination est entourée à la main.
+  route:
+    from: "Suisse"
+    to: "Montréal"
 
 # Portrait de la page Profil : nom de fichier dans src/assets/ (racine).
 # `logo.avif` est le portrait utilisé par la page « À propos » du site.
