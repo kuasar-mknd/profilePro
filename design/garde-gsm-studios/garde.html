@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      /* ================================================================
+     RÉGLAGES — modifie ces valeurs puis relance :
+       node design/garde-gsm-studios/render.mjs
+     (toutes les cotes sont en mm sur une page A4 paysage 297 × 210)
+     ================================================================ */
+      :root {
+        /* encres et papier */
+        --ink: #173ae3; /* encre dominante (Electric Blue) */
+        --accent: #e55d2b; /* encre d'accent (Safety Orange)  */
+        --paper: #fafaf7;
+
+        /* spécimen 01 — le lustre */
+        --lustre-x: 22mm;
+        --lustre-y: 5mm;
+        --lustre-w: 66mm;
+        --viseur-x: 27mm;
+        --viseur-y: 8mm;
+        --viseur-w: 56mm;
+        --viseur-h: 33mm;
+        --label1-x: 34mm;
+        --label1-y: 54mm;
+
+        /* spécimen 02 — la cascade de globes (du plus petit au plus grand) */
+        --globe1-x: 168mm;
+        --globe1-y: 32mm;
+        --globe1-w: 24mm;
+        --globe2-x: 152mm;
+        --globe2-y: 46mm;
+        --globe2-w: 34mm;
+        --globe3-x: 126mm;
+        --globe3-y: 64mm;
+        --globe3-w: 46mm;
+        --globe4-x: 90mm;
+        --globe4-y: 92mm;
+        --globe4-w: 60mm;
+        --label2-x: 96mm;
+        --label2-y: 57.5mm;
+
+        /* spécimen 03 — la caméra */
+        --camera-x: 4mm;
+        --camera-y: 151mm;
+        --camera-w: 60mm;
+        --label3-x: 60mm;
+        --label3-y: 182mm;
+
+        /* déclaration */
+        --lead-y: 80mm;
+        --titre-y: 96.5mm;
+        --titre-taille: 18.5mm;
+      }
+
+      @font-face {
+        font-family: "Space Grotesk";
+        font-weight: 700;
+        src: url("../../public/fonts/space-grotesk-bold.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Outfit";
+        font-weight: 400;
+        src: url("../../public/fonts/outfit-regular.woff2") format("woff2");
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 297mm;
+        height: 210mm;
+      }
+      body {
+        position: relative;
+        overflow: hidden;
+        background: var(--paper);
+        font-family: Outfit, sans-serif;
+      }
+
+      .spec {
+        position: absolute;
+        display: block;
+      }
+      .spec img {
+        width: 100%;
+        display: block;
+      }
+      #lustre {
+        left: var(--lustre-x);
+        top: var(--lustre-y);
+        width: var(--lustre-w);
+      }
+      #globe1 {
+        left: var(--globe1-x);
+        top: var(--globe1-y);
+        width: var(--globe1-w);
+      }
+      #globe2 {
+        left: var(--globe2-x);
+        top: var(--globe2-y);
+        width: var(--globe2-w);
+      }
+      #globe3 {
+        left: var(--globe3-x);
+        top: var(--globe3-y);
+        width: var(--globe3-w);
+      }
+      #globe4 {
+        left: var(--globe4-x);
+        top: var(--globe4-y);
+        width: var(--globe4-w);
+      }
+      #camera {
+        left: var(--camera-x);
+        top: var(--camera-y);
+        width: var(--camera-w);
+      }
+
+      .spec-label {
+        position: absolute;
+        font-family: Menlo, monospace;
+        font-size: 2.15mm;
+        letter-spacing: 0.2em;
+        line-height: 1.8;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+      .spec-label .num {
+        color: var(--accent);
+      }
+      /* seconde ligne d'une légende : alignée après le numéro */
+      .spec-label .l2 {
+        display: block;
+        padding-left: 8.4mm;
+      }
+      #label1 {
+        left: var(--label1-x);
+        top: var(--label1-y);
+      }
+      /* la légende 02 se niche entre les globes 2 et 3, au bord de la cascade */
+      #label2 {
+        left: var(--label2-x);
+        top: var(--label2-y);
+        width: 50mm;
+        text-align: right;
+      }
+      #label3 {
+        left: var(--label3-x);
+        top: var(--label3-y);
+      }
+
+      /* Repère de visée sur le lustre — l'unique geste */
+      .mark {
+        position: absolute;
+        left: var(--viseur-x);
+        top: var(--viseur-y);
+        width: var(--viseur-w);
+        height: var(--viseur-h);
+      }
+      .mark i {
+        position: absolute;
+        width: 5mm;
+        height: 5mm;
+        border: 0.55mm solid var(--ink);
+      }
+      .mark i:nth-child(1) {
+        left: 0;
+        top: 0;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .mark i:nth-child(2) {
+        right: 0;
+        top: 0;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .mark i:nth-child(3) {
+        left: 0;
+        bottom: 0;
+        border-right: 0;
+        border-top: 0;
+      }
+      .mark i:nth-child(4) {
+        right: 0;
+        bottom: 0;
+        border-left: 0;
+        border-top: 0;
+      }
+
+      /* Déclaration */
+      .lead {
+        position: absolute;
+        left: 14mm;
+        top: var(--lead-y);
+        font-size: 4mm;
+        color: var(--ink);
+        letter-spacing: 0.01em;
+      }
+      .display {
+        position: absolute;
+        left: 13.4mm;
+        top: var(--titre-y);
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: var(--titre-taille);
+        line-height: 1.02;
+        letter-spacing: +0.012em;
+        text-transform: uppercase;
+        color: var(--ink);
+        white-space: nowrap;
+        mix-blend-mode: multiply;
+      }
+
+      /* Colonne d'informations : blocs réglés, voix mono */
+      .col {
+        position: absolute;
+        left: 194mm;
+        right: 14mm;
+        top: 12mm;
+        color: var(--ink);
+        font-family: Menlo, monospace;
+      }
+      .col .block {
+        border-top: 0.42mm solid var(--ink);
+        padding: 2.6mm 0 4.6mm;
+      }
+      .col .label {
+        font-size: 2.15mm;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        opacity: 0.62;
+        margin-bottom: 1.8mm;
+      }
+      .col .value {
+        font-size: 2.7mm;
+        line-height: 1.75;
+        letter-spacing: 0.05em;
+      }
+      /* Ce qui se lit (mots, phrases) passe en Outfit ; le mono reste aux
+     coordonnées et aux données. */
+      .col .read {
+        font-family: Outfit, sans-serif;
+        font-size: 3.2mm;
+        line-height: 1.55;
+        letter-spacing: 0;
+      }
+      .col .read .sep {
+        color: var(--accent);
+      }
+      /* Les logiciels : donnée technique, donc mono et discret */
+      .col .tools {
+        font-size: 2.3mm;
+        line-height: 1.7;
+        letter-spacing: 0.08em;
+        opacity: 0.66;
+        margin-top: 2.2mm;
+      }
+      .col .name {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 9.2mm;
+        line-height: 1.02;
+        text-transform: uppercase;
+        letter-spacing: 0.005em;
+        margin: 0.6mm 0 1.4mm;
+      }
+      .col .kicker {
+        font-size: 2.3mm;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-bottom: 2mm;
+      }
+      .col .route {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 4.9mm;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+      .col .accent {
+        color: var(--accent);
+      }
+      .col.foot {
+        top: auto;
+        bottom: 9mm;
+      }
+      .col.foot .block {
+        padding: 2.2mm 0 2.6mm;
+      }
+      .col.foot .route {
+        font-size: 5.6mm;
+      }
+      .circled {
+        position: relative;
+        display: inline-block;
+        padding: 0 1.2mm;
+      }
+      .circled svg {
+        position: absolute;
+        inset: -2.8mm -2.4mm -3.2mm -2.6mm;
+        width: calc(100% + 5mm);
+        height: calc(100% + 6mm);
+        overflow: visible;
+      }
+    </style>
+  </head>
+  <body>
+    <figure class="spec" id="lustre">
+      <img src="../../src/assets/portfolio-pdf/spec-lustre.png" alt="" />
+    </figure>
+    <p class="spec-label" id="label1">
+      <span class="num">01</span> · COMMUNICATION<span class="l2"
+        >LA PATERNELLE · THÉÂTRE</span
+      >
+    </p>
+
+    <figure class="spec" id="globe1">
+      <img src="../../src/assets/portfolio-pdf/spec-globe.png" alt="" />
+    </figure>
+    <figure class="spec" id="globe2">
+      <img src="../../src/assets/portfolio-pdf/spec-globe.png" alt="" />
+    </figure>
+    <figure class="spec" id="globe3">
+      <img src="../../src/assets/portfolio-pdf/spec-globe.png" alt="" />
+    </figure>
+
+    <p class="spec-label" id="label2">
+      <span class="num">02</span> · WEB<span class="l2">ÉMISSION DE CO₂</span>
+    </p>
+
+    <figure class="spec" id="camera">
+      <img src="../../src/assets/portfolio-pdf/spec-camera.png" alt="" />
+    </figure>
+    <p class="spec-label" id="label3">
+      <span class="num">03</span> · VIDÉO<span class="l2"
+        >48H FILM PROJECT</span
+      >
+    </p>
+
+    <figure class="mark" aria-hidden="true">
+      <i></i><i></i><i></i><i></i>
+    </figure>
+
+    <p class="lead">
+      Des contenus qui racontent.<br />Des plateformes qui diffusent.<br />Des
+      stratégies qui performent.
+    </p>
+    <h1 class="display">
+      Communication<span style="color: var(--accent)">.</span
+      ><br />Développement web<span style="color: var(--accent)">.</span
+      ><br />Création de contenu<span style="color: var(--accent)">.</span>
+    </h1>
+
+    <aside class="col">
+      <div class="block" style="border-top: none; padding-top: 0">
+        <p class="kicker">Portfolio · Édition 2026</p>
+        <p class="name">Samuel<br />Dulex</p>
+      </div>
+      <div class="block">
+        <p class="value">
+          hello@kuasar.xyz<br />portfolio.kuasar.xyz · in/samuel-dulex
+        </p>
+      </div>
+      <div class="block">
+        <p class="label">Savoir-faire</p>
+        <p class="value read">
+          Direction artistique
+          <span class="sep">·</span> UX/UI<br />Développement fullstack<br />Réalisation
+          <span class="sep">·</span> Montage<br />Stratégie de contenu
+          <span class="sep">·</span> Réseaux
+        </p>
+        <p class="value tools">
+          Figma · Adobe CC · DaVinci<br />Astro · React · Laravel · TypeScript
+        </p>
+      </div>
+    </aside>
+
+    <aside class="col foot">
+      <div class="block">
+        <p class="value route">
+          Suisse →
+          <span class="accent circled"
+            >Montréal<svg
+              viewBox="0 0 120 44"
+              preserveAspectRatio="none"
+              fill="none"
+            >
+              <path
+                d="M8 24 C 6 10, 38 3, 66 4 C 96 5, 117 10, 116 21 C 115 34, 88 41, 55 40 C 28 39, 9 35, 10 26"
+                stroke="#e55d2b"
+                stroke-width="2.6"
+                stroke-linecap="round"
+              /></svg
+          ></span>
+        </p>
+        <p class="value" style="margin-top: 1.6mm">
+          Disponible pour le Canada<br />Permis Jeunes professionnels <br />(EIC
+          Canada–Suisse)
+        </p>
+      </div>
+    </aside>
+  </body>
+</html>

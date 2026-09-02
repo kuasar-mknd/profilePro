@@ -2,6 +2,8 @@
 dist/
 # export PDF du portfolio (bun run pdf)
 portfolio-samuel-dulex.pdf
+# aperçu régénérable de la maquette de couverture (node design/…/render.mjs)
+design/garde-gsm-studios/garde.png
 # generated types
 .astro/
 .frontmatter/
